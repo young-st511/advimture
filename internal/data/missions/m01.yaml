@@ -2,7 +2,6 @@ id: "m-01"
 title: "nginx.conf 도메인 변경"
 difficulty: 1
 story: "프로덕션 서버 도메인이 변경됐어. nginx.conf를 수정해줘."
-goal_type: "text_match"
 initial_text: |
   server {
       listen 80;

@@ -2,22 +2,21 @@ id: "m-03"
 title: "SSH config Host 블록 추가"
 difficulty: 2
 story: "새 프로덕션 서버가 생겼어. SSH config에 추가해줘."
-goal_type: "text_match"
 initial_text: |
   Host production-01
       HostName 10.0.0.1
-      User ubuntu
-      IdentityFile ~/.ssh/prod.pem
+      User deploy
+      IdentityFile ~/.ssh/id_rsa
 expected_text: |
   Host production-01
       HostName 10.0.0.1
-      User ubuntu
-      IdentityFile ~/.ssh/prod.pem
+      User deploy
+      IdentityFile ~/.ssh/id_rsa
 
   Host production-02
       HostName 10.0.0.2
-      User ubuntu
-      IdentityFile ~/.ssh/prod.pem
+      User deploy
+      IdentityFile ~/.ssh/id_rsa
 cursor_start:
   row: 0
   col: 0
@@ -27,8 +26,8 @@ required_tutorials:
   - "1-4"
 optimal_solutions:
   - description: "파일 끝으로 이동 후 새 블록 입력"
-    keys: "Go<Enter>Host production-02<Enter>    HostName 10.0.0.2<Enter>    User ubuntu<Enter>    IdentityFile ~/.ssh/prod.pem<Esc>:wq<Enter>"
+    keys: "Go<Enter>Host production-02<Enter>    HostName 10.0.0.2<Enter>    User deploy<Enter>    IdentityFile ~/.ssh/id_rsa<Esc>:wq<Enter>"
     count: 20
 tips:
   - trigger: "keystroke_over_40"
-    message: "G로 파일 끝으로 이동한 후 o로 새 줄을 열어 입력하세요."
+    message: "G로 파일 끝으로 이동한 다음 o로 새 줄을 여세요."

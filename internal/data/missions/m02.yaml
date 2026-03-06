@@ -2,7 +2,6 @@ id: "m-02"
 title: ".env DB_HOST 수정"
 difficulty: 1
 story: "DB 서버가 이전됐어. .env 파일의 DB_HOST를 수정해줘."
-goal_type: "text_match"
 initial_text: |
   APP_ENV=production
   APP_PORT=8080
@@ -23,9 +22,9 @@ required_tutorials:
   - "1-1"
   - "1-5"
 optimal_solutions:
-  - description: "3번째 줄로 이동 후 cw로 값 변경"
-    keys: "3Gwwcw10.0.0.5<Esc>:wq<Enter>"
+  - description: "이동 후 cw로 단어 교체"
+    keys: "3jwwcw10.0.0.5<Esc>:wq<Enter>"
     count: 10
 tips:
   - trigger: "keystroke_over_20"
-    message: "다음에 ciw를 배우면 더 빠르게 할 수 있어."
+    message: "ciw로 단어 전체를 교체하는 방법도 있어. 아직 안 배웠지만 다음 기회에!"
