@@ -1,0 +1,33 @@
+id: "0-0"
+title: "테스트 튜토리얼"
+description: "프레임워크 검증용 더미 튜토리얼"
+substeps:
+  - id: "0-0-1"
+    title: "커서 이동"
+    instruction: "커서를 (0, 4) 위치로 이동하세요."
+    initial_text: "hello world"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_position
+      row: 0
+      col: 4
+    hints:
+      - "l 키를 사용하세요."
+      - "l 키를 4번 누르세요."
+      - "llll 을 입력하세요."
+    mentor_msg: "l 키로 오른쪽으로 이동할 수 있어."
+  - id: "0-0-2"
+    title: "텍스트 수정"
+    instruction: "'hello world'를 'hello vim'으로 바꾸세요."
+    initial_text: "hello world"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: text_match
+      text: "hello vim"
+    hints:
+      - "cw 로 단어를 바꿀 수 있어요."
+      - "$ 로 끝으로 이동 후 cw 를 사용하세요."
+      - "wcw 입력 후 vim 을 타이핑하세요."
+    mentor_msg: "cw 는 단어를 바꾸는 명령이야."
