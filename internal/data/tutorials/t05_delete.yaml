@@ -1,0 +1,63 @@
+id: "1-5"
+title: "삭제의 기술"
+description: "x, dd, dw, d$ 로 효율적으로 삭제하기"
+substeps:
+  - id: "1-5-1"
+    title: "한 글자 삭제: x"
+    instruction: "x 를 사용하여 'helo' 를 'helo' → 'hello' ... 아니, 'helllo' 에서 'l' 하나를 삭제하여 'hello' 로 만드세요."
+    initial_text: "helllo world"
+    cursor_row: 0
+    cursor_col: 3
+    goal:
+      type: text_match
+      text: "hello world"
+    hints:
+      - "x 는 커서 위의 문자를 삭제해요."
+      - "커서가 여분의 l 위에 있으니 x 를 한 번 누르세요."
+      - "x"
+    mentor_msg: "x 는 커서 위 글자 하나를 삭제해."
+
+  - id: "1-5-2"
+    title: "줄 삭제: dd"
+    instruction: "dd 를 사용하여 '# DELETE THIS' 줄을 삭제하세요."
+    initial_text: "keep this\n# DELETE THIS\nkeep this too"
+    cursor_row: 1
+    cursor_col: 0
+    goal:
+      type: text_match
+      text: "keep this\nkeep this too"
+    hints:
+      - "dd 는 현재 줄 전체를 삭제해요."
+      - "커서가 이미 삭제할 줄에 있으니 dd 를 입력하세요."
+      - "dd"
+    mentor_msg: "dd 는 줄 전체 삭제. 같은 키를 두 번 누르면 줄 단위."
+
+  - id: "1-5-3"
+    title: "단어 삭제: dw"
+    instruction: "dw 를 사용하여 'bad' 단어를 삭제하세요."
+    initial_text: "this is bad code"
+    cursor_row: 0
+    cursor_col: 8
+    goal:
+      type: text_match
+      text: "this is code"
+    hints:
+      - "dw 는 커서 위치부터 단어 끝까지 삭제해요."
+      - "커서가 'bad' 위에 있으니 dw 를 입력하세요."
+      - "dw"
+    mentor_msg: "dw 는 Delete Word. x 10번보다 dw 1번이 빠르지?"
+
+  - id: "1-5-4"
+    title: "줄 끝까지 삭제: d$"
+    instruction: "d$ 를 사용하여 'important' 이후의 텍스트를 삭제하세요."
+    initial_text: "important unnecessary extra text"
+    cursor_row: 0
+    cursor_col: 9
+    goal:
+      type: text_match
+      text: "important"
+    hints:
+      - "d$ 는 커서부터 줄 끝까지 삭제해요."
+      - "커서가 ' ' (공백) 위에 있으니 d$ 를 입력하세요."
+      - "d$"
+    mentor_msg: "d$ 는 커서부터 줄 끝까지 한 방에 삭제."

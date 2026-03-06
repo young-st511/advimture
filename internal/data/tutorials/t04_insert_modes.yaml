@@ -1,0 +1,63 @@
+id: "1-4"
+title: "삽입의 기술"
+description: "i, a, o, I, A, O 로 다양한 위치에서 입력하기"
+substeps:
+  - id: "1-4-1"
+    title: "줄 끝에 추가: A"
+    instruction: "A 를 사용하여 줄 끝에 '!' 을 추가하세요."
+    initial_text: "hello world"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: text_match
+      text: "hello world!"
+    hints:
+      - "A 는 줄 끝에서 입력을 시작해요."
+      - "A 를 누르고 ! 을 입력한 후 Esc"
+      - "A → ! → Esc"
+    mentor_msg: "A 는 줄 끝에서 바로 입력 시작. $a 보다 한 키 적어."
+
+  - id: "1-4-2"
+    title: "아래에 새 줄 추가: o"
+    instruction: "o 를 사용하여 새 줄에 'new line' 을 입력하세요."
+    initial_text: "first line\nthird line"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: text_match
+      text: "first line\nnew line\nthird line"
+    hints:
+      - "o 는 현재 줄 아래에 새 줄을 만들어요."
+      - "o 를 누르고 'new line' 을 타이핑한 후 Esc"
+      - "o → new line → Esc"
+    mentor_msg: "o 는 Open below. 새 줄을 만들고 바로 입력해."
+
+  - id: "1-4-3"
+    title: "위에 새 줄 추가: O"
+    instruction: "O 를 사용하여 첫 줄 위에 '# Header' 를 추가하세요."
+    initial_text: "content here"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: text_match
+      text: "# Header\ncontent here"
+    hints:
+      - "O 는 현재 줄 위에 새 줄을 만들어요."
+      - "O 를 누르고 '# Header' 를 입력한 후 Esc"
+      - "O → # Header → Esc"
+    mentor_msg: "O 는 Open above. 위에 줄을 추가하고 바로 입력."
+
+  - id: "1-4-4"
+    title: "줄 처음에서 입력: I"
+    instruction: "I 를 사용하여 줄 맨 앞에 '> ' 를 추가하세요."
+    initial_text: "quoted text"
+    cursor_row: 0
+    cursor_col: 5
+    goal:
+      type: text_match
+      text: "> quoted text"
+    hints:
+      - "I 는 줄 맨 앞에서 입력을 시작해요."
+      - "I 를 누르고 '> ' 를 입력한 후 Esc"
+      - "I → > (공백) → Esc"
+    mentor_msg: "I 는 줄 처음에서 바로 입력. 0i 보다 한 키 적지."

@@ -1,0 +1,68 @@
+id: "1-2"
+title: "커서 이동"
+description: "hjkl 로 자유롭게 움직이기"
+substeps:
+  - id: "1-2-1"
+    title: "세로 이동: j와 k"
+    instruction: "j 와 k 를 사용하여 커서를 4번째 줄로 이동하세요."
+    initial_text: "line 1\nline 2\nline 3\n>>> target <<<\nline 5"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_position
+      row: 3
+      col: 0
+    hints:
+      - "j 키로 아래로 이동할 수 있어요."
+      - "j 를 3번 누르세요."
+      - "jjj"
+    mentor_msg: "j 는 아래, k 는 위. 손가락 위치를 기억해."
+    allowed_keys: ["j", "k"]
+
+  - id: "1-2-2"
+    title: "가로 이동: h와 l"
+    instruction: "커서를 'X' 문자 위로 이동하세요."
+    initial_text: "find the X here"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_on_char
+      char: "X"
+    hints:
+      - "l 키로 오른쪽으로 이동하세요."
+      - "l 을 여러 번 눌러 X 를 찾으세요."
+      - "l 을 9번 누르세요."
+    mentor_msg: "h 는 왼쪽, l 은 오른쪽이야."
+    allowed_keys: ["h", "l"]
+
+  - id: "1-2-3"
+    title: "그리드 이동"
+    instruction: "hjkl 을 사용하여 커서를 '*' 위로 이동하세요."
+    initial_text: ". . . . .\n. . . . .\n. . * . .\n. . . . .\n. . . . ."
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_on_char
+      char: "*"
+    hints:
+      - "j 로 아래, l 로 오른쪽으로 이동하세요."
+      - "별표는 3번째 줄, 5번째 열에 있어요."
+      - "jjllll"
+    mentor_msg: "hjkl 에 익숙해지면 화살표보다 빨라."
+    allowed_keys: ["h", "j", "k", "l"]
+
+  - id: "1-2-4"
+    title: "미로 탈출"
+    instruction: "hjkl 로 미로를 통과하여 'G' (goal)에 도착하세요."
+    initial_text: "S . . . .\n. # # # .\n. # . . .\n. # . # .\n. . . # G"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_on_char
+      char: "G"
+    hints:
+      - "벽(#)을 피해 이동하세요."
+      - "아래로 내려간 후 오른쪽으로 이동하세요."
+      - "jjjjllllllll (경로를 따라가세요)"
+    mentor_msg: "미로도 hjkl 로 풀 수 있어!"
+    allowed_keys: ["h", "j", "k", "l"]

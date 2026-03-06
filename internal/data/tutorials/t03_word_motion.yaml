@@ -1,0 +1,67 @@
+id: "1-3"
+title: "빠른 이동"
+description: "w, b, e, 0, $ 로 단어 단위 이동"
+substeps:
+  - id: "1-3-1"
+    title: "단어 앞으로: w"
+    instruction: "w 키로 'world' 단어의 시작 위치로 이동하세요."
+    initial_text: "hello world vim"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_position
+      row: 0
+      col: 6
+    hints:
+      - "w 는 다음 단어의 시작으로 이동해요."
+      - "w 를 한 번 누르세요."
+      - "w"
+    mentor_msg: "w 는 Word forward. 단어 단위로 점프해."
+
+  - id: "1-3-2"
+    title: "단어 뒤로: b"
+    instruction: "b 키로 'hello' 의 시작 위치로 돌아가세요."
+    initial_text: "hello world vim"
+    cursor_row: 0
+    cursor_col: 6
+    goal:
+      type: cursor_position
+      row: 0
+      col: 0
+    hints:
+      - "b 는 이전 단어의 시작으로 이동해요."
+      - "b 를 한 번 누르세요."
+      - "b"
+    mentor_msg: "b 는 Back. 단어 단위로 뒤로 가."
+
+  - id: "1-3-3"
+    title: "줄 처음과 끝: 0 과 $"
+    instruction: "$ 키로 줄 끝으로 이동하세요."
+    initial_text: "The quick brown fox jumps over the lazy dog"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_position
+      row: 0
+      col: 43
+    hints:
+      - "$ 는 줄 끝으로 이동해요."
+      - "$ 를 한 번 누르세요."
+      - "$"
+    mentor_msg: "0 은 줄 처음, $ 는 줄 끝. 정규표현식이랑 같아."
+
+  - id: "1-3-4"
+    title: "속도 비교 챌린지"
+    instruction: "3번째 단어 'brown'의 시작 위치로 이동하세요. (w 를 사용)"
+    initial_text: "The quick brown fox jumps"
+    cursor_row: 0
+    cursor_col: 0
+    goal:
+      type: cursor_position
+      row: 0
+      col: 10
+    hints:
+      - "w 를 두 번 누르면 'brown'에 도착해요."
+      - "ww"
+      - "l 로 10번 이동하는 것보다 w 2번이 훨씬 빠르죠?"
+    mentor_msg: "hjkl로 10칸 vs w로 2번. 어떤 게 나을까?"
