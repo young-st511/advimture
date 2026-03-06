@@ -1,6 +1,8 @@
 package editor
 
 import (
+	"strings"
+
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -48,6 +50,11 @@ type Model struct {
 	// Command mode state
 	cmdInput string
 
+	// Search mode state
+	searchMode  bool
+	searchInput string
+	searchState *SearchState
+
 	// Status message (shown briefly)
 	statusMsg   string
 	statusError bool
@@ -55,8 +62,12 @@ type Model struct {
 	// Ctrl+C tracking
 	ctrlCCount int
 
-	// Keystroke counter
-	keystrokes int
+	// Keystroke counters
+	keystrokes          int // total keystrokes
+	effectiveKeystrokes int // buffer-modifying operations only
+
+	// savedAndQuit is true when the user used :wq (save + quit), false for :q!
+	savedAndQuit bool
 }
 
 // New creates a new editor model with sample text.
@@ -107,6 +118,12 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		m.keystrokes++
 		m.statusMsg = ""
 
+		// Search mode takes priority over normal key routing
+		if m.searchMode {
+			m = m.handleSearchKey(msg)
+			return m, nil
+		}
+
 		switch m.mode {
 		case ModeNormal, ModeOperatorPending:
 			m = m.handleNormalKey(msg)
@@ -152,16 +169,51 @@ func (m Model) handleNormalKey(msg tea.KeyMsg) Model {
 		m.mode = ModeCommand
 		m.cmdInput = ""
 		return m
+
 	case SimpleCmdSearchForward:
-		m.mode = ModeCommand
-		m.cmdInput = ""
-		m.statusMsg = "/ 검색은 아직 미구현"
-		m.mode = ModeNormal
+		m.searchMode = true
+		m.searchInput = ""
+		return m
+
+	case SimpleCmdSearchNext:
+		if m.searchState != nil && len(m.searchState.Matches) > 0 {
+			m.searchState.CurrentIdx = (m.searchState.CurrentIdx + 1) % len(m.searchState.Matches)
+			match := m.searchState.Matches[m.searchState.CurrentIdx]
+			m.cursor.Row = match.Row
+			m.cursor.Col = match.Col
+			m.cursor.DesiredCol = match.Col
+			m.cursor.ClampToBuffer(m.buf, false)
+		} else {
+			m.statusMsg = "검색어를 먼저 입력하세요 (/pattern)"
+		}
+		return m
+
+	case SimpleCmdSearchPrev:
+		if m.searchState != nil && len(m.searchState.Matches) > 0 {
+			idx := m.searchState.CurrentIdx - 1
+			if idx < 0 {
+				idx = len(m.searchState.Matches) - 1
+			}
+			m.searchState.CurrentIdx = idx
+			match := m.searchState.Matches[m.searchState.CurrentIdx]
+			m.cursor.Row = match.Row
+			m.cursor.Col = match.Col
+			m.cursor.DesiredCol = match.Col
+			m.cursor.ClampToBuffer(m.buf, false)
+		}
 		return m
 	}
 
 	// Execute the parsed command
 	execResult := Execute(m.buf, m.cursor, m.reg, m.undo, result)
+
+	// Track effective keystrokes for buffer-modifying operations
+	if result.Operator == OperatorDelete || result.Operator == OperatorChange {
+		m.effectiveKeystrokes++
+	}
+	if result.SimpleCmd == SimpleCmdDeleteChar || result.SimpleCmd == SimpleCmdReplaceChar || result.SimpleCmd == SimpleCmdJoinLine {
+		m.effectiveKeystrokes++
+	}
 
 	if execResult.SwitchToInsert {
 		m.mode = ModeInsert
@@ -190,6 +242,7 @@ func (m Model) handleInsertKey(msg tea.KeyMsg) Model {
 		return m
 
 	case "backspace":
+		m.effectiveKeystrokes++
 		if m.cursor.Col > 0 {
 			m.cursor.Col--
 			ch := m.buf.DeleteChar(m.cursor.Row, m.cursor.Col)
@@ -213,6 +266,7 @@ func (m Model) handleInsertKey(msg tea.KeyMsg) Model {
 		return m
 
 	case "enter":
+		m.effectiveKeystrokes++
 		col := m.cursor.Col
 		m.undo.Record(Operation{
 			Type: OpSplitLine, Row: m.cursor.Row, Col: col,
@@ -226,26 +280,16 @@ func (m Model) handleInsertKey(msg tea.KeyMsg) Model {
 
 	default:
 		// Insert character
-		if len(key) == 1 {
-			ch := rune(key[0])
+		runes := []rune(key)
+		if len(runes) == 1 {
+			ch := runes[0]
+			m.effectiveKeystrokes++
 			m.undo.Record(Operation{
 				Type: OpInsertChar, Row: m.cursor.Row, Col: m.cursor.Col, Char: ch,
 				CursorRow: m.cursor.Row, CursorCol: m.cursor.Col,
 			})
 			m.buf.InsertChar(m.cursor.Row, m.cursor.Col, ch)
 			m.cursor.Col++
-		} else {
-			// Multi-byte rune
-			runes := []rune(key)
-			if len(runes) == 1 {
-				ch := runes[0]
-				m.undo.Record(Operation{
-					Type: OpInsertChar, Row: m.cursor.Row, Col: m.cursor.Col, Char: ch,
-					CursorRow: m.cursor.Row, CursorCol: m.cursor.Col,
-				})
-				m.buf.InsertChar(m.cursor.Row, m.cursor.Col, ch)
-				m.cursor.Col++
-			}
 		}
 		return m
 	}
@@ -280,8 +324,15 @@ func (m Model) handleCommandKey(msg tea.KeyMsg) Model {
 			m.cursor.ClampToBuffer(m.buf, false)
 		}
 
+		if result.BufferModified {
+			m.effectiveKeystrokes++
+		}
+
 		if result.Quit {
 			m.quitting = true
+			if result.Save {
+				m.savedAndQuit = true
+			}
 		}
 		return m
 
@@ -294,23 +345,102 @@ func (m Model) handleCommandKey(msg tea.KeyMsg) Model {
 		return m
 
 	default:
-		if len(key) == 1 || len([]rune(key)) == 1 {
+		if len([]rune(key)) == 1 {
 			m.cmdInput += key
 		}
 		return m
 	}
 }
 
-// Quitting returns whether the editor is quitting.
-func (m Model) Quitting() bool {
-	return m.quitting
+func (m Model) handleSearchKey(msg tea.KeyMsg) Model {
+	key := msg.String()
+
+	switch key {
+	case "esc":
+		m.searchMode = false
+		m.searchInput = ""
+		return m
+
+	case "enter":
+		if m.searchInput == "" {
+			m.searchMode = false
+			return m
+		}
+		lines := m.buf.Lines()
+		matches := FindMatches(lines, m.searchInput)
+		if len(matches) == 0 {
+			m.statusMsg = "Pattern not found: " + m.searchInput
+			m.statusError = true
+			m.searchState = nil
+			m.searchMode = false
+			m.searchInput = ""
+			return m
+		}
+		m.searchState = &SearchState{
+			Pattern:    m.searchInput,
+			Matches:    matches,
+			CurrentIdx: 0,
+		}
+		m.cursor.Row = matches[0].Row
+		m.cursor.Col = matches[0].Col
+		m.cursor.DesiredCol = matches[0].Col
+		m.cursor.ClampToBuffer(m.buf, false)
+		m.searchMode = false
+		m.searchInput = ""
+		return m
+
+	case "backspace":
+		if len(m.searchInput) > 0 {
+			runes := []rune(m.searchInput)
+			m.searchInput = string(runes[:len(runes)-1])
+		} else {
+			m.searchMode = false
+		}
+		return m
+
+	default:
+		runes := []rune(key)
+		if len(runes) == 1 {
+			m.searchInput += key
+		}
+		return m
+	}
 }
 
+// ResetSearch clears the current search state and highlights.
+func (m *Model) ResetSearch() {
+	m.searchState = nil
+	m.searchMode = false
+	m.searchInput = ""
+}
+
+// SetSize sets the editor dimensions.
+func (m *Model) SetSize(width, height int) {
+	m.width = width
+	m.height = height
+}
+
+// Quitting returns whether the editor is quitting.
+func (m Model) Quitting() bool { return m.quitting }
+
+// SavedAndQuit returns true if the editor quit via :wq (save-and-quit), false for :q!
+func (m Model) SavedAndQuit() bool { return m.savedAndQuit }
+
 // Getters for view rendering
-func (m Model) GetBuffer() *Buffer     { return m.buf }
-func (m Model) GetCursor() *Cursor     { return m.cursor }
-func (m Model) GetMode() Mode          { return m.mode }
-func (m Model) GetCmdInput() string    { return m.cmdInput }
-func (m Model) GetStatusMsg() string   { return m.statusMsg }
-func (m Model) IsStatusError() bool    { return m.statusError }
-func (m Model) GetKeystrokes() int     { return m.keystrokes }
+func (m Model) GetBuffer() *Buffer          { return m.buf }
+func (m Model) GetCursor() *Cursor          { return m.cursor }
+func (m Model) GetMode() Mode               { return m.mode }
+func (m Model) GetCmdInput() string         { return m.cmdInput }
+func (m Model) GetStatusMsg() string        { return m.statusMsg }
+func (m Model) IsStatusError() bool         { return m.statusError }
+func (m Model) GetKeystrokes() int          { return m.keystrokes }
+func (m Model) GetTotalKeystrokes() int     { return m.keystrokes }
+func (m Model) GetEffectiveKeystrokes() int { return m.effectiveKeystrokes }
+func (m Model) GetSearchState() *SearchState { return m.searchState }
+func (m Model) IsSearchMode() bool          { return m.searchMode }
+func (m Model) GetSearchInput() string      { return m.searchInput }
+
+// Lines returns all buffer lines as a slice of strings.
+func (m Model) Lines() []string {
+	return strings.Split(m.buf.GetText(), "\n")
+}

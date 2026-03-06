@@ -1,0 +1,19 @@
+id: "m-00"
+title: "테스트 미션"
+difficulty: 1
+story: "이것은 테스트용 더미 미션입니다."
+goal_type: "text_match"
+initial_text: "hello world"
+expected_text: "hello vim"
+cursor_start:
+  row: 0
+  col: 0
+optimal_keystrokes: 4
+required_tutorials: []
+optimal_solutions:
+  - description: "cw로 단어 변경"
+    keys: "wcwvim<Esc>:wq<Enter>"
+    count: 4
+tips:
+  - trigger: "keystroke_over_15"
+    message: "cw 명령어로 단어를 빠르게 바꿀 수 있습니다."

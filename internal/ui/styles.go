@@ -4,17 +4,18 @@ import "github.com/charmbracelet/lipgloss"
 
 // Mode colors
 var (
-	NormalColor      = lipgloss.Color("#5B7FFF") // blue
-	InsertColor      = lipgloss.Color("#50C878") // green
-	CommandColor     = lipgloss.Color("#FFD700") // yellow
-	VisualColor      = lipgloss.Color("#9B59B6") // purple
-	OpPendingColor   = lipgloss.Color("#FF8C00") // orange
-	MentorColor      = lipgloss.Color("#00CED1") // cyan
-	ErrorColor       = lipgloss.Color("#FF4444") // red
-	SuccessColor     = lipgloss.Color("#50C878") // green
-	DimColor         = lipgloss.Color("#555555") // dim gray
-	LineNumberColor  = lipgloss.Color("#888888") // gray
-	EmptyLineColor   = lipgloss.Color("#444444") // dark gray
+	NormalColor        = lipgloss.Color("#5B7FFF") // blue
+	InsertColor        = lipgloss.Color("#50C878") // green
+	CommandColor       = lipgloss.Color("#FFD700") // yellow
+	VisualColor        = lipgloss.Color("#9B59B6") // purple
+	OpPendingColor     = lipgloss.Color("#FF8C00") // orange
+	MentorColor        = lipgloss.Color("#00CED1") // cyan
+	ErrorColor         = lipgloss.Color("#FF4444") // red
+	SuccessColor       = lipgloss.Color("#50C878") // green
+	DimColor           = lipgloss.Color("#555555") // dim gray
+	LineNumberColor    = lipgloss.Color("#888888") // gray
+	EmptyLineColor     = lipgloss.Color("#444444") // dark gray
+	SearchHighlightBg  = lipgloss.Color("#FFAA00") // amber for search match background
 )
 
 // StatusBarStyle returns a lipgloss.Style for the status bar based on the mode name.
@@ -69,3 +70,8 @@ var LineNumberStyle = lipgloss.NewStyle().
 // Empty line (~) style.
 var EmptyLineStyle = lipgloss.NewStyle().
 	Foreground(EmptyLineColor)
+
+// Search highlight style (yellow background for search matches).
+var SearchHighlightStyle = lipgloss.NewStyle().
+	Background(SearchHighlightBg).
+	Foreground(lipgloss.Color("#000000"))

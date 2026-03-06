@@ -13,22 +13,26 @@ import (
 type Screen int
 
 const (
-	ScreenMenu Screen = iota
+	ScreenMenu        Screen = iota
 	ScreenEditor
 	ScreenFTUE
 	ScreenTutorial
+	ScreenMissionList
+	ScreenMission
 )
 
 // Model is the top-level Bubbletea model that manages screen transitions.
 type Model struct {
-	screen   Screen
-	menu     ui.MenuModel
-	editor   editor.Model
-	ftue     game.FTUEModel
-	tutorial game.TutorialModel
-	progress *progress.Progress
-	width    int
-	height   int
+	screen      Screen
+	menu        ui.MenuModel
+	editor      editor.Model
+	ftue        game.FTUEModel
+	tutorial    game.TutorialModel
+	missionList ui.MissionListModel
+	mission     game.MissionModel
+	progress    *progress.Progress
+	width       int
+	height      int
 }
 
 // New creates a new app model.
@@ -45,8 +49,7 @@ func New() Model {
 		m.ftue = game.NewFTUE()
 	} else {
 		m.screen = ScreenMenu
-		m.menu = ui.NewMenu()
-		m.menu.Rank = p.CurrentRank().String()
+		m.menu = ui.NewMenu(p)
 	}
 
 	return m
@@ -72,6 +75,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateFTUE(msg)
 	case ScreenTutorial:
 		return m.updateTutorial(msg)
+	case ScreenMissionList:
+		return m.updateMissionList(msg)
+	case ScreenMission:
+		return m.updateMission(msg)
 	}
 
 	return m, nil
@@ -87,6 +94,10 @@ func (m Model) updateMenu(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.screen = ScreenEditor
 	case ui.MenuTutorial:
 		m.startTutorial("t01_survival.yaml")
+	case ui.MenuMission:
+		m.screen = ScreenMissionList
+		missions, _ := data.LoadAllMissions()
+		m.missionList = ui.NewMissionList(missions, m.progress)
 	case ui.MenuQuit:
 		return m, tea.Quit
 	}
@@ -100,8 +111,7 @@ func (m Model) updateEditor(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if m.editor.Quitting() {
 		m.screen = ScreenMenu
-		m.menu = ui.NewMenu()
-		m.menu.Rank = m.progress.CurrentRank().String()
+		m.menu = ui.NewMenu(m.progress)
 		return m, nil
 	}
 
@@ -129,7 +139,6 @@ func (m Model) updateTutorial(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	if m.tutorial.Quitting() {
 		if m.tutorial.Completed() {
-			// Save progress
 			m.progress.CompleteTutorial(
 				m.tutorial.TutorialID(),
 				m.tutorial.ElapsedSeconds(),
@@ -139,8 +148,50 @@ func (m Model) updateTutorial(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		m.screen = ScreenMenu
-		m.menu = ui.NewMenu()
-		m.menu.Rank = m.progress.CurrentRank().String()
+		m.menu = ui.NewMenu(m.progress)
+		return m, nil
+	}
+
+	return m, cmd
+}
+
+func (m Model) updateMissionList(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+	m.missionList, cmd = m.missionList.Update(msg)
+
+	if m.missionList.Quitting() {
+		m.screen = ScreenMenu
+		m.menu = ui.NewMenu(m.progress)
+		return m, nil
+	}
+
+	if filename := m.missionList.Chosen(); filename != "" {
+		m.startMission(filename)
+	}
+
+	return m, cmd
+}
+
+func (m Model) updateMission(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+	m.mission, cmd = m.mission.Update(msg)
+
+	if m.mission.Quitting() {
+		if m.mission.Completed() && m.mission.Result() != nil {
+			r := m.mission.Result()
+			m.progress.CompleteMission(
+				m.mission.MissionID(),
+				r.Grade,
+				r.EffKeys,
+				r.TimeMs,
+			)
+			_ = progress.Save(m.progress)
+		}
+
+		// Return to mission list
+		missions, _ := data.LoadAllMissions()
+		m.missionList = ui.NewMissionList(missions, m.progress)
+		m.screen = ScreenMissionList
 		return m, nil
 	}
 
@@ -150,13 +201,22 @@ func (m Model) updateTutorial(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *Model) startTutorial(filename string) {
 	td, err := data.LoadTutorial(filename)
 	if err != nil {
-		// Fallback to menu on error
 		m.screen = ScreenMenu
-		m.menu = ui.NewMenu()
+		m.menu = ui.NewMenu(m.progress)
 		return
 	}
 	m.tutorial = game.NewTutorial(td)
 	m.screen = ScreenTutorial
+}
+
+func (m *Model) startMission(filename string) {
+	md, err := data.LoadMission(filename)
+	if err != nil {
+		// Fallback to mission list on error
+		return
+	}
+	m.mission = game.NewMission(md)
+	m.screen = ScreenMission
 }
 
 func (m Model) View() string {
@@ -169,6 +229,10 @@ func (m Model) View() string {
 		return m.ftue.View()
 	case ScreenTutorial:
 		return m.tutorial.View()
+	case ScreenMissionList:
+		return m.missionList.View()
+	case ScreenMission:
+		return m.mission.View()
 	}
 	return ""
 }

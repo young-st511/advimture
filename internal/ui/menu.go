@@ -6,6 +6,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/young-st511/advimture/internal/progress"
 )
 
 // MenuAction represents what the user selected from the menu.
@@ -15,6 +16,7 @@ const (
 	MenuNone MenuAction = iota
 	MenuFreeMode
 	MenuTutorial
+	MenuMission
 	MenuQuit
 )
 
@@ -37,21 +39,52 @@ type MenuModel struct {
 	chosen MenuAction
 }
 
-// NewMenu creates a new menu model with default items.
-func NewMenu() MenuModel {
-	return MenuModel{
-		Items: []MenuItem{
-			{Label: "Tutorial", Action: MenuTutorial},
-			{Label: "Mission", Locked: true, LockText: "Tutorial 완료 후 해금"},
-			{Label: "Time Attack", Locked: true, LockText: "Mission 3 완료 후 해금"},
-			{Label: "Free Mode", Action: MenuFreeMode},
-			{Label: "Progress", Locked: true, LockText: "준비 중"},
-			{Label: "Cheatsheet", Locked: true, LockText: "준비 중"},
-			{Label: "Quit", Action: MenuQuit},
-		},
-		Selected: 0,
-		Rank:     "Intern",
+// NewMenu creates a new menu model, unlocking items based on the given progress.
+func NewMenu(p *progress.Progress) MenuModel {
+	missionUnlocked := isMissionMenuUnlocked(p)
+
+	items := []MenuItem{
+		{Label: "Tutorial", Action: MenuTutorial},
 	}
+
+	if missionUnlocked {
+		items = append(items, MenuItem{Label: "Mission", Action: MenuMission})
+	} else {
+		items = append(items, MenuItem{Label: "Mission", Locked: true, LockText: "Tutorial 1-1~1-3 완료 후 해금"})
+	}
+
+	items = append(items,
+		MenuItem{Label: "Time Attack", Locked: true, LockText: "Mission 3 완료 후 해금"},
+		MenuItem{Label: "Free Mode", Action: MenuFreeMode},
+		MenuItem{Label: "Progress", Locked: true, LockText: "준비 중"},
+		MenuItem{Label: "Cheatsheet", Locked: true, LockText: "준비 중"},
+		MenuItem{Label: "Quit", Action: MenuQuit},
+	)
+
+	rank := "Intern"
+	if p != nil {
+		rank = p.CurrentRank().String()
+	}
+
+	return MenuModel{
+		Items:    items,
+		Selected: 0,
+		Rank:     rank,
+	}
+}
+
+// isMissionMenuUnlocked returns true when tutorials 1-1, 1-2, and 1-3 are completed.
+func isMissionMenuUnlocked(p *progress.Progress) bool {
+	if p == nil {
+		return false
+	}
+	for _, id := range []string{"1-1", "1-2", "1-3"} {
+		tp, ok := p.Tutorials[id]
+		if !ok || !tp.Completed {
+			return false
+		}
+	}
+	return true
 }
 
 func (m MenuModel) Init() tea.Cmd {

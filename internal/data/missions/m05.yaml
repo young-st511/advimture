@@ -1,0 +1,37 @@
+id: "m-05"
+title: "access.log ERROR 찾기"
+difficulty: 2
+story: "서버에 장애가 났어. access.log에서 첫 번째 ERROR를 찾아줘."
+goal_type: "cursor_on_line"
+goal_pattern: "ERROR"
+initial_text: |
+  2024-01-15 10:00:01 INFO  Server started on port 8080
+  2024-01-15 10:00:05 INFO  Database connected
+  2024-01-15 10:01:22 INFO  Request GET /api/health 200
+  2024-01-15 10:01:45 INFO  Request GET /api/users 200
+  2024-01-15 10:02:11 INFO  Request POST /api/login 200
+  2024-01-15 10:03:30 INFO  Request GET /api/products 200
+  2024-01-15 10:04:00 INFO  Cache refreshed
+  2024-01-15 10:04:55 INFO  Request GET /api/orders 200
+  2024-01-15 10:05:12 INFO  Request POST /api/orders 201
+  2024-01-15 10:05:44 INFO  Request GET /api/users/42 200
+  2024-01-15 10:06:01 ERROR Database connection lost
+  2024-01-15 10:06:02 ERROR Request GET /api/products 500
+  2024-01-15 10:06:03 INFO  Attempting reconnect...
+  2024-01-15 10:06:05 INFO  Database reconnected
+  2024-01-15 10:06:10 INFO  Request GET /api/products 200
+expected_text: ""
+cursor_start:
+  row: 0
+  col: 0
+optimal_keystrokes: 4
+required_tutorials:
+  - "1-1"
+  - "1-2"
+optimal_solutions:
+  - description: "검색으로 첫 번째 ERROR 이동"
+    keys: "/ERROR<Enter>"
+    count: 4
+tips:
+  - trigger: "keystroke_over_10"
+    message: "/ERROR 를 입력하면 첫 번째 ERROR 라인으로 바로 이동할 수 있어."

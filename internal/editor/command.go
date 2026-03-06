@@ -9,11 +9,12 @@ import (
 
 // CommandResult represents the outcome of executing a command-mode command.
 type CommandResult struct {
-	Quit     bool
-	Save     bool
-	Error    string
-	Message  string
-	GotoLine int // -1 means no line jump
+	Quit           bool
+	Save           bool
+	BufferModified bool // true if the command modified buffer content (e.g. substitute)
+	Error          string
+	Message        string
+	GotoLine       int // -1 means no line jump
 }
 
 // ExecuteCommand parses and executes an ex command string.
@@ -99,8 +100,9 @@ func tryRangeDelete(cmd string, buf *Buffer, cur *Cursor, undo *UndoManager) (Co
 	cur.DesiredCol = 0
 
 	return CommandResult{
-		Message:  fmt.Sprintf("%d줄 삭제됨", count),
-		GotoLine: -1,
+		Message:        fmt.Sprintf("%d줄 삭제됨", count),
+		GotoLine:       -1,
+		BufferModified: true,
 	}, true
 }
 
@@ -144,8 +146,9 @@ func trySubstitute(cmd string, buf *Buffer, cur *Cursor, undo *UndoManager) (Com
 	})
 
 	return CommandResult{
-		Message:  fmt.Sprintf("%d개 치환됨", count),
-		GotoLine: -1,
+		Message:        fmt.Sprintf("%d개 치환됨", count),
+		GotoLine:       -1,
+		BufferModified: true,
 	}, true
 }
 
@@ -202,7 +205,8 @@ func tryGlobalSubstitute(cmd string, buf *Buffer, cur *Cursor, undo *UndoManager
 	})
 
 	return CommandResult{
-		Message:  fmt.Sprintf("%d개 치환됨", totalCount),
-		GotoLine: -1,
+		Message:        fmt.Sprintf("%d개 치환됨", totalCount),
+		GotoLine:       -1,
+		BufferModified: true,
 	}, true
 }

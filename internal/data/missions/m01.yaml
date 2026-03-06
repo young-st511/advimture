@@ -1,0 +1,31 @@
+id: "m-01"
+title: "nginx.conf 도메인 변경"
+difficulty: 1
+story: "프로덕션 서버 도메인이 변경됐어. nginx.conf를 수정해줘."
+goal_type: "text_match"
+initial_text: |
+  server {
+      listen 80;
+      server_name example.com;
+      root /var/www/html;
+  }
+expected_text: |
+  server {
+      listen 80;
+      server_name mysite.com;
+      root /var/www/html;
+  }
+cursor_start:
+  row: 0
+  col: 0
+optimal_keystrokes: 8
+required_tutorials:
+  - "1-1"
+  - "1-3"
+optimal_solutions:
+  - description: "전역 치환"
+    keys: ":%s/example.com/mysite.com/g<Enter>:wq<Enter>"
+    count: 8
+tips:
+  - trigger: "keystroke_over_20"
+    message: ":%s/old/new/g 를 사용하면 파일 전체를 한번에 치환할 수 있습니다."

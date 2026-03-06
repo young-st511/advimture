@@ -1,6 +1,10 @@
 package progress
 
-import "time"
+import (
+	"time"
+
+	"github.com/young-st511/advimture/internal/data"
+)
 
 // Progress holds all player progress data.
 type Progress struct {
@@ -25,11 +29,12 @@ type TutorialProgress struct {
 
 // MissionProgress tracks completion of a single mission.
 type MissionProgress struct {
-	Completed   bool      `json:"completed"`
-	CompletedAt time.Time `json:"completed_at,omitempty"`
-	BestTime    float64   `json:"best_time,omitempty"`
-	Keystrokes  int       `json:"keystrokes,omitempty"`
-	Stars       int       `json:"stars"` // 1-3
+	Completed       bool      `json:"completed"`
+	CompletedAt     time.Time `json:"completed_at,omitempty"`
+	BestGrade       string    `json:"best_grade,omitempty"`    // "S", "A", "B", "C"
+	BestKeystrokes  int       `json:"best_keystrokes,omitempty"`
+	BestTimeMs      int64     `json:"best_time_ms,omitempty"`
+	Attempts        int       `json:"attempts"`
 }
 
 // NewProgress creates a new empty progress.
@@ -68,6 +73,53 @@ func (p *Progress) CompletedMissionCount() int {
 // CurrentRank returns the player's current rank.
 func (p *Progress) CurrentRank() Rank {
 	return CalculateRank(p.CompletedTutorialCount(), p.CompletedMissionCount())
+}
+
+// IsMissionUnlocked returns true if all of the mission's required tutorials are completed.
+func IsMissionUnlocked(m *data.MissionData, p *Progress) bool {
+	if m == nil {
+		return false
+	}
+	if len(m.RequiredTutorials) == 0 {
+		return true
+	}
+	if p == nil {
+		return false
+	}
+	for _, id := range m.RequiredTutorials {
+		tp, ok := p.Tutorials[id]
+		if !ok || !tp.Completed {
+			return false
+		}
+	}
+	return true
+}
+
+// gradeOrder maps grade strings to numeric priority (higher = better).
+var gradeOrder = map[string]int{"S": 4, "A": 3, "B": 2, "C": 1}
+
+// CompleteMission records a mission attempt and updates best stats.
+func (p *Progress) CompleteMission(id, grade string, keystrokes int, timeMs int64) {
+	mp := p.Missions[id]
+	mp.Attempts++
+	if !mp.Completed {
+		mp.Completed = true
+		mp.CompletedAt = time.Now()
+	}
+	// Update best grade (S > A > B > C)
+	if gradeOrder[grade] > gradeOrder[mp.BestGrade] {
+		mp.BestGrade = grade
+	}
+	// Update best keystrokes (lower is better)
+	if mp.BestKeystrokes == 0 || keystrokes < mp.BestKeystrokes {
+		mp.BestKeystrokes = keystrokes
+	}
+	// Update best time (lower is better)
+	if mp.BestTimeMs == 0 || timeMs < mp.BestTimeMs {
+		mp.BestTimeMs = timeMs
+	}
+	p.Missions[id] = mp
+	p.UpdatedAt = time.Now()
 }
 
 // CompleteTutorial marks a tutorial substep as completed.

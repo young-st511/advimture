@@ -1,0 +1,28 @@
+id: "m-04"
+title: "crontab 백업 job 추가"
+difficulty: 2
+story: "매일 새벽 2시에 DB 백업 스크립트를 실행해야 해."
+goal_type: "text_match"
+initial_text: |
+  # Crontab
+  0 * * * * /usr/local/bin/healthcheck.sh
+  30 3 * * 0 /usr/local/bin/weekly-report.sh
+expected_text: |
+  # Crontab
+  0 * * * * /usr/local/bin/healthcheck.sh
+  30 3 * * 0 /usr/local/bin/weekly-report.sh
+  0 2 * * * /usr/local/bin/backup.sh
+cursor_start:
+  row: 0
+  col: 0
+optimal_keystrokes: 18
+required_tutorials:
+  - "1-1"
+  - "1-4"
+optimal_solutions:
+  - description: "파일 끝으로 이동 후 새 cron job 입력"
+    keys: "Go0 2 * * * /usr/local/bin/backup.sh<Esc>:wq<Enter>"
+    count: 18
+tips:
+  - trigger: "keystroke_over_35"
+    message: "G로 파일 끝으로 이동한 후 o로 새 줄을 열면 빠르게 추가할 수 있어."

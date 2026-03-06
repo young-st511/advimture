@@ -101,3 +101,97 @@ func TestGoalChecker_Reset(t *testing.T) {
 		t.Error("reset should clear state")
 	}
 }
+
+// ─── Mission loader tests ─────────────────────────────────────────────────────
+
+func TestLoadMission(t *testing.T) {
+	m, err := LoadMission("m00_test.yaml")
+	if err != nil {
+		t.Fatalf("load failed: %v", err)
+	}
+	if m.ID != "m-00" {
+		t.Errorf("expected id 'm-00', got '%s'", m.ID)
+	}
+	if m.OptimalKeystrokes != 4 {
+		t.Errorf("expected optimal_keystrokes 4, got %d", m.OptimalKeystrokes)
+	}
+	if len(m.Tips) != 1 {
+		t.Errorf("expected 1 tip, got %d", len(m.Tips))
+	}
+}
+
+func TestLoadAllMissions(t *testing.T) {
+	_, err := LoadAllMissions()
+	if err != nil {
+		t.Fatalf("load all missions failed: %v", err)
+	}
+}
+
+func TestValidateMission_OK(t *testing.T) {
+	m := &MissionData{
+		ID: "m-01", Title: "test", InitialText: "a", ExpectedText: "b", OptimalKeystrokes: 5,
+	}
+	if err := ValidateMission(m); err != nil {
+		t.Errorf("expected no error, got %v", err)
+	}
+}
+
+func TestValidateMission_MissingID(t *testing.T) {
+	m := &MissionData{Title: "test", InitialText: "a", ExpectedText: "b", OptimalKeystrokes: 5}
+	if err := ValidateMission(m); err == nil {
+		t.Error("expected error for missing ID")
+	}
+}
+
+func TestValidateMission_ZeroOptimal(t *testing.T) {
+	m := &MissionData{ID: "m-01", Title: "test", InitialText: "a", ExpectedText: "b", OptimalKeystrokes: 0}
+	if err := ValidateMission(m); err == nil {
+		t.Error("expected error for OptimalKeystrokes=0")
+	}
+}
+
+func TestCompareText_Equal(t *testing.T) {
+	ok, diffs, totalDiff := CompareText("hello\nworld", "hello\nworld")
+	if !ok {
+		t.Error("expected match")
+	}
+	if totalDiff != 0 {
+		t.Errorf("expected 0 total diffs, got %d", totalDiff)
+	}
+	if len(diffs) != 0 {
+		t.Errorf("expected 0 diffs, got %d", len(diffs))
+	}
+}
+
+func TestCompareText_TrailingWhitespace(t *testing.T) {
+	ok, _, _ := CompareText("hello  ", "hello")
+	if !ok {
+		t.Error("trailing whitespace should be ignored")
+	}
+}
+
+func TestCompareText_LineMismatch(t *testing.T) {
+	ok, diffs, totalDiff := CompareText("a\nb\nc", "a\nb")
+	if ok {
+		t.Error("expected mismatch for different line counts")
+	}
+	if totalDiff != 1 {
+		t.Errorf("expected 1 totalDiff, got %d", totalDiff)
+	}
+	if len(diffs) != 1 {
+		t.Errorf("expected 1 diff entry, got %d", len(diffs))
+	}
+}
+
+func TestCompareText_MultipleDiffs(t *testing.T) {
+	ok, diffs, totalDiff := CompareText("a\nb\nc\nd\ne", "a\nX\nX\nX\nX")
+	if ok {
+		t.Error("expected mismatch")
+	}
+	if totalDiff != 4 {
+		t.Errorf("expected 4 total diffs, got %d", totalDiff)
+	}
+	if len(diffs) != 3 {
+		t.Errorf("expected max 3 returned diffs, got %d", len(diffs))
+	}
+}
