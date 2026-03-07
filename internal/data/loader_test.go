@@ -72,6 +72,20 @@ func TestGoalChecker_SaveQuit(t *testing.T) {
 	}
 }
 
+func TestGoalChecker_Quit(t *testing.T) {
+	gc := NewGoalChecker()
+	goal := GoalData{Type: "quit"}
+
+	if gc.CheckGoal(goal, "", 0, 0, "NORMAL") {
+		t.Error("quit should not pass without RecordQuit")
+	}
+
+	gc.RecordQuit()
+	if !gc.CheckGoal(goal, "", 0, 0, "NORMAL") {
+		t.Error("quit should pass after RecordQuit")
+	}
+}
+
 func TestGoalChecker_ModeIs(t *testing.T) {
 	gc := NewGoalChecker()
 	goal := GoalData{Type: "mode_is", Mode: "INSERT"}
@@ -96,8 +110,9 @@ func TestGoalChecker_Reset(t *testing.T) {
 	gc := NewGoalChecker()
 	gc.RecordCommand("dd")
 	gc.RecordSaveQuit()
+	gc.RecordQuit()
 	gc.Reset()
-	if gc.LastCommandUsed != "" || gc.SaveQuitCalled {
+	if gc.LastCommandUsed != "" || gc.SaveQuitCalled || gc.QuitCalled {
 		t.Error("reset should clear state")
 	}
 }

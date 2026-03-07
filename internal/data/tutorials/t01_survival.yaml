@@ -9,7 +9,7 @@ substeps:
     cursor_row: 0
     cursor_col: 0
     goal:
-      type: save_quit
+      type: quit
     hints:
       - ": 를 먼저 눌러 명령 모드에 진입하세요."
       - ":q! 를 입력하고 Enter를 누르세요."

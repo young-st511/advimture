@@ -8,6 +8,7 @@ import (
 type GoalChecker struct {
 	LastCommandUsed string
 	SaveQuitCalled  bool
+	QuitCalled      bool
 }
 
 // NewGoalChecker creates a new goal checker.
@@ -44,6 +45,9 @@ func (gc *GoalChecker) CheckGoal(goal GoalData, bufferText string, curRow, curCo
 		}
 		return true
 
+	case "quit":
+		return gc.QuitCalled
+
 	case "mode_is":
 		return strings.EqualFold(mode, goal.Mode)
 
@@ -65,8 +69,14 @@ func (gc *GoalChecker) RecordSaveQuit() {
 	gc.SaveQuitCalled = true
 }
 
+// RecordQuit records that :q! or another quit action was used.
+func (gc *GoalChecker) RecordQuit() {
+	gc.QuitCalled = true
+}
+
 // Reset clears the recorded state for a new substep.
 func (gc *GoalChecker) Reset() {
 	gc.LastCommandUsed = ""
 	gc.SaveQuitCalled = false
+	gc.QuitCalled = false
 }

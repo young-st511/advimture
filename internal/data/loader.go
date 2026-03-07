@@ -40,7 +40,7 @@ type SubstepData struct {
 
 // GoalData defines the completion condition for a substep.
 type GoalData struct {
-	Type string `yaml:"type"` // cursor_position, cursor_on_char, text_match, save_quit, mode_is, command_used
+	Type string `yaml:"type"` // cursor_position, cursor_on_char, text_match, save_quit, quit, mode_is, command_used
 	Row  int    `yaml:"row,omitempty"`
 	Col  int    `yaml:"col,omitempty"`
 	Char string `yaml:"char,omitempty"`

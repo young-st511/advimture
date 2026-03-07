@@ -112,7 +112,7 @@ func (m FTUEModel) View() string {
 
 	titleStyle := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#5B7FFF"))
 	mentorStyle := lipgloss.NewStyle().Foreground(ui.MentorColor).Italic(true)
-	dimStyle := ui.DimStyle
+	promptStyle := ui.PromptStyle
 	panicStyle := lipgloss.NewStyle().Foreground(ui.ErrorColor)
 
 	switch m.phase {
@@ -124,7 +124,7 @@ func (m FTUEModel) View() string {
 		b.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("#FFD700")).Render(
 			"팀장: \"이 서버에는 nano가 없어. vim으로 수정해줘.\""))
 		b.WriteString("\n\n")
-		b.WriteString(dimStyle.Render("Enter 키를 눌러 계속..."))
+		b.WriteString(promptStyle.Render("Enter 키를 눌러 계속..."))
 
 	case FTUESSHTyping:
 		b.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("#50C878")).Render(
@@ -134,7 +134,7 @@ func (m FTUEModel) View() string {
 		b.WriteString(lipgloss.NewStyle().Foreground(lipgloss.Color("#50C878")).Render(
 			"$ vim /etc/nginx/nginx.conf"))
 		b.WriteString("\n\n")
-		b.WriteString(dimStyle.Render("Enter 키를 눌러 계속..."))
+		b.WriteString(promptStyle.Render("Enter 키를 눌러 계속..."))
 
 	case FTUEVimPanic:
 		b.WriteString("~\n~\n~\n~\n")
@@ -144,7 +144,7 @@ func (m FTUEModel) View() string {
 		b.WriteString("마우스도 안 먹히고...\n\n")
 		b.WriteString(panicStyle.Render("😱 Vim에 갇혔다!"))
 		b.WriteString("\n\n")
-		b.WriteString(dimStyle.Render("Enter 키를 눌러 계속..."))
+		b.WriteString(promptStyle.Render("Enter 키를 눌러 계속..."))
 
 	case FTUEMentorAppear:
 		b.WriteString(mentorStyle.Render("???: \"이봐, 신입. 당황하지 마.\""))
@@ -155,7 +155,7 @@ func (m FTUEModel) View() string {
 		b.WriteString("\n")
 		b.WriteString(mentorStyle.Render("          :q! 를 입력하면 저장 없이 나갈 수 있어.\""))
 		b.WriteString("\n\n")
-		b.WriteString(dimStyle.Render("Enter 키를 눌러 직접 해보세요..."))
+		b.WriteString(promptStyle.Render("Enter 키를 눌러 직접 해보세요..."))
 
 	case FTUEQuitPrompt:
 		b.WriteString("~\n~\n~\n")
@@ -178,7 +178,7 @@ func (m FTUEModel) View() string {
 		b.WriteString("\n\n")
 		b.WriteString(mentorStyle.Render("Vi 선배: \"잘했어! 이제 본격적으로 Vim을 배워보자.\""))
 		b.WriteString("\n\n")
-		b.WriteString(dimStyle.Render("Enter 키를 눌러 튜토리얼을 시작하세요"))
+		b.WriteString(promptStyle.Render("Enter 키를 눌러 튜토리얼을 시작하세요"))
 	}
 
 	return b.String()

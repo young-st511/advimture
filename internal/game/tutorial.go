@@ -137,8 +137,16 @@ func (m TutorialModel) Update(msg tea.Msg) (TutorialModel, tea.Cmd) {
 						m.errorMsg = "아직 완료되지 않았어. 내용을 다시 확인해봐!"
 					}
 				} else {
-					// :q! — abort tutorial, return to menu
-					m.quitting = true
+					// :q! — complete "quit" goals, otherwise abort tutorial
+					m.checker.RecordQuit()
+					if sub.Goal.Type == "quit" && m.checkGoal() {
+						m.elapsedSecs = time.Since(m.startTime).Seconds()
+						m.state = StateComplete
+						m.errorMsg = ""
+						m.editor.ResetQuit()
+					} else {
+						m.quitting = true
+					}
 				}
 				return m, cmd
 			}
@@ -240,7 +248,7 @@ func (m TutorialModel) View() string {
 			b.WriteString("\n")
 			b.WriteString(sub.Instruction)
 			b.WriteString("\n\n")
-			b.WriteString(ui.DimStyle.Render("Enter 키를 눌러 시작하세요"))
+			b.WriteString(ui.PromptStyle.Render("Enter 키를 눌러 시작하세요"))
 		}
 
 	case StatePractice:
@@ -274,14 +282,14 @@ func (m TutorialModel) View() string {
 		b.WriteString(successStyle.Render("✓ 완료!"))
 		b.WriteString(fmt.Sprintf("  시간: %.1f초  키 입력: %d", m.elapsedSecs, m.keystrokes))
 		b.WriteString("\n\n")
-		b.WriteString(ui.DimStyle.Render("Enter 키를 눌러 다음으로 진행하세요"))
+		b.WriteString(ui.PromptStyle.Render("Enter 키를 눌러 다음으로 진행하세요"))
 
 	case StateAllDone:
 		b.WriteString("\n")
 		doneStyle := lipgloss.NewStyle().Foreground(ui.SuccessColor).Bold(true)
 		b.WriteString(doneStyle.Render("🎉 모든 단계를 완료했습니다!"))
 		b.WriteString("\n\n")
-		b.WriteString(ui.DimStyle.Render("Enter 키를 눌러 돌아가세요"))
+		b.WriteString(ui.PromptStyle.Render("Enter 키를 눌러 돌아가세요"))
 	}
 
 	return b.String()
