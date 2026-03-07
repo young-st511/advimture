@@ -426,6 +426,12 @@ func (m Model) Quitting() bool { return m.quitting }
 // SavedAndQuit returns true if the editor quit via :wq (save-and-quit), false for :q!
 func (m Model) SavedAndQuit() bool { return m.savedAndQuit }
 
+// ResetQuit clears the quitting state so the editor can continue to be used.
+func (m *Model) ResetQuit() {
+	m.quitting = false
+	m.savedAndQuit = false
+}
+
 // Getters for view rendering
 func (m Model) GetBuffer() *Buffer          { return m.buf }
 func (m Model) GetCursor() *Cursor          { return m.cursor }

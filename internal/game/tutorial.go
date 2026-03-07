@@ -37,6 +37,7 @@ type TutorialModel struct {
 	completed   bool
 	keystrokes  int
 	elapsedSecs float64
+	errorMsg    string // shown when :wq is attempted but goal not met
 }
 
 // NewTutorial creates a new tutorial model from tutorial data.
@@ -112,19 +113,41 @@ func (m TutorialModel) Update(msg tea.Msg) (TutorialModel, tea.Cmd) {
 
 			// Forward to editor
 			m.keystrokes++
+			prevMode := m.editor.GetMode()
 			var cmd tea.Cmd
 			m.editor, cmd = m.editor.Update(msg)
 
-			// Track save/quit for goal checking
-			if m.editor.Quitting() {
-				m.checker.RecordSaveQuit()
-				// Don't actually quit — check the goal
+			// Track esc from insert mode
+			if prevMode == editor.ModeInsert && m.editor.GetMode() == editor.ModeNormal {
+				m.checker.RecordCommand("esc_from_insert")
 			}
 
-			// Check goal
+			// Handle editor quit attempts
+			if m.editor.Quitting() {
+				if m.editor.SavedAndQuit() {
+					// :wq — check goal
+					m.checker.RecordSaveQuit()
+					if m.checkGoal() {
+						m.elapsedSecs = time.Since(m.startTime).Seconds()
+						m.state = StateComplete
+						m.errorMsg = ""
+					} else {
+						// Goal not met — block exit, reset editor quit state
+						m.editor.ResetQuit()
+						m.errorMsg = "아직 완료되지 않았어. 내용을 다시 확인해봐!"
+					}
+				} else {
+					// :q! — abort tutorial, return to menu
+					m.quitting = true
+				}
+				return m, cmd
+			}
+
+			// Check goal (for non-wq goals like cursor_position, command_used)
 			if m.checkGoal() {
 				m.elapsedSecs = time.Since(m.startTime).Seconds()
 				m.state = StateComplete
+				m.errorMsg = ""
 			}
 
 			return m, cmd
@@ -223,6 +246,13 @@ func (m TutorialModel) View() string {
 	case StatePractice:
 		// Editor view
 		b.WriteString(m.editor.View())
+
+		// Error message (goal not met on :wq)
+		if m.errorMsg != "" {
+			errStyle := lipgloss.NewStyle().Foreground(lipgloss.Color("#FF4444")).Bold(true)
+			b.WriteString("\n")
+			b.WriteString(errStyle.Render("✗ " + m.errorMsg))
+		}
 
 		// Hint area
 		if sub != nil && m.hintLevel > 0 && m.hintLevel <= len(sub.Hints) {
