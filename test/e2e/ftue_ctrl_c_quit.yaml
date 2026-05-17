@@ -1,0 +1,20 @@
+id: ftue_ctrl_c_quit
+command: ["go", "run", "."]
+timeout_ms: 6000
+terminal:
+  width: 100
+  height: 30
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "A D V I M T U R E"
+  - send: "ctrl+c"
+assert:
+  screen_contains:
+    - "A D V I M T U R E"
+  exit_code: 0
+  progress_file_exists: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
