@@ -23,14 +23,14 @@
 | 7 | VIM-008 | TUI Adapter | completed | Bubble Tea input/output과 runtime 연결 |
 | 8 | VIM-009 | Progress Adapter | completed | runtime 결과를 로컬 저장 포맷으로 변환 |
 | 9 | VIM-010 | Neovim Oracle Runner | completed | `exact` tier command를 Neovim 결과와 비교 |
-| 10 | VIM-011 | Legacy Archive Pass | planned | 기존 `internal/editor/game/app/ui/data` 유지/격리 결정 |
+| 10 | VIM-011 | Legacy Archive Pass | completed | 기존 `internal/editor/game/app/ui/data` 유지/격리 결정 |
 
 ## 다음 루프 후보
 
 현재 진행 중: 없음
 
-다음 후보는 VIM-004 결과에 따라 결정한다.
+다음 후보는 새 엔진 모듈 완료 상태에 따라 결정한다.
 
-- oracle runner 계약이 생겼으므로 VIM-011 Legacy Archive Pass
-- 목표 판정/성공 기준이 부족하면 VIM-006 Grader / Scoring Engine을 먼저 당긴다.
-- runtime을 TUI에 붙여야만 결함이 보이면 E2E assertion을 먼저 보강한다.
+- 실제 Bubble Tea app wiring을 시작하려면 먼저 E2E assertion을 보강한다.
+- 첫 playable slice는 `content -> scenario -> tuiadapter -> progressadapter`를 실제 app에 연결한다.
+- 새 Vim command를 늘릴 때는 `command catalog -> vimengine -> oracle comparison` 순서로 진행한다.

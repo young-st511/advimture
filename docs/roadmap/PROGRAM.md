@@ -73,6 +73,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-010-neovim-oracle-runner.md`
 - 완료일: 2026-05-18
 
+### VIM-011. Legacy archive pass
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-011-legacy-archive-pass.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |
