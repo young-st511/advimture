@@ -14,7 +14,10 @@ assert:
     - "A D V I M T U R E"
   exit_code: 0
   progress_file_exists: false
+  key_trace:
+    - "ctrl+c"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
   save_key_trace: true
+  save_summary: true

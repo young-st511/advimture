@@ -28,6 +28,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/e2e-runner-bootstrap.md`
 - 완료일: 2026-05-18
 
+### E2E-002. E2E runner assertion hardening
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-002-runner-assertion-hardening.md`
+- 완료일: 2026-05-18
+
 ### VIM-002. Vim engine foundation
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/vim-002-vimengine-foundation.md`
@@ -85,6 +90,6 @@ Phase: Vim Learning Foundation
 | B-001 | 첫 command cluster 승인 | P0 |
 | B-002 | 첫 exercise set 승인 | P0 |
 | B-003 | 첫 scenario skin 승인 | P1 |
-| B-004 | Vim 학습 문항용 E2E schema 확장 | P1 |
+| B-004 | app state summary 기반 buffer/cursor/mode E2E assertion | P0 |
 | B-005 | 기존 구현에서 유지할 모듈/버릴 모듈 분류 | P1 |
 | B-006 | Neovim oracle test runner 설계 | P1 |

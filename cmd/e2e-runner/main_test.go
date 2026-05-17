@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
@@ -31,4 +34,99 @@ func TestCleanTerminal(t *testing.T) {
 	if strings.Contains(clean, "\x1b") {
 		t.Fatalf("cleaned output still contains escape sequence: %q", clean)
 	}
+}
+
+func TestAssertScenarioChecksKeyTrace(t *testing.T) {
+	sc := scenario{
+		Assert: assertionConfig{
+			KeyTrace: []string{"l", "l"},
+		},
+	}
+	result := runResult{
+		trace: []string{"l", "h"},
+	}
+
+	err := assertScenario(sc, result)
+	if err == nil || !strings.Contains(err.Error(), "key trace") {
+		t.Fatalf("assertScenario error = %v, want key trace error", err)
+	}
+}
+
+func TestAssertScenarioChecksProgressFileContains(t *testing.T) {
+	home := t.TempDir()
+	progressDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(progressDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(progressDir, "progress.json"), []byte(`{"mission":"m01"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	sc := scenario{
+		Assert: assertionConfig{
+			ProgressFileContains: []string{`"mission":"m01"`},
+		},
+	}
+	result := runResult{homeDir: home}
+
+	if err := assertScenario(sc, result); err != nil {
+		t.Fatalf("assertScenario returned error: %v", err)
+	}
+}
+
+func TestSetupHomeRejectsRealHomeByDefault(t *testing.T) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, cleanup, err := setupHome(scenario{
+		Setup: setupConfig{
+			Home: home,
+		},
+	})
+	defer cleanup()
+
+	if err == nil || !strings.Contains(err.Error(), "unsafe home") {
+		t.Fatalf("setupHome error = %v, want unsafe home error", err)
+	}
+}
+
+func TestWriteEvidenceWritesSummary(t *testing.T) {
+	root := t.TempDir()
+	runErr := assertError("screen mismatch")
+	result := runResult{
+		clean:    "screen",
+		exitCode: 1,
+		homeDir:  t.TempDir(),
+		trace:    []string{"ctrl+c"},
+	}
+
+	if err := writeEvidence(root, scenario{ID: "summary"}, result, runErr); err != nil {
+		t.Fatalf("writeEvidence returned error: %v", err)
+	}
+
+	raw, err := os.ReadFile(filepath.Join(root, "summary", "summary.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var summary summaryEvidence
+	if err := json.Unmarshal(raw, &summary); err != nil {
+		t.Fatal(err)
+	}
+	if summary.Passed {
+		t.Fatal("summary.Passed = true, want false")
+	}
+	if summary.Error != "screen mismatch" {
+		t.Fatalf("summary.Error = %q, want screen mismatch", summary.Error)
+	}
+	if summary.ExitCode != 1 {
+		t.Fatalf("summary.ExitCode = %d, want 1", summary.ExitCode)
+	}
+}
+
+type assertError string
+
+func (e assertError) Error() string {
+	return string(e)
 }

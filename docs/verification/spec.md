@@ -23,8 +23,9 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - smoke 실행 명령은 `go run ./cmd/e2e-runner --scenario test/e2e/ftue_ctrl_c_quit.yaml` 또는 `make e2e-smoke`이다.
 - runner는 scenario YAML의 `setup.home: temp`일 때 테스트 전용 HOME을 만들고 앱을 실행한다.
 - runner는 pseudo terminal로 앱을 실행하기 위해 `github.com/creack/pty`를 사용한다.
-- runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence를 검증한다.
-- runner는 raw ANSI log, cleaned final screen, key trace를 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
+- runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence/content, key trace exact match를 검증한다.
+- runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
+- runner는 `summary.json`, raw ANSI log, cleaned final screen, key trace를 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `ftue_ctrl_c_quit` smoke scenario는 FTUE 첫 화면이 보이는지 확인한 뒤 `ctrl+c`로 종료하고 exit code 0과 progress 파일 미생성을 검증한다.
 
 ## 미확인 사항
@@ -32,6 +33,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - [ ] Bubble Tea model-level integration test와 pty-level E2E의 경계를 정해야 한다.
 - [ ] full E2E를 CI에 포함할지, 로컬/Agent 전용으로 둘지 결정해야 한다.
 - [ ] ANSI strip 기반 text assertion에서 정교한 terminal screen parser로 승격할 시점을 결정해야 한다.
+- [ ] 첫 playable slice에서 app state summary 기반 buffer/cursor/mode assertion을 추가해야 한다.
 
 ---
 

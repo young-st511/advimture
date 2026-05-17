@@ -12,8 +12,8 @@ E2E scenario
   ├─ launch: go run . 또는 빌드된 advimture binary
   ├─ drive: 키 입력 trace 전송
   ├─ observe: ANSI screen buffer 수집
-  ├─ assert: 화면 텍스트 + 종료 코드 + progress 파일 확인
-  └─ evidence: raw log, cleaned screen, trace 저장
+  ├─ assert: 화면 텍스트 + 종료 코드 + key trace + progress 파일 확인
+  └─ evidence: summary JSON, raw log, cleaned screen, trace 저장
 ```
 
 ## Agent Loop
@@ -32,7 +32,7 @@ E2E scenario
 | Browser page | pseudo terminal |
 | DOM selector | screen text / cursor / ANSI buffer |
 | click/type | key trace |
-| screenshot | cleaned screen snapshot |
+| screenshot | cleaned screen snapshot / summary JSON |
 | localStorage/cookies | temporary progress file |
 | network wait | prompt/state text wait |
 
@@ -78,11 +78,40 @@ assert:
     - "Tutorial"
   progress:
     file_exists: true
+  key_trace:
+    - "esc"
+    - ":"
+    - "q"
+    - "!"
+    - "enter"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
   save_key_trace: true
+  save_summary: true
 ```
+
+## 현재 Assertion
+
+- `screen_contains`: cleaned terminal text 포함 여부
+- `exit_code`: process exit code
+- `progress_file_exists`: test HOME의 `.advimture/progress.json` 존재 여부
+- `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
+- `key_trace`: runner가 실제 전송한 key trace와 기대 trace의 exact match
+
+## 현재 Evidence
+
+- `summary.json`: pass/fail, error, exit code, HOME, key trace, screen byte 수, progress file 존재 여부
+- `raw.log`: raw ANSI stream
+- `screen.txt`: cleaned terminal text
+- `key_trace.txt`: 전송한 key trace
+
+## Safety Guard
+
+- `setup.home: temp`가 기본 권장값이다.
+- 실제 사용자 HOME은 기본적으로 거부한다.
+- 기존 progress file이 보이는 HOME도 기본적으로 거부한다.
+- 예외가 꼭 필요할 때만 `setup.allow_unsafe_home: true`를 명시한다.
 
 ## Flake 정책
 
@@ -95,5 +124,9 @@ evidence:
 - [x] pty 의존성 추가 여부: `github.com/creack/pty` 사용
 - [x] scenario 파일 위치: `test/e2e/`
 - [x] smoke 실행 명령: `make e2e-smoke`
+- [x] summary JSON evidence
+- [x] key trace assertion
+- [x] unsafe HOME guard
+- [ ] app state summary 기반 buffer/cursor/mode assertion
 - [ ] `go test ./...` 안에 포함할 smoke 범위
 - [ ] full E2E를 로컬 전용으로 둘지 CI까지 올릴지 여부

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -36,7 +37,8 @@ type terminalConfig struct {
 }
 
 type setupConfig struct {
-	Home string `yaml:"home"`
+	Home            string `yaml:"home"`
+	AllowUnsafeHome bool   `yaml:"allow_unsafe_home"`
 }
 
 type step struct {
@@ -46,15 +48,18 @@ type step struct {
 }
 
 type assertionConfig struct {
-	ScreenContains     []string `yaml:"screen_contains"`
-	ExitCode           *int     `yaml:"exit_code"`
-	ProgressFileExists *bool    `yaml:"progress_file_exists"`
+	ScreenContains       []string `yaml:"screen_contains"`
+	ExitCode             *int     `yaml:"exit_code"`
+	ProgressFileExists   *bool    `yaml:"progress_file_exists"`
+	ProgressFileContains []string `yaml:"progress_file_contains"`
+	KeyTrace             []string `yaml:"key_trace"`
 }
 
 type evidenceConfig struct {
 	SaveRawANSI     bool `yaml:"save_raw_ansi"`
 	SaveCleanScreen bool `yaml:"save_clean_screen"`
 	SaveKeyTrace    bool `yaml:"save_key_trace"`
+	SaveSummary     bool `yaml:"save_summary"`
 }
 
 type runResult struct {
@@ -63,6 +68,17 @@ type runResult struct {
 	exitCode int
 	homeDir  string
 	trace    []string
+}
+
+type summaryEvidence struct {
+	ScenarioID         string   `json:"scenario_id"`
+	Passed             bool     `json:"passed"`
+	Error              string   `json:"error,omitempty"`
+	ExitCode           int      `json:"exit_code"`
+	HomeDir            string   `json:"home_dir"`
+	KeyTrace           []string `json:"key_trace"`
+	ScreenBytes        int      `json:"screen_bytes"`
+	ProgressFileExists bool     `json:"progress_file_exists"`
 }
 
 func main() {
@@ -82,7 +98,7 @@ func main() {
 	}
 
 	result, err := runScenario(sc)
-	if writeErr := writeEvidence(*artifactRoot, sc, result); writeErr != nil {
+	if writeErr := writeEvidence(*artifactRoot, sc, result, err); writeErr != nil {
 		fmt.Fprintf(os.Stderr, "evidence write failed: %v\n", writeErr)
 		if err == nil {
 			err = writeErr
@@ -120,6 +136,9 @@ func loadScenario(path string) (scenario, error) {
 	}
 	if sc.Terminal.Height == 0 {
 		sc.Terminal.Height = 30
+	}
+	if !sc.Evidence.SaveRawANSI && !sc.Evidence.SaveCleanScreen && !sc.Evidence.SaveKeyTrace && !sc.Evidence.SaveSummary {
+		sc.Evidence.SaveSummary = true
 	}
 	return sc, nil
 }
@@ -215,7 +234,34 @@ func setupHome(sc scenario) (string, func(), error) {
 	if err != nil {
 		return "", func() {}, err
 	}
+	if err := guardHome(abs, sc.Setup.AllowUnsafeHome); err != nil {
+		return "", func() {}, err
+	}
 	return abs, func() {}, nil
+}
+
+func guardHome(path string, allowUnsafe bool) error {
+	if allowUnsafe {
+		return nil
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return err
+	}
+	absHome, err := filepath.Abs(home)
+	if err != nil {
+		return err
+	}
+	cleanPath := filepath.Clean(path)
+	cleanHome := filepath.Clean(absHome)
+	if cleanPath == cleanHome {
+		return fmt.Errorf("unsafe home %q: use setup.home: temp or set allow_unsafe_home explicitly", path)
+	}
+	progressPath := filepath.Join(cleanPath, ".advimture", "progress.json")
+	if _, err := os.Stat(progressPath); err == nil {
+		return fmt.Errorf("unsafe home %q: existing progress file would be visible to E2E", path)
+	}
+	return nil
 }
 
 func waitForScreen(mu *sync.Mutex, raw *bytes.Buffer, want string, deadline time.Time) error {
@@ -262,6 +308,22 @@ func assertScenario(sc scenario, result runResult) error {
 			return fmt.Errorf("progress file exists: got %v, want %v", exists, *sc.Assert.ProgressFileExists)
 		}
 	}
+	if len(sc.Assert.ProgressFileContains) > 0 {
+		progressPath := filepath.Join(result.homeDir, ".advimture", "progress.json")
+		raw, err := os.ReadFile(progressPath)
+		if err != nil {
+			return fmt.Errorf("progress file read failed: %w", err)
+		}
+		text := string(raw)
+		for _, want := range sc.Assert.ProgressFileContains {
+			if !strings.Contains(text, want) {
+				return fmt.Errorf("progress file does not contain %q", want)
+			}
+		}
+	}
+	if len(sc.Assert.KeyTrace) > 0 && !sameStrings(result.trace, sc.Assert.KeyTrace) {
+		return fmt.Errorf("key trace: got %v, want %v", result.trace, sc.Assert.KeyTrace)
+	}
 	return nil
 }
 
@@ -278,7 +340,7 @@ func collectResult(mu *sync.Mutex, raw *bytes.Buffer, homeDir string, trace []st
 	}
 }
 
-func writeEvidence(root string, sc scenario, result runResult) error {
+func writeEvidence(root string, sc scenario, result runResult, runErr error) error {
 	if root == "" || sc.ID == "" {
 		return nil
 	}
@@ -301,7 +363,39 @@ func writeEvidence(root string, sc scenario, result runResult) error {
 			return err
 		}
 	}
+	summary := buildSummary(sc, result, runErr)
+	raw, err := json.MarshalIndent(summary, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err := os.WriteFile(filepath.Join(dir, "summary.json"), raw, 0o644); err != nil {
+		return err
+	}
 	return nil
+}
+
+func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
+	summary := summaryEvidence{
+		ScenarioID:         sc.ID,
+		Passed:             runErr == nil,
+		ExitCode:           result.exitCode,
+		HomeDir:            result.homeDir,
+		KeyTrace:           append([]string(nil), result.trace...),
+		ScreenBytes:        len(result.clean),
+		ProgressFileExists: progressFileExists(result.homeDir),
+	}
+	if runErr != nil {
+		summary.Error = runErr.Error()
+	}
+	return summary
+}
+
+func progressFileExists(homeDir string) bool {
+	if homeDir == "" {
+		return false
+	}
+	_, err := os.Stat(filepath.Join(homeDir, ".advimture", "progress.json"))
+	return err == nil
 }
 
 func keyBytes(key string) string {
@@ -377,6 +471,18 @@ func respondTerminalQueries(w io.Writer, p []byte) {
 	if bytes.Contains(p, []byte("\x1b]11;?\x1b\\")) || bytes.Contains(p, []byte("\x1b]11;?\x07")) {
 		_, _ = w.Write([]byte("\x1b]11;rgb:0000/0000/0000\x1b\\"))
 	}
+}
+
+func sameStrings(left []string, right []string) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for index := range left {
+		if left[index] != right[index] {
+			return false
+		}
+	}
+	return true
 }
 
 type writerFunc func([]byte) (int, error)
