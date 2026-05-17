@@ -43,6 +43,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-004-exercise-runtime-foundation.md`
 - 완료일: 2026-05-18
 
+### VIM-005. Content schema foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-005-content-schema-foundation.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |
