@@ -53,6 +53,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-006-grader-scoring-engine.md`
 - 완료일: 2026-05-18
 
+### VIM-007. Scenario runtime
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-007-scenario-runtime.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |
