@@ -63,6 +63,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-008-tui-adapter.md`
 - 완료일: 2026-05-18
 
+### VIM-009. Progress adapter
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-009-progress-adapter.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |

@@ -21,7 +21,7 @@
 | 5 | VIM-006 | Grader / Scoring Engine | completed | 정답, 최적 키 대비 평가, 실수/힌트 평가 |
 | 6 | VIM-007 | Scenario Runtime | completed | 검증된 exercise를 어드벤처 사건으로 감싸기 |
 | 7 | VIM-008 | TUI Adapter | completed | Bubble Tea input/output과 runtime 연결 |
-| 8 | VIM-009 | Progress Adapter | planned | runtime 결과를 로컬 저장 포맷으로 변환 |
+| 8 | VIM-009 | Progress Adapter | completed | runtime 결과를 로컬 저장 포맷으로 변환 |
 | 9 | VIM-010 | Neovim Oracle Runner | planned | `exact` tier command를 Neovim 결과와 비교 |
 | 10 | VIM-011 | Legacy Archive Pass | planned | 기존 `internal/editor/game/app/ui/data` 유지/격리 결정 |
 
@@ -31,6 +31,6 @@
 
 다음 후보는 VIM-004 결과에 따라 결정한다.
 
-- adapter 계약이 생겼으므로 VIM-009 Progress Adapter
+- progress adapter가 생겼으므로 VIM-010 Neovim Oracle Runner
 - 목표 판정/성공 기준이 부족하면 VIM-006 Grader / Scoring Engine을 먼저 당긴다.
 - runtime을 TUI에 붙여야만 결함이 보이면 E2E assertion을 먼저 보강한다.
