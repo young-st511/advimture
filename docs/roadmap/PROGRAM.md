@@ -38,6 +38,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-003-vimengine-contract-hardening.md`
 - 완료일: 2026-05-18
 
+### VIM-004. Exercise runtime foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-004-exercise-runtime-foundation.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |
