@@ -58,6 +58,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-007-scenario-runtime.md`
 - 완료일: 2026-05-18
 
+### VIM-008. TUI adapter
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-008-tui-adapter.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |
