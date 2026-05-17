@@ -48,6 +48,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/vim-005-content-schema-foundation.md`
 - 완료일: 2026-05-18
 
+### VIM-006. Grader / scoring engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-006-grader-scoring-engine.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |

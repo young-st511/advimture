@@ -18,7 +18,7 @@
 | 2 | VIM-003 | Vim Engine Contract Hardening | completed | 상태 주입, key trace replay, copy/normalize 경계 |
 | 3 | VIM-004 | Exercise Runtime Foundation | completed | 문항 세션, 목표 판정, key trace, retry, hint |
 | 4 | VIM-005 | Content Schema Foundation | completed | command/exercise/scenario 데이터를 runtime spec으로 변환 |
-| 5 | VIM-006 | Grader / Scoring Engine | planned | 정답, 최적 키 대비 평가, 실수/힌트 평가 |
+| 5 | VIM-006 | Grader / Scoring Engine | completed | 정답, 최적 키 대비 평가, 실수/힌트 평가 |
 | 6 | VIM-007 | Scenario Runtime | planned | 검증된 exercise를 어드벤처 사건으로 감싸기 |
 | 7 | VIM-008 | TUI Adapter | planned | Bubble Tea input/output과 runtime 연결 |
 | 8 | VIM-009 | Progress Adapter | planned | runtime 결과를 로컬 저장 포맷으로 변환 |
@@ -31,6 +31,6 @@
 
 다음 후보는 VIM-004 결과에 따라 결정한다.
 
-- content schema가 runtime exercise로 compile되므로 VIM-006 Grader / Scoring Engine
+- scoring 결과가 생겼으므로 VIM-007 Scenario Runtime
 - 목표 판정/성공 기준이 부족하면 VIM-006 Grader / Scoring Engine을 먼저 당긴다.
 - runtime을 TUI에 붙여야만 결함이 보이면 E2E assertion을 먼저 보강한다.
