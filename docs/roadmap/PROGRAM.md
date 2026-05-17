@@ -16,12 +16,6 @@ Phase: Vim Learning Foundation
 - 목표: 첫 5분 플레이 루프에 들어갈 command cluster 후보를 선정하고, `docs/gameplay/command-catalog.md`의 draft 항목을 승인 가능한 수준으로 다듬는다.
 - 범위: command catalog 중심. exercise/scenario는 필요한 최소 초안만 다룬다.
 
-### VIM-002. Vim engine foundation
-- 상태: active
-- ExecPlan: `docs/exec-plans/active/vim-002-vimengine-foundation.md`
-- 목표: 새 플랫폼이 의존할 순수 Vim engine의 첫 상태 전이 루프를 만든다.
-- 범위: `internal/vimengine`의 Normal mode `h/j/k/l` 이동. 기존 `internal/editor` 교체와 TUI 연결은 제외한다.
-
 ## 완료된 초기 세팅
 
 ### P0-001. Harness docs bootstrap
@@ -32,6 +26,16 @@ Phase: Vim Learning Foundation
 ### E2E-001. TUI E2E runner bootstrap
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/e2e-runner-bootstrap.md`
+- 완료일: 2026-05-18
+
+### VIM-002. Vim engine foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-002-vimengine-foundation.md`
+- 완료일: 2026-05-18
+
+### VIM-003. Vim engine contract hardening
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-003-vimengine-contract-hardening.md`
 - 완료일: 2026-05-18
 
 ## Backlog

@@ -2,7 +2,7 @@
 
 Slice-ID: VIM-002
 Created: 2026-05-18
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md

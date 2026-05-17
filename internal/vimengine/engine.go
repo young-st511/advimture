@@ -10,6 +10,14 @@ const (
 	ModeCommand Mode = "command"
 )
 
+const (
+	KeyEsc = "esc"
+	KeyH   = "h"
+	KeyJ   = "j"
+	KeyK   = "k"
+	KeyL   = "l"
+)
+
 type Cursor struct {
 	Row        int
 	Col        int
@@ -50,6 +58,10 @@ func New(lines []string) *Engine {
 	return &Engine{state: NewState(lines)}
 }
 
+func NewWithState(state State) *Engine {
+	return &Engine{state: normalizeState(state)}
+}
+
 func NewState(lines []string) State {
 	state := State{
 		Mode:  ModeNormal,
@@ -71,10 +83,32 @@ func (e *Engine) Apply(key string) Result {
 	return result
 }
 
+func (e *Engine) ApplyKeys(keys []string) Result {
+	result := ApplyKeys(e.state, keys)
+	e.state = result.State
+	return result
+}
+
+func ApplyKeys(state State, keys []string) Result {
+	next := normalizeState(state)
+	events := make([]Event, 0, len(keys))
+
+	for _, key := range keys {
+		result := Apply(next, key)
+		next = result.State
+		events = append(events, result.Events...)
+	}
+
+	return Result{
+		State:  copyState(next),
+		Events: events,
+	}
+}
+
 func Apply(state State, key string) Result {
 	next := normalizeState(state)
 
-	if key == "esc" {
+	if key == KeyEsc {
 		next.Mode = ModeNormal
 		return Result{
 			State: copyState(next),
@@ -97,13 +131,13 @@ func Apply(state State, key string) Result {
 	}
 
 	switch key {
-	case "h":
+	case KeyH:
 		return moveHorizontal(next, key, -1)
-	case "l":
+	case KeyL:
 		return moveHorizontal(next, key, 1)
-	case "j":
+	case KeyJ:
 		return moveVertical(next, key, 1)
-	case "k":
+	case KeyK:
 		return moveVertical(next, key, -1)
 	default:
 		return Result{
@@ -184,7 +218,10 @@ func normalizeState(state State) State {
 	}
 	next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
 	if next.Cursor.DesiredCol < 0 {
-		next.Cursor.DesiredCol = 0
+		next.Cursor.DesiredCol = next.Cursor.Col
+	}
+	if next.Cursor.DesiredCol < next.Cursor.Col {
+		next.Cursor.DesiredCol = next.Cursor.Col
 	}
 	return next
 }
