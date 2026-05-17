@@ -38,6 +38,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/e2e-003-app-state-summary-assertion.md`
 - 완료일: 2026-05-18
 
+### PLAY-001. First playable vertical slice
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/play-001-first-playable-slice.md`
+- 완료일: 2026-05-18
+
 ### VIM-002. Vim engine foundation
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/vim-002-vimengine-foundation.md`

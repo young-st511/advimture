@@ -7,7 +7,7 @@
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
 | 1 | E2E-003 | completed | app state summary 기반 buffer/cursor/mode/status/score/progress assertion |
-| 2 | PLAY-001 | planned | 첫 playable vertical slice: `hjkl` 목표 이동, 성공, 점수, progress 반영 |
+| 2 | PLAY-001 | completed | 첫 playable vertical slice: `hjkl` 목표 이동, 성공, 점수, progress 반영 |
 | 3 | LEGACY-001 | planned | 새 playable path가 canonical이 된 뒤 기존 editor/game 격리 |
 | 4 | CONTENT-001 | planned | 새 content schema용 YAML/JSON loader |
 | 5 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
@@ -22,4 +22,4 @@
 
 ## 현재 판단
 
-다음 작업은 **PLAY-001 첫 playable vertical slice**다. 이 루프에서는 앱이 `ADVIMTURE_E2E=1`일 때 state summary를 쓰고, E2E runner가 그 파일로 성공 상태를 검증한다.
+다음 작업은 **LEGACY-001 기존 editor/game 격리**다. 새 playable path가 E2E로 검증됐으므로, import graph를 확인한 뒤 기존 구현을 바로 제거할지, compatibility 기간을 둘지 결정한다.

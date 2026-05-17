@@ -1,10 +1,14 @@
 package app
 
 import (
+	"os"
+
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/young-st511/advimture/internal/data"
+	"github.com/young-st511/advimture/internal/e2estate"
 	"github.com/young-st511/advimture/internal/editor"
 	"github.com/young-st511/advimture/internal/game"
+	"github.com/young-st511/advimture/internal/playable"
 	"github.com/young-st511/advimture/internal/progress"
 	"github.com/young-st511/advimture/internal/ui"
 )
@@ -13,12 +17,13 @@ import (
 type Screen int
 
 const (
-	ScreenMenu        Screen = iota
+	ScreenMenu Screen = iota
 	ScreenEditor
 	ScreenFTUE
 	ScreenTutorial
 	ScreenMissionList
 	ScreenMission
+	ScreenPlayable
 )
 
 // Model is the top-level Bubbletea model that manages screen transitions.
@@ -30,6 +35,7 @@ type Model struct {
 	tutorial    game.TutorialModel
 	missionList ui.MissionListModel
 	mission     game.MissionModel
+	playable    playable.Model
 	progress    *progress.Progress
 	width       int
 	height      int
@@ -41,6 +47,16 @@ func New() Model {
 
 	m := Model{
 		progress: p,
+	}
+
+	if os.Getenv("ADVIMTURE_PLAYABLE_SLICE") == "1" {
+		m.screen = ScreenPlayable
+		m.playable = playable.New(playable.Options{
+			Progress:     p,
+			SaveProgress: progress.Save,
+			E2EStatePath: e2eStatePath(),
+		})
+		return m
 	}
 
 	// First run: show FTUE
@@ -79,9 +95,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m.updateMissionList(msg)
 	case ScreenMission:
 		return m.updateMission(msg)
+	case ScreenPlayable:
+		return m.updatePlayable(msg)
 	}
 
 	return m, nil
+}
+
+func (m Model) updatePlayable(msg tea.Msg) (tea.Model, tea.Cmd) {
+	updated, cmd := m.playable.Update(msg)
+	if next, ok := updated.(playable.Model); ok {
+		m.playable = next
+	}
+	return m, cmd
 }
 
 func (m Model) updateMenu(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -233,6 +259,19 @@ func (m Model) View() string {
 		return m.missionList.View()
 	case ScreenMission:
 		return m.mission.View()
+	case ScreenPlayable:
+		return m.playable.View()
 	}
 	return ""
+}
+
+func e2eStatePath() string {
+	if os.Getenv("ADVIMTURE_E2E") != "1" {
+		return ""
+	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return ""
+	}
+	return e2estate.DefaultPath(home)
 }

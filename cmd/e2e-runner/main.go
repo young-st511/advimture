@@ -115,11 +115,13 @@ type evidenceConfig struct {
 }
 
 type runResult struct {
-	raw      []byte
-	clean    string
-	exitCode int
-	homeDir  string
-	trace    []string
+	raw                []byte
+	clean              string
+	exitCode           int
+	homeDir            string
+	trace              []string
+	progressFileExists bool
+	appStateExists     bool
 }
 
 type summaryEvidence struct {
@@ -242,7 +244,7 @@ func runScenario(sc scenario) (runResult, error) {
 		if st.WaitScreenContains != "" {
 			if err := waitForScreen(&mu, &raw, st.WaitScreenContains, deadline); err != nil {
 				terminate(cmd)
-				return collectResult(&mu, &raw, homeDir, trace, exitCode(cmd)), err
+				return collectResult(sc, &mu, &raw, homeDir, trace, exitCode(cmd)), err
 			}
 		}
 		if st.WaitMs > 0 {
@@ -252,7 +254,7 @@ func runScenario(sc scenario) (runResult, error) {
 			trace = append(trace, st.Send)
 			if _, err := ptmx.Write([]byte(keyBytes(st.Send))); err != nil {
 				terminate(cmd)
-				return collectResult(&mu, &raw, homeDir, trace, exitCode(cmd)), err
+				return collectResult(sc, &mu, &raw, homeDir, trace, exitCode(cmd)), err
 			}
 		}
 	}
@@ -260,7 +262,7 @@ func runScenario(sc scenario) (runResult, error) {
 	waitErr := waitWithTimeout(cmd, time.Until(deadline))
 	if waitErr != nil && sc.Assert.ExitCode != nil {
 		terminate(cmd)
-		return collectResult(&mu, &raw, homeDir, trace, exitCode(cmd)), waitErr
+		return collectResult(sc, &mu, &raw, homeDir, trace, exitCode(cmd)), waitErr
 	}
 	if waitErr != nil {
 		terminate(cmd)
@@ -269,7 +271,7 @@ func runScenario(sc scenario) (runResult, error) {
 	_ = ptmx.Close()
 	<-doneReading
 
-	result := collectResult(&mu, &raw, homeDir, trace, exitCode(cmd))
+	result := collectResult(sc, &mu, &raw, homeDir, trace, exitCode(cmd))
 	if err := assertScenario(sc, result); err != nil {
 		return result, err
 	}
@@ -390,16 +392,18 @@ func assertScenario(sc scenario, result runResult) error {
 	return nil
 }
 
-func collectResult(mu *sync.Mutex, raw *bytes.Buffer, homeDir string, trace []string, code int) runResult {
+func collectResult(sc scenario, mu *sync.Mutex, raw *bytes.Buffer, homeDir string, trace []string, code int) runResult {
 	mu.Lock()
 	defer mu.Unlock()
 	rawBytes := append([]byte(nil), raw.Bytes()...)
 	return runResult{
-		raw:      rawBytes,
-		clean:    cleanTerminal(rawBytes),
-		exitCode: code,
-		homeDir:  homeDir,
-		trace:    trace,
+		raw:                rawBytes,
+		clean:              cleanTerminal(rawBytes),
+		exitCode:           code,
+		homeDir:            homeDir,
+		trace:              trace,
+		progressFileExists: progressFileExists(homeDir),
+		appStateExists:     appStateExists(homeDir, sc.Assert.AppState.Path),
 	}
 }
 
@@ -445,9 +449,9 @@ func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
 		HomeDir:            result.homeDir,
 		KeyTrace:           append([]string(nil), result.trace...),
 		ScreenBytes:        len(result.clean),
-		ProgressFileExists: progressFileExists(result.homeDir),
+		ProgressFileExists: result.progressFileExists || progressFileExists(result.homeDir),
 		AppStatePath:       appStatePath(result.homeDir, sc.Assert.AppState.Path),
-		AppStateExists:     appStateExists(result.homeDir, sc.Assert.AppState.Path),
+		AppStateExists:     result.appStateExists || appStateExists(result.homeDir, sc.Assert.AppState.Path),
 	}
 	if runErr != nil {
 		summary.Error = runErr.Error()
