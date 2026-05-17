@@ -96,12 +96,34 @@ evidence:
 - `screen_contains`: cleaned terminal text 포함 여부
 - `exit_code`: process exit code
 - `progress_file_exists`: test HOME의 `.advimture/progress.json` 존재 여부
-- `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
 - `key_trace`: runner가 실제 전송한 key trace와 기대 trace의 exact match
+- `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
+- `app_state`: test HOME 내부 app state summary JSON 검증
+
+### `assert.app_state`
+
+기본 파일 위치는 test HOME 기준 `.advimture/e2e_state.json`이다. 실제 앱은 첫 playable slice부터 `ADVIMTURE_E2E=1`일 때 이 파일을 쓸 수 있다.
+
+```yaml
+assert:
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 2
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "mission-1"
+      completed: true
+```
 
 ## 현재 Evidence
 
-- `summary.json`: pass/fail, error, exit code, HOME, key trace, screen byte 수, progress file 존재 여부
+- `summary.json`: pass/fail, error, exit code, HOME, key trace, screen byte 수, progress file/app state 존재 여부
 - `raw.log`: raw ANSI stream
 - `screen.txt`: cleaned terminal text
 - `key_trace.txt`: 전송한 key trace
@@ -127,6 +149,6 @@ evidence:
 - [x] summary JSON evidence
 - [x] key trace assertion
 - [x] unsafe HOME guard
-- [ ] app state summary 기반 buffer/cursor/mode assertion
+- [x] app state summary 기반 buffer/cursor/mode/status/score/progress assertion
 - [ ] `go test ./...` 안에 포함할 smoke 범위
 - [ ] full E2E를 로컬 전용으로 둘지 CI까지 올릴지 여부

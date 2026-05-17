@@ -74,6 +74,96 @@ func TestAssertScenarioChecksProgressFileContains(t *testing.T) {
 	}
 }
 
+func TestAssertScenarioChecksAppStateSummary(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	statePath := filepath.Join(stateDir, "e2e_state.json")
+	raw := []byte(`{
+		"buffer": ["abc"],
+		"cursor": {"row": 0, "col": 2},
+		"mode": "normal",
+		"status": "succeeded",
+		"score": {"grade": "S", "passed": true},
+		"progress": {"mission_id": "mission-1", "completed": true}
+	}`)
+	if err := os.WriteFile(statePath, raw, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	row := 0
+	col := 2
+	passed := true
+	completed := true
+	sc := scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Buffer: []string{"abc"},
+				Cursor: &cursorAssertion{
+					Row: &row,
+					Col: &col,
+				},
+				Mode:   "normal",
+				Status: "succeeded",
+				Score: &scoreAssertion{
+					Grade:  "S",
+					Passed: &passed,
+				},
+				Progress: &progressAssertion{
+					MissionID: "mission-1",
+					Completed: &completed,
+				},
+			},
+		},
+	}
+	result := runResult{homeDir: home}
+
+	if err := assertScenario(sc, result); err != nil {
+		t.Fatalf("assertScenario returned error: %v", err)
+	}
+}
+
+func TestAssertScenarioFailsWhenAppStateMissing(t *testing.T) {
+	sc := scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Mode: "normal",
+			},
+		},
+	}
+
+	err := assertScenario(sc, runResult{homeDir: t.TempDir()})
+	if err == nil || !strings.Contains(err.Error(), "app state") {
+		t.Fatalf("assertScenario error = %v, want app state error", err)
+	}
+}
+
+func TestAssertScenarioReportsAppStateMismatch(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(stateDir, "e2e_state.json"), []byte(`{"mode":"insert"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	sc := scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Mode: "normal",
+			},
+		},
+	}
+
+	err := assertScenario(sc, runResult{homeDir: home})
+	if err == nil || !strings.Contains(err.Error(), "mode") {
+		t.Fatalf("assertScenario error = %v, want mode mismatch", err)
+	}
+}
+
 func TestSetupHomeRejectsRealHomeByDefault(t *testing.T) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -122,6 +212,25 @@ func TestWriteEvidenceWritesSummary(t *testing.T) {
 	}
 	if summary.ExitCode != 1 {
 		t.Fatalf("summary.ExitCode = %d, want 1", summary.ExitCode)
+	}
+}
+
+func TestBuildSummaryRecordsAppStateLoaded(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(stateDir, "e2e_state.json"), []byte(`{"mode":"normal"}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	summary := buildSummary(scenario{ID: "state"}, runResult{homeDir: home}, nil)
+	if !summary.AppStateExists {
+		t.Fatal("AppStateExists = false, want true")
+	}
+	if summary.AppStatePath == "" {
+		t.Fatal("AppStatePath is empty")
 	}
 }
 

@@ -48,11 +48,63 @@ type step struct {
 }
 
 type assertionConfig struct {
-	ScreenContains       []string `yaml:"screen_contains"`
-	ExitCode             *int     `yaml:"exit_code"`
-	ProgressFileExists   *bool    `yaml:"progress_file_exists"`
-	ProgressFileContains []string `yaml:"progress_file_contains"`
-	KeyTrace             []string `yaml:"key_trace"`
+	ScreenContains       []string          `yaml:"screen_contains"`
+	ExitCode             *int              `yaml:"exit_code"`
+	ProgressFileExists   *bool             `yaml:"progress_file_exists"`
+	ProgressFileContains []string          `yaml:"progress_file_contains"`
+	KeyTrace             []string          `yaml:"key_trace"`
+	AppState             appStateAssertion `yaml:"app_state"`
+}
+
+type appStateAssertion struct {
+	Path     string             `yaml:"path"`
+	Buffer   []string           `yaml:"buffer"`
+	Cursor   *cursorAssertion   `yaml:"cursor"`
+	Mode     string             `yaml:"mode"`
+	Status   string             `yaml:"status"`
+	Score    *scoreAssertion    `yaml:"score"`
+	Progress *progressAssertion `yaml:"progress"`
+	Contains map[string]string  `yaml:"contains"`
+}
+
+type cursorAssertion struct {
+	Row *int `yaml:"row"`
+	Col *int `yaml:"col"`
+}
+
+type scoreAssertion struct {
+	Grade  string `yaml:"grade"`
+	Passed *bool  `yaml:"passed"`
+}
+
+type progressAssertion struct {
+	MissionID string `yaml:"mission_id"`
+	Completed *bool  `yaml:"completed"`
+}
+
+type appStateSummary struct {
+	Buffer   []string         `json:"buffer"`
+	Cursor   appStateCursor   `json:"cursor"`
+	Mode     string           `json:"mode"`
+	Status   string           `json:"status"`
+	Score    appStateScore    `json:"score"`
+	Progress appStateProgress `json:"progress"`
+	Extra    map[string]any   `json:"-"`
+}
+
+type appStateCursor struct {
+	Row int `json:"row"`
+	Col int `json:"col"`
+}
+
+type appStateScore struct {
+	Grade  string `json:"grade"`
+	Passed bool   `json:"passed"`
+}
+
+type appStateProgress struct {
+	MissionID string `json:"mission_id"`
+	Completed bool   `json:"completed"`
 }
 
 type evidenceConfig struct {
@@ -79,6 +131,8 @@ type summaryEvidence struct {
 	KeyTrace           []string `json:"key_trace"`
 	ScreenBytes        int      `json:"screen_bytes"`
 	ProgressFileExists bool     `json:"progress_file_exists"`
+	AppStatePath       string   `json:"app_state_path,omitempty"`
+	AppStateExists     bool     `json:"app_state_exists"`
 }
 
 func main() {
@@ -324,6 +378,15 @@ func assertScenario(sc scenario, result runResult) error {
 	if len(sc.Assert.KeyTrace) > 0 && !sameStrings(result.trace, sc.Assert.KeyTrace) {
 		return fmt.Errorf("key trace: got %v, want %v", result.trace, sc.Assert.KeyTrace)
 	}
+	if wantsAppStateAssertion(sc.Assert.AppState) {
+		state, raw, err := loadAppStateSummary(result.homeDir, sc.Assert.AppState.Path)
+		if err != nil {
+			return err
+		}
+		if err := assertAppState(sc.Assert.AppState, state, raw); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -383,6 +446,8 @@ func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
 		KeyTrace:           append([]string(nil), result.trace...),
 		ScreenBytes:        len(result.clean),
 		ProgressFileExists: progressFileExists(result.homeDir),
+		AppStatePath:       appStatePath(result.homeDir, sc.Assert.AppState.Path),
+		AppStateExists:     appStateExists(result.homeDir, sc.Assert.AppState.Path),
 	}
 	if runErr != nil {
 		summary.Error = runErr.Error()
@@ -396,6 +461,95 @@ func progressFileExists(homeDir string) bool {
 	}
 	_, err := os.Stat(filepath.Join(homeDir, ".advimture", "progress.json"))
 	return err == nil
+}
+
+func wantsAppStateAssertion(assertion appStateAssertion) bool {
+	return assertion.Path != "" ||
+		len(assertion.Buffer) > 0 ||
+		assertion.Cursor != nil ||
+		assertion.Mode != "" ||
+		assertion.Status != "" ||
+		assertion.Score != nil ||
+		assertion.Progress != nil ||
+		len(assertion.Contains) > 0
+}
+
+func loadAppStateSummary(homeDir string, configuredPath string) (appStateSummary, []byte, error) {
+	path := appStatePath(homeDir, configuredPath)
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return appStateSummary{}, nil, fmt.Errorf("app state summary read failed: %w", err)
+	}
+	var state appStateSummary
+	if err := json.Unmarshal(raw, &state); err != nil {
+		return appStateSummary{}, nil, fmt.Errorf("app state summary parse failed: %w", err)
+	}
+	return state, raw, nil
+}
+
+func appStatePath(homeDir string, configuredPath string) string {
+	if configuredPath != "" {
+		if filepath.IsAbs(configuredPath) {
+			return configuredPath
+		}
+		return filepath.Join(homeDir, configuredPath)
+	}
+	if homeDir == "" {
+		return ""
+	}
+	return filepath.Join(homeDir, ".advimture", "e2e_state.json")
+}
+
+func appStateExists(homeDir string, configuredPath string) bool {
+	path := appStatePath(homeDir, configuredPath)
+	if path == "" {
+		return false
+	}
+	_, err := os.Stat(path)
+	return err == nil
+}
+
+func assertAppState(assertion appStateAssertion, state appStateSummary, raw []byte) error {
+	if len(assertion.Buffer) > 0 && !sameStrings(state.Buffer, assertion.Buffer) {
+		return fmt.Errorf("app state buffer: got %v, want %v", state.Buffer, assertion.Buffer)
+	}
+	if assertion.Cursor != nil {
+		if assertion.Cursor.Row != nil && state.Cursor.Row != *assertion.Cursor.Row {
+			return fmt.Errorf("app state cursor row: got %d, want %d", state.Cursor.Row, *assertion.Cursor.Row)
+		}
+		if assertion.Cursor.Col != nil && state.Cursor.Col != *assertion.Cursor.Col {
+			return fmt.Errorf("app state cursor col: got %d, want %d", state.Cursor.Col, *assertion.Cursor.Col)
+		}
+	}
+	if assertion.Mode != "" && state.Mode != assertion.Mode {
+		return fmt.Errorf("app state mode: got %q, want %q", state.Mode, assertion.Mode)
+	}
+	if assertion.Status != "" && state.Status != assertion.Status {
+		return fmt.Errorf("app state status: got %q, want %q", state.Status, assertion.Status)
+	}
+	if assertion.Score != nil {
+		if assertion.Score.Grade != "" && state.Score.Grade != assertion.Score.Grade {
+			return fmt.Errorf("app state score grade: got %q, want %q", state.Score.Grade, assertion.Score.Grade)
+		}
+		if assertion.Score.Passed != nil && state.Score.Passed != *assertion.Score.Passed {
+			return fmt.Errorf("app state score passed: got %v, want %v", state.Score.Passed, *assertion.Score.Passed)
+		}
+	}
+	if assertion.Progress != nil {
+		if assertion.Progress.MissionID != "" && state.Progress.MissionID != assertion.Progress.MissionID {
+			return fmt.Errorf("app state progress mission_id: got %q, want %q", state.Progress.MissionID, assertion.Progress.MissionID)
+		}
+		if assertion.Progress.Completed != nil && state.Progress.Completed != *assertion.Progress.Completed {
+			return fmt.Errorf("app state progress completed: got %v, want %v", state.Progress.Completed, *assertion.Progress.Completed)
+		}
+	}
+	text := string(raw)
+	for key, want := range assertion.Contains {
+		if !strings.Contains(text, want) {
+			return fmt.Errorf("app state contains %q: missing %q", key, want)
+		}
+	}
+	return nil
 }
 
 func keyBytes(key string) string {
