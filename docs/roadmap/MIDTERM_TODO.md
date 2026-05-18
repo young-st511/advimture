@@ -15,10 +15,11 @@
 | 7 | PLAY-002 | completed | hardcoded playable 제거, file-backed playable |
 | 8 | CONTENT-002 | completed | replay/coverage validator |
 | 9 | VIM-012 | completed | 다음 command cluster: `w/b/e` word motion |
-| 10 | SURVIVAL-001 | planned | `esc`, `:q!`, `:wq` 생존/종료 루프 |
-| 11 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
-| 12 | EXCMD-001 | planned | `:` 명령어, substitute, range command 기반 |
-| 13 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 자동 저장, 피드백 구조 |
+| 10 | EXERCISE-001 | completed | word motion exercise set |
+| 11 | SURVIVAL-001 | planned | `esc`, `:q!`, `:wq` 생존/종료 루프 |
+| 12 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
+| 13 | EXCMD-001 | planned | `:` 명령어, substitute, range command 기반 |
+| 14 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 자동 저장, 피드백 구조 |
 
 ## 루프별 출구 조건
 
@@ -29,7 +30,7 @@
 | PLAY-002 | CONTENT-001 통과 | hardcoded playable 제거, file-backed playable | `go test ./internal/playable/...`, `make e2e-smoke` | completed: screen assertion과 app state/progress를 함께 검증했다. |
 | CONTENT-002 | file-backed playable 통과 | replay/coverage validator | content replay tests, coverage report | completed: `coverage_required`, `replay_status: pass`, key trace, E2E assertion을 loader gate로 검증한다. |
 | VIM-012 | word-motion cluster approved | `w/b/e` engine, oracle fixtures | `go test ./internal/vimengine/...`, oracle comparison | completed: word boundary, 공백, 문장부호, 줄 경계, unsupported mode, DesiredCol 회귀를 고정했다. |
-| EXERCISE-001 | VIM-012 통과 | word motion exercise set | replay validator, verifier OK | `w`, `b`, `e`가 각각 optimal trace에 등장해야 한다. |
+| EXERCISE-001 | VIM-012 통과 | word motion exercise set | replay validator, verifier OK | completed: `w`, `b`, `e`가 각각 approved exercise optimal trace에 등장하고 replay gate를 통과한다. |
 | SURVIVAL-001 | command-line scope 승인 | `esc`, `:q!`, `:wq` runtime/app semantics | unit tests, E2E smoke | app exit와 mission success를 혼동하지 않는다. |
 | NAV-001 | movement fundamentals 통과 | `gg`, `G`, line/file motion clusters | vimengine/oracle tests | 후반 범용 이동은 `coverage_required` 중심으로 범위를 좁힌다. |
 | EXCMD-001 | command-line engine 기반 | `:` 명령어, substitute, range command | parser/runtime tests | Ex command는 편집 engine과 scenario success를 분리한다. |
@@ -46,4 +47,4 @@
 
 ## 현재 판단
 
-현재 active slice는 없다. 다음 작업 후보는 **EXERCISE-001 word motion exercise set**이다.
+현재 active slice는 없다. 다음 작업 후보는 **SURVIVAL-001 `esc`, `:q!`, `:wq` 생존/종료 루프**다.

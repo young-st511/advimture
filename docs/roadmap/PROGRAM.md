@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice 없음. 다음 후보는 `EXERCISE-001`이다.
+현재 active slice 없음. 다음 후보는 `SURVIVAL-001`이다.
 
 ## 완료된 초기 세팅
 
@@ -132,6 +132,11 @@ Phase: Vim Learning Foundation
 ### VIM-012. Word motion engine
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/vim-012-word-motion-engine.md`
+- 완료일: 2026-05-18
+
+### EXERCISE-001. Word motion exercise set
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/exercise-001-word-motion-exercise-set.md`
 - 완료일: 2026-05-18
 
 ## Backlog

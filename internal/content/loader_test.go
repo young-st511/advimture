@@ -19,11 +19,11 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 3 {
 		t.Fatalf("command clusters = %d, want 3", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 3 {
-		t.Fatalf("exercises = %d, want 3", len(lib.Exercises))
+	if len(lib.Exercises) != 5 {
+		t.Fatalf("exercises = %d, want 5", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 3 {
-		t.Fatalf("scenarios = %d, want 3", len(lib.Scenarios))
+	if len(lib.Scenarios) != 5 {
+		t.Fatalf("scenarios = %d, want 5", len(lib.Scenarios))
 	}
 	if len(lib.Playlists) != 1 {
 		t.Fatalf("playlists = %d, want 1", len(lib.Playlists))
@@ -37,14 +37,22 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 1 {
-		t.Fatalf("playable exercises = %d, want 1: %+v", len(playable), playable)
+	if len(playable) != 4 {
+		t.Fatalf("playable exercises = %d, want 4: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "normal-motion-basic-001" {
 		t.Fatalf("playable[0].ID = %q, want normal-motion-basic-001", playable[0].ID)
 	}
-	if playable[0].ReplayStatus != ReplayStatusPass {
-		t.Fatalf("playable[0].ReplayStatus = %q, want pass", playable[0].ReplayStatus)
+	assertPlayableIDs(t, playable, []string{
+		"normal-motion-basic-001",
+		"word-motion-basic-001",
+		"word-motion-basic-002",
+		"word-motion-basic-003",
+	})
+	for _, exercise := range playable {
+		if exercise.ReplayStatus != ReplayStatusPass {
+			t.Fatalf("exercise %q ReplayStatus = %q, want pass", exercise.ID, exercise.ReplayStatus)
+		}
 	}
 }
 
@@ -91,6 +99,26 @@ func TestCoverageReportsMissingCommandsWithoutFailingLoad(t *testing.T) {
 	assertStrings(t, normal.Missing, []string{"h", "j", "k"})
 }
 
+func TestCoverageReportsWordMotionCommandsCovered(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	var word CoverageReport
+	for _, report := range lib.CoverageReports() {
+		if report.CommandClusterID == "word-motion-basic" {
+			word = report
+			break
+		}
+	}
+
+	assertStrings(t, word.Covered, []string{"w", "b", "e"})
+	if len(word.Missing) != 0 {
+		t.Fatalf("word motion missing coverage = %+v, want empty", word.Missing)
+	}
+}
+
 func TestLoadLibraryPreservesE2EAssertions(t *testing.T) {
 	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
 	if err != nil {
@@ -107,6 +135,21 @@ func TestLoadLibraryPreservesE2EAssertions(t *testing.T) {
 	}
 	if assertion.Mode != "normal" || assertion.Status != "succeeded" {
 		t.Fatalf("E2E mode/status = %q/%q, want normal/succeeded", assertion.Mode, assertion.Status)
+	}
+}
+
+func TestLoadLibraryPreservesHintThresholds(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	hints := lib.Exercises["word-motion-basic-001"].Hints
+	if len(hints) != 2 {
+		t.Fatalf("len(hints) = %d, want 2", len(hints))
+	}
+	if hints[0].AfterKeys != 1 || hints[1].AfterKeys != 2 {
+		t.Fatalf("hint after_keys = %d,%d, want 1,2", hints[0].AfterKeys, hints[1].AfterKeys)
 	}
 }
 
@@ -489,4 +532,14 @@ func writeYAML(t *testing.T, path string, content string) {
 	if err := os.WriteFile(path, []byte(strings.TrimSpace(content)+"\n"), 0o644); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func assertPlayableIDs(t *testing.T, exercises []ExerciseDocument, want []string) {
+	t.Helper()
+
+	got := make([]string, 0, len(exercises))
+	for _, exercise := range exercises {
+		got = append(got, exercise.ID)
+	}
+	assertStrings(t, got, want)
 }

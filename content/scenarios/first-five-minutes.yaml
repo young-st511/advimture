@@ -30,9 +30,9 @@ scenarios:
       - "j의 아래 방향 학습에 집중한다."
 
   - id: word-motion-basic-001-scenario
-    status: draft
+    status: approved
     exercise_id: word-motion-basic-001
-    engine_support: planned
+    engine_support: implemented
     learning_reinforcement: "w는 다음 단어 시작점으로 이동한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "서비스 이름 찾기"
@@ -43,3 +43,33 @@ scenarios:
     story_constraints:
       - "편집을 요구하지 않는다."
       - "w의 효율을 l 반복과 비교해 체감하게 한다."
+
+  - id: word-motion-basic-002-scenario
+    status: approved
+    exercise_id: word-motion-basic-002
+    engine_support: implemented
+    learning_reinforcement: "b는 이전 단어 시작점으로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+    mission_title: "잘못 지나친 항목 복귀"
+    briefing: "배포 설정을 훑다가 backend를 지나쳐 enabled까지 와버렸습니다. 한 글자씩 되돌아가지 말고 이전 단어 시작점으로 복귀하세요."
+    context_role: "서비스 라우팅 설정"
+    mentor_success: "좋습니다. b를 쓰면 지나친 단어도 빠르게 다시 잡을 수 있습니다."
+    mentor_failure: "지금 목표는 이전 단어 시작점입니다. b로 backend까지 되돌아가보세요."
+    story_constraints:
+      - "편집을 요구하지 않는다."
+      - "b의 이전 단어 시작점 이동만 강조한다."
+
+  - id: word-motion-basic-003-scenario
+    status: approved
+    exercise_id: word-motion-basic-003
+    engine_support: implemented
+    learning_reinforcement: "e는 현재 또는 다음 단어 끝으로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+    mission_title: "토큰 끝 확인"
+    briefing: "backend 토큰의 끝 글자를 확인해야 합니다. 오른쪽으로 여러 번 걷지 말고 단어 끝으로 바로 이동하세요."
+    context_role: "서비스 라우팅 설정"
+    mentor_success: "좋습니다. e를 쓰면 단어 끝 위치를 빠르게 확인할 수 있습니다."
+    mentor_failure: "지금 목표는 단어의 끝입니다. e로 backend 마지막 글자에 도착해보세요."
+    story_constraints:
+      - "편집을 요구하지 않는다."
+      - "e의 단어 끝 이동만 강조한다."

@@ -38,8 +38,8 @@ type CursorSpec struct {
 }
 
 type HintSpec struct {
-	AfterKeys int
-	Text      string
+	AfterKeys int    `yaml:"after_keys"`
+	Text      string `yaml:"text"`
 }
 
 type CompiledExercise struct {

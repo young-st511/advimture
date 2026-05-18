@@ -22,4 +22,16 @@ playlists:
         command_cluster: word-motion-basic
         exercise_id: word-motion-basic-001
         scenario_id: word-motion-basic-001-scenario
-        engine_support: planned
+        engine_support: implemented
+      - id: first-5-minute-005
+        role: recovery
+        command_cluster: word-motion-basic
+        exercise_id: word-motion-basic-002
+        scenario_id: word-motion-basic-002-scenario
+        engine_support: implemented
+      - id: first-5-minute-006
+        role: precision
+        command_cluster: word-motion-basic
+        exercise_id: word-motion-basic-003
+        scenario_id: word-motion-basic-003-scenario
+        engine_support: implemented

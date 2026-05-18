@@ -77,13 +77,13 @@ exercises:
       optimal_key_count: 1
 
   - id: word-motion-basic-001
-    status: draft
+    status: approved
     command_cluster: word-motion-basic
-    engine_support: planned
+    engine_support: implemented
     trained_commands: ["w"]
     reviewed_commands: ["b", "e"]
     mistake_focus: ["l 반복으로 긴 줄을 이동하려고 한다."]
-    replay_status: pending
+    replay_status: pass
     title: "단어 시작점으로 뛰어가기"
     goal_for_player: "커서를 backend 단어의 시작으로 이동하세요."
     initial_state:
@@ -109,3 +109,92 @@ exercises:
     grading:
       pass_condition: "cursor.row == 0 && cursor.col == 12"
       optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["service api backend enabled"]
+      cursor:
+        row: 0
+        col: 12
+      mode: normal
+      status: succeeded
+
+  - id: word-motion-basic-002
+    status: approved
+    command_cluster: word-motion-basic
+    engine_support: implemented
+    trained_commands: ["b"]
+    reviewed_commands: ["w"]
+    mistake_focus: ["이전 단어 시작점으로 돌아갈 때 h를 반복한다."]
+    replay_status: pass
+    title: "이전 단어 시작점으로 되돌아가기"
+    goal_for_player: "커서를 backend 단어의 시작으로 되돌리세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 20
+      buffer: |
+        service api backend enabled
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 12
+    optimal_keys: ["b"]
+    allowed_keys: ["h", "j", "k", "l", "w", "b", "e", "esc"]
+    forbidden_keys: ["right", "left", "up", "down"]
+    hints:
+      - after_keys: 1
+        text: "b는 이전 단어의 시작으로 이동합니다."
+      - after_keys: 2
+        text: "한 글자씩 왼쪽으로 걷지 말고 b로 단어 시작점까지 돌아가세요."
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 12"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["service api backend enabled"]
+      cursor:
+        row: 0
+        col: 12
+      mode: normal
+      status: succeeded
+
+  - id: word-motion-basic-003
+    status: approved
+    command_cluster: word-motion-basic
+    engine_support: implemented
+    trained_commands: ["e"]
+    reviewed_commands: ["w", "b"]
+    mistake_focus: ["단어 끝으로 갈 때 l을 반복한다."]
+    replay_status: pass
+    title: "단어 끝으로 이동하기"
+    goal_for_player: "커서를 backend 단어의 마지막 글자로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 12
+      buffer: |
+        service api backend enabled
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 18
+    optimal_keys: ["e"]
+    allowed_keys: ["h", "j", "k", "l", "w", "b", "e", "esc"]
+    forbidden_keys: ["right", "left", "up", "down"]
+    hints:
+      - after_keys: 1
+        text: "e는 현재 단어의 끝으로 이동합니다."
+      - after_keys: 2
+        text: "backend의 끝 글자까지는 e 한 번이면 충분합니다."
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 18"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["service api backend enabled"]
+      cursor:
+        row: 0
+        col: 18
+      mode: normal
+      status: succeeded
