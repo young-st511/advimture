@@ -58,6 +58,24 @@ exercise:
     optimal_key_count: <number>
 ```
 
+## PLAYPACK-002 Small Edits — Implemented Set
+
+| Exercise ID | Command cluster | Trained command | 핵심 목표 | Optimal keys |
+|-------------|-----------------|-----------------|-----------|--------------|
+| `single-char-edit-001` | `single-char-edit` | `x` | 커서 아래 불필요한 문자 하나 삭제 | `x` |
+| `single-char-edit-002` | `single-char-edit` | `r` | 커서 아래 문자 하나 교체 | `r i` |
+| `insert-mode-entry-001` | `insert-mode-entry` | `i`, `esc` | 커서 앞에 한 글자 삽입 후 Normal mode 복귀 | `i b esc` |
+| `insert-mode-entry-002` | `insert-mode-entry` | `a`, `esc` | 커서 뒤에 한 글자 추가 후 Normal mode 복귀 | `a i esc` |
+| `insert-mode-entry-003` | `insert-mode-entry` | `A`, `esc` | 줄 끝에 즉시 추가 후 Normal mode 복귀 | `A ! esc` |
+| `undo-redo-basic-001` | `undo-redo-basic` | `u` | 실수 변경을 undo로 복구 | `x u` |
+| `undo-redo-basic-002` | `undo-redo-basic` | `ctrl+r` | undo한 변경을 redo로 다시 적용하고 결과 위치 확인 | `x u ctrl+r h` |
+
+공통 제약:
+
+- 모든 문항은 `approved`, `engine_support: implemented`, `replay_status: pass` 상태다.
+- 모든 문항은 `constraints.required_keys`로 의도 command 사용을 고정한다.
+- `undo-redo-basic-002`는 required key 없이 최종 목표에 먼저 도착하지 않도록 target cursor를 함께 검증한다.
+
 ## Exercises
 
 ### survival-save-quit-001

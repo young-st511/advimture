@@ -213,25 +213,74 @@ playlists:
         scenario_id: whole-file-navigation-004-scenario
         engine_support: implemented
 
-  - id: tutorial-3-ex-command
+  - id: tutorial-3-small-edits
+    status: approved
+    title: "Tutorial 3: 작은 수정"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-3-001
+        role: remove_extra_char
+        command_cluster: single-char-edit
+        exercise_id: single-char-edit-001
+        scenario_id: single-char-edit-001-scenario
+        engine_support: implemented
+      - id: tutorial-3-002
+        role: replace_one_char
+        command_cluster: single-char-edit
+        exercise_id: single-char-edit-002
+        scenario_id: single-char-edit-002-scenario
+        engine_support: implemented
+      - id: tutorial-3-003
+        role: insert_before_cursor
+        command_cluster: insert-mode-entry
+        exercise_id: insert-mode-entry-001
+        scenario_id: insert-mode-entry-001-scenario
+        engine_support: implemented
+      - id: tutorial-3-004
+        role: append_after_cursor
+        command_cluster: insert-mode-entry
+        exercise_id: insert-mode-entry-002
+        scenario_id: insert-mode-entry-002-scenario
+        engine_support: implemented
+      - id: tutorial-3-005
+        role: append_line_end
+        command_cluster: insert-mode-entry
+        exercise_id: insert-mode-entry-003
+        scenario_id: insert-mode-entry-003-scenario
+        engine_support: implemented
+      - id: tutorial-3-006
+        role: undo_recovery
+        command_cluster: undo-redo-basic
+        exercise_id: undo-redo-basic-001
+        scenario_id: undo-redo-basic-001-scenario
+        engine_support: implemented
+      - id: tutorial-3-007
+        role: redo_reapply
+        command_cluster: undo-redo-basic
+        exercise_id: undo-redo-basic-002
+        scenario_id: undo-redo-basic-002-scenario
+        engine_support: implemented
+
+  - id: tutorial-4-ex-command
     status: approved
     title: "Mid Tutorial: Ex command 고급 튜토리얼"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
     beats:
-      - id: tutorial-3-001
+      - id: tutorial-4-001
         role: current_line_substitute
         command_cluster: vim-ex-command-substitute
         exercise_id: vim-ex-command-substitute-001
         scenario_id: vim-ex-command-substitute-001-scenario
         engine_support: implemented
-      - id: tutorial-3-002
+      - id: tutorial-4-002
         role: whole_file_substitute
         command_cluster: vim-ex-command-substitute
         exercise_id: vim-ex-command-substitute-002
         scenario_id: vim-ex-command-substitute-002-scenario
         engine_support: implemented
-      - id: tutorial-3-003
+      - id: tutorial-4-003
         role: range_substitute
         command_cluster: vim-ex-command-substitute
         exercise_id: vim-ex-command-substitute-003

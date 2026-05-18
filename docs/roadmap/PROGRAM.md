@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-002. Small edits tutorial
+### SCENARIO-TONE-001. Midgame survival adventure tone
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: 6~8문항짜리 “편집 기본기” 튜토리얼 playpack을 설계/구현한다.
+- 목표: 중반 생존 어드벤처 톤 원칙과 적용 범위를 확정한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-002. Small edits tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-002-small-edits-tutorial.md`
+- 완료일: 2026-05-19
 
 ### TUTORIAL-001. Split first tour into tutorial episodes
 - 상태: completed

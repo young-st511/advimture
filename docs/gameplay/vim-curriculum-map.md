@@ -66,7 +66,7 @@ Scenario 방향:
 - `single-char-edit`: `x`, `r`
 - `insert-around-cursor`: `i`, `a`, `I`, `A`
 - `open-line-edit`: `o`, `O`
-- `undo-redo-basic`: `u`, `<C-r>`
+- `undo-redo-basic`: `u`, `ctrl+r`
 - `repeat-last-change`: `.`
 
 Exercise 방향:
@@ -212,13 +212,13 @@ Scenario 방향:
 1. Tutorial 0: 커서 감각 회상 — `normal-motion-basic` (`h`, `j`, `k`, `l`)
 2. Tutorial 1: Vim 생존 키트 — `survival-save-quit` (`esc`, `:q!`, `:wq`)
 3. Tutorial 2: 빠르게 훑기 — `word-motion-basic`, `line-motion-basic`, `file-motion-basic`
-4. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
+4. Tutorial 3: 작은 수정 — `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`
+5. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
 
 다음 playable milestone은 아래 순서를 우선한다.
 
-1. Tutorial 3: 작은 수정 — `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`
-2. Adventure intro: operator grammar — `delete-with-motion`, `change-with-motion`
-3. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
+1. Adventure intro: operator grammar — `delete-with-motion`, `change-with-motion`
+2. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 중반 고급 명령”으로 이어진다.
 
@@ -236,8 +236,8 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `vim-ex-command-substitute` |
-| next | 다음 playpack에서 구현/승격할 후보 | `single-char-edit`, `insert-mode-entry`, `undo-redo-basic` |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute` |
+| next | 다음 playpack에서 구현/승격할 후보 | `delete-with-motion`, `change-with-motion` |
 | soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `open-line-edit`, `repeat-last-change`, `delete-with-motion`, `change-with-motion` |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `search-basic`, `visual-char-line`, `text-object-inner`, `macro-basic`, buffer/window/navigation-at-scale 계열 |
 
@@ -251,9 +251,9 @@ Command cluster 후보:
 
 | Cluster | Commands | Engine support | Oracle | 이유 |
 |---------|----------|----------------|--------|------|
-| `single-char-edit` | `x`, `r` | planned | optional | 가장 작은 편집 성공 경험을 만든다. |
-| `insert-mode-entry` | `i`, `a`, `A` | planned | optional | 실제 수정을 위해 Insert mode 진입/복귀를 배운다. |
-| `undo-redo-basic` | `u`, `<C-r>` | planned | optional | 억까 상황과 실패 회복을 학습적으로 처리할 수 있다. |
+| `single-char-edit` | `x`, `r` | implemented | optional | 가장 작은 편집 성공 경험을 만든다. |
+| `insert-mode-entry` | `i`, `a`, `A` | implemented | optional | 실제 수정을 위해 Insert mode 진입/복귀를 배운다. |
+| `undo-redo-basic` | `u`, `ctrl+r` | implemented | optional | 억까 상황과 실패 회복을 학습적으로 처리할 수 있다. |
 
 ENGINE-GAP-001 결정:
 

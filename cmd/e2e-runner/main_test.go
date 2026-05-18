@@ -16,6 +16,7 @@ func TestKeyBytes(t *testing.T) {
 		"enter":  "\r",
 		"esc":    "\x1b",
 		"ctrl+c": "\x03",
+		"ctrl+r": "\x12",
 		"space":  " ",
 		"x":      "x",
 	}

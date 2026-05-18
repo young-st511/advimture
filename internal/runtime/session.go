@@ -102,7 +102,7 @@ func NewSession(exercise Exercise) *Session {
 		status:   StatusRunning,
 		attempts: 1,
 	}
-	if session.exercise.Goal.Matches(initial) {
+	if session.canSucceedWithCurrentTrace(initial) {
 		session.status = StatusSucceeded
 	}
 	return session
@@ -175,7 +175,7 @@ func (s *Session) Retry() State {
 	s.attempts++
 	s.failure = FailureNone
 	s.message = ""
-	if s.exercise.Goal.Matches(s.engine.State()) {
+	if s.canSucceedWithCurrentTrace(s.engine.State()) {
 		s.status = StatusSucceeded
 	}
 	return s.State()
@@ -236,6 +236,13 @@ func (s *Session) missingRequiredKeys() []string {
 		}
 	}
 	return missing
+}
+
+func (s *Session) canSucceedWithCurrentTrace(state vimengine.State) bool {
+	if !s.exercise.Goal.Matches(state) {
+		return false
+	}
+	return len(s.missingRequiredKeys()) == 0
 }
 
 func (s *Session) inputsLeft() int {

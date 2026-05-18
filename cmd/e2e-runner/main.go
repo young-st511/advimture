@@ -603,6 +603,8 @@ func keyBytes(key string) string {
 		return "\x1b"
 	case "ctrl+c":
 		return "\x03"
+	case "ctrl+r":
+		return "\x12"
 	case "tab":
 		return "\t"
 	case "space":

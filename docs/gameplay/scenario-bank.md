@@ -41,6 +41,20 @@ scenario:
     - <문항을 방해하지 않기 위한 제약>
 ```
 
+## PLAYPACK-002 Small Edits — Implemented Scenario Set
+
+| Scenario ID | Mission title | Reinforced command | 톤 |
+|-------------|---------------|--------------------|----|
+| `single-char-edit-001-scenario` | 중복 글자 제거 | `x` | 첫 투어식 짧은 라우트 오타 수습 |
+| `single-char-edit-002-scenario` | 한 글자 교정 | `r` | 삭제 후 재입력 대신 한 글자 교체 |
+| `insert-mode-entry-001-scenario` | 빠진 중간 글자 넣기 | `i`, `esc` | 커서 앞 삽입과 mode 복귀 |
+| `insert-mode-entry-002-scenario` | 뒤쪽 글자 이어 붙이기 | `a`, `esc` | 커서 뒤 추가와 mode 복귀 |
+| `insert-mode-entry-003-scenario` | 끝 표시 붙이기 | `A`, `esc` | 줄 끝으로 이동하지 않는 즉시 추가 |
+| `undo-redo-basic-001-scenario` | 방금 실수 수습 | `u` | 작은 억까 후 복구 |
+| `undo-redo-basic-002-scenario` | 되돌림 다시 적용 | `ctrl+r` | undo 이후 redo로 재적용 |
+
+이 세트는 시나리오가 문항을 바꾸지 않는다는 원칙을 유지한다. 각 scenario의 `does_not_change`에는 `target_state`, `optimal_keys`, `allowed_keys`, `constraints`가 포함된다.
+
 ## Scenarios
 
 ### survival-save-quit-001-scenario

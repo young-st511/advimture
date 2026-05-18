@@ -52,6 +52,6 @@
 |------|------|-------------|-----|
 | VIM-013 | `x`, `r`, buffer mutation, cursor clamp | `internal/vimengine` unit, runtime replay smoke | completed: engine/tuiadapter unit까지 연결. content 승격 시 E2E 추가 |
 | VIM-014 | `i`, `a`, `A`, printable insertion, `esc` 복귀 | vimengine/tuiadapter/runtime unit | completed: insert-mode printable input까지 연결. content 승격 시 E2E 추가 |
-| VIM-015 | `u`, `<C-r>`, mutation history | vimengine unit, scenario scoring regression | completed: mutation snapshot undo/redo 구현. content 승격 시 E2E 추가 |
+| VIM-015 | `u`, `ctrl+r`, mutation history | vimengine unit, scenario scoring regression | completed: mutation snapshot undo/redo 구현. content 승격 시 E2E 추가 |
 
 `PLAYPACK-002`는 VIM-013~015 중 실제 implemented cluster만 playable로 승격한다. engine support가 planned인 cluster는 YAML에 남길 수 있지만 playable path에는 연결하지 않는다.

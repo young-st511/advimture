@@ -171,6 +171,36 @@ func TestSessionFailsWhenGoalReachedWithoutRequiredKey(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyDollar})
 }
 
+func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
+	initial := vimengine.NewState([]string{"api"})
+	initial.Cursor.Col = 1
+	initial.Cursor.DesiredCol = 1
+	session := NewSession(Exercise{
+		ID:      "undo-training",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"api"},
+			Cursor: CursorGoal(0, 1),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyU},
+		},
+	})
+
+	state := session.State()
+	if state.Status != StatusRunning {
+		t.Fatalf("status = %q, want %q", state.Status, StatusRunning)
+	}
+
+	session.ApplyKey(vimengine.KeyX)
+	result := session.ApplyKey(vimengine.KeyU)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after undo = %q, want %q", result.State.Status, StatusSucceeded)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyX, vimengine.KeyU})
+}
+
 func TestRetryResetsSessionAndIncrementsAttempts(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "retry",

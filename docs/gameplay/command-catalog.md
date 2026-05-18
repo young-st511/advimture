@@ -307,8 +307,8 @@ command_cluster:
   engine_support: implemented
   curriculum_area: chapter-2-small-edits
   title: 실수 되돌리기와 다시 적용
-  commands: ["u", "<C-r>"]
-  coverage_required: ["u", "<C-r>"]
+  commands: ["u", "ctrl+r"]
+  coverage_required: ["u", "ctrl+r"]
   oracle: optional
   purpose: 작은 수정 실수를 안전하게 되돌리고 필요한 경우 다시 적용한다.
   prerequisite: ["single-char-edit", "insert-mode-entry"]
@@ -320,7 +320,7 @@ command_cluster:
   combo_paths:
     - ["x", "u"]
     - ["r", "u"]
-    - ["u", "<C-r>"]
+    - ["u", "ctrl+r"]
   common_mistakes:
     - 실수 후 수동으로 다시 편집하려고 한다.
     - undo 후 redo가 가능하다는 점을 모른다.

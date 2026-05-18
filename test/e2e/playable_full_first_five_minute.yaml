@@ -1,6 +1,6 @@
 id: playable_full_first_five_minute
 command: ["go", "run", "."]
-timeout_ms: 40000
+timeout_ms: 60000
 terminal:
   width: 120
   height: 40
@@ -101,6 +101,63 @@ steps:
 
   - wait_screen_contains: "현재 줄의 마지막 토큰 끝을 확인해야 합니다"
   - send: "$"
+  - wait_screen_contains: "Next tutorial: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "라우트 이름에 i가 하나 더 들어갔습니다"
+  - send: "x"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "api가 apx로 찍혔습니다"
+  - send: "r"
+  - wait_ms: 50
+  - send: "i"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "가운데 b가 빠졌습니다"
+  - send: "i"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "서비스 이름 ap 뒤에 i가 빠졌습니다"
+  - send: "a"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "배포 체크 줄 끝에 확인 표시가 빠졌습니다"
+  - send: "A"
+  - wait_ms: 50
+  - send: "!"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "잠깐 손이 미끄러져 p를 지워버렸습니다"
+  - send: "x"
+  - wait_ms: 50
+  - send: "u"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "p를 지우는 판단이 맞았는데 u로 되돌려버렸습니다"
+  - send: "x"
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "ctrl+r"
+  - wait_ms: 50
+  - send: "h"
   - wait_screen_contains: "Next tutorial: enter"
   - send: "enter"
 
@@ -227,6 +284,13 @@ assert:
     - "\"whole-file-navigation-002\""
     - "\"whole-file-navigation-003\""
     - "\"whole-file-navigation-004\""
+    - "\"single-char-edit-001\""
+    - "\"single-char-edit-002\""
+    - "\"insert-mode-entry-001\""
+    - "\"insert-mode-entry-002\""
+    - "\"insert-mode-entry-003\""
+    - "\"undo-redo-basic-001\""
+    - "\"undo-redo-basic-002\""
     - "\"vim-ex-command-substitute-001\""
     - "\"vim-ex-command-substitute-002\""
     - "\"vim-ex-command-substitute-003\""

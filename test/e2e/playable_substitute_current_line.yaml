@@ -23,7 +23,14 @@ setup:
         "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
         "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
         "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1}
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-002": {"completed": true, "best_grade": "S", "attempts": 1}
       },
       "total_keystrokes": 0
     }
