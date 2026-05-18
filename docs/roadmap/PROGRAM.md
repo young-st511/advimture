@@ -10,10 +10,10 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### QA-001. Constraint E2E hardening
+### CONTENT-003. Ex command tutorial placement
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: forbidden input, max input 초과, non-intended route, retry/hint E2E를 보강한다.
+- 목표: Ex command를 중반 고급 튜토리얼로 위치시키고 first tour pacing을 재검증한다.
 
 ## 방금 완료한 슬라이스
 
@@ -35,6 +35,11 @@ Phase: Vim Learning Foundation
 ### FAILURE-001. Failure and retry UX
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/failure-001-failure-retry-ux.md`
+- 완료일: 2026-05-18
+
+### QA-001. Constraint E2E hardening
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/qa-001-constraint-e2e-hardening.md`
 - 완료일: 2026-05-18
 
 ## 완료된 초기 세팅
