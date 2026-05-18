@@ -35,6 +35,7 @@ command_cluster:
   id: <kebab-case-id>
   status: draft | approved | implemented | retired
   compatibility_tier: exact | pedagogical | unsupported
+  engine_support: implemented | planned | unsupported
   title: <학습 목표 이름>
   commands: ["<vim-key-or-command>"]
   purpose: <한 문장 목적>
@@ -61,6 +62,7 @@ command_cluster:
   id: survival-save-quit
   status: draft
   compatibility_tier: pedagogical
+  engine_support: planned
   title: Vim 생존: 모드 복귀와 저장/종료
   commands: ["esc", ":q!", ":wq"]
   purpose: Vim에서 안전하게 빠져나오고, 수정한 내용을 저장 후 종료한다.
@@ -90,6 +92,7 @@ command_cluster:
   id: normal-motion-basic
   status: draft
   compatibility_tier: exact
+  engine_support: implemented
   title: 기본 커서 이동
   commands: ["h", "j", "k", "l"]
   purpose: Normal mode에서 홈 포지션을 유지하며 커서를 이동한다.
@@ -118,6 +121,7 @@ command_cluster:
   id: word-motion-basic
   status: draft
   compatibility_tier: exact
+  engine_support: planned
   title: 단어 단위 이동
   commands: ["w", "b", "e"]
   purpose: 단어 경계를 이용해 한 글자씩 이동하지 않고 빠르게 위치를 잡는다.
@@ -138,3 +142,10 @@ command_cluster:
     - `hjkl` 대비 키 입력 수가 줄어드는 문항을 반드시 포함한다.
     - 같은 줄 안 이동과 줄 경계 이동을 별도 exercise로 분리한다.
 ```
+
+## First 5-Minute Discovery Notes
+
+- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 유일한 cluster다.
+- `survival-save-quit`은 첫 경험의 불안감을 줄이는 데 중요하지만 command-line 입력과 app exit semantics가 필요하다.
+- `word-motion-basic`은 첫 5분 후반의 효율성 체감에 적합하지만 `w/b/e` engine support와 oracle comparison이 먼저 필요하다.
+- CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.

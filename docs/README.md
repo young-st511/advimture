@@ -22,7 +22,8 @@ docs/
 │   ├── spec.md
 │   ├── command-catalog.md
 │   ├── exercise-bank.md
-│   └── scenario-bank.md
+│   ├── scenario-bank.md
+│   └── content-requirements.md
 ├── verification/
 │   ├── domain-contract.md
 │   ├── spec.md
@@ -60,6 +61,7 @@ docs/
 | `gameplay/command-catalog.md` | 사람 + AI | Vim command cluster 축적 | 새 command 학습 목표 제안/승인 시 |
 | `gameplay/exercise-bank.md` | 사람 + AI | command 기반 문항 축적 | 새 exercise 제안/승인 시 |
 | `gameplay/scenario-bank.md` | 사람 + AI | exercise 기반 시나리오 축적 | 새 scenario 제안/승인 시 |
+| `gameplay/content-requirements.md` | 사람 + AI | loader가 받아야 할 콘텐츠 구조 요구사항 | scenario workflow로 새 콘텐츠 요구가 발견될 때 |
 | `guardrails.md` | 사람 | 자동 검증과 안전장치 현황 | CI, hooks, 테스트 루프 변경 시 |
 
 ## spec.md 운영 규칙

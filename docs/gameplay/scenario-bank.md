@@ -26,6 +26,7 @@ scenario:
   id: <exercise-id>-scenario
   status: draft | approved | implemented | retired
   exercise_id: <exercise-id>
+  engine_support: implemented | planned | unsupported
   mission_title: <미션 제목>
   briefing: <플레이어에게 보여줄 상황 설명>
   context_role: <텍스트가 게임 세계에서 의미하는 것>
@@ -44,6 +45,7 @@ scenario:
   id: survival-save-quit-001-scenario
   status: draft
   exercise_id: survival-save-quit-001
+  engine_support: planned
   mission_title: "일단 빠져나오기"
   briefing: "프로덕션 서버에서 낯선 파일이 열렸습니다. 지금은 수정하지 말고 안전하게 빠져나오는 것이 목표입니다."
   context_role: "처음 마주친 nginx 설정 파일"
@@ -61,6 +63,7 @@ scenario:
   id: normal-motion-basic-001-scenario
   status: draft
   exercise_id: normal-motion-basic-001
+  engine_support: implemented
   mission_title: "커서 위치 맞추기"
   briefing: "로그 줄에서 표시된 지점까지 커서를 이동해야 합니다. 화살표 키 대신 Vim 기본 이동을 사용하세요."
   context_role: "짧은 로그 라인"
@@ -71,6 +74,60 @@ scenario:
     - "기본 이동의 방향 학습에 집중한다."
 ```
 
+### survival-save-quit-002-scenario
+
+```yaml
+scenario:
+  id: survival-save-quit-002-scenario
+  status: draft
+  exercise_id: survival-save-quit-002
+  engine_support: planned
+  mission_title: "작업 마무리"
+  briefing: "설정 확인을 마쳤습니다. 이제 변경 결과를 저장하고 안전하게 종료하세요."
+  context_role: "검증된 서버 설정 파일"
+  mentor_success: "좋습니다. 필요한 작업을 저장하고 세션을 닫았습니다."
+  mentor_failure: "이번 목표는 버리고 나가는 것이 아닙니다. 저장 후 종료하는 명령을 떠올려보세요."
+  story_constraints:
+    - "`:q!`와 `:wq`의 차이를 분명히 보여준다."
+    - "추가 편집을 요구하지 않는다."
+```
+
+### normal-motion-basic-002-scenario
+
+```yaml
+scenario:
+  id: normal-motion-basic-002-scenario
+  status: draft
+  exercise_id: normal-motion-basic-002
+  engine_support: implemented
+  mission_title: "경고 줄 찾기"
+  briefing: "부팅 로그에서 경고가 난 줄로 이동해야 합니다. 아래 줄로 내려가 WARN 표시를 확인하세요."
+  context_role: "짧은 시스템 로그"
+  mentor_success: "좋습니다. 위아래 이동을 써서 필요한 줄을 잡았습니다."
+  mentor_failure: "지금은 아래 줄로 내려가는 연습입니다. `j` 방향을 떠올려보세요."
+  story_constraints:
+    - "편집이나 검색을 요구하지 않는다."
+    - "`j`의 아래 방향 학습에 집중한다."
+```
+
+### normal-motion-basic-003-scenario
+
+```yaml
+scenario:
+  id: normal-motion-basic-003-scenario
+  status: draft
+  exercise_id: normal-motion-basic-003
+  engine_support: implemented
+  mission_title: "좌표 맞추기"
+  briefing: "터미널 지도에서 X 표시로 커서를 옮기세요. 짧은 이동을 조합하면 됩니다."
+  context_role: "터미널 지도"
+  mentor_success: "좋아요. 짧은 이동을 조합해서 정확한 좌표에 도착했습니다."
+  mentor_failure: "한 번에 멀리 가려 하지 말고, 아래 이동과 오른쪽 이동을 나누어 생각하세요."
+  story_constraints:
+    - "긴 거리 반복 입력을 요구하지 않는다."
+    - "단어 이동이나 검색을 아직 요구하지 않는다."
+```
+
 ### word-motion-basic-001-scenario
 
 ```yaml
@@ -78,6 +135,7 @@ scenario:
   id: word-motion-basic-001-scenario
   status: draft
   exercise_id: word-motion-basic-001
+  engine_support: planned
   mission_title: "서비스 이름 찾기"
   briefing: "배포 설정 한 줄에서 `backend` 항목으로 빠르게 이동해야 합니다. 한 글자씩 걷지 말고 단어 단위로 이동하세요."
   context_role: "서비스 라우팅 설정"

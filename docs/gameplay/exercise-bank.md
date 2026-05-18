@@ -26,6 +26,7 @@ exercise:
   id: <command-cluster-id>-NNN
   status: draft | approved | implemented | retired
   command_cluster: <command-cluster-id>
+  engine_support: implemented | planned | unsupported
   title: <문항 이름>
   goal_for_player: <플레이어에게 보여줄 목표 문장>
   initial_state:
@@ -62,6 +63,7 @@ exercise:
   id: survival-save-quit-001
   status: draft
   command_cluster: survival-save-quit
+  engine_support: planned
   title: 저장하지 않고 빠져나오기
   goal_for_player: "변경하지 않고 Vim에서 빠져나오세요."
   initial_state:
@@ -93,6 +95,7 @@ exercise:
   id: normal-motion-basic-001
   status: draft
   command_cluster: normal-motion-basic
+  engine_support: implemented
   title: 목표 문자까지 이동하기
   goal_for_player: "커서를 X 표시 위로 이동하세요."
   initial_state:
@@ -118,6 +121,107 @@ exercise:
     optimal_key_count: 4
 ```
 
+### survival-save-quit-002
+
+```yaml
+exercise:
+  id: survival-save-quit-002
+  status: draft
+  command_cluster: survival-save-quit
+  engine_support: planned
+  title: 저장하고 종료하기
+  goal_for_player: "성공한 변경을 저장하고 종료하세요."
+  initial_state:
+    mode: NORMAL
+    cursor:
+      row: 0
+      col: 0
+    buffer: |
+      server_name correct.example.com;
+  target_state:
+    mode: NORMAL
+    buffer: |
+      server_name correct.example.com;
+  optimal_keys: ": w q enter"
+  allowed_keys: ["esc", ":", "w", "q", "enter"]
+  forbidden_keys: ["i", "a", "o", "x", "d", "c"]
+  hints:
+    - "이번에는 결과를 저장하고 종료해야 합니다."
+    - "`:wq`는 저장한 뒤 종료합니다."
+  grading:
+    pass_condition: "app exits with code 0 && buffer unchanged && mission completed"
+    optimal_key_count: 4
+```
+
+### normal-motion-basic-002
+
+```yaml
+exercise:
+  id: normal-motion-basic-002
+  status: draft
+  command_cluster: normal-motion-basic
+  engine_support: implemented
+  title: 경고 지점으로 이동하기
+  goal_for_player: "커서를 WARN 표시의 W 위로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor:
+      row: 0
+      col: 0
+    buffer: |
+      INFO boot
+      WARN disk
+      INFO done
+  target_state:
+    mode: NORMAL
+    cursor:
+      row: 1
+      col: 0
+  optimal_keys: "j"
+  allowed_keys: ["h", "j", "k", "l", "esc"]
+  forbidden_keys: ["right", "left", "up", "down"]
+  hints:
+    - "아래 줄로 내려가야 합니다."
+    - "`j`는 아래로 한 줄 이동합니다."
+  grading:
+    pass_condition: "cursor.row == 1 && cursor.col == 0"
+    optimal_key_count: 1
+```
+
+### normal-motion-basic-003
+
+```yaml
+exercise:
+  id: normal-motion-basic-003
+  status: draft
+  command_cluster: normal-motion-basic
+  engine_support: implemented
+  title: 짧은 경로 조합하기
+  goal_for_player: "커서를 X 표시 위로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor:
+      row: 0
+      col: 0
+    buffer: |
+      .....
+      ..X..
+  target_state:
+    mode: NORMAL
+    cursor:
+      row: 1
+      col: 2
+  optimal_keys: "j l l"
+  allowed_keys: ["h", "j", "k", "l", "esc"]
+  forbidden_keys: ["right", "left", "up", "down"]
+  hints:
+    - "아래로 이동한 뒤 오른쪽으로 이동하면 됩니다."
+    - "`j` 다음 `l`을 두 번 눌러보세요."
+  grading:
+    pass_condition: "cursor.row == 1 && cursor.col == 2"
+    optimal_key_count: 3
+```
+
 ### word-motion-basic-001
 
 ```yaml
@@ -125,6 +229,7 @@ exercise:
   id: word-motion-basic-001
   status: draft
   command_cluster: word-motion-basic
+  engine_support: planned
   title: 단어 시작점으로 뛰어가기
   goal_for_player: "커서를 `backend` 단어의 시작으로 이동하세요."
   initial_state:

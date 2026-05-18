@@ -103,6 +103,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/legacy-001-archive-old-implementation.md`
 - 완료일: 2026-05-18
 
+### SCENARIO-001. First 5-minute scenario content discovery
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/scenario-001-first-content-discovery.md`
+- 완료일: 2026-05-18
+
 ## Backlog
 
 | ID | 제목 | 우선순위 |
