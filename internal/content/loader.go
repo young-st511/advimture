@@ -84,9 +84,10 @@ type YAMLState struct {
 }
 
 type YAMLGoal struct {
-	Mode   string      `yaml:"mode"`
-	Cursor *CursorSpec `yaml:"cursor"`
-	Buffer string      `yaml:"buffer"`
+	Mode    string      `yaml:"mode"`
+	Cursor  *CursorSpec `yaml:"cursor"`
+	Buffer  string      `yaml:"buffer"`
+	Command string      `yaml:"command"`
 }
 
 type GradingSpec struct {
@@ -95,10 +96,11 @@ type GradingSpec struct {
 }
 
 type E2EAssertionSpec struct {
-	Buffer []string    `yaml:"buffer"`
-	Cursor *CursorSpec `yaml:"cursor"`
-	Mode   string      `yaml:"mode"`
-	Status string      `yaml:"status"`
+	Buffer  []string    `yaml:"buffer"`
+	Cursor  *CursorSpec `yaml:"cursor"`
+	Mode    string      `yaml:"mode"`
+	Status  string      `yaml:"status"`
+	Command string      `yaml:"command"`
 }
 
 type ScenarioDocument struct {
@@ -297,6 +299,9 @@ func (l Library) CoverageReports() []CoverageReport {
 			if exercise.CommandCluster != cluster.ID || !isApprovedLike(exercise.Status) {
 				continue
 			}
+			for _, command := range exercise.TrainedCommands {
+				coveredSet[command] = true
+			}
 			for _, key := range exercise.OptimalKeys {
 				coveredSet[key] = true
 			}
@@ -355,9 +360,10 @@ func (s YAMLState) toStateSpec() StateSpec {
 
 func (g YAMLGoal) toGoalSpec() GoalSpec {
 	return GoalSpec{
-		Lines:  optionalBuffer(g.Buffer),
-		Cursor: copyCursor(g.Cursor),
-		Mode:   g.Mode,
+		Lines:   optionalBuffer(g.Buffer),
+		Cursor:  copyCursor(g.Cursor),
+		Mode:    g.Mode,
+		Command: g.Command,
 	}
 }
 
@@ -509,6 +515,9 @@ func validateReplay(exercise ExerciseDocument, compiled exerciseruntime.Exercise
 	}
 	if assertions.Buffer != nil && !sameStrings(state.Vim.Lines, assertions.Buffer) {
 		return fmt.Errorf("exercise %q replay failed: buffer = %v, want %v", exercise.ID, state.Vim.Lines, assertions.Buffer)
+	}
+	if assertions.Command != "" && state.Vim.LastCommand != assertions.Command {
+		return fmt.Errorf("exercise %q replay failed: command = %q, want %q", exercise.ID, state.Vim.LastCommand, assertions.Command)
 	}
 	return nil
 }

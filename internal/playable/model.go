@@ -13,6 +13,7 @@ import (
 	exerciseruntime "github.com/young-st511/advimture/internal/runtime"
 	"github.com/young-st511/advimture/internal/scenario"
 	"github.com/young-st511/advimture/internal/tuiadapter"
+	"github.com/young-st511/advimture/internal/vimengine"
 )
 
 const missionID = "mission-1"
@@ -67,7 +68,7 @@ func (m Model) Init() tea.Cmd {
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		action := tuiadapter.MapInput(msg.String())
+		action := tuiadapter.MapInputForMode(msg.String(), m.inputMode())
 		if m.err != nil {
 			if action.Type == tuiadapter.ActionQuit {
 				_ = m.writeE2EState()
@@ -120,7 +121,15 @@ func (m Model) View() string {
 	if view.Grade != "" {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
 	}
-	b.WriteString("Keys: h/j/k/l move  ?: hint  r: retry  q: quit")
+	if view.Mode == string(vimengine.ModeCommand) {
+		b.WriteString(":" + view.CommandLine + "\n")
+		b.WriteString("Keys: type command  enter: run  esc: normal  ctrl+c: quit")
+		return b.String()
+	}
+	if view.LastCommand != "" {
+		b.WriteString(fmt.Sprintf("Command: %s\n", view.LastCommand))
+	}
+	b.WriteString("Keys: h/j/k/l/w/b/e move  ?: hint  r: retry  q: quit  :: command")
 	return b.String()
 }
 
@@ -147,6 +156,7 @@ func (m Model) State() e2estate.State {
 			Col: state.Runtime.Vim.Cursor.Col,
 		},
 		Mode:     string(state.Runtime.Vim.Mode),
+		Command:  state.Runtime.Vim.LastCommand,
 		Status:   string(state.Status),
 		Score:    score,
 		Progress: progressState,
@@ -171,6 +181,13 @@ func (m Model) applyProgressIfSucceeded() {
 
 func (m Model) writeE2EState() error {
 	return e2estate.Write(m.e2eStatePath, m.State())
+}
+
+func (m Model) inputMode() vimengine.Mode {
+	if m.run == nil {
+		return ""
+	}
+	return m.run.State().Runtime.Vim.Mode
 }
 
 func newRunFromContent(root string) (*scenario.Run, error) {

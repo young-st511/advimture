@@ -48,19 +48,19 @@ scenario:
 ```yaml
 scenario:
   id: survival-save-quit-001-scenario
-  status: draft
+  status: approved
   exercise_id: survival-save-quit-001
-  engine_support: planned
-  learning_reinforcement: "`:q!`는 변경을 버리고 나가는 command다."
+  engine_support: implemented
+  learning_reinforcement: "`esc`는 현재 mode를 빠져나와 Normal mode로 돌아온다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "일단 빠져나오기"
-  briefing: "프로덕션 서버에서 낯선 파일이 열렸습니다. 지금은 수정하지 말고 안전하게 빠져나오는 것이 목표입니다."
-  context_role: "처음 마주친 nginx 설정 파일"
-  mentor_success: "좋아요. 저장하지 않고 빠져나오는 법을 알면, 적어도 더 망치지는 않습니다."
-  mentor_failure: "지금은 편집이 아니라 탈출이 목표입니다. 변경을 버리고 나가는 명령을 떠올려보세요."
+  briefing: "편집 중인 줄에 갇혔습니다. 무언가 더 입력하기 전에 Normal mode로 돌아오세요."
+  context_role: "당황한 터미널 입력"
+  mentor_success: "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
+  mentor_failure: "지금은 빠져나오는 연습입니다. esc를 눌러 Normal mode로 돌아오세요."
   story_constraints:
-    - "플레이어에게 파일 수정을 요구하지 않는다."
-    - "`:q!`와 `:wq`의 차이를 흐리지 않는다."
+    - "저장이나 종료를 요구하지 않는다."
+    - "esc의 mode 복귀 의미만 강조한다."
 ```
 
 ### normal-motion-basic-001-scenario
@@ -88,19 +88,39 @@ scenario:
 ```yaml
 scenario:
   id: survival-save-quit-002-scenario
-  status: draft
+  status: approved
   exercise_id: survival-save-quit-002
-  engine_support: planned
-  learning_reinforcement: "`:wq`는 저장한 뒤 종료한다."
+  engine_support: implemented
+  learning_reinforcement: "`:q!`는 변경을 버리고 나가는 command-line 명령이다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
-  mission_title: "작업 마무리"
-  briefing: "설정 확인을 마쳤습니다. 이제 변경 결과를 저장하고 안전하게 종료하세요."
-  context_role: "검증된 서버 설정 파일"
-  mentor_success: "좋습니다. 필요한 작업을 저장하고 세션을 닫았습니다."
-  mentor_failure: "이번 목표는 버리고 나가는 것이 아닙니다. 저장 후 종료하는 명령을 떠올려보세요."
+  mission_title: "실험 파일 버리고 나가기"
+  briefing: "실험용 설정 파일을 잘못 열었습니다. 저장하지 않고 빠져나가야 합니다. command-line에 :q!를 실행하세요."
+  context_role: "버려도 되는 임시 설정"
+  mentor_success: "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
+  mentor_failure: "저장하지 않고 나가는 상황입니다. :를 누른 뒤 q!를 실행하세요."
   story_constraints:
-    - "`:q!`와 `:wq`의 차이를 분명히 보여준다."
-    - "추가 편집을 요구하지 않는다."
+    - "실제 파일 삭제나 저장을 수행하지 않는다."
+    - "앱 종료 단축키 q와 Vim 명령 :q!를 구분한다."
+```
+
+### survival-save-quit-003-scenario
+
+```yaml
+scenario:
+  id: survival-save-quit-003-scenario
+  status: approved
+  exercise_id: survival-save-quit-003
+  engine_support: implemented
+  learning_reinforcement: "`:wq`는 저장하고 나가는 command-line 명령이다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+  mission_title: "수정 저장 후 종료"
+  briefing: "설정 변경을 끝냈습니다. 저장하고 나가야 합니다. command-line에 :wq를 실행하세요."
+  context_role: "수정한 배포 설정"
+  mentor_success: "좋습니다. :wq는 저장하고 종료해야 할 때 쓰는 기본 생존 명령입니다."
+  mentor_failure: "이번에는 저장 후 종료입니다. :를 누른 뒤 wq를 실행하세요."
+  story_constraints:
+    - "실제 파일 저장을 수행하지 않는다."
+    - ":q!와 :wq의 의도 차이를 강조한다."
 ```
 
 ### normal-motion-basic-002-scenario

@@ -41,6 +41,34 @@ func TestCompileExerciseProducesRuntimeExercise(t *testing.T) {
 	assertStrings(t, compiled.AllowedKeys, []string{vimengine.KeyH, vimengine.KeyJ, vimengine.KeyK, vimengine.KeyL})
 }
 
+func TestCompileExerciseProducesCommandGoal(t *testing.T) {
+	compiled, err := CompileExercise(ExerciseSpec{
+		ID: "write-quit",
+		Initial: StateSpec{
+			Lines: []string{"draft"},
+			Mode:  "normal",
+		},
+		Goal: GoalSpec{
+			Command: ":wq",
+		},
+		ExpectedKeys: []string{vimengine.KeyColon, "w", "q", vimengine.KeyEnter},
+		AllowedKeys:  []string{vimengine.KeyColon, "w", "q", vimengine.KeyEnter},
+	})
+	if err != nil {
+		t.Fatalf("CompileExercise returned error: %v", err)
+	}
+
+	session := exerciseruntime.NewSession(compiled.Exercise)
+	session.ApplyKey(vimengine.KeyColon)
+	session.ApplyKey("w")
+	session.ApplyKey("q")
+	result := session.ApplyKey(vimengine.KeyEnter)
+
+	if result.State.Status != exerciseruntime.StatusSucceeded {
+		t.Fatalf("status = %q, want succeeded", result.State.Status)
+	}
+}
+
 func TestCompileExerciseCopiesMetadata(t *testing.T) {
 	spec := ExerciseSpec{
 		ID: "copy",

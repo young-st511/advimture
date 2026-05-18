@@ -14,14 +14,16 @@ const (
 )
 
 const (
-	KeyEsc = "esc"
-	KeyH   = "h"
-	KeyJ   = "j"
-	KeyK   = "k"
-	KeyL   = "l"
-	KeyW   = "w"
-	KeyB   = "b"
-	KeyE   = "e"
+	KeyEsc   = "esc"
+	KeyEnter = "enter"
+	KeyColon = ":"
+	KeyH     = "h"
+	KeyJ     = "j"
+	KeyK     = "k"
+	KeyL     = "l"
+	KeyW     = "w"
+	KeyB     = "b"
+	KeyE     = "e"
 )
 
 type Cursor struct {
@@ -31,18 +33,23 @@ type Cursor struct {
 }
 
 type State struct {
-	Mode   Mode
-	Lines  []string
-	Cursor Cursor
+	Mode        Mode
+	Lines       []string
+	Cursor      Cursor
+	CommandLine string
+	LastCommand string
 }
 
 type EventType string
 
 const (
-	EventMoved          EventType = "moved"
-	EventBoundary       EventType = "boundary"
-	EventUnsupportedKey EventType = "unsupported_key"
-	EventModeReset      EventType = "mode_reset"
+	EventMoved           EventType = "moved"
+	EventBoundary        EventType = "boundary"
+	EventUnsupportedKey  EventType = "unsupported_key"
+	EventModeReset       EventType = "mode_reset"
+	EventCommandMode     EventType = "command_mode"
+	EventCommandInput    EventType = "command_input"
+	EventCommandExecuted EventType = "command_executed"
 )
 
 type Event struct {
@@ -116,6 +123,7 @@ func Apply(state State, key string) Result {
 
 	if key == KeyEsc {
 		next.Mode = ModeNormal
+		next.CommandLine = ""
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -123,6 +131,10 @@ func Apply(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	}
+
+	if next.Mode == ModeCommand {
+		return applyCommandKey(next, key)
 	}
 
 	if next.Mode != ModeNormal {
@@ -137,6 +149,16 @@ func Apply(state State, key string) Result {
 	}
 
 	switch key {
+	case KeyColon:
+		next.Mode = ModeCommand
+		next.CommandLine = ""
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventCommandMode,
+				Key:  key,
+			}},
+		}
 	case KeyH:
 		return moveHorizontal(next, key, -1)
 	case KeyL:
@@ -158,6 +180,62 @@ func Apply(state State, key string) Result {
 				Type:    EventUnsupportedKey,
 				Key:     key,
 				Message: "key is not supported",
+			}},
+		}
+	}
+}
+
+func applyCommandKey(state State, key string) Result {
+	next := copyState(state)
+	switch key {
+	case KeyEnter:
+		command := ":" + next.CommandLine
+		if command != ":q!" && command != ":wq" {
+			return Result{
+				State: copyState(next),
+				Events: []Event{{
+					Type:    EventUnsupportedKey,
+					Key:     key,
+					Message: "command is not supported",
+				}},
+			}
+		}
+		next.Mode = ModeNormal
+		next.CommandLine = ""
+		next.LastCommand = command
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventCommandExecuted,
+				Key:  key,
+			}},
+		}
+	case KeyColon:
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "nested command mode is not supported",
+			}},
+		}
+	default:
+		if len([]rune(key)) != 1 {
+			return Result{
+				State: copyState(next),
+				Events: []Event{{
+					Type:    EventUnsupportedKey,
+					Key:     key,
+					Message: "command input is not supported",
+				}},
+			}
+		}
+		next.CommandLine += key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventCommandInput,
+				Key:  key,
 			}},
 		}
 	}
@@ -390,6 +468,9 @@ func normalizeState(state State) State {
 	}
 	if next.Mode == "" {
 		next.Mode = ModeNormal
+	}
+	if next.Mode != ModeCommand {
+		next.CommandLine = ""
 	}
 	if next.Cursor.Row < 0 {
 		next.Cursor.Row = 0

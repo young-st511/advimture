@@ -22,9 +22,10 @@ type Hint struct {
 }
 
 type Goal struct {
-	Cursor *vimengine.Cursor
-	Mode   *vimengine.Mode
-	Lines  []string
+	Cursor  *vimengine.Cursor
+	Mode    *vimengine.Mode
+	Lines   []string
+	Command *string
 }
 
 type State struct {
@@ -61,6 +62,10 @@ func CursorGoal(row int, col int) *vimengine.Cursor {
 func ModeGoal(mode vimengine.Mode) *vimengine.Mode {
 	next := mode
 	return &next
+}
+
+func CommandGoal(command string) *string {
+	return &command
 }
 
 func NewSession(exercise Exercise) *Session {
@@ -149,6 +154,9 @@ func (g Goal) Matches(state vimengine.State) bool {
 	if g.Lines != nil && !sameStrings(normalized.Lines, g.Lines) {
 		return false
 	}
+	if g.Command != nil && normalized.LastCommand != *g.Command {
+		return false
+	}
 	return true
 }
 
@@ -169,6 +177,10 @@ func copyGoal(goal Goal) Goal {
 	if goal.Mode != nil {
 		mode := *goal.Mode
 		next.Mode = &mode
+	}
+	if goal.Command != nil {
+		command := *goal.Command
+		next.Command = &command
 	}
 	next.Lines = copyStrings(goal.Lines)
 	return next

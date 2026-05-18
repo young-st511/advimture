@@ -17,6 +17,24 @@ playlists:
         exercise_id: normal-motion-basic-002
         scenario_id: normal-motion-basic-002-scenario
         engine_support: implemented
+      - id: first-5-minute-003a
+        role: survival_escape
+        command_cluster: survival-save-quit
+        exercise_id: survival-save-quit-001
+        scenario_id: survival-save-quit-001-scenario
+        engine_support: implemented
+      - id: first-5-minute-003b
+        role: survival_discard
+        command_cluster: survival-save-quit
+        exercise_id: survival-save-quit-002
+        scenario_id: survival-save-quit-002-scenario
+        engine_support: implemented
+      - id: first-5-minute-003c
+        role: survival_save
+        command_cluster: survival-save-quit
+        exercise_id: survival-save-quit-003
+        scenario_id: survival-save-quit-003-scenario
+        engine_support: implemented
       - id: first-5-minute-004
         role: efficiency_teaser
         command_cluster: word-motion-basic

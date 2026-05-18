@@ -27,9 +27,10 @@ type StateSpec struct {
 }
 
 type GoalSpec struct {
-	Cursor *CursorSpec
-	Mode   string
-	Lines  []string
+	Cursor  *CursorSpec
+	Mode    string
+	Lines   []string
+	Command string
 }
 
 type CursorSpec struct {
@@ -118,6 +119,9 @@ func validateExerciseSpec(spec ExerciseSpec) error {
 			return fmt.Errorf("goal mode: %w", err)
 		}
 	}
+	if spec.Goal.Command != "" && spec.Goal.Command != ":q!" && spec.Goal.Command != ":wq" {
+		return fmt.Errorf("goal command %q is not supported", spec.Goal.Command)
+	}
 	if spec.Goal.Cursor != nil {
 		goalLines := spec.Initial.Lines
 		if spec.Goal.Lines != nil {
@@ -152,6 +156,9 @@ func compileGoal(spec GoalSpec) (exerciseruntime.Goal, error) {
 		}
 		goal.Mode = exerciseruntime.ModeGoal(mode)
 	}
+	if spec.Command != "" {
+		goal.Command = exerciseruntime.CommandGoal(spec.Command)
+	}
 	return goal, nil
 }
 
@@ -169,7 +176,7 @@ func parseMode(value string) (vimengine.Mode, error) {
 }
 
 func (g GoalSpec) hasAnyTarget() bool {
-	return g.Cursor != nil || g.Mode != "" || g.Lines != nil
+	return g.Cursor != nil || g.Mode != "" || g.Lines != nil || g.Command != ""
 }
 
 func vimCursor(cursor CursorSpec) vimengine.Cursor {

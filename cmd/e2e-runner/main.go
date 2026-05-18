@@ -61,6 +61,7 @@ type appStateAssertion struct {
 	Buffer   []string           `yaml:"buffer"`
 	Cursor   *cursorAssertion   `yaml:"cursor"`
 	Mode     string             `yaml:"mode"`
+	Command  string             `yaml:"command"`
 	Status   string             `yaml:"status"`
 	Score    *scoreAssertion    `yaml:"score"`
 	Progress *progressAssertion `yaml:"progress"`
@@ -86,6 +87,7 @@ type appStateSummary struct {
 	Buffer   []string         `json:"buffer"`
 	Cursor   appStateCursor   `json:"cursor"`
 	Mode     string           `json:"mode"`
+	Command  string           `json:"command"`
 	Status   string           `json:"status"`
 	Score    appStateScore    `json:"score"`
 	Progress appStateProgress `json:"progress"`
@@ -472,6 +474,7 @@ func wantsAppStateAssertion(assertion appStateAssertion) bool {
 		len(assertion.Buffer) > 0 ||
 		assertion.Cursor != nil ||
 		assertion.Mode != "" ||
+		assertion.Command != "" ||
 		assertion.Status != "" ||
 		assertion.Score != nil ||
 		assertion.Progress != nil ||
@@ -527,6 +530,9 @@ func assertAppState(assertion appStateAssertion, state appStateSummary, raw []by
 	}
 	if assertion.Mode != "" && state.Mode != assertion.Mode {
 		return fmt.Errorf("app state mode: got %q, want %q", state.Mode, assertion.Mode)
+	}
+	if assertion.Command != "" && state.Command != assertion.Command {
+		return fmt.Errorf("app state command: got %q, want %q", state.Command, assertion.Command)
 	}
 	if assertion.Status != "" && state.Status != assertion.Status {
 		return fmt.Errorf("app state status: got %q, want %q", state.Status, assertion.Status)

@@ -65,7 +65,7 @@ command_cluster:
   id: survival-save-quit
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-0-survival
   title: Vim 생존: 모드 복귀와 저장/종료
   commands: ["esc", ":q!", ":wq"]
@@ -85,7 +85,7 @@ command_cluster:
     - 저장해야 하는 상황과 버려야 하는 상황을 구분하지 못한다.
   compatibility_notes:
     - `esc`는 Vim의 mode 복귀와 동일한 학습 목표로 다룬다.
-    - `:q!`, `:wq`는 실제 파일 저장보다 exercise 종료/성공 상태 전이를 우선 검증한다.
+    - `:q!`, `:wq`는 실제 파일 저장보다 command-line 입력과 exercise command goal을 우선 검증한다.
   design_notes:
     - 첫 학습 문항은 조작 성공 경험을 우선한다.
     - `:q!`와 `:wq`의 차이를 문항 목표 상태로 분리한다.
@@ -158,7 +158,7 @@ command_cluster:
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
-- `survival-save-quit`은 첫 경험의 불안감을 줄이는 데 중요하지만 command-line 입력과 app exit semantics가 필요하다.
+- `survival-save-quit`은 command-line 입력과 app exit semantics를 분리해 구현됐다. 실제 파일 저장/폐기는 아직 수행하지 않는다.
 - `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
@@ -169,7 +169,7 @@ command_cluster:
 추천:
 
 - `normal-motion-basic`: `approved`. 단 `h`, `k` coverage exercise를 후속 루프에서 반드시 보강한다.
-- `survival-save-quit`: `approved`, `engine_support: planned`.
+- `survival-save-quit`: `approved`, `engine_support: implemented`. 단 실제 파일 저장/폐기는 후속 앱/파일 작업 루프에서만 다룬다.
 - `word-motion-basic`: `approved`, `engine_support: implemented`. 단 exercise/scenario playable 승격은 후속 루프에서 진행한다.
 
 주의: `approved`는 학습 우선순위 승인이고, `implemented` 또는 playable 연결을 의미하지 않는다.

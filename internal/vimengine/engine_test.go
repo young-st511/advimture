@@ -152,6 +152,71 @@ func TestUnsupportedKeyDoesNotMove(t *testing.T) {
 	assertEvent(t, result, EventUnsupportedKey)
 }
 
+func TestEscReturnsToNormalMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeInsert,
+		Lines: []string{"abc"},
+	})
+
+	result := engine.Apply(KeyEsc)
+
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	assertEvent(t, result, EventModeReset)
+}
+
+func TestCommandLineExecutesQuitWithoutSave(t *testing.T) {
+	engine := New([]string{"scratch"})
+
+	assertApply(t, engine, KeyColon, 0, 0, EventCommandMode)
+	assertCommandLine(t, engine.State(), "")
+	assertApply(t, engine, "q", 0, 0, EventCommandInput)
+	assertCommandLine(t, engine.State(), "q")
+	assertApply(t, engine, "!", 0, 0, EventCommandInput)
+	result := engine.Apply(KeyEnter)
+
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.LastCommand != ":q!" {
+		t.Fatalf("LastCommand = %q, want :q!", result.State.LastCommand)
+	}
+	assertEvent(t, result, EventCommandExecuted)
+}
+
+func TestCommandLineExecutesWriteQuit(t *testing.T) {
+	engine := New([]string{"scratch"})
+
+	engine.Apply(KeyColon)
+	engine.Apply("w")
+	engine.Apply("q")
+	result := engine.Apply(KeyEnter)
+
+	if result.State.LastCommand != ":wq" {
+		t.Fatalf("LastCommand = %q, want :wq", result.State.LastCommand)
+	}
+	assertEvent(t, result, EventCommandExecuted)
+}
+
+func TestEscClearsCommandLine(t *testing.T) {
+	engine := New([]string{"scratch"})
+
+	engine.Apply(KeyColon)
+	engine.Apply("q")
+	result := engine.Apply(KeyEsc)
+
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.CommandLine != "" {
+		t.Fatalf("CommandLine = %q, want empty", result.State.CommandLine)
+	}
+	if result.State.LastCommand != "" {
+		t.Fatalf("LastCommand = %q, want empty", result.State.LastCommand)
+	}
+}
+
 func TestApplyIsPureTransition(t *testing.T) {
 	state := NewState([]string{"abc"})
 	result := Apply(state, KeyL)
@@ -226,5 +291,13 @@ func assertEvent(t *testing.T, result Result, eventType EventType) {
 	}
 	if result.Events[0].Type != eventType {
 		t.Fatalf("event type = %q, want %q", result.Events[0].Type, eventType)
+	}
+}
+
+func assertCommandLine(t *testing.T, state State, want string) {
+	t.Helper()
+
+	if state.CommandLine != want {
+		t.Fatalf("CommandLine = %q, want %q", state.CommandLine, want)
 	}
 }

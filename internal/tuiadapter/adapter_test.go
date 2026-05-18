@@ -45,6 +45,32 @@ func TestMapInputMapsCommands(t *testing.T) {
 	}
 }
 
+func TestMapInputInCommandModeTreatsQAsVimKey(t *testing.T) {
+	action := MapInputForMode("q", vimengine.ModeCommand)
+
+	if action.Type != ActionKey || action.Key != "q" {
+		t.Fatalf("action = %+v, want command-mode q key", action)
+	}
+}
+
+func TestMapInputMapsCommandLineKeys(t *testing.T) {
+	cases := map[string]string{
+		":":     vimengine.KeyColon,
+		"enter": vimengine.KeyEnter,
+		"esc":   vimengine.KeyEsc,
+		"w":     vimengine.KeyW,
+		"b":     vimengine.KeyB,
+		"e":     vimengine.KeyE,
+	}
+
+	for input, wantKey := range cases {
+		action := MapInput(input)
+		if action.Type != ActionKey || action.Key != wantKey {
+			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
+		}
+	}
+}
+
 func TestMapInputIgnoresUnknownInput(t *testing.T) {
 	action := MapInput("space")
 	if action.Type != ActionIgnored {
@@ -95,8 +121,30 @@ func TestRenderStateBuildsStableViewModel(t *testing.T) {
 	if view.Grade != "S" {
 		t.Fatalf("Grade = %q, want S", view.Grade)
 	}
+	if view.CommandLine != "" || view.LastCommand != "" {
+		t.Fatalf("command fields = %q/%q, want empty", view.CommandLine, view.LastCommand)
+	}
 	if len(view.BufferLines) != 1 || view.BufferLines[0] != "abc" {
 		t.Fatalf("BufferLines = %+v, want [abc]", view.BufferLines)
+	}
+}
+
+func TestRenderStateIncludesCommandFields(t *testing.T) {
+	state := scenario.State{
+		Runtime: exerciseruntime.State{
+			Vim: vimengine.State{
+				Mode:        vimengine.ModeCommand,
+				Lines:       []string{"abc"},
+				CommandLine: "q",
+				LastCommand: ":q!",
+			},
+		},
+	}
+
+	view := RenderState(state)
+
+	if view.CommandLine != "q" || view.LastCommand != ":q!" {
+		t.Fatalf("command fields = %q/%q, want q/:q!", view.CommandLine, view.LastCommand)
 	}
 }
 

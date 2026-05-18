@@ -31,6 +31,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 진행 사항은 자동 저장을 기본으로 하며, 기존 `.advimture` 계열 progress 저장 경계를 유지한다.
 - `word-motion-basic`은 `w`, `b`, `e` 각각이 optimal trace에 등장하는 approved + implemented exercise set을 가진다.
 - word motion exercise set은 replay gate와 E2E assertion gate를 통과해야 한다.
+- `survival-save-quit`은 `esc`, `:q!`, `:wq` 각각이 `trained_commands`와 command goal coverage에 등장하는 approved + implemented exercise set을 가진다.
+- `:q!`, `:wq`는 실제 파일 작업이 아니라 command-line key trace replay와 runtime command goal로 검증한다.
+- 앱 종료 단축키 `q`와 command-line mode의 `q` 입력은 분리한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

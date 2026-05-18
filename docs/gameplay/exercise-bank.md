@@ -65,35 +65,35 @@ exercise:
 ```yaml
 exercise:
   id: survival-save-quit-001
-  status: draft
+  status: approved
   command_cluster: survival-save-quit
-  engine_support: planned
-  trained_commands: [":q!"]
-  reviewed_commands: ["esc"]
-  mistake_focus: ["saving when the goal is to discard changes"]
-  replay_status: pending
-  title: 저장하지 않고 빠져나오기
-  goal_for_player: "변경하지 않고 Vim에서 빠져나오세요."
+  engine_support: implemented
+  trained_commands: ["esc"]
+  reviewed_commands: []
+  mistake_focus: ["Insert mode에서 Normal mode로 빠져나오지 못한다."]
+  replay_status: pass
+  title: Normal mode로 돌아오기
+  goal_for_player: "Insert mode에서 빠져나와 Normal mode로 돌아오세요."
   initial_state:
-    mode: NORMAL
+    mode: INSERT
     cursor:
       row: 0
       col: 0
     buffer: |
-      server_name wrong.example.com;
+      draft
   target_state:
     mode: NORMAL
-    buffer: |
-      server_name wrong.example.com;
-  optimal_keys: ": q ! enter"
-  allowed_keys: ["esc", ":", "q", "!", "enter"]
-  forbidden_keys: ["i", "a", "o", "x", "d", "c"]
+    cursor:
+      row: 0
+      col: 0
+  optimal_keys: "esc"
+  allowed_keys: ["esc"]
+  forbidden_keys: ["ctrl+c"]
   hints:
-    - "수정하지 않고 나갈 때는 저장 명령이 필요하지 않습니다."
-    - "`:q!`는 변경을 버리고 종료합니다."
+    - "esc는 현재 mode를 빠져나와 Normal mode로 돌아갑니다."
   grading:
-    pass_condition: "app exits with code 0 && buffer unchanged && no progress file required"
-    optimal_key_count: 4
+    pass_condition: "mode == normal"
+    optimal_key_count: 1
 ```
 
 ### normal-motion-basic-001
@@ -138,34 +138,68 @@ exercise:
 ```yaml
 exercise:
   id: survival-save-quit-002
-  status: draft
+  status: approved
   command_cluster: survival-save-quit
-  engine_support: planned
-  trained_commands: [":wq"]
-  reviewed_commands: ["esc", ":q!"]
-  mistake_focus: ["discarding when the goal is to save"]
-  replay_status: pending
-  title: 저장하고 종료하기
-  goal_for_player: "성공한 변경을 저장하고 종료하세요."
+  engine_support: implemented
+  trained_commands: [":q!"]
+  reviewed_commands: ["esc"]
+  mistake_focus: ["저장하지 않고 나가야 할 때 :q!를 입력하지 못한다."]
+  replay_status: pass
+  title: 변경 버리고 나가기
+  goal_for_player: "command-line에 :q!를 실행하세요."
   initial_state:
     mode: NORMAL
     cursor:
       row: 0
       col: 0
     buffer: |
-      server_name correct.example.com;
+      throwaway draft
   target_state:
     mode: NORMAL
-    buffer: |
-      server_name correct.example.com;
-  optimal_keys: ": w q enter"
-  allowed_keys: ["esc", ":", "w", "q", "enter"]
-  forbidden_keys: ["i", "a", "o", "x", "d", "c"]
+    command: ":q!"
+  optimal_keys: ": q ! enter"
+  allowed_keys: [":", "q", "!", "enter", "esc"]
+  forbidden_keys: ["ctrl+c"]
   hints:
-    - "이번에는 결과를 저장하고 종료해야 합니다."
-    - "`:wq`는 저장한 뒤 종료합니다."
+    - ":로 command-line mode에 들어갑니다."
+    - "q!는 변경을 버리고 종료한다는 뜻입니다."
   grading:
-    pass_condition: "app exits with code 0 && buffer unchanged && mission completed"
+    pass_condition: "last_command == :q!"
+    optimal_key_count: 4
+```
+
+### survival-save-quit-003
+
+```yaml
+exercise:
+  id: survival-save-quit-003
+  status: approved
+  command_cluster: survival-save-quit
+  engine_support: implemented
+  trained_commands: [":wq"]
+  reviewed_commands: ["esc", ":q!"]
+  mistake_focus: ["저장 후 종료와 버리고 종료를 구분하지 못한다."]
+  replay_status: pass
+  title: 저장하고 나가기
+  goal_for_player: "command-line에 :wq를 실행하세요."
+  initial_state:
+    mode: NORMAL
+    cursor:
+      row: 0
+      col: 0
+    buffer: |
+      edited config
+  target_state:
+    mode: NORMAL
+    command: ":wq"
+  optimal_keys: ": w q enter"
+  allowed_keys: [":", "w", "q", "enter", "esc"]
+  forbidden_keys: ["ctrl+c"]
+  hints:
+    - ":로 command-line mode에 들어갑니다."
+    - "wq는 저장(write)하고 종료(quit)한다는 뜻입니다."
+  grading:
+    pass_condition: "last_command == :wq"
     optimal_key_count: 4
 ```
 

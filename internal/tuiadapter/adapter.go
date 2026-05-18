@@ -28,6 +28,8 @@ type ViewModel struct {
 	Message     string
 	Status      string
 	Mode        string
+	CommandLine string
+	LastCommand string
 	BufferLines []string
 	CursorRow   int
 	CursorCol   int
@@ -38,7 +40,34 @@ type ViewModel struct {
 }
 
 func MapInput(input string) Action {
-	switch strings.ToLower(strings.TrimSpace(input)) {
+	return MapInputForMode(input, vimengine.ModeNormal)
+}
+
+func MapInputForMode(input string, mode vimengine.Mode) Action {
+	normalized := strings.ToLower(strings.TrimSpace(input))
+	if normalized == "ctrl+c" {
+		return Action{Type: ActionQuit}
+	}
+	if mode == vimengine.ModeCommand {
+		switch normalized {
+		case "enter":
+			return Action{Type: ActionKey, Key: vimengine.KeyEnter}
+		case "esc":
+			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
+		case "q", "w", "!":
+			return Action{Type: ActionKey, Key: normalized}
+		default:
+			return Action{Type: ActionIgnored}
+		}
+	}
+
+	switch normalized {
+	case ":":
+		return Action{Type: ActionKey, Key: vimengine.KeyColon}
+	case "enter":
+		return Action{Type: ActionKey, Key: vimengine.KeyEnter}
+	case "esc":
+		return Action{Type: ActionKey, Key: vimengine.KeyEsc}
 	case "h", "left":
 		return Action{Type: ActionKey, Key: vimengine.KeyH}
 	case "j", "down":
@@ -47,11 +76,17 @@ func MapInput(input string) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyK}
 	case "l", "right":
 		return Action{Type: ActionKey, Key: vimengine.KeyL}
+	case "w":
+		return Action{Type: ActionKey, Key: vimengine.KeyW}
+	case "b":
+		return Action{Type: ActionKey, Key: vimengine.KeyB}
+	case "e":
+		return Action{Type: ActionKey, Key: vimengine.KeyE}
 	case "?":
 		return Action{Type: ActionHint}
 	case "r":
 		return Action{Type: ActionRetry}
-	case "q", "ctrl+c":
+	case "q":
 		return Action{Type: ActionQuit}
 	default:
 		return Action{Type: ActionIgnored}
@@ -65,6 +100,8 @@ func RenderState(state scenario.State) ViewModel {
 		Message:     state.Message,
 		Status:      string(state.Status),
 		Mode:        string(state.Runtime.Vim.Mode),
+		CommandLine: state.Runtime.Vim.CommandLine,
+		LastCommand: state.Runtime.Vim.LastCommand,
 		BufferLines: copyStrings(state.Runtime.Vim.Lines),
 		CursorRow:   state.Runtime.Vim.Cursor.Row,
 		CursorCol:   state.Runtime.Vim.Cursor.Col,

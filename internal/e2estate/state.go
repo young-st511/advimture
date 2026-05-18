@@ -10,6 +10,7 @@ type State struct {
 	Buffer   []string `json:"buffer"`
 	Cursor   Cursor   `json:"cursor"`
 	Mode     string   `json:"mode"`
+	Command  string   `json:"command,omitempty"`
 	Status   string   `json:"status"`
 	Score    Score    `json:"score"`
 	Progress Progress `json:"progress"`

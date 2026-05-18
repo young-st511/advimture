@@ -1,4 +1,123 @@
 exercises:
+  - id: survival-save-quit-001
+    status: approved
+    command_cluster: survival-save-quit
+    engine_support: implemented
+    trained_commands: ["esc"]
+    reviewed_commands: []
+    mistake_focus: ["Insert mode에서 Normal mode로 빠져나오지 못한다."]
+    replay_status: pass
+    title: "Normal mode로 돌아오기"
+    goal_for_player: "Insert mode에서 빠져나와 Normal mode로 돌아오세요."
+    initial_state:
+      mode: insert
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        draft
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+    optimal_keys: ["esc"]
+    allowed_keys: ["esc"]
+    forbidden_keys: ["ctrl+c"]
+    hints:
+      - after_keys: 1
+        text: "esc는 현재 mode를 빠져나와 Normal mode로 돌아갑니다."
+    grading:
+      pass_condition: "mode == normal"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["draft"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: survival-save-quit-002
+    status: approved
+    command_cluster: survival-save-quit
+    engine_support: implemented
+    trained_commands: [":q!"]
+    reviewed_commands: ["esc"]
+    mistake_focus: ["저장하지 않고 나가야 할 때 :q!를 입력하지 못한다."]
+    replay_status: pass
+    title: "변경 버리고 나가기"
+    goal_for_player: "command-line에 :q!를 실행하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        throwaway draft
+    target_state:
+      mode: normal
+      command: ":q!"
+    optimal_keys: [":", "q", "!", "enter"]
+    allowed_keys: [":", "q", "!", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    hints:
+      - after_keys: 1
+        text: ":로 command-line mode에 들어갑니다."
+      - after_keys: 3
+        text: "q!는 변경을 버리고 종료한다는 뜻입니다."
+    grading:
+      pass_condition: "last_command == :q!"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["throwaway draft"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+      command: ":q!"
+
+  - id: survival-save-quit-003
+    status: approved
+    command_cluster: survival-save-quit
+    engine_support: implemented
+    trained_commands: [":wq"]
+    reviewed_commands: ["esc", ":q!"]
+    mistake_focus: ["저장 후 종료와 버리고 종료를 구분하지 못한다."]
+    replay_status: pass
+    title: "저장하고 나가기"
+    goal_for_player: "command-line에 :wq를 실행하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        edited config
+    target_state:
+      mode: normal
+      command: ":wq"
+    optimal_keys: [":", "w", "q", "enter"]
+    allowed_keys: [":", "w", "q", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    hints:
+      - after_keys: 1
+        text: ":로 command-line mode에 들어갑니다."
+      - after_keys: 3
+        text: "wq는 저장(write)하고 종료(quit)한다는 뜻입니다."
+    grading:
+      pass_condition: "last_command == :wq"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["edited config"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+      command: ":wq"
+
   - id: normal-motion-basic-001
     status: approved
     command_cluster: normal-motion-basic

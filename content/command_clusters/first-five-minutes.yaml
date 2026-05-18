@@ -2,7 +2,7 @@ command_clusters:
   - id: survival-save-quit
     status: approved
     compatibility_tier: pedagogical
-    engine_support: planned
+    engine_support: implemented
     curriculum_area: chapter-0-survival
     title: "Vim 생존: 모드 복귀와 저장/종료"
     commands: ["esc", ":q!", ":wq"]

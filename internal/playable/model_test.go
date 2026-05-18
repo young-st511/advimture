@@ -89,6 +89,20 @@ func TestPlayableReportsContentLoadError(t *testing.T) {
 	}
 }
 
+func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
+	model := New(Options{ContentRoot: contentRootForTest()})
+
+	model, _ = updateWithKey(t, model, ":")
+
+	view := model.View()
+	if !strings.Contains(view, ":") {
+		t.Fatalf("view = %q, want command prompt", view)
+	}
+	if strings.Contains(view, "q: quit") {
+		t.Fatalf("view = %q, should not show q quit hint in command mode", view)
+	}
+}
+
 func TestPlayableCanQuitFromContentLoadError(t *testing.T) {
 	model := New(Options{ContentRoot: filepath.Join(t.TempDir(), "missing")})
 

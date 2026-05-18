@@ -49,6 +49,26 @@ func TestSessionKeepsRunningBeforeGoalMatches(t *testing.T) {
 	}
 }
 
+func TestSessionSucceedsWhenCommandGoalMatches(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "write-quit",
+		Initial: vimengine.NewState([]string{"draft"}),
+		Goal: Goal{
+			Command: CommandGoal(":wq"),
+		},
+	})
+
+	session.ApplyKey(vimengine.KeyColon)
+	session.ApplyKey("w")
+	session.ApplyKey("q")
+	result := session.ApplyKey(vimengine.KeyEnter)
+
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyColon, "w", "q", vimengine.KeyEnter})
+}
+
 func TestUnsupportedKeyIsRecorded(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "unsupported",
