@@ -1,0 +1,111 @@
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    trained_commands: ["l"]
+    reviewed_commands: ["h"]
+    mistake_focus: ["h와 l 방향을 헷갈린다."]
+    replay_status: pending
+    title: "목표 문자까지 이동하기"
+    goal_for_player: "커서를 c 위로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        abc
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 2
+    optimal_keys: ["l", "l"]
+    allowed_keys: ["h", "j", "k", "l", "esc"]
+    forbidden_keys: ["right", "left", "up", "down"]
+    hints:
+      - after_keys: 1
+        text: "오른쪽으로 한 칸 더 이동해야 합니다."
+      - after_keys: 2
+        text: "l은 오른쪽으로 한 칸 이동합니다."
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 2"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor:
+        row: 0
+        col: 2
+      mode: normal
+      status: succeeded
+
+  - id: normal-motion-basic-002
+    status: draft
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    trained_commands: ["j"]
+    reviewed_commands: ["k"]
+    mistake_focus: ["j와 k 방향을 헷갈린다."]
+    replay_status: pending
+    title: "경고 지점으로 이동하기"
+    goal_for_player: "커서를 WARN 표시의 W 위로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        INFO boot
+        WARN disk
+        INFO done
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+    optimal_keys: ["j"]
+    allowed_keys: ["h", "j", "k", "l", "esc"]
+    forbidden_keys: ["right", "left", "up", "down"]
+    hints:
+      - after_keys: 1
+        text: "아래 줄로 내려가야 합니다."
+      - after_keys: 2
+        text: "j는 아래로 한 줄 이동합니다."
+    grading:
+      pass_condition: "cursor.row == 1 && cursor.col == 0"
+      optimal_key_count: 1
+
+  - id: word-motion-basic-001
+    status: draft
+    command_cluster: word-motion-basic
+    engine_support: planned
+    trained_commands: ["w"]
+    reviewed_commands: ["b", "e"]
+    mistake_focus: ["l 반복으로 긴 줄을 이동하려고 한다."]
+    replay_status: pending
+    title: "단어 시작점으로 뛰어가기"
+    goal_for_player: "커서를 backend 단어의 시작으로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        service api backend enabled
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 12
+    optimal_keys: ["w", "w"]
+    allowed_keys: ["h", "j", "k", "l", "w", "b", "e", "esc"]
+    forbidden_keys: ["right", "left", "up", "down"]
+    hints:
+      - after_keys: 1
+        text: "한 글자씩 이동하지 말고 단어 단위로 이동해보세요."
+      - after_keys: 2
+        text: "w는 다음 단어의 시작으로 이동합니다."
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 12"
+      optimal_key_count: 2

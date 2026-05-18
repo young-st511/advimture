@@ -1,0 +1,45 @@
+scenarios:
+  - id: normal-motion-basic-001-scenario
+    status: approved
+    exercise_id: normal-motion-basic-001
+    engine_support: implemented
+    learning_reinforcement: "l은 Normal mode에서 오른쪽으로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+    mission_title: "커서 위치 맞추기"
+    briefing: "터미널 지도에서 목표 문자까지 커서를 이동하세요. 화살표 키 대신 Vim 기본 이동을 사용합니다."
+    context_role: "짧은 터미널 지도"
+    mentor_success: "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
+    mentor_failure: "지금은 오른쪽 이동 감각을 익히는 단계입니다. l 방향을 떠올려보세요."
+    story_constraints:
+      - "긴 거리 이동을 요구하지 않는다."
+      - "기본 이동의 방향 학습에 집중한다."
+
+  - id: normal-motion-basic-002-scenario
+    status: draft
+    exercise_id: normal-motion-basic-002
+    engine_support: implemented
+    learning_reinforcement: "j는 아래 줄로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+    mission_title: "경고 줄 찾기"
+    briefing: "부팅 로그에서 경고가 난 줄로 이동해야 합니다. 아래 줄로 내려가 WARN 표시를 확인하세요."
+    context_role: "짧은 시스템 로그"
+    mentor_success: "좋습니다. 위아래 이동을 써서 필요한 줄을 잡았습니다."
+    mentor_failure: "지금은 아래 줄로 내려가는 연습입니다. j 방향을 떠올려보세요."
+    story_constraints:
+      - "편집이나 검색을 요구하지 않는다."
+      - "j의 아래 방향 학습에 집중한다."
+
+  - id: word-motion-basic-001-scenario
+    status: draft
+    exercise_id: word-motion-basic-001
+    engine_support: planned
+    learning_reinforcement: "w는 다음 단어 시작점으로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+    mission_title: "서비스 이름 찾기"
+    briefing: "배포 설정 한 줄에서 backend 항목으로 빠르게 이동해야 합니다. 한 글자씩 걷지 말고 단어 단위로 이동하세요."
+    context_role: "서비스 라우팅 설정"
+    mentor_success: "좋아요. 단어 단위 이동을 쓰면 긴 설정 줄에서도 금방 위치를 잡을 수 있습니다."
+    mentor_failure: "지금 목표는 속도입니다. w로 다음 단어 시작점까지 뛰어가보세요."
+    story_constraints:
+      - "편집을 요구하지 않는다."
+      - "w의 효율을 l 반복과 비교해 체감하게 한다."

@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice 없음. 다음 후보는 `CONTENT-001`이다.
+현재 active slice 없음. 다음 후보는 `PLAY-002`다.
 
 ## 완료된 초기 세팅
 
@@ -112,6 +112,11 @@ Phase: Vim Learning Foundation
 ### VIM-CURRICULUM-001. Scenario production harness
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/vim-curriculum-001-scenario-production-harness.md`
+- 완료일: 2026-05-18
+
+### CONTENT-001. YAML content loader
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/content-001-yaml-loader.md`
 - 완료일: 2026-05-18
 
 ## Backlog

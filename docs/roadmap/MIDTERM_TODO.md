@@ -11,7 +11,7 @@
 | 3 | LEGACY-001 | completed | 새 playable path가 canonical이 된 뒤 기존 editor/game 격리 |
 | 4 | SCENARIO-001 | completed | 첫 5분 시나리오 워크플로우로 content loader 요구사항 발견 |
 | 5 | VIM-CURRICULUM-001 | completed | Vim curriculum map과 scenario production harness |
-| 6 | CONTENT-001 | planned | 새 content schema용 YAML/JSON loader |
+| 6 | CONTENT-001 | completed | 새 content schema용 YAML loader |
 | 7 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
 | 8 | SURVIVAL-001 | planned | `esc`, `:q!`, `:wq` 생존/종료 루프 |
 | 9 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
@@ -23,7 +23,7 @@
 | ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |----|----------|-------------|------|---------------|
 | VIM-001 | curriculum defaults 결정 완료 | 첫 5분 command cluster approval packet | `rg`, `go test ./...` | completed: 사용자 승인 후 3개 cluster를 `approved`로 승격했다. |
-| CONTENT-001 | VIM-001 승인 또는 approval packet 준비 | root `content/` YAML fixture, loader, validator | `go test ./internal/content/...`, `go test ./...` | draft/planned 콘텐츠는 로드하되 playable 후보에서 제외한다. |
+| CONTENT-001 | VIM-001 승인 완료 | root `content/` YAML fixture, loader, validator | `go test ./internal/content/...`, `go test ./...` | completed: draft/planned 콘텐츠는 로드하되 playable 후보에서 제외한다. |
 | PLAY-002 | CONTENT-001 통과 | hardcoded playable 제거, file-backed playable | `go test ./internal/playable/...`, `make e2e-smoke` | screen assertion만 믿지 않고 app state/progress를 함께 본다. |
 | CONTENT-002 | file-backed playable 통과 | replay/coverage validator | content replay tests, coverage report | `coverage_required`와 `replay_status` 없이는 approved/playable 승격 금지. |
 | VIM-012 | word-motion cluster approved | `w/b/e` engine, oracle fixtures | `go test ./internal/vimengine/...`, oracle comparison | word boundary, 공백, 문장부호 edge case를 먼저 고정한다. |
@@ -44,4 +44,4 @@
 
 ## 현재 판단
 
-현재 active slice는 없다. 다음 작업은 **CONTENT-001 새 content schema용 YAML loader**이며, VIM-001에서 승인된 `normal-motion-basic`, `survival-save-quit`, `word-motion-basic`을 입력으로 사용한다.
+현재 active slice는 없다. 다음 작업은 **PLAY-002 file-backed playable**이며, CONTENT-001의 `LoadLibrary`와 root `content/` YAML fixture를 입력으로 사용한다.

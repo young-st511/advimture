@@ -1,0 +1,25 @@
+playlists:
+  - id: first-5-minute
+    status: draft
+    title: "첫 5분 Vim 생존 루프"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: first-5-minute-002
+        role: first_success
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: first-5-minute-003
+        role: spatial_practice
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-002
+        scenario_id: normal-motion-basic-002-scenario
+        engine_support: implemented
+      - id: first-5-minute-004
+        role: efficiency_teaser
+        command_cluster: word-motion-basic
+        exercise_id: word-motion-basic-001
+        scenario_id: word-motion-basic-001-scenario
+        engine_support: planned
