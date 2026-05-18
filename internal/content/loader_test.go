@@ -43,6 +43,9 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	if playable[0].ID != "normal-motion-basic-001" {
 		t.Fatalf("playable[0].ID = %q, want normal-motion-basic-001", playable[0].ID)
 	}
+	if playable[0].ReplayStatus != ReplayStatusPass {
+		t.Fatalf("playable[0].ReplayStatus = %q, want pass", playable[0].ReplayStatus)
+	}
 }
 
 func TestCompileLoadedExerciseMatchesPlayableTarget(t *testing.T) {
@@ -131,6 +134,155 @@ exercises:
 	_, err := LoadLibrary(root)
 	if err == nil || !strings.Contains(err.Error(), "missing command cluster") {
 		t.Fatalf("LoadLibrary error = %v, want missing command cluster", err)
+	}
+}
+
+func TestLoadLibraryRejectsApprovedImplementedClusterWithoutCoverage(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "command_clusters", "clusters.yaml"), `
+command_clusters:
+  - id: normal-motion-basic
+    status: approved
+    compatibility_tier: exact
+    engine_support: implemented
+    title: Basic motion
+    commands: ["h", "j", "k", "l"]
+    coverage_required: []
+    oracle: optional
+    purpose: Move cursor
+    prerequisite: []
+    difficulty: beginner
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "coverage_required") {
+		t.Fatalf("LoadLibrary error = %v, want coverage_required", err)
+	}
+}
+
+func TestLoadLibraryRejectsApprovedImplementedExerciseWithoutReplayPass(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pending
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 1
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "replay_status") {
+		t.Fatalf("LoadLibrary error = %v, want replay_status", err)
+	}
+}
+
+func TestLoadLibraryRejectsReplayPassWhenOptimalKeysMissGoal(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 2}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 2"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 2}
+      mode: normal
+      status: succeeded
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "replay failed") {
+		t.Fatalf("LoadLibrary error = %v, want replay failed", err)
+	}
+}
+
+func TestLoadLibraryRejectsReplayPassWithTrailingOptimalKeys(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l", "l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: normal
+      status: succeeded
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "key trace") {
+		t.Fatalf("LoadLibrary error = %v, want key trace", err)
+	}
+}
+
+func TestLoadLibraryRejectsReplayPassWithoutE2EAssertions(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 1
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "e2e_assertions") {
+		t.Fatalf("LoadLibrary error = %v, want e2e_assertions", err)
 	}
 }
 
@@ -245,6 +397,11 @@ exercises:
     grading:
       pass_condition: "cursor.row == 0 && cursor.col == 1"
       optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: normal
+      status: succeeded
 `)
 
 	_, err := LoadLibrary(root)
@@ -282,6 +439,7 @@ exercises:
     status: approved
     command_cluster: normal-motion-basic
     engine_support: implemented
+    replay_status: pass
     title: Move right
     initial_state:
       mode: normal
@@ -294,6 +452,11 @@ exercises:
     grading:
       pass_condition: "cursor.row == 0 && cursor.col == 1"
       optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: normal
+      status: succeeded
 `)
 	writeYAML(t, filepath.Join(root, "scenarios", "scenarios.yaml"), `
 scenarios:

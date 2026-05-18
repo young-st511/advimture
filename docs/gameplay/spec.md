@@ -51,3 +51,10 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 제품 기획을 시작하기 전에 `docs/roadmap/PRODUCT.md`에 목표, 표면, 기둥, 워크스트림이 채워져 있어야 한다.
 - [draft] 첫 구현 slice를 시작하기 전에 `docs/roadmap/PROGRAM.md`에 현재 phase와 활성 slice가 있어야 한다.
 - [draft] 기존 `docs/archived/GAME_DESIGN.md`에서 재사용할 아이디어는 그대로 구현하지 않고, 이 spec 또는 ExecPlan의 승인된 수용 기준으로 먼저 승격해야 한다.
+
+### Content Gate
+
+- approved + implemented command cluster는 비어 있지 않은 `coverage_required`를 가져야 한다.
+- approved + implemented exercise는 `replay_status: pass`가 아니면 load에 실패한다.
+- `replay_status: pass`인 approved + implemented exercise는 `optimal_keys` 재생 결과가 목표 상태와 E2E assertion을 만족해야 한다.
+- playable exercise 목록은 replay gate를 통과한 exercise만 반환한다.

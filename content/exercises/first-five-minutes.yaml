@@ -6,7 +6,7 @@ exercises:
     trained_commands: ["l"]
     reviewed_commands: ["h"]
     mistake_focus: ["h와 l 방향을 헷갈린다."]
-    replay_status: pending
+    replay_status: pass
     title: "목표 문자까지 이동하기"
     goal_for_player: "커서를 c 위로 이동하세요."
     initial_state:

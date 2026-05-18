@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 
+	exerciseruntime "github.com/young-st511/advimture/internal/runtime"
 	"gopkg.in/yaml.v3"
 )
 
@@ -25,6 +26,14 @@ const (
 	EngineSupportImplemented EngineSupport = "implemented"
 	EngineSupportPlanned     EngineSupport = "planned"
 	EngineSupportUnsupported EngineSupport = "unsupported"
+)
+
+type ReplayStatus string
+
+const (
+	ReplayStatusPending ReplayStatus = "pending"
+	ReplayStatusPass    ReplayStatus = "pass"
+	ReplayStatusFail    ReplayStatus = "fail"
 )
 
 type CommandCluster struct {
@@ -55,7 +64,7 @@ type ExerciseDocument struct {
 	TrainedCommands  []string         `yaml:"trained_commands"`
 	ReviewedCommands []string         `yaml:"reviewed_commands"`
 	MistakeFocus     []string         `yaml:"mistake_focus"`
-	ReplayStatus     string           `yaml:"replay_status"`
+	ReplayStatus     ReplayStatus     `yaml:"replay_status"`
 	Title            string           `yaml:"title"`
 	GoalForPlayer    string           `yaml:"goal_for_player"`
 	InitialState     YAMLState        `yaml:"initial_state"`
@@ -240,6 +249,9 @@ func (l Library) Validate() error {
 		if !validEngineSupport(cluster.EngineSupport) {
 			return fmt.Errorf("command cluster %q has invalid engine_support %q", cluster.ID, cluster.EngineSupport)
 		}
+		if isApprovedLike(cluster.Status) && cluster.EngineSupport == EngineSupportImplemented && len(cluster.CoverageRequired) == 0 {
+			return fmt.Errorf("command cluster %q coverage_required is required", cluster.ID)
+		}
 	}
 
 	for _, exercise := range l.Exercises {
@@ -266,7 +278,7 @@ func (l Library) PlayableExercises() []ExerciseDocument {
 	exercises := make([]ExerciseDocument, 0)
 	for _, exercise := range l.Exercises {
 		if exercise.Status == StatusApproved || exercise.Status == StatusImplemented {
-			if exercise.EngineSupport == EngineSupportImplemented {
+			if exercise.EngineSupport == EngineSupportImplemented && exercise.ReplayStatus == ReplayStatusPass {
 				exercises = append(exercises, exercise)
 			}
 		}
@@ -363,6 +375,9 @@ func (l Library) validateExerciseDocument(exercise ExerciseDocument) error {
 	if !validEngineSupport(exercise.EngineSupport) {
 		return fmt.Errorf("exercise %q has invalid engine_support %q", exercise.ID, exercise.EngineSupport)
 	}
+	if exercise.ReplayStatus != "" && !validReplayStatus(exercise.ReplayStatus) {
+		return fmt.Errorf("exercise %q has invalid replay_status %q", exercise.ID, exercise.ReplayStatus)
+	}
 	if isApprovedLike(exercise.Status) && !isApprovedLike(cluster.Status) {
 		return fmt.Errorf("approved exercise %q references non-approved command cluster %q", exercise.ID, cluster.ID)
 	}
@@ -372,8 +387,17 @@ func (l Library) validateExerciseDocument(exercise ExerciseDocument) error {
 	if err := validateKeys(exercise); err != nil {
 		return err
 	}
-	if _, err := CompileExercise(exercise.ToExerciseSpec()); err != nil {
+	compiled, err := CompileExercise(exercise.ToExerciseSpec())
+	if err != nil {
 		return fmt.Errorf("exercise %q compile failed: %w", exercise.ID, err)
+	}
+	if isApprovedLike(exercise.Status) && exercise.EngineSupport == EngineSupportImplemented {
+		if exercise.ReplayStatus != ReplayStatusPass {
+			return fmt.Errorf("exercise %q replay_status must be %q before approval", exercise.ID, ReplayStatusPass)
+		}
+		if err := validateReplay(exercise, compiled.Exercise); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -441,6 +465,50 @@ func validateKeys(exercise ExerciseDocument) error {
 		if !allowed[key] {
 			return fmt.Errorf("exercise %q optimal key %q is not allowed", exercise.ID, key)
 		}
+	}
+	return nil
+}
+
+func validateReplay(exercise ExerciseDocument, compiled exerciseruntime.Exercise) error {
+	session := exerciseruntime.NewSession(compiled)
+	for _, key := range exercise.OptimalKeys {
+		session.ApplyKey(key)
+	}
+
+	state := session.State()
+	if !sameStrings(state.KeyTrace, exercise.OptimalKeys) {
+		return fmt.Errorf("exercise %q replay failed: key trace = %v, want %v", exercise.ID, state.KeyTrace, exercise.OptimalKeys)
+	}
+	if state.Status != exerciseruntime.StatusSucceeded {
+		return fmt.Errorf("exercise %q replay failed: status = %q, want %q", exercise.ID, state.Status, exerciseruntime.StatusSucceeded)
+	}
+
+	assertions := exercise.E2EAssertions
+	if len(assertions.Buffer) == 0 {
+		return fmt.Errorf("exercise %q e2e_assertions.buffer is required for replay pass", exercise.ID)
+	}
+	if assertions.Cursor == nil {
+		return fmt.Errorf("exercise %q e2e_assertions.cursor is required for replay pass", exercise.ID)
+	}
+	if strings.TrimSpace(assertions.Mode) == "" {
+		return fmt.Errorf("exercise %q e2e_assertions.mode is required for replay pass", exercise.ID)
+	}
+	if strings.TrimSpace(assertions.Status) == "" {
+		return fmt.Errorf("exercise %q e2e_assertions.status is required for replay pass", exercise.ID)
+	}
+	if assertions.Cursor != nil {
+		if state.Vim.Cursor.Row != assertions.Cursor.Row || state.Vim.Cursor.Col != assertions.Cursor.Col {
+			return fmt.Errorf("exercise %q replay failed: cursor = %d,%d, want %d,%d", exercise.ID, state.Vim.Cursor.Row, state.Vim.Cursor.Col, assertions.Cursor.Row, assertions.Cursor.Col)
+		}
+	}
+	if assertions.Mode != "" && string(state.Vim.Mode) != assertions.Mode {
+		return fmt.Errorf("exercise %q replay failed: mode = %q, want %q", exercise.ID, state.Vim.Mode, assertions.Mode)
+	}
+	if assertions.Status != "" && string(state.Status) != assertions.Status {
+		return fmt.Errorf("exercise %q replay failed: assertion status = %q, want %q", exercise.ID, state.Status, assertions.Status)
+	}
+	if assertions.Buffer != nil && !sameStrings(state.Vim.Lines, assertions.Buffer) {
+		return fmt.Errorf("exercise %q replay failed: buffer = %v, want %v", exercise.ID, state.Vim.Lines, assertions.Buffer)
 	}
 	return nil
 }
@@ -527,6 +595,15 @@ func validEngineSupport(value EngineSupport) bool {
 	}
 }
 
+func validReplayStatus(value ReplayStatus) bool {
+	switch value {
+	case ReplayStatusPending, ReplayStatusPass, ReplayStatusFail:
+		return true
+	default:
+		return false
+	}
+}
+
 func isApprovedLike(status Status) bool {
 	return status == StatusApproved || status == StatusImplemented
 }
@@ -534,4 +611,16 @@ func isApprovedLike(status Status) bool {
 func isYAML(name string) bool {
 	ext := strings.ToLower(filepath.Ext(name))
 	return ext == ".yaml" || ext == ".yml"
+}
+
+func sameStrings(left []string, right []string) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for index := range left {
+		if left[index] != right[index] {
+			return false
+		}
+	}
+	return true
 }

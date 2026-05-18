@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice 없음. 다음 후보는 `CONTENT-002` 또는 `VIM-012`다.
+현재 active slice 없음. 다음 후보는 `VIM-012`다.
 
 ## 완료된 초기 세팅
 
@@ -122,6 +122,11 @@ Phase: Vim Learning Foundation
 ### PLAY-002. File-backed playable
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/play-002-file-backed-playable.md`
+- 완료일: 2026-05-18
+
+### CONTENT-002. Replay and coverage validator
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/content-002-replay-coverage-validator.md`
 - 완료일: 2026-05-18
 
 ## Backlog
