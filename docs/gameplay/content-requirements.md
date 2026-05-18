@@ -11,6 +11,9 @@
 - loader는 사람이 읽기 쉬운 작성 단위와 엔진이 소비하기 쉬운 compiled 단위를 분리해야 한다.
 - 현재 엔진이 지원하지 않는 command를 포함한 콘텐츠는 `engine_support: planned`로 남기고 playable path에 연결하지 않는다.
 - 모든 playable 콘텐츠는 TUI E2E가 재현할 수 있는 key trace와 app state assertion을 가져야 한다.
+- 실제 학습용 tutorial playlist는 8문항 이하로 나눈다.
+- 새 command 학습 문항은 최대 입력 수, 필수 command, 금지 입력, 금지 우회 전략, 실패 코칭을 함께 정의해야 한다.
+- 최대 입력 수 초과나 금지 입력 사용은 즉시 실패이며, 초반 튜토리얼 재시도는 기본 무제한이다.
 
 ## First 5-Minute Loop
 
@@ -18,7 +21,7 @@ ID: `first-5-minute`
 
 목적: 플레이어가 Vim에서 당황하지 않고, Normal mode에서 커서를 움직이며, 짧은 목표를 정확히 달성하는 첫 성공 경험을 만든다.
 
-> 현재 구현 메모: 이 섹션의 beat 예시는 CONTENT-001 이전 discovery 기록이다. 현재 playable content의 canonical source는 `content/` YAML과 `docs/gameplay/spec.md`이며, `first-5-minute` playlist는 `h/j/k/l`, survival, word motion, file navigation, substitute까지 포함한 17개 replay-pass exercise로 확장됐다.
+> 현재 구현 메모: 이 섹션의 beat 예시는 CONTENT-001 이전 discovery 기록이다. 현재 playable content의 canonical source는 `content/` YAML과 `docs/gameplay/spec.md`이며, `first-5-minute` playlist는 `h/j/k/l`, survival, word motion, file navigation, substitute까지 포함한 17개 replay-pass exercise로 확장됐다. 실제 학습 UX에서는 이 17개를 8문항 이하의 짧은 tutorial episodes로 분리하고, substitute 계열은 중반 고급 튜토리얼로 이동한다.
 
 ### Beat 1. Panic Exit
 

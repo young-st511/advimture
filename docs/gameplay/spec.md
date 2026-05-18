@@ -23,6 +23,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - Exercise는 `docs/gameplay/exercise-bank.md`에 축적한다.
 - Scenario는 `docs/gameplay/scenario-bank.md`에 축적한다.
 - 게임이 읽는 콘텐츠 파일은 repo root `content/` 아래 YAML을 우선한다.
+- 초반 콘텐츠는 8문항 이하의 짧은 tutorial playlist 묶음으로 나누는 것을 기본으로 한다.
+- 초반 튜토리얼은 “첫 투어”처럼 Vim command를 넓게 맛보게 하고, 중후반부터 생존 어드벤처와 위기 해결 비중을 높인다.
+- Ex substitute 계열(`:s`, `:%s`, range substitute)은 초반 튜토리얼에서 분리해 중반 고급 튜토리얼로 다룬다.
 - 시나리오 톤은 DevOps/터미널 문제 해결을 기본으로 하되, 과하지 않은 억까 상황은 허용한다.
 - 시나리오에서 출발해 문항을 끼워 맞추지 않는다.
 - 스토리나 세계관은 문항을 더 기억에 남게 해야 하며, command 학습 목표를 방해하면 안 된다.
@@ -41,6 +44,10 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 `first-5-minute` playlist beat 순서로 17개 replay-pass exercise를 실행한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
+- 향후 exercise constraint는 최대 입력 수 초과와 금지 입력/금지 우회 전략 사용을 즉시 실패로 처리해야 한다.
+- 실패 횟수는 기본 무제한이며, 후반 콘텐츠를 위해 `attempt_limit` 설정 여지는 남긴다.
+- 실패 후 재시도는 `r`과 `enter`를 모두 허용한다.
+- 초반 튜토리얼 코칭은 개념 힌트 중심이지만, 새 command 첫 소개에서는 command 의미를 명시한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 
@@ -49,7 +56,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - [ ] 첫 5분 플레이 루프를 정의해야 한다.
 - [x] CONTENT-001 loader가 읽을 실제 content file 경로를 정해야 한다. 결정: repo root `content/` 아래 YAML.
 - [ ] Vim 핵심 영역 coverage rubric을 승인해야 한다.
-- [ ] 실패/힌트/등급 시스템이 학습 동기를 해치지 않는 기준을 정의해야 한다.
+- [x] 실패/힌트/등급 시스템이 학습 동기를 해치지 않는 기준을 정의해야 한다. 결정: 최대 입력 수/금지 입력은 즉시 실패, 초반 코칭은 개념 중심, 재시도는 무제한 기본.
 - [x] 기존 Vim emulator를 유지, 축소, 교체할지 결정해야 한다. 결정: 새 `internal/vimengine`을 만들고 기존 `internal/editor`는 LEGACY-001에서 archive한다.
 
 ---

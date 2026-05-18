@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-18 — 튜토리얼 페이싱과 제약 설계 원칙 확정
+
+이전 가정: 첫 playable pack은 17개 exercise를 한 번에 완주하는 vertical slice이며, 초반/중반 튜토리얼 분리와 실패/재시도/입력 제약 기준은 아직 열려 있었다.
+
+새 가정: 초반은 8문항 이하의 짧은 튜토리얼 에피소드 묶음으로 운영한다. 초반은 “첫 투어” 느낌으로 command를 넓게 맛보게 하고, 중후반부터 생존 어드벤처와 탐험 비중을 높인다. `:s`, `:%s`, range substitute는 초반에서 빼고 중반 고급 튜토리얼로 분리한다. 최대 입력 수 초과와 금지 입력/금지 우회 전략 사용은 즉시 실패이며, 초반 재시도는 무제한 기본이다. 재시도는 `r`과 `enter`를 모두 허용한다.
+
+이유: 첫 pack이 E2E vertical slice로는 유효하지만 실제 학습 단위로는 넓기 때문에, 플레이어가 부담 없이 익히는 짧은 episode 구조가 필요하다. 또한 Vim 학습 게임으로서 “목표에 도착했는가”뿐 아니라 “의도 command를 썼는가”를 강제해야 한다.
+
+영향: `docs/roadmap/decisions/0004-tutorial-pacing-and-constraints.md`, `docs/gameplay/spec.md`, `docs/gameplay/vim-curriculum-map.md`, `docs/workflows/scenario-flow-workbench.md`를 기준으로 다음 구현 루프를 진행한다.
+
 ## 2026-05-18 — 콘텐츠/커리큘럼 기본값 확정
 
 이전 가정: CONTENT-001의 파일 포맷, 위치, draft 파일 정책, 다음 엔진 확장 순서, scenario tone, coverage 예외, 자동 저장 기준이 아직 열려 있었다.

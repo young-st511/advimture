@@ -7,7 +7,9 @@
 - 이 문서는 넓은 지도이고, 구현 대상은 `command-catalog.md`의 cluster로 승격된 뒤 결정한다.
 - 각 chapter는 플레이어가 실제 Vim을 쓰는 능력 단위로 나눈다.
 - 각 cluster는 `command -> exercise -> scenario` 워크플로우를 통과해야 한다.
-- 첫 5분 콘텐츠는 Chapter 0-1의 극초반에만 해당한다.
+- 초반 콘텐츠는 8문항 이하의 짧은 tutorial episode playlist로 나눈다.
+- 초반 튜토리얼은 “첫 투어”이고, 중후반부터 생존 어드벤처와 탐험 비중을 높인다.
+- Ex substitute 계열은 초반 튜토리얼에서 빼고 중반 고급 튜토리얼로 분리한다.
 
 ## Chapter 0. Survival
 
@@ -205,18 +207,17 @@ Scenario 방향:
 
 ## First Curriculum Cut
 
-초기 playable 플랫폼은 아래 순서를 우선한다.
+초기 playable 플랫폼은 아래 tutorial episode 순서를 우선한다.
 
-1. `normal-motion-basic`
-2. `survival-save-quit`
-3. `word-motion-basic`
-4. `line-motion-basic`
-5. `single-char-edit`
-6. `insert-mode-entry`
-7. `delete-with-motion`
-8. `search-basic`
+1. Tutorial 0: 커서 감각 회상 — `normal-motion-basic` (`h`, `j`, `k`, `l`)
+2. Tutorial 1: Vim 생존 키트 — `survival-save-quit` (`esc`, `:q!`, `:wq`)
+3. Tutorial 2: 빠르게 훑기 — `word-motion-basic`, `line-motion-basic`, `file-motion-basic`
+4. Tutorial 3: 작은 수정 — `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`
+5. Adventure intro: operator grammar — `delete-with-motion`, `change-with-motion`
+6. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
+7. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
 
-이 순서는 “첫 성공 경험 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법”으로 이어진다.
+이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 중반 고급 명령”으로 이어진다.
 
 ## Coverage Rubric
 

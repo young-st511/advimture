@@ -16,6 +16,7 @@
 3. engine/schema/progress 변경이 필요하면 이 워크벤치를 멈추고 별도 ExecPlan으로 분리한다.
 4. SubAgent 토론은 결론을 내기 위한 장치다. 최종 적용은 Integrator가 must-fix / should-fix / defer로 통합한 뒤 수행한다.
 5. `OK`는 작성자가 아니라 Verifier/Skeptic 역할이 준다.
+6. 새 command를 처음 배우는 exercise는 의도 command 외 우회를 막는 constraints를 함께 설계한다.
 
 ## 입력
 
@@ -107,6 +108,36 @@ scenario_writer_review:
     - <why this improves learning>
 ```
 
+### Constraint Designer
+
+책임:
+
+- exercise가 의도 command를 실제로 쓰게 만드는 입력 제약을 설계한다.
+- 최대 입력 수, 필수 command, 금지 입력, 금지 우회 전략, 실패 시 코칭 메시지를 제안한다.
+- 새 command 첫 소개에서는 command 의미를 알려주되, 정답 전체를 대신 풀어주지 않는다.
+- 초반 튜토리얼은 실패 후 재시도를 유도하고, 후반 콘텐츠는 `attempt_limit` 설정 가능성을 남긴다.
+
+산출:
+
+```yaml
+constraint_design:
+  exercise_id: <exercise-id>
+  max_inputs: <number>
+  attempt_limit: null | <number>
+  required_commands:
+    - <command>
+  forbidden_inputs:
+    - <key>
+  forbidden_strategies:
+    - <strategy that bypasses the intended command>
+  fail_on_forbidden_input: true
+  fail_on_max_inputs: true
+  retry_keys: ["r", "enter"]
+  coaching:
+    first_intro: <command meaning when first introduced>
+    failure: <concept-focused recovery message>
+```
+
 ### Verifier / Skeptic
 
 책임:
@@ -132,12 +163,12 @@ verification_report:
 
 1. Integrator가 Work Start Protocol과 ExecPlan을 확인한다.
 2. Integrator가 대상 팩의 command/exercise/scenario/E2E 현황을 요약한다.
-3. Curriculum Reviewer, Exercise Reviewer, Scenario Writer, Verifier/Skeptic을 독립적으로 실행한다.
+3. Curriculum Reviewer, Exercise Reviewer, Constraint Designer, Scenario Writer, Verifier/Skeptic을 독립적으로 실행한다.
 4. Integrator가 결과를 다음 표로 통합한다.
 
 ```text
 issue
-  source: curriculum | exercise | scenario | verifier
+  source: curriculum | exercise | constraints | scenario | verifier
   classification: must-fix | should-fix | defer
   action: apply | document | split-slice | ignore-with-reason
 ```
@@ -152,6 +183,7 @@ issue
 
 적용한다:
 
+- exercise가 의도 command를 쓰도록 만드는 max input, required command, forbidden input 설계
 - briefing이 command 목적을 더 명확히 하는 변경
 - success/failure가 Vim 개념을 더 잘 강화하는 변경
 - story tone을 정리하되 target/keys를 바꾸지 않는 변경
@@ -174,6 +206,8 @@ issue
 ## OK Checklist
 
 - [ ] command-first 원칙을 지켰다.
+- [ ] 새 command 학습 문항은 의도 command 외 우회 입력이 불가능하도록 설계됐다.
+- [ ] 최대 입력 수, 실패 코칭, 재시도 키가 정의됐다.
 - [ ] scenario 변경이 target/keys/pass condition을 바꾸지 않는다.
 - [ ] 각 변경은 어떤 Vim 개념을 강화하는지 설명 가능하다.
 - [ ] E2E screen assertion 문구가 변경된 copy와 일치한다.
@@ -207,6 +241,15 @@ Advimture 첫 플레이팩의 scenario copy를 검토하세요.
 DevOps/터미널 문제 해결 톤, 약간의 과하지 않은 억까, 학습 강화 문구를 기준으로 briefing/success/failure 개선안을 제안하세요.
 exercise target, optimal keys, allowed keys, pass condition을 바꾸는 제안은 하지 마세요.
 파일을 수정하지 말고 제안 copy와 이유만 보고하세요.
+```
+
+### Constraint Designer
+
+```text
+Advimture 첫 플레이팩의 exercise constraints를 설계하세요.
+각 exercise가 의도 command를 실제로 쓰게 만들 max_inputs, required_commands, forbidden_inputs, forbidden_strategies, coaching copy를 제안하세요.
+초반 튜토리얼은 실패 횟수 무제한, retry는 r/enter 둘 다 허용, 코칭은 개념 힌트 중심으로 하되 새 command 첫 소개에서는 command 의미를 명시하세요.
+파일을 수정하지 말고 constraints proposal만 보고하세요.
 ```
 
 ### Verifier / Skeptic
