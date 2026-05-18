@@ -27,7 +27,7 @@
 
 ## 다음 루프 후보
 
-현재 진행 중: ENGINE-GAP-001 준비
+현재 진행 중: VIM-013 준비
 
 다음 후보는 `ENGINE-GAP-001`에서 아래 순서로 검토한다.
 
@@ -43,3 +43,15 @@
 
 - 새 Vim command를 늘릴 때는 `command catalog -> vimengine -> oracle comparison -> exercise` 순서로 진행한다.
 - TUI로 연결되는 순간 E2E assertion이 부족하면 구현을 멈추고 E2E를 보강한다.
+
+## ENGINE-GAP-001 결정
+
+다음 구현 루프는 `VIM-013: single-char-edit engine`으로 한다.
+
+| 루프 | 범위 | 필수 테스트 | E2E |
+|------|------|-------------|-----|
+| VIM-013 | `x`, `r`, buffer mutation, cursor clamp | `internal/vimengine` unit, runtime replay smoke | 아직 없음. content 승격 시 추가 |
+| VIM-014 | `i`, `a`, `A`, printable insertion, `esc` 복귀 | vimengine/tuiadapter/runtime unit | content 승격 시 추가 |
+| VIM-015 | `u`, `<C-r>`, mutation history | vimengine unit, scenario scoring regression | content 승격 시 추가 |
+
+`PLAYPACK-002`는 VIM-013~015 중 실제 implemented cluster만 playable로 승격한다. engine support가 planned인 cluster는 YAML에 남길 수 있지만 playable path에는 연결하지 않는다.

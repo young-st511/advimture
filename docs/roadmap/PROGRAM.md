@@ -10,10 +10,10 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### ENGINE-GAP-001. Small edits engine gap
+### VIM-013. Single-char edit engine
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: 다음 playpack에 필요한 vimengine/runtime gap과 구현 순서를 결정한다.
+- 목표: `x`, `r` buffer mutation engine을 구현한다.
 
 ## 방금 완료한 슬라이스
 
@@ -50,6 +50,11 @@ Phase: Vim Learning Foundation
 ### CURRICULUM-001. Core Vim coverage rubric
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/curriculum-001-core-coverage-rubric.md`
+- 완료일: 2026-05-19
+
+### ENGINE-GAP-001. Small edits engine gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/engine-gap-001-small-edits-gap.md`
 - 완료일: 2026-05-19
 
 ## 완료된 초기 세팅

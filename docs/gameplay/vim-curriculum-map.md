@@ -255,6 +255,12 @@ Command cluster 후보:
 | `insert-mode-entry` | `i`, `a`, `A` | planned | optional | 실제 수정을 위해 Insert mode 진입/복귀를 배운다. |
 | `undo-redo-basic` | `u`, `<C-r>` | planned | optional | 억까 상황과 실패 회복을 학습적으로 처리할 수 있다. |
 
+ENGINE-GAP-001 결정:
+
+- 첫 구현은 `single-char-edit`이다.
+- `insert-mode-entry`는 printable insertion 모델이 필요하므로 두 번째로 둔다.
+- `undo-redo-basic`은 mutation history가 필요하므로 세 번째로 둔다.
+
 권장 문항 수:
 
 - `single-char-edit`: 2문항
