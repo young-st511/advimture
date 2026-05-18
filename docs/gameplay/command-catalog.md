@@ -190,12 +190,48 @@ command_cluster:
     - 문항은 `hjkl` 반복보다 키 입력 수가 줄어드는 상황을 사용한다.
 ```
 
+### vim-ex-command-substitute
+
+```yaml
+command_cluster:
+  id: vim-ex-command-substitute
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: implemented
+  curriculum_area: chapter-3-ex-command
+  title: Ex substitute와 range
+  commands: [":s", ":%s", ":2,3s"]
+  coverage_required: [":s", ":%s", ":2,3s"]
+  oracle: optional
+  purpose: command-line에서 현재 줄, 전체 파일, 지정 범위의 문자열을 치환한다.
+  prerequisite: ["survival-save-quit", "whole-file-navigation"]
+  difficulty: intermediate
+  useful_when:
+    - 현재 줄의 잘못된 토큰을 빠르게 바꿀 때
+    - 파일 전체의 반복된 상태값을 한 번에 바꿀 때
+    - 특정 줄 범위 안에서만 같은 오타를 고칠 때
+  combo_paths:
+    - [":s", "n"]
+    - [":%s", ":%s///g"]
+    - [":2,3s", ":wq"]
+  common_mistakes:
+    - Normal mode 키 입력과 command-line 입력을 혼동한다.
+    - 현재 줄 치환과 전체 파일 치환의 범위를 구분하지 못한다.
+  compatibility_notes:
+    - EXCMD-001은 Vim regex가 아니라 literal match substitute만 지원한다.
+    - 지원 flag는 global 치환을 뜻하는 `g`로 제한한다.
+  design_notes:
+    - 시나리오 성공은 buffer target으로 검증하고 app quit과 분리한다.
+    - range command는 1-based inclusive 줄 번호로 설명한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
 - `survival-save-quit`은 command-line 입력과 app exit semantics를 분리해 구현됐다. 실제 파일 저장/폐기는 아직 수행하지 않는다.
 - `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
 - `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
+- `vim-ex-command-substitute`는 literal `:s`, `:%s`, `:2,3s` engine support가 구현됐다. Vim regex와 복잡한 flags는 아직 다루지 않는다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

@@ -262,3 +262,63 @@ scenario:
     - "파일 마지막 줄과 현재 줄 끝을 섞지 않는다."
     - "`$`의 현재 줄 범위를 강조한다."
 ```
+
+### vim-ex-command-substitute-001-scenario
+
+```yaml
+scenario:
+  id: vim-ex-command-substitute-001-scenario
+  status: approved
+  exercise_id: vim-ex-command-substitute-001
+  engine_support: implemented
+  learning_reinforcement: "`:s/old/new/`는 현재 줄의 첫 번째 literal match를 바꾼다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+  mission_title: "현재 줄만 긴급 수정"
+  briefing: "첫 줄의 라우트 타입 하나만 잘못 들어갔습니다. 전체 파일을 건드리지 말고 현재 줄의 첫 api만 web으로 바꾸세요."
+  context_role: "서비스 라우팅 설정"
+  mentor_success: "좋습니다. :s는 현재 줄의 작은 치환을 빠르게 처리할 때 유용합니다."
+  mentor_failure: "이번 목표는 현재 줄의 첫 match입니다. :s/api/web/ 형태를 떠올려보세요."
+  story_constraints:
+    - "전체 파일 치환으로 오해시키지 않는다."
+    - "literal substitute 범위를 강조한다."
+```
+
+### vim-ex-command-substitute-002-scenario
+
+```yaml
+scenario:
+  id: vim-ex-command-substitute-002-scenario
+  status: approved
+  exercise_id: vim-ex-command-substitute-002
+  engine_support: implemented
+  learning_reinforcement: "`:%s/old/new/g`는 전체 파일의 모든 literal match를 바꾼다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+  mission_title: "전체 상태값 전환"
+  briefing: "두 작업 항목이 모두 끝났습니다. 파일 전체의 TODO를 DONE으로 바꾸세요."
+  context_role: "배포 체크리스트"
+  mentor_success: "좋습니다. % range와 g flag를 조합하면 반복된 상태값을 한 번에 정리할 수 있습니다."
+  mentor_failure: "전체 파일을 대상으로 해야 합니다. :%s/TODO/DONE/g 명령을 조립해보세요."
+  story_constraints:
+    - "현재 줄 치환과 전체 파일 치환의 차이를 강조한다."
+    - "regex 설명으로 새지 않는다."
+```
+
+### vim-ex-command-substitute-003-scenario
+
+```yaml
+scenario:
+  id: vim-ex-command-substitute-003-scenario
+  status: approved
+  exercise_id: vim-ex-command-substitute-003
+  engine_support: implemented
+  learning_reinforcement: "`:2,3s/old/new/`는 지정한 1-based 줄 범위 안에서 치환한다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+  mission_title: "문제 구간만 수정"
+  briefing: "첫 줄은 아직 조사 중이라 건드리면 안 됩니다. 2~3번째 줄의 error만 ok로 바꾸세요."
+  context_role: "장애 처리 메모"
+  mentor_success: "좋습니다. range를 붙이면 필요한 구간만 조심스럽게 고칠 수 있습니다."
+  mentor_failure: "이번에는 전체 파일이 아닙니다. 2,3 range를 붙여 문제 구간만 바꾸세요."
+  story_constraints:
+    - "첫 줄이 그대로 남아야 함을 명확히 한다."
+    - "range가 1-based inclusive임을 강화한다."
+```

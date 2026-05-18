@@ -1,6 +1,8 @@
 package vimengine
 
 import (
+	"strconv"
+	"strings"
 	"unicode"
 	"unicode/utf8"
 )
@@ -235,7 +237,20 @@ func applyCommandKey(state State, key string) Result {
 	switch key {
 	case KeyEnter:
 		command := ":" + next.CommandLine
-		if command != ":q!" && command != ":wq" {
+		if command == ":q!" || command == ":wq" {
+			next.Mode = ModeNormal
+			next.CommandLine = ""
+			next.LastCommand = command
+			return Result{
+				State: copyState(next),
+				Events: []Event{{
+					Type: EventCommandExecuted,
+					Key:  key,
+				}},
+			}
+		}
+		substituted, ok := applySubstituteCommand(next, command)
+		if !ok {
 			return Result{
 				State: copyState(next),
 				Events: []Event{{
@@ -245,9 +260,7 @@ func applyCommandKey(state State, key string) Result {
 				}},
 			}
 		}
-		next.Mode = ModeNormal
-		next.CommandLine = ""
-		next.LastCommand = command
+		next = substituted
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -283,6 +296,100 @@ func applyCommandKey(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	}
+}
+
+type substituteCommand struct {
+	startRow int
+	endRow   int
+	old      string
+	new      string
+	global   bool
+}
+
+func applySubstituteCommand(state State, command string) (State, bool) {
+	parsed, ok := parseSubstituteCommand(state, command)
+	if !ok {
+		return State{}, false
+	}
+	next := copyState(state)
+	for row := parsed.startRow; row <= parsed.endRow; row++ {
+		if parsed.global {
+			next.Lines[row] = strings.ReplaceAll(next.Lines[row], parsed.old, parsed.new)
+			continue
+		}
+		next.Lines[row] = strings.Replace(next.Lines[row], parsed.old, parsed.new, 1)
+	}
+	next.Mode = ModeNormal
+	next.CommandLine = ""
+	next.LastCommand = command
+	next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return next, true
+}
+
+func parseSubstituteCommand(state State, command string) (substituteCommand, bool) {
+	if !strings.HasPrefix(command, ":") {
+		return substituteCommand{}, false
+	}
+	body := strings.TrimPrefix(command, ":")
+	substituteIndex := strings.Index(body, "s/")
+	if substituteIndex < 0 {
+		return substituteCommand{}, false
+	}
+	rangeSpec := body[:substituteIndex]
+	rest := body[substituteIndex+2:]
+	parts := strings.Split(rest, "/")
+	if len(parts) < 2 {
+		return substituteCommand{}, false
+	}
+	old := parts[0]
+	if old == "" {
+		return substituteCommand{}, false
+	}
+	newValue := parts[1]
+	flags := ""
+	if len(parts) > 2 {
+		flags = parts[2]
+	}
+	startRow, endRow, ok := parseSubstituteRange(state, rangeSpec)
+	if !ok {
+		return substituteCommand{}, false
+	}
+	return substituteCommand{
+		startRow: startRow,
+		endRow:   endRow,
+		old:      old,
+		new:      newValue,
+		global:   strings.Contains(flags, "g"),
+	}, true
+}
+
+func parseSubstituteRange(state State, rangeSpec string) (int, int, bool) {
+	switch rangeSpec {
+	case "":
+		return state.Cursor.Row, state.Cursor.Row, true
+	case "%":
+		return 0, len(state.Lines) - 1, true
+	default:
+		parts := strings.Split(rangeSpec, ",")
+		if len(parts) != 2 {
+			return 0, 0, false
+		}
+		start, err := strconv.Atoi(parts[0])
+		if err != nil {
+			return 0, 0, false
+		}
+		end, err := strconv.Atoi(parts[1])
+		if err != nil {
+			return 0, 0, false
+		}
+		start--
+		end--
+		if start < 0 || end < start || end >= len(state.Lines) {
+			return 0, 0, false
+		}
+		return start, end, true
 	}
 }
 

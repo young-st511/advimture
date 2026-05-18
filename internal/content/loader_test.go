@@ -16,14 +16,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 4 {
-		t.Fatalf("command clusters = %d, want 4", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 5 {
+		t.Fatalf("command clusters = %d, want 5", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 12 {
-		t.Fatalf("exercises = %d, want 12", len(lib.Exercises))
+	if len(lib.Exercises) != 15 {
+		t.Fatalf("exercises = %d, want 15", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 12 {
-		t.Fatalf("scenarios = %d, want 12", len(lib.Scenarios))
+	if len(lib.Scenarios) != 15 {
+		t.Fatalf("scenarios = %d, want 15", len(lib.Scenarios))
 	}
 	if len(lib.Playlists) != 1 {
 		t.Fatalf("playlists = %d, want 1", len(lib.Playlists))
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 11 {
-		t.Fatalf("playable exercises = %d, want 11: %+v", len(playable), playable)
+	if len(playable) != 14 {
+		t.Fatalf("playable exercises = %d, want 14: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "normal-motion-basic-001" {
 		t.Fatalf("playable[0].ID = %q, want normal-motion-basic-001", playable[0].ID)
@@ -48,6 +48,9 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"survival-save-quit-001",
 		"survival-save-quit-002",
 		"survival-save-quit-003",
+		"vim-ex-command-substitute-001",
+		"vim-ex-command-substitute-002",
+		"vim-ex-command-substitute-003",
 		"whole-file-navigation-001",
 		"whole-file-navigation-002",
 		"whole-file-navigation-003",
@@ -163,6 +166,26 @@ func TestCoverageReportsNavigationCommandsCovered(t *testing.T) {
 	assertStrings(t, navigation.Covered, []string{"gg", "G", "0", "$"})
 	if len(navigation.Missing) != 0 {
 		t.Fatalf("navigation missing coverage = %+v, want empty", navigation.Missing)
+	}
+}
+
+func TestCoverageReportsExCommandSubstituteCommandsCovered(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	var substitute CoverageReport
+	for _, report := range lib.CoverageReports() {
+		if report.CommandClusterID == "vim-ex-command-substitute" {
+			substitute = report
+			break
+		}
+	}
+
+	assertStrings(t, substitute.Covered, []string{":s", ":%s", ":2,3s"})
+	if len(substitute.Missing) != 0 {
+		t.Fatalf("substitute missing coverage = %+v, want empty", substitute.Missing)
 	}
 }
 

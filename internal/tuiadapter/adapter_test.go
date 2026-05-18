@@ -71,6 +71,15 @@ func TestMapInputMapsCommandLineKeys(t *testing.T) {
 	}
 }
 
+func TestMapInputInCommandModePassesSubstituteCharacters(t *testing.T) {
+	for _, input := range []string{"s", "/", "%", "2", ",", "3", "D"} {
+		action := MapInputForMode(input, vimengine.ModeCommand)
+		if action.Type != ActionKey || action.Key != input {
+			t.Fatalf("MapInputForMode(%q, command) = %+v, want key %q", input, action, input)
+		}
+	}
+}
+
 func TestMapInputMapsNavigationKeys(t *testing.T) {
 	cases := map[string]string{
 		"g": vimengine.KeyG,

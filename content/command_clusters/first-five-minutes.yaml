@@ -110,3 +110,33 @@ command_clusters:
     design_notes:
       - "후반 navigation은 모든 이동을 나열하지 않고 coverage_required로 좁혀 구현한다."
       - "문항은 hjkl 반복보다 키 입력 수가 줄어드는 상황을 사용한다."
+
+  - id: vim-ex-command-substitute
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-3-ex-command
+    title: "Ex substitute와 range"
+    commands: [":s", ":%s", ":2,3s"]
+    coverage_required: [":s", ":%s", ":2,3s"]
+    oracle: optional
+    purpose: "command-line에서 현재 줄, 전체 파일, 지정 범위의 문자열을 치환한다."
+    prerequisite: ["survival-save-quit", "whole-file-navigation"]
+    difficulty: intermediate
+    useful_when:
+      - "현재 줄의 잘못된 토큰을 빠르게 바꿀 때"
+      - "파일 전체의 반복된 상태값을 한 번에 바꿀 때"
+      - "특정 줄 범위 안에서만 같은 오타를 고칠 때"
+    combo_paths:
+      - [":s", "n"]
+      - [":%s", ":%s///g"]
+      - [":2,3s", ":wq"]
+    common_mistakes:
+      - "Normal mode 키 입력과 command-line 입력을 혼동한다."
+      - "현재 줄 치환과 전체 파일 치환의 범위를 구분하지 못한다."
+    compatibility_notes:
+      - "EXCMD-001은 Vim regex가 아니라 literal match substitute만 지원한다."
+      - "지원 flag는 global 치환을 뜻하는 g로 제한한다."
+    design_notes:
+      - "시나리오 성공은 buffer target으로 검증하고 app quit과 분리한다."
+      - "range command는 1-based inclusive 줄 번호로 설명한다."

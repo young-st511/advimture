@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. 다음 후보는 `EXCMD-001`이다.
+현재 active slice는 없다. 다음 후보는 `GAMELOOP-001`이다.
 
 ## 완료된 초기 세팅
 
@@ -147,6 +147,11 @@ Phase: Vim Learning Foundation
 ### NAV-001. Line and file navigation motion
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/nav-001-line-file-motion.md`
+- 완료일: 2026-05-18
+
+### EXCMD-001. Ex substitute and range command foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/excmd-001-substitute-range.md`
 - 완료일: 2026-05-18
 
 ## Backlog

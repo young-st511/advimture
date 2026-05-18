@@ -58,6 +58,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		case "q", "w", "!":
 			return Action{Type: ActionKey, Key: normalized}
 		default:
+			if len([]rune(trimmed)) == 1 {
+				return Action{Type: ActionKey, Key: trimmed}
+			}
 			return Action{Type: ActionIgnored}
 		}
 	}

@@ -452,3 +452,79 @@ exercise:
     pass_condition: "cursor.row == 0 && cursor.col == 16"
     optimal_key_count: 1
 ```
+
+### vim-ex-command-substitute-001
+
+```yaml
+exercise:
+  id: vim-ex-command-substitute-001
+  status: approved
+  command_cluster: vim-ex-command-substitute
+  engine_support: implemented
+  trained_commands: [":s"]
+  reviewed_commands: [":%s"]
+  mistake_focus: ["현재 줄만 바꿔야 하는데 전체 파일 치환을 떠올린다."]
+  replay_status: pass
+  title: 현재 줄 토큰 치환하기
+  goal_for_player: "command-line에서 현재 줄의 첫 api를 web으로 바꾸세요."
+  target_state:
+    mode: NORMAL
+    buffer: |
+      web api
+      api worker
+  optimal_keys: ": s / a p i / w e b / enter"
+  grading:
+    pass_condition: "buffer[0] == web api && buffer[1] == api worker"
+    optimal_key_count: 12
+```
+
+### vim-ex-command-substitute-002
+
+```yaml
+exercise:
+  id: vim-ex-command-substitute-002
+  status: approved
+  command_cluster: vim-ex-command-substitute
+  engine_support: implemented
+  trained_commands: [":%s"]
+  reviewed_commands: [":s"]
+  mistake_focus: ["전체 파일 치환에 % range를 붙이지 않는다."]
+  replay_status: pass
+  title: 전체 파일 상태값 치환하기
+  goal_for_player: "command-line에서 모든 TODO를 DONE으로 바꾸세요."
+  target_state:
+    mode: NORMAL
+    buffer: |
+      DONE api
+      DONE worker
+  optimal_keys: ": % s / T O D O / D O N E / g enter"
+  grading:
+    pass_condition: "buffer has no TODO"
+    optimal_key_count: 16
+```
+
+### vim-ex-command-substitute-003
+
+```yaml
+exercise:
+  id: vim-ex-command-substitute-003
+  status: approved
+  command_cluster: vim-ex-command-substitute
+  engine_support: implemented
+  trained_commands: [":2,3s"]
+  reviewed_commands: [":s", ":%s"]
+  mistake_focus: ["특정 줄 범위만 바꿔야 하는데 전체 파일을 바꾼다."]
+  replay_status: pass
+  title: 줄 범위 안에서 치환하기
+  goal_for_player: "command-line에서 2~3번째 줄의 첫 error를 ok로 바꾸세요."
+  target_state:
+    mode: NORMAL
+    buffer: |
+      error one
+      ok two
+      ok three
+  optimal_keys: ": 2 , 3 s / e r r o r / o k / enter"
+  grading:
+    pass_condition: "buffer[0] unchanged && buffer[1:3] changed"
+    optimal_key_count: 16
+```

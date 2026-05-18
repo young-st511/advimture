@@ -247,6 +247,56 @@ func TestCommandLineExecutesWriteQuit(t *testing.T) {
 	assertEvent(t, result, EventCommandExecuted)
 }
 
+func TestCommandLineSubstitutesFirstMatchOnCurrentLine(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"api api", "api"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        0,
+			DesiredCol: 0,
+		},
+	})
+
+	result := applyCommandText(engine, "s/api/web/")
+
+	assertStrings(t, result.State.Lines, []string{"web api", "api"})
+	if result.State.LastCommand != ":s/api/web/" {
+		t.Fatalf("LastCommand = %q, want :s/api/web/", result.State.LastCommand)
+	}
+	assertEvent(t, result, EventCommandExecuted)
+}
+
+func TestCommandLineSubstitutesAllMatchesInWholeFile(t *testing.T) {
+	engine := New([]string{"TODO api", "TODO worker"})
+
+	result := applyCommandText(engine, "%s/TODO/DONE/g")
+
+	assertStrings(t, result.State.Lines, []string{"DONE api", "DONE worker"})
+	assertEvent(t, result, EventCommandExecuted)
+}
+
+func TestCommandLineSubstitutesNumericLineRange(t *testing.T) {
+	engine := New([]string{"error one", "error two", "error three"})
+
+	result := applyCommandText(engine, "2,3s/error/ok/")
+
+	assertStrings(t, result.State.Lines, []string{"error one", "ok two", "ok three"})
+	assertEvent(t, result, EventCommandExecuted)
+}
+
+func TestCommandLineRejectsInvalidSubstituteWithoutMutating(t *testing.T) {
+	engine := New([]string{"api"})
+
+	result := applyCommandText(engine, "%s//web/g")
+
+	assertStrings(t, result.State.Lines, []string{"api"})
+	if result.State.LastCommand != "" {
+		t.Fatalf("LastCommand = %q, want empty", result.State.LastCommand)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
 func TestEscClearsCommandLine(t *testing.T) {
 	engine := New([]string{"scratch"})
 
@@ -347,5 +397,26 @@ func assertCommandLine(t *testing.T, state State, want string) {
 
 	if state.CommandLine != want {
 		t.Fatalf("CommandLine = %q, want %q", state.CommandLine, want)
+	}
+}
+
+func applyCommandText(engine *Engine, command string) Result {
+	engine.Apply(KeyColon)
+	for _, r := range command {
+		engine.Apply(string(r))
+	}
+	return engine.Apply(KeyEnter)
+}
+
+func assertStrings(t *testing.T, got []string, want []string) {
+	t.Helper()
+
+	if len(got) != len(want) {
+		t.Fatalf("len = %d, want %d: %+v", len(got), len(want), got)
+	}
+	for index := range want {
+		if got[index] != want[index] {
+			t.Fatalf("value[%d] = %q, want %q", index, got[index], want[index])
+		}
 	}
 }
