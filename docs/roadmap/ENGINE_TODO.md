@@ -27,10 +27,19 @@
 
 ## 다음 루프 후보
 
-현재 진행 중: 없음
+현재 진행 중: ENGINE-GAP-001 준비
 
-다음 후보는 새 엔진 모듈 완료 상태에 따라 결정한다.
+다음 후보는 `ENGINE-GAP-001`에서 아래 순서로 검토한다.
 
-- 실제 Bubble Tea app wiring을 시작하려면 먼저 E2E assertion을 보강한다.
-- 첫 playable slice는 `content -> scenario -> tuiadapter -> progressadapter`를 실제 app에 연결한다.
-- 새 Vim command를 늘릴 때는 `command catalog -> vimengine -> oracle comparison` 순서로 진행한다.
+| 우선순위 | 후보 | 필요한 엔진 계약 | 비고 |
+|----------|------|------------------|------|
+| 1 | `single-char-edit` | `x`, `r`, buffer mutation, cursor clamp | 다음 playpack의 가장 작은 편집 성공 경험 |
+| 2 | `insert-mode-entry` | `i`, `a`, `A`, insert text input, `esc` 복귀 | Bubble Tea key mapping과 runtime replay 표현 점검 필요 |
+| 3 | `undo-redo-basic` | undo stack, redo stack, mutation event history | 억까/회복 상황을 게임적으로 만들기 좋음 |
+| 4 | `open-line-edit` | `o`, `O`, newline insertion, insert mode entry | insert 모델 안정 후 진행 |
+| 5 | operator grammar | operator pending, `dw`, `dd`, `cw`, `cc` | 작은 수정 playpack 이후 adventure intro 후보 |
+
+진행 원칙:
+
+- 새 Vim command를 늘릴 때는 `command catalog -> vimengine -> oracle comparison -> exercise` 순서로 진행한다.
+- TUI로 연결되는 순간 E2E assertion이 부족하면 구현을 멈추고 E2E를 보강한다.

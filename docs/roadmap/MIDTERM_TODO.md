@@ -45,11 +45,7 @@
 - 각 루프는 ExecPlan을 열고, 해당 루프의 검증과 커밋까지 닫은 뒤 다음 항목으로 넘어간다.
 - 후반부 루프일수록 `scenario-production-harness.md`의 Verifier OK, replay gate, coverage gate를 생략하지 않는다.
 
-## 현재 판단
-
-플랫폼 기반 루프는 모두 completed다. 다음 중기 플랜은 튜토리얼 UX와 학습 제약을 제품화하는 순서로 진행한다.
-
-## 다음 중기 플랜
+## 완료된 중기 플랜: 튜토리얼 UX와 학습 제약
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
@@ -59,3 +55,16 @@
 | 4 | FAILURE-001 | completed | 실패 화면, 남은 입력 수 UI, `r`/`enter` retry UX 완성 |
 | 5 | QA-001 | completed | forbidden input, max input 초과, non-intended route, retry/hint E2E 보강 |
 | 6 | CONTENT-003 | completed | Ex command를 중반 고급 튜토리얼로 위치시키고 first tour pacing 재검증 |
+
+## 현재 판단
+
+플랫폼 기반과 첫 튜토리얼 UX는 completed다. 다음 중기 플랜은 콘텐츠를 늘리기 전에 Vim 학습 지도, 엔진 gap, 다음 playpack, 시나리오 톤을 순서대로 고정한다.
+
+## 다음 중기 플랜
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | CURRICULUM-001 | completed | Vim 핵심 커버리지 루브릭과 다음 command cluster 우선순위 확정 |
+| 2 | ENGINE-GAP-001 | planning | 다음 playpack에 필요한 vimengine/runtime gap 식별과 구현 순서 결정 |
+| 3 | PLAYPACK-002 | pending | 6~8문항짜리 “편집 기본기” 튜토리얼 playpack 설계/구현 |
+| 4 | SCENARIO-TONE-001 | pending | 중반 생존 어드벤처 톤 원칙과 적용 범위 확정 |

@@ -57,6 +57,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 실패 상태는 progress를 저장하지 않으며, 실패 화면은 `Grade: F`, 남은 입력 수, 재시도 안내를 보여준다.
 - 실패 화면은 attempt count를 표시하며 `attempt_limit: 0`은 `unlimited`로 표현한다.
 - scoring result는 runtime failure reason을 보존하며, `required_keys_missing`은 `IntentSatisfied=false`, `Grade=F`로 평가한다.
+- 다음 playpack 후보는 작은 수정 중심의 `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`이다.
+- 다음 playpack은 6~8문항 이하로 설계하고, 이동은 복습 요소로만 사용한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 
@@ -64,7 +66,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 
 - [ ] 첫 5분 플레이 루프를 정의해야 한다.
 - [x] CONTENT-001 loader가 읽을 실제 content file 경로를 정해야 한다. 결정: repo root `content/` 아래 YAML.
-- [ ] Vim 핵심 영역 coverage rubric을 승인해야 한다.
+- [x] Vim 핵심 영역 coverage rubric을 승인해야 한다. 결정: `docs/gameplay/vim-curriculum-map.md`의 Priority Bands와 Next Playpack Candidate를 따른다.
 - [x] 실패/힌트/등급 시스템이 학습 동기를 해치지 않는 기준을 정의해야 한다. 결정: 최대 입력 수/금지 입력은 즉시 실패, 초반 코칭은 개념 중심, 재시도는 무제한 기본.
 - [x] 기존 Vim emulator를 유지, 축소, 교체할지 결정해야 한다. 결정: 새 `internal/vimengine`을 만들고 기존 `internal/editor`는 LEGACY-001에서 archive한다.
 

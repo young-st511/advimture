@@ -207,21 +207,24 @@ Scenario 방향:
 
 ## First Curriculum Cut
 
-초기 playable 플랫폼은 아래 tutorial episode 순서를 우선한다.
+현재 playable 플랫폼은 아래 tutorial episode 순서를 따른다.
 
 1. Tutorial 0: 커서 감각 회상 — `normal-motion-basic` (`h`, `j`, `k`, `l`)
 2. Tutorial 1: Vim 생존 키트 — `survival-save-quit` (`esc`, `:q!`, `:wq`)
 3. Tutorial 2: 빠르게 훑기 — `word-motion-basic`, `line-motion-basic`, `file-motion-basic`
-4. Tutorial 3: 작은 수정 — `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`
-5. Adventure intro: operator grammar — `delete-with-motion`, `change-with-motion`
-6. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
-7. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
+4. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
+
+다음 playable milestone은 아래 순서를 우선한다.
+
+1. Tutorial 3: 작은 수정 — `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`
+2. Adventure intro: operator grammar — `delete-with-motion`, `change-with-motion`
+3. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 중반 고급 명령”으로 이어진다.
 
 ## Coverage Rubric
 
-- Chapter 0-3은 첫 playable milestone 전에 최소 draft cluster가 있어야 한다.
+- Chapter 0-4는 다음 playable milestone 전에 최소 draft cluster가 있어야 한다.
 - approved cluster는 `coverage_required`의 모든 command가 exercise optimal trace에 등장해야 한다.
 - 초반 기본 이동 cluster는 방향 감각 자체가 목표이므로 모든 방향 command를 optimal trace에 포함해야 한다.
 - 후반 범용 이동/조합 cluster는 모든 Vim 기능을 억지로 한 루프에 넣지 않고, cluster의 `coverage_required`로 핵심 학습 범위를 정의한다.
@@ -229,10 +232,48 @@ Scenario 방향:
 - chapter가 넓어질수록 scenario보다 replay 가능한 exercise coverage를 먼저 늘린다.
 - coverage matrix는 `cluster -> trained commands -> exercise count -> replay status -> oracle status -> e2e status` 순서로 본다.
 
+### Priority Bands
+
+| Band | 의미 | 현재 cluster |
+|------|------|--------------|
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `vim-ex-command-substitute` |
+| next | 다음 playpack에서 구현/승격할 후보 | `single-char-edit`, `insert-mode-entry`, `undo-redo-basic` |
+| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `open-line-edit`, `repeat-last-change`, `delete-with-motion`, `change-with-motion` |
+| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `search-basic`, `visual-char-line`, `text-object-inner`, `macro-basic`, buffer/window/navigation-at-scale 계열 |
+
+### Next Playpack Candidate
+
+ID: `playpack-002-small-edits`
+
+목표: 플레이어가 이동만 하는 상태에서 벗어나, 작은 텍스트 수정을 안전하게 수행한다.
+
+Command cluster 후보:
+
+| Cluster | Commands | Engine support | Oracle | 이유 |
+|---------|----------|----------------|--------|------|
+| `single-char-edit` | `x`, `r` | planned | optional | 가장 작은 편집 성공 경험을 만든다. |
+| `insert-mode-entry` | `i`, `a`, `A` | planned | optional | 실제 수정을 위해 Insert mode 진입/복귀를 배운다. |
+| `undo-redo-basic` | `u`, `<C-r>` | planned | optional | 억까 상황과 실패 회복을 학습적으로 처리할 수 있다. |
+
+권장 문항 수:
+
+- `single-char-edit`: 2문항
+- `insert-mode-entry`: 3문항
+- `undo-redo-basic`: 2문항
+- 총 7문항 이하
+
+설계 제약:
+
+- 이동은 필요한 만큼만 복습하고 주목표로 삼지 않는다.
+- 각 문항은 `constraints.required_keys`로 의도 command를 고정한다.
+- 첫 소개 문항은 command 의미를 명시하고, 이후 문항은 개념 힌트 중심으로 둔다.
+- 후반 생존 어드벤처 톤을 얹기 전까지는 튜토리얼 사건을 짧게 유지한다.
+
 ## Known Coverage Gaps
 
-- `normal-motion-basic`: 현재 draft는 `l`, `j` 중심이다. `h`, `k` optimal trace exercise가 필요하다.
-- `survival-save-quit`: command-line mode와 app exit semantics가 필요하다.
-- `word-motion-basic`: `w/b/e` engine support와 word boundary oracle fixture가 필요하다.
-- `file-motion-basic`: `gg`, `G`, `{count}G`는 후반 navigation-at-scale 전에 필요하다.
-- `ex-command-navigation`: `:` command-line 입력, range, substitute를 폭넓게 다루기 위한 별도 engine/runtime 설계가 필요하다.
+- `single-char-edit`: `x`, `r` engine support와 replay fixture가 필요하다.
+- `insert-mode-entry`: `i`, `a`, `A` engine support와 insert text 입력 모델 결정이 필요하다.
+- `undo-redo-basic`: Vim state history, undo stack, redo stack의 엔진 계약이 필요하다.
+- `open-line-edit`: `o`, `O`는 insert mode 입력 모델이 안정된 뒤 다룬다.
+- `delete-with-motion`/`change-with-motion`: operator pending mode 또는 단순 pedagogical grammar 결정이 필요하다.
+- `search-basic`: `/`, `?`, `n`, `N`은 command-line 입력과 search state를 분리해야 한다.

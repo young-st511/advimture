@@ -225,6 +225,113 @@ command_cluster:
     - range command는 1-based inclusive 줄 번호로 설명한다.
 ```
 
+### single-char-edit
+
+```yaml
+command_cluster:
+  id: single-char-edit
+  status: draft
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-2-small-edits
+  title: 문자 하나 고치기
+  commands: ["x", "r"]
+  coverage_required: ["x", "r"]
+  oracle: optional
+  purpose: Normal mode에서 작은 오타를 Insert mode 진입 없이 빠르게 고친다.
+  prerequisite: ["normal-motion-basic", "word-motion-basic"]
+  difficulty: beginner
+  useful_when:
+    - 설정 키나 값의 글자 하나가 틀렸을 때
+    - 불필요한 문자 하나를 제거할 때
+    - Insert mode로 들어가기 전 작은 수정 감각을 만들 때
+  combo_paths:
+    - ["x", "u"]
+    - ["r", "u"]
+    - ["w", "x"]
+  common_mistakes:
+    - 글자 하나를 고치려고 매번 Insert mode에 들어간다.
+    - `x`가 현재 커서 아래 문자를 지운다는 점을 잊는다.
+    - `r` 뒤에 교체할 문자 하나만 입력한다는 점을 놓친다.
+  compatibility_notes:
+    - 첫 구현은 single-width 문자 중심의 pedagogical behavior를 허용한다.
+    - count prefix와 multibyte edge case는 후속 exact tier hardening에서 다룬다.
+  design_notes:
+    - 문항은 목표 문자를 찾는 이동과 실제 수정 입력을 분리해서 설계한다.
+    - `constraints.required_keys`로 `x` 또는 `r` 사용을 고정한다.
+```
+
+### insert-mode-entry
+
+```yaml
+command_cluster:
+  id: insert-mode-entry
+  status: draft
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-2-small-edits
+  title: Insert mode 진입과 작은 추가
+  commands: ["i", "a", "A"]
+  coverage_required: ["i", "a", "A", "esc"]
+  oracle: optional
+  purpose: 커서 주변 또는 줄 끝에 짧은 텍스트를 추가하고 Normal mode로 복귀한다.
+  prerequisite: ["survival-save-quit", "normal-motion-basic"]
+  difficulty: beginner
+  useful_when:
+    - 커서 앞/뒤에 값을 끼워 넣을 때
+    - 설정 줄 끝에 suffix나 flag를 추가할 때
+    - 수정 후 `esc`로 Normal mode를 회복해야 할 때
+  combo_paths:
+    - ["i", "esc", ":wq"]
+    - ["A", "esc", ":wq"]
+    - ["w", "a", "esc"]
+  common_mistakes:
+    - Insert mode에 들어간 뒤 Normal mode로 돌아오지 않는다.
+    - `i`와 `a`의 삽입 위치 차이를 혼동한다.
+    - 줄 끝 추가에도 `l`을 반복해서 끝까지 이동한다.
+  compatibility_notes:
+    - 첫 구현은 printable rune 입력과 `esc` 복귀를 우선한다.
+    - 복잡한 insert editing, backspace, newline은 후속 루프에서 다룬다.
+  design_notes:
+    - 첫 문항은 `i`, `a`, `A`의 위치 차이를 짧게 분리한다.
+    - 모든 문항은 수정 후 `esc`까지 optimal trace에 포함한다.
+```
+
+### undo-redo-basic
+
+```yaml
+command_cluster:
+  id: undo-redo-basic
+  status: draft
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-2-small-edits
+  title: 실수 되돌리기와 다시 적용
+  commands: ["u", "<C-r>"]
+  coverage_required: ["u", "<C-r>"]
+  oracle: optional
+  purpose: 작은 수정 실수를 안전하게 되돌리고 필요한 경우 다시 적용한다.
+  prerequisite: ["single-char-edit", "insert-mode-entry"]
+  difficulty: beginner
+  useful_when:
+    - 잘못 지운 문자나 변경을 즉시 복구할 때
+    - 되돌린 변경이 맞았음을 확인하고 다시 적용할 때
+    - 실패를 학습 루프로 회복하는 감각을 만들 때
+  combo_paths:
+    - ["x", "u"]
+    - ["r", "u"]
+    - ["u", "<C-r>"]
+  common_mistakes:
+    - 실수 후 수동으로 다시 편집하려고 한다.
+    - undo 후 redo가 가능하다는 점을 모른다.
+  compatibility_notes:
+    - 첫 구현은 exercise 단위 mutation history를 pedagogical stack으로 다룬다.
+    - Vim의 undo block, insert transaction semantics는 후속 hardening에서 다룬다.
+  design_notes:
+    - 억까 상황은 과하지 않게, 실패 회복의 재미를 주는 정도로 사용한다.
+    - undo/redo는 점수 감점보다 학습 회복 메시지를 우선한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.

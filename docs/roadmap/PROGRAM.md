@@ -10,9 +10,10 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### 다음 슬라이스
-- 상태: planning-needed
-- 목표: 다음 중기 플랜 수립
+### ENGINE-GAP-001. Small edits engine gap
+- 상태: planning
+- ExecPlan: 다음 루프에서 작성
+- 목표: 다음 playpack에 필요한 vimengine/runtime gap과 구현 순서를 결정한다.
 
 ## 방금 완료한 슬라이스
 
@@ -45,6 +46,11 @@ Phase: Vim Learning Foundation
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/content-003-ex-command-pacing.md`
 - 완료일: 2026-05-18
+
+### CURRICULUM-001. Core Vim coverage rubric
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/curriculum-001-core-coverage-rubric.md`
+- 완료일: 2026-05-19
 
 ## 완료된 초기 세팅
 
