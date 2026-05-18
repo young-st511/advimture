@@ -161,3 +161,15 @@ command_cluster:
 - `survival-save-quit`은 첫 경험의 불안감을 줄이는 데 중요하지만 command-line 입력과 app exit semantics가 필요하다.
 - `word-motion-basic`은 첫 5분 후반의 효율성 체감에 적합하지만 `w/b/e` engine support와 oracle comparison이 먼저 필요하다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
+
+## Approval Packet — VIM-001
+
+사용자 결정으로 첫 playable 커리큘럼 순서는 `normal-motion-basic -> survival-save-quit -> word-motion-basic`이다.
+
+추천:
+
+- `normal-motion-basic`: 현재 `approved` 승격 후보. 단 `h`, `k` coverage exercise를 후속 루프에서 반드시 보강한다.
+- `survival-save-quit`: `approved` 승격 후보지만 `engine_support: planned`를 유지한다.
+- `word-motion-basic`: `approved` 승격 후보지만 `engine_support: planned`를 유지한다.
+
+주의: `approved`는 학습 우선순위 승인이고, `implemented` 또는 playable 연결을 의미하지 않는다.
