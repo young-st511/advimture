@@ -21,6 +21,7 @@ docs/
 │   ├── domain-contract.md
 │   ├── spec.md
 │   ├── command-catalog.md
+│   ├── vim-curriculum-map.md
 │   ├── exercise-bank.md
 │   ├── scenario-bank.md
 │   └── content-requirements.md
@@ -32,7 +33,8 @@ docs/
 │   ├── PLAN.md
 │   └── GAME_DESIGN.md
 ├── workflows/
-│   └── vim-learning-loops.md
+│   ├── vim-learning-loops.md
+│   └── scenario-production-harness.md
 ├── exec-plans/
 │   ├── README.md
 │   ├── templates/
@@ -59,9 +61,11 @@ docs/
 | `{domain}/domain-contract.md` | AI | 도메인별 불변 규칙 | 규칙, 저장 포맷, 검증 방식 변경 시 |
 | `{domain}/spec.md` | 사람 + AI | 승인된 수용 기준과 현재 동작 | 기능 구현 전/후 |
 | `gameplay/command-catalog.md` | 사람 + AI | Vim command cluster 축적 | 새 command 학습 목표 제안/승인 시 |
+| `gameplay/vim-curriculum-map.md` | 사람 + AI | 장기 Vim 학습 범위와 chapter 지도 | 커리큘럼 범위나 우선순위 변경 시 |
 | `gameplay/exercise-bank.md` | 사람 + AI | command 기반 문항 축적 | 새 exercise 제안/승인 시 |
 | `gameplay/scenario-bank.md` | 사람 + AI | exercise 기반 시나리오 축적 | 새 scenario 제안/승인 시 |
 | `gameplay/content-requirements.md` | 사람 + AI | loader가 받아야 할 콘텐츠 구조 요구사항 | scenario workflow로 새 콘텐츠 요구가 발견될 때 |
+| `workflows/scenario-production-harness.md` | AI | command→exercise→scenario 제작/검증 하네스 | 콘텐츠 생성 워크플로우 품질 기준 변경 시 |
 | `guardrails.md` | 사람 | 자동 검증과 안전장치 현황 | CI, hooks, 테스트 루프 변경 시 |
 
 ## spec.md 운영 규칙

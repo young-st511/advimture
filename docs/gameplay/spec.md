@@ -33,6 +33,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 
 - [ ] 첫 5분 플레이 루프를 정의해야 한다.
 - [ ] CONTENT-001 loader가 읽을 실제 content file 경로를 정해야 한다.
+- [ ] Vim 핵심 영역 coverage rubric을 승인해야 한다.
 - [ ] 실패/힌트/등급 시스템이 학습 동기를 해치지 않는 기준을 정의해야 한다.
 - [x] 기존 Vim emulator를 유지, 축소, 교체할지 결정해야 한다. 결정: 새 `internal/vimengine`을 만들고 기존 `internal/editor`는 LEGACY-001에서 archive한다.
 

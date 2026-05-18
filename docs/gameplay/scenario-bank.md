@@ -27,6 +27,11 @@ scenario:
   status: draft | approved | implemented | retired
   exercise_id: <exercise-id>
   engine_support: implemented | planned | unsupported
+  learning_reinforcement: <which Vim concept the copy reinforces>
+  does_not_change:
+    - target_state
+    - optimal_keys
+    - allowed_keys
   mission_title: <미션 제목>
   briefing: <플레이어에게 보여줄 상황 설명>
   context_role: <텍스트가 게임 세계에서 의미하는 것>
@@ -46,6 +51,8 @@ scenario:
   status: draft
   exercise_id: survival-save-quit-001
   engine_support: planned
+  learning_reinforcement: "`:q!`는 변경을 버리고 나가는 command다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "일단 빠져나오기"
   briefing: "프로덕션 서버에서 낯선 파일이 열렸습니다. 지금은 수정하지 말고 안전하게 빠져나오는 것이 목표입니다."
   context_role: "처음 마주친 nginx 설정 파일"
@@ -64,6 +71,8 @@ scenario:
   status: draft
   exercise_id: normal-motion-basic-001
   engine_support: implemented
+  learning_reinforcement: "`l`은 Normal mode에서 오른쪽으로 이동한다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "커서 위치 맞추기"
   briefing: "로그 줄에서 표시된 지점까지 커서를 이동해야 합니다. 화살표 키 대신 Vim 기본 이동을 사용하세요."
   context_role: "짧은 로그 라인"
@@ -82,6 +91,8 @@ scenario:
   status: draft
   exercise_id: survival-save-quit-002
   engine_support: planned
+  learning_reinforcement: "`:wq`는 저장한 뒤 종료한다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "작업 마무리"
   briefing: "설정 확인을 마쳤습니다. 이제 변경 결과를 저장하고 안전하게 종료하세요."
   context_role: "검증된 서버 설정 파일"
@@ -100,6 +111,8 @@ scenario:
   status: draft
   exercise_id: normal-motion-basic-002
   engine_support: implemented
+  learning_reinforcement: "`j`는 아래 줄로 이동한다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "경고 줄 찾기"
   briefing: "부팅 로그에서 경고가 난 줄로 이동해야 합니다. 아래 줄로 내려가 WARN 표시를 확인하세요."
   context_role: "짧은 시스템 로그"
@@ -118,6 +131,8 @@ scenario:
   status: draft
   exercise_id: normal-motion-basic-003
   engine_support: implemented
+  learning_reinforcement: "`j`와 `l`을 조합해 행과 열을 맞춘다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "좌표 맞추기"
   briefing: "터미널 지도에서 X 표시로 커서를 옮기세요. 짧은 이동을 조합하면 됩니다."
   context_role: "터미널 지도"
@@ -136,6 +151,8 @@ scenario:
   status: draft
   exercise_id: word-motion-basic-001
   engine_support: planned
+  learning_reinforcement: "`w`는 다음 단어 시작점으로 이동한다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "서비스 이름 찾기"
   briefing: "배포 설정 한 줄에서 `backend` 항목으로 빠르게 이동해야 합니다. 한 글자씩 걷지 말고 단어 단위로 이동하세요."
   context_role: "서비스 라우팅 설정"

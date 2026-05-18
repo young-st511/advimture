@@ -36,8 +36,11 @@ command_cluster:
   status: draft | approved | implemented | retired
   compatibility_tier: exact | pedagogical | unsupported
   engine_support: implemented | planned | unsupported
+  curriculum_area: <chapter-id>
   title: <학습 목표 이름>
   commands: ["<vim-key-or-command>"]
+  coverage_required: ["<command that must appear in optimal traces>"]
+  oracle: required | optional | none
   purpose: <한 문장 목적>
   prerequisite: ["<command-cluster-id>"]
   difficulty: beginner | intermediate | advanced
@@ -63,8 +66,11 @@ command_cluster:
   status: draft
   compatibility_tier: pedagogical
   engine_support: planned
+  curriculum_area: chapter-0-survival
   title: Vim 생존: 모드 복귀와 저장/종료
   commands: ["esc", ":q!", ":wq"]
+  coverage_required: ["esc", ":q!", ":wq"]
+  oracle: none
   purpose: Vim에서 안전하게 빠져나오고, 수정한 내용을 저장 후 종료한다.
   prerequisite: []
   difficulty: beginner
@@ -93,8 +99,11 @@ command_cluster:
   status: draft
   compatibility_tier: exact
   engine_support: implemented
+  curriculum_area: chapter-1-movement
   title: 기본 커서 이동
   commands: ["h", "j", "k", "l"]
+  coverage_required: ["h", "j", "k", "l"]
+  oracle: optional
   purpose: Normal mode에서 홈 포지션을 유지하며 커서를 이동한다.
   prerequisite: ["survival-save-quit"]
   difficulty: beginner
@@ -122,8 +131,11 @@ command_cluster:
   status: draft
   compatibility_tier: exact
   engine_support: planned
+  curriculum_area: chapter-1-movement
   title: 단어 단위 이동
   commands: ["w", "b", "e"]
+  coverage_required: ["w", "b", "e"]
+  oracle: required
   purpose: 단어 경계를 이용해 한 글자씩 이동하지 않고 빠르게 위치를 잡는다.
   prerequisite: ["normal-motion-basic"]
   difficulty: beginner
@@ -145,7 +157,7 @@ command_cluster:
 
 ## First 5-Minute Discovery Notes
 
-- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 유일한 cluster다.
+- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 유일한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 approval 전 보강이 필요하다.
 - `survival-save-quit`은 첫 경험의 불안감을 줄이는 데 중요하지만 command-line 입력과 app exit semantics가 필요하다.
 - `word-motion-basic`은 첫 5분 후반의 효율성 체감에 적합하지만 `w/b/e` engine support와 oracle comparison이 먼저 필요하다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.

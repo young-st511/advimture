@@ -10,9 +10,10 @@
 | 2 | PLAY-001 | completed | 첫 playable vertical slice: `hjkl` 목표 이동, 성공, 점수, progress 반영 |
 | 3 | LEGACY-001 | completed | 새 playable path가 canonical이 된 뒤 기존 editor/game 격리 |
 | 4 | SCENARIO-001 | completed | 첫 5분 시나리오 워크플로우로 content loader 요구사항 발견 |
-| 5 | CONTENT-001 | planned | 새 content schema용 YAML/JSON loader |
-| 6 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
-| 7 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 피드백 구조 |
+| 5 | VIM-CURRICULUM-001 | completed | Vim curriculum map과 scenario production harness |
+| 6 | CONTENT-001 | planned | 새 content schema용 YAML/JSON loader |
+| 7 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
+| 8 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 피드백 구조 |
 
 ## 진행 원칙
 
@@ -23,4 +24,4 @@
 
 ## 현재 판단
 
-현재 SCENARIO-001까지 완료됐다. 다음 작업 후보는 **CONTENT-001 새 content schema용 YAML/JSON loader**이며, `docs/gameplay/content-requirements.md`를 입력으로 사용한다.
+현재 VIM-CURRICULUM-001까지 완료됐다. 다음 작업 후보는 **CONTENT-001 새 content schema용 YAML/JSON loader**이며, `docs/gameplay/content-requirements.md`와 `docs/workflows/scenario-production-harness.md`를 입력으로 사용한다.

@@ -14,7 +14,7 @@ Phase: Vim Learning Foundation
 - 상태: active
 - ExecPlan: `docs/exec-plans/active/vim-001-first-command-cluster.md`
 - 목표: 첫 5분 플레이 루프에 들어갈 command cluster 후보를 선정하고, `docs/gameplay/command-catalog.md`의 draft 항목을 승인 가능한 수준으로 다듬는다.
-- 범위: command catalog 중심. exercise/scenario는 필요한 최소 초안만 다룬다.
+- 범위: command catalog 중심. exercise/scenario는 필요한 최소 초안만 다룬다. 첫 command cluster 승인 전에 `docs/gameplay/vim-curriculum-map.md`의 coverage map을 확인한다.
 
 ## 완료된 초기 세팅
 
@@ -106,6 +106,11 @@ Phase: Vim Learning Foundation
 ### SCENARIO-001. First 5-minute scenario content discovery
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/scenario-001-first-content-discovery.md`
+- 완료일: 2026-05-18
+
+### VIM-CURRICULUM-001. Scenario production harness
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-curriculum-001-scenario-production-harness.md`
 - 완료일: 2026-05-18
 
 ## Backlog

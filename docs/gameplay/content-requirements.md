@@ -215,6 +215,12 @@ content/
 - [draft] loader는 scenario가 참조하는 exercise가 없으면 오류를 반환해야 한다.
 - [draft] loader는 cursor target이 buffer 범위를 벗어나면 오류를 반환해야 한다.
 - [draft] loader는 E2E assertion에 필요한 buffer/cursor/mode/status/score/progress 기대값을 보존해야 한다.
+- [draft] loader는 approved exercise가 approved 또는 implemented command cluster만 참조하도록 검증해야 한다.
+- [draft] loader는 approved scenario가 approved 또는 implemented exercise만 참조하도록 검증해야 한다.
+- [draft] loader는 optimal key trace를 정규화하고 `optimal_key_count`와 길이가 다르면 오류를 반환해야 한다.
+- [draft] loader는 optimal key가 allowed keys에 없거나 forbidden keys와 충돌하면 오류를 반환해야 한다.
+- [draft] loader는 command cluster의 `coverage_required`가 approved exercise들의 optimal trace에서 모두 등장하는지 보고해야 한다.
+- [draft] loader 또는 후속 검증기는 `replay_status: pass` 없이 approved/implemented exercise를 playable로 올리지 않아야 한다.
 
 ## Open Questions
 

@@ -8,6 +8,8 @@
 
 이 문서는 모든 튜토리얼, 미션, 스테이지를 만들 때 따르는 순서를 정의한다.
 
+실제 콘텐츠 제작 시에는 이 문서의 기본 루프에 더해 `docs/workflows/scenario-production-harness.md`의 OK Gate와 SubAgent 검증 프로토콜을 따른다.
+
 ```text
 Vim Command Loop
   → Exercise Design Loop
@@ -162,11 +164,17 @@ docs/workflows/vim-learning-loops.md
 docs/gameplay/command-catalog.md
   command cluster 목록
 
+docs/gameplay/vim-curriculum-map.md
+  장기 Vim 학습 범위와 chapter 지도
+
 docs/gameplay/exercise-bank.md
   검증된 exercise 목록
 
 docs/gameplay/scenario-bank.md
   exercise에 입힌 scenario 목록
+
+docs/workflows/scenario-production-harness.md
+  Producer/Verifier SubAgent 반복 하네스와 OK Gate
 ```
 
 ## Agent 운영 규칙

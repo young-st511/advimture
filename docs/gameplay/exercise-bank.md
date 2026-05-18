@@ -27,6 +27,10 @@ exercise:
   status: draft | approved | implemented | retired
   command_cluster: <command-cluster-id>
   engine_support: implemented | planned | unsupported
+  trained_commands: ["<commands used in optimal_keys>"]
+  reviewed_commands: ["<commands allowed for review or recovery>"]
+  mistake_focus: ["<common mistake this exercise teaches against>"]
+  replay_status: pending | pass | fail
   title: <문항 이름>
   goal_for_player: <플레이어에게 보여줄 목표 문장>
   initial_state:
@@ -64,6 +68,10 @@ exercise:
   status: draft
   command_cluster: survival-save-quit
   engine_support: planned
+  trained_commands: [":q!"]
+  reviewed_commands: ["esc"]
+  mistake_focus: ["saving when the goal is to discard changes"]
+  replay_status: pending
   title: 저장하지 않고 빠져나오기
   goal_for_player: "변경하지 않고 Vim에서 빠져나오세요."
   initial_state:
@@ -96,6 +104,10 @@ exercise:
   status: draft
   command_cluster: normal-motion-basic
   engine_support: implemented
+  trained_commands: ["l"]
+  reviewed_commands: ["h"]
+  mistake_focus: ["confusing h and l"]
+  replay_status: pending
   title: 목표 문자까지 이동하기
   goal_for_player: "커서를 X 표시 위로 이동하세요."
   initial_state:
@@ -129,6 +141,10 @@ exercise:
   status: draft
   command_cluster: survival-save-quit
   engine_support: planned
+  trained_commands: [":wq"]
+  reviewed_commands: ["esc", ":q!"]
+  mistake_focus: ["discarding when the goal is to save"]
+  replay_status: pending
   title: 저장하고 종료하기
   goal_for_player: "성공한 변경을 저장하고 종료하세요."
   initial_state:
@@ -161,6 +177,10 @@ exercise:
   status: draft
   command_cluster: normal-motion-basic
   engine_support: implemented
+  trained_commands: ["j"]
+  reviewed_commands: ["k"]
+  mistake_focus: ["confusing j and k"]
+  replay_status: pending
   title: 경고 지점으로 이동하기
   goal_for_player: "커서를 WARN 표시의 W 위로 이동하세요."
   initial_state:
@@ -196,6 +216,10 @@ exercise:
   status: draft
   command_cluster: normal-motion-basic
   engine_support: implemented
+  trained_commands: ["j", "l"]
+  reviewed_commands: ["h", "k"]
+  mistake_focus: ["losing row/column orientation"]
+  replay_status: pending
   title: 짧은 경로 조합하기
   goal_for_player: "커서를 X 표시 위로 이동하세요."
   initial_state:
@@ -230,6 +254,10 @@ exercise:
   status: draft
   command_cluster: word-motion-basic
   engine_support: planned
+  trained_commands: ["w"]
+  reviewed_commands: ["b", "e"]
+  mistake_focus: ["using repeated l instead of word motion"]
+  replay_status: pending
   title: 단어 시작점으로 뛰어가기
   goal_for_player: "커서를 `backend` 단어의 시작으로 이동하세요."
   initial_state:
