@@ -58,4 +58,4 @@
 | 3 | SCORING-002 | completed | 의도 command 사용 여부를 grade/coaching에 반영 |
 | 4 | FAILURE-001 | completed | 실패 화면, 남은 입력 수 UI, `r`/`enter` retry UX 완성 |
 | 5 | QA-001 | completed | forbidden input, max input 초과, non-intended route, retry/hint E2E 보강 |
-| 6 | CONTENT-003 | planning | Ex command를 중반 고급 튜토리얼로 위치시키고 first tour pacing 재검증 |
+| 6 | CONTENT-003 | completed | Ex command를 중반 고급 튜토리얼로 위치시키고 first tour pacing 재검증 |

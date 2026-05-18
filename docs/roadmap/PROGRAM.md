@@ -10,10 +10,9 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### CONTENT-003. Ex command tutorial placement
-- 상태: planning
-- ExecPlan: 다음 루프에서 작성
-- 목표: Ex command를 중반 고급 튜토리얼로 위치시키고 first tour pacing을 재검증한다.
+### 다음 슬라이스
+- 상태: planning-needed
+- 목표: 다음 중기 플랜 수립
 
 ## 방금 완료한 슬라이스
 
@@ -40,6 +39,11 @@ Phase: Vim Learning Foundation
 ### QA-001. Constraint E2E hardening
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/qa-001-constraint-e2e-hardening.md`
+- 완료일: 2026-05-18
+
+### CONTENT-003. Ex command tutorial placement
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/content-003-ex-command-pacing.md`
 - 완료일: 2026-05-18
 
 ## 완료된 초기 세팅
