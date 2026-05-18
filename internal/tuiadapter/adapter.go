@@ -49,6 +49,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	if normalized == "ctrl+c" {
 		return Action{Type: ActionQuit}
 	}
+	if normalized == "ctrl+r" {
+		return Action{Type: ActionKey, Key: vimengine.KeyCtrlR}
+	}
 	if mode == vimengine.ModeInsert {
 		if normalized == "esc" {
 			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
@@ -115,6 +118,8 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyI}
 	case "a":
 		return Action{Type: ActionKey, Key: vimengine.KeyA}
+	case "u":
+		return Action{Type: ActionKey, Key: vimengine.KeyU}
 	case "?":
 		return Action{Type: ActionHint}
 	case "q":

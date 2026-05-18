@@ -398,6 +398,81 @@ func TestInsertModeRejectsMultiCharacterInput(t *testing.T) {
 	assertEvent(t, result, EventUnsupportedKey)
 }
 
+func TestUndoRedoRestoresSingleCharDelete(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"abc"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        1,
+			DesiredCol: 1,
+		},
+	})
+
+	engine.Apply(KeyX)
+	result := engine.Apply(KeyU)
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line after undo = %q, want abc", result.State.Lines[0])
+	}
+	if result.State.Cursor.Col != 1 {
+		t.Fatalf("cursor after undo = %d, want 1", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+
+	result = engine.Apply(KeyCtrlR)
+	if result.State.Lines[0] != "ac" {
+		t.Fatalf("line after redo = %q, want ac", result.State.Lines[0])
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestUndoRedoRestoresInsertText(t *testing.T) {
+	engine := New([]string{"ac"})
+
+	engine.Apply(KeyI)
+	engine.Apply("b")
+	engine.Apply(KeyEsc)
+	result := engine.Apply(KeyU)
+
+	if result.State.Lines[0] != "ac" {
+		t.Fatalf("line after undo = %q, want ac", result.State.Lines[0])
+	}
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode after undo = %q, want normal", result.State.Mode)
+	}
+
+	result = engine.Apply(KeyCtrlR)
+	if result.State.Lines[0] != "bac" {
+		t.Fatalf("line after redo = %q, want bac", result.State.Lines[0])
+	}
+}
+
+func TestNewChangeClearsRedoStack(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	engine.Apply(KeyX)
+	engine.Apply(KeyU)
+	engine.Apply(KeyR)
+	engine.Apply("z")
+	result := engine.Apply(KeyCtrlR)
+
+	if result.State.Lines[0] != "zbc" {
+		t.Fatalf("line = %q, want zbc", result.State.Lines[0])
+	}
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestUndoRedoBoundaryWhenStackIsEmpty(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	result := engine.Apply(KeyU)
+	assertEvent(t, result, EventBoundary)
+
+	result = engine.Apply(KeyCtrlR)
+	assertEvent(t, result, EventBoundary)
+}
+
 func TestEscReturnsToNormalMode(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeInsert,

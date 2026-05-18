@@ -302,9 +302,9 @@ command_cluster:
 ```yaml
 command_cluster:
   id: undo-redo-basic
-  status: draft
+  status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-2-small-edits
   title: 실수 되돌리기와 다시 적용
   commands: ["u", "<C-r>"]

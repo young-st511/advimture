@@ -35,6 +35,8 @@ const (
 	KeyI      = "i"
 	KeyA      = "a"
 	KeyShiftA = "A"
+	KeyU      = "u"
+	KeyCtrlR  = "ctrl+r"
 )
 
 type Cursor struct {
@@ -50,6 +52,13 @@ type State struct {
 	CommandLine string
 	LastCommand string
 	PendingKey  string
+	UndoStack   []Snapshot
+	RedoStack   []Snapshot
+}
+
+type Snapshot struct {
+	Lines  []string
+	Cursor Cursor
 }
 
 type EventType string
@@ -234,6 +243,10 @@ func Apply(state State, key string) Result {
 		return enterInsertMode(next, key, next.Cursor.Col+1)
 	case KeyShiftA:
 		return enterInsertMode(next, key, lineRuneLen(next.Lines[next.Cursor.Row]))
+	case KeyU:
+		return undoLastChange(next, key)
+	case KeyCtrlR:
+		return redoLastChange(next, key)
 	default:
 		return Result{
 			State: copyState(next),
@@ -261,7 +274,7 @@ func enterInsertMode(state State, key string, insertCol int) Result {
 }
 
 func insertPrintable(state State, key string) Result {
-	next := copyState(state)
+	next := pushUndo(state)
 	inserted := []rune(key)
 	if len(inserted) != 1 {
 		return Result{
@@ -376,10 +389,10 @@ func applyCommandKey(state State, key string) Result {
 }
 
 func deleteCurrentChar(state State, key string) Result {
-	next := copyState(state)
+	next := pushUndo(state)
 	runes := []rune(next.Lines[next.Cursor.Row])
 	if len(runes) == 0 {
-		return boundary(next, key)
+		return boundary(state, key)
 	}
 	col := clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
 	runes = append(runes[:col], runes[col+1:]...)
@@ -396,11 +409,11 @@ func deleteCurrentChar(state State, key string) Result {
 }
 
 func replaceCurrentChar(state State, key string) Result {
-	next := copyState(state)
+	next := pushUndo(state)
 	replacement := []rune(key)
 	if len(replacement) != 1 {
 		return Result{
-			State: copyState(next),
+			State: copyState(state),
 			Events: []Event{{
 				Type:    EventUnsupportedKey,
 				Key:     key,
@@ -410,7 +423,7 @@ func replaceCurrentChar(state State, key string) Result {
 	}
 	runes := []rune(next.Lines[next.Cursor.Row])
 	if len(runes) == 0 {
-		return boundary(next, key)
+		return boundary(state, key)
 	}
 	col := clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
 	runes[col] = replacement[0]
@@ -439,7 +452,7 @@ func applySubstituteCommand(state State, command string) (State, bool) {
 	if !ok {
 		return State{}, false
 	}
-	next := copyState(state)
+	next := pushUndo(state)
 	for row := parsed.startRow; row <= parsed.endRow; row++ {
 		if parsed.global {
 			next.Lines[row] = strings.ReplaceAll(next.Lines[row], parsed.old, parsed.new)
@@ -453,6 +466,69 @@ func applySubstituteCommand(state State, command string) (State, bool) {
 	next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
 	next.Cursor.DesiredCol = next.Cursor.Col
 	return next, true
+}
+
+func undoLastChange(state State, key string) Result {
+	if len(state.UndoStack) == 0 {
+		return boundary(state, key)
+	}
+	next := copyState(state)
+	snapshot := next.UndoStack[len(next.UndoStack)-1]
+	next.UndoStack = next.UndoStack[:len(next.UndoStack)-1]
+	next.RedoStack = append(next.RedoStack, snapshotState(state))
+	applySnapshot(&next, snapshot)
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func redoLastChange(state State, key string) Result {
+	if len(state.RedoStack) == 0 {
+		return boundary(state, key)
+	}
+	next := copyState(state)
+	snapshot := next.RedoStack[len(next.RedoStack)-1]
+	next.RedoStack = next.RedoStack[:len(next.RedoStack)-1]
+	next.UndoStack = append(next.UndoStack, snapshotState(state))
+	applySnapshot(&next, snapshot)
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func pushUndo(state State) State {
+	next := copyState(state)
+	next.UndoStack = append(next.UndoStack, snapshotState(state))
+	next.RedoStack = nil
+	return next
+}
+
+func snapshotState(state State) Snapshot {
+	return Snapshot{
+		Lines:  copyLines(state.Lines),
+		Cursor: state.Cursor,
+	}
+}
+
+func applySnapshot(state *State, snapshot Snapshot) {
+	state.Mode = ModeNormal
+	state.CommandLine = ""
+	state.PendingKey = ""
+	state.Lines = copyLines(snapshot.Lines)
+	if len(state.Lines) == 0 {
+		state.Lines = []string{""}
+	}
+	state.Cursor = snapshot.Cursor
+	state.Cursor.Col = clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	state.Cursor.DesiredCol = state.Cursor.Col
 }
 
 func parseSubstituteCommand(state State, command string) (substituteCommand, bool) {
@@ -879,6 +955,22 @@ func lineRuneLen(line string) int {
 func copyState(state State) State {
 	next := state
 	next.Lines = copyLines(state.Lines)
+	next.UndoStack = copySnapshots(state.UndoStack)
+	next.RedoStack = copySnapshots(state.RedoStack)
+	return next
+}
+
+func copySnapshots(snapshots []Snapshot) []Snapshot {
+	if snapshots == nil {
+		return nil
+	}
+	next := make([]Snapshot, len(snapshots))
+	for index, snapshot := range snapshots {
+		next[index] = Snapshot{
+			Lines:  copyLines(snapshot.Lines),
+			Cursor: snapshot.Cursor,
+		}
+	}
 	return next
 }
 

@@ -46,12 +46,14 @@ func TestMapInputMapsCommands(t *testing.T) {
 
 func TestMapInputMapsSingleCharEditKeys(t *testing.T) {
 	cases := map[string]string{
-		"x": vimengine.KeyX,
-		"r": vimengine.KeyR,
-		"i": vimengine.KeyI,
-		"a": vimengine.KeyA,
-		"A": vimengine.KeyShiftA,
-		"Z": "Z",
+		"x":      vimengine.KeyX,
+		"r":      vimengine.KeyR,
+		"i":      vimengine.KeyI,
+		"a":      vimengine.KeyA,
+		"A":      vimengine.KeyShiftA,
+		"u":      vimengine.KeyU,
+		"ctrl+r": vimengine.KeyCtrlR,
+		"Z":      "Z",
 	}
 
 	for input, wantKey := range cases {
