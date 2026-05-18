@@ -142,6 +142,54 @@ func TestWordMotionUpdatesDesiredColumnForVerticalMovement(t *testing.T) {
 	assertApply(t, engine, KeyJ, 2, 6, EventMoved)
 }
 
+func TestLineMotionMovesToStartAndEndOfCurrentLine(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "deploy target"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        3,
+			DesiredCol: 3,
+		},
+	})
+
+	assertApply(t, engine, KeyZero, 1, 0, EventMoved)
+	assertApply(t, engine, KeyDollar, 1, 12, EventMoved)
+}
+
+func TestDocumentMotionMovesToFirstAndLastLine(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"top", "middle", "bottom"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        3,
+			DesiredCol: 3,
+		},
+	})
+
+	assertApply(t, engine, KeyG, 1, 3, EventPendingKey)
+	assertApply(t, engine, KeyG, 0, 0, EventMoved)
+	assertApply(t, engine, KeyShiftG, 2, 0, EventMoved)
+}
+
+func TestDocumentMotionClearsPendingGOnUnsupportedCombo(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"top", "bottom"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        0,
+			DesiredCol: 0,
+		},
+	})
+
+	assertApply(t, engine, KeyG, 1, 0, EventPendingKey)
+	assertApply(t, engine, KeyW, 1, 0, EventUnsupportedKey)
+	assertApply(t, engine, KeyG, 1, 0, EventPendingKey)
+	assertApply(t, engine, KeyG, 0, 0, EventMoved)
+}
+
 func TestUnsupportedKeyDoesNotMove(t *testing.T) {
 	engine := New([]string{"abc"})
 	result := engine.Apply("x")

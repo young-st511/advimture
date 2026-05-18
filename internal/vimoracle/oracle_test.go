@@ -114,6 +114,41 @@ func TestRunCaseCanLockWordMotionFixture(t *testing.T) {
 	}
 }
 
+func TestRunCaseCanLockNavigationMotionFixture(t *testing.T) {
+	initial := vimengine.NewWithState(vimengine.State{
+		Mode:  vimengine.ModeNormal,
+		Lines: []string{"server {", "route api", "status ok"},
+		Cursor: vimengine.Cursor{
+			Row:        1,
+			Col:        5,
+			DesiredCol: 5,
+		},
+	}).State()
+	testCase := Case{
+		Name:    "navigation-line-and-file",
+		Initial: initial,
+		Keys:    []string{vimengine.KeyDollar, vimengine.KeyG, vimengine.KeyG, vimengine.KeyShiftG},
+	}
+	executor := fakeExecutor{
+		state: vimengine.State{
+			Mode:  vimengine.ModeNormal,
+			Lines: []string{"server {", "route api", "status ok"},
+			Cursor: vimengine.Cursor{
+				Row: 2,
+				Col: 0,
+			},
+		},
+	}
+
+	result, err := RunCase(context.Background(), executor, testCase)
+	if err != nil {
+		t.Fatalf("RunCase returned error: %v", err)
+	}
+	if !result.Matched {
+		t.Fatalf("Matched = false, mismatches = %+v", result.Mismatches)
+	}
+}
+
 type fakeExecutor struct {
 	state vimengine.State
 	err   error

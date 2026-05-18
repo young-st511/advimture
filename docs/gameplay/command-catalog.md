@@ -155,11 +155,47 @@ command_cluster:
     - 같은 줄 안 이동과 줄 경계 이동을 별도 exercise로 분리한다.
 ```
 
+### whole-file-navigation
+
+```yaml
+command_cluster:
+  id: whole-file-navigation
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: implemented
+  curriculum_area: chapter-2-navigation
+  title: 줄과 파일 단위 이동
+  commands: ["gg", "G", "0", "$"]
+  coverage_required: ["gg", "G", "0", "$"]
+  oracle: optional
+  purpose: 긴 파일에서 한 글자씩 이동하지 않고 줄 시작/끝과 파일 처음/끝으로 빠르게 이동한다.
+  prerequisite: ["word-motion-basic"]
+  difficulty: intermediate
+  useful_when:
+    - 설정 파일 맨 위의 선언부로 돌아갈 때
+    - 로그나 설정 파일의 마지막 줄로 즉시 이동할 때
+    - 현재 줄의 키나 값 경계를 빠르게 확인할 때
+  combo_paths:
+    - ["gg", "0"]
+    - ["G", "$"]
+    - ["0", "w", "$"]
+  common_mistakes:
+    - 긴 파일에서도 `j/k`를 반복한다.
+    - 현재 줄의 시작과 파일의 시작을 혼동한다.
+  compatibility_notes:
+    - NAV-001에서는 `gg/G`를 줄의 첫 column으로 이동하는 pedagogical motion으로 다룬다.
+    - numeric count prefix와 first non-blank column semantics는 후속 루프에서 다룬다.
+  design_notes:
+    - 후반 navigation은 모든 이동을 나열하지 않고 `coverage_required`로 좁혀 구현한다.
+    - 문항은 `hjkl` 반복보다 키 입력 수가 줄어드는 상황을 사용한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
 - `survival-save-quit`은 command-line 입력과 app exit semantics를 분리해 구현됐다. 실제 파일 저장/폐기는 아직 수행하지 않는다.
 - `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
+- `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

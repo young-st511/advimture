@@ -14,16 +14,20 @@ const (
 )
 
 const (
-	KeyEsc   = "esc"
-	KeyEnter = "enter"
-	KeyColon = ":"
-	KeyH     = "h"
-	KeyJ     = "j"
-	KeyK     = "k"
-	KeyL     = "l"
-	KeyW     = "w"
-	KeyB     = "b"
-	KeyE     = "e"
+	KeyEsc    = "esc"
+	KeyEnter  = "enter"
+	KeyColon  = ":"
+	KeyH      = "h"
+	KeyJ      = "j"
+	KeyK      = "k"
+	KeyL      = "l"
+	KeyW      = "w"
+	KeyB      = "b"
+	KeyE      = "e"
+	KeyG      = "g"
+	KeyShiftG = "G"
+	KeyZero   = "0"
+	KeyDollar = "$"
 )
 
 type Cursor struct {
@@ -38,6 +42,7 @@ type State struct {
 	Cursor      Cursor
 	CommandLine string
 	LastCommand string
+	PendingKey  string
 }
 
 type EventType string
@@ -50,6 +55,7 @@ const (
 	EventCommandMode     EventType = "command_mode"
 	EventCommandInput    EventType = "command_input"
 	EventCommandExecuted EventType = "command_executed"
+	EventPendingKey      EventType = "pending_key"
 )
 
 type Event struct {
@@ -124,6 +130,7 @@ func Apply(state State, key string) Result {
 	if key == KeyEsc {
 		next.Mode = ModeNormal
 		next.CommandLine = ""
+		next.PendingKey = ""
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -134,10 +141,12 @@ func Apply(state State, key string) Result {
 	}
 
 	if next.Mode == ModeCommand {
+		next.PendingKey = ""
 		return applyCommandKey(next, key)
 	}
 
 	if next.Mode != ModeNormal {
+		next.PendingKey = ""
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -146,6 +155,10 @@ func Apply(state State, key string) Result {
 				Message: "key is not supported outside normal mode",
 			}},
 		}
+	}
+
+	if next.PendingKey != "" {
+		return applyPendingKey(next, key)
 	}
 
 	switch key {
@@ -173,6 +186,21 @@ func Apply(state State, key string) Result {
 		return moveWordBackward(next, key)
 	case KeyE:
 		return moveWordEnd(next, key)
+	case KeyG:
+		next.PendingKey = key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventPendingKey,
+				Key:  key,
+			}},
+		}
+	case KeyShiftG:
+		return moveDocumentEnd(next, key)
+	case KeyZero:
+		return moveLineStart(next, key)
+	case KeyDollar:
+		return moveLineEnd(next, key)
 	default:
 		return Result{
 			State: copyState(next),
@@ -182,6 +210,23 @@ func Apply(state State, key string) Result {
 				Message: "key is not supported",
 			}},
 		}
+	}
+}
+
+func applyPendingKey(state State, key string) Result {
+	next := copyState(state)
+	pending := next.PendingKey
+	next.PendingKey = ""
+	if pending == KeyG && key == KeyG {
+		return moveDocumentStart(next, key)
+	}
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type:    EventUnsupportedKey,
+			Key:     key,
+			Message: "key sequence is not supported",
+		}},
 	}
 }
 
@@ -283,6 +328,74 @@ func moveVertical(state State, key string, delta int) Result {
 
 	next.Cursor.Row = targetRow
 	next.Cursor.Col = clampCol(next.Cursor.DesiredCol, next.Lines[targetRow])
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func moveLineStart(state State, key string) Result {
+	next := copyState(state)
+	if next.Cursor.Col == 0 {
+		return boundary(next, key)
+	}
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func moveLineEnd(state State, key string) Result {
+	next := copyState(state)
+	targetCol := maxCursorCol(next.Lines[next.Cursor.Row])
+	if next.Cursor.Col == targetCol {
+		return boundary(next, key)
+	}
+	next.Cursor.Col = targetCol
+	next.Cursor.DesiredCol = targetCol
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func moveDocumentStart(state State, key string) Result {
+	next := copyState(state)
+	if next.Cursor.Row == 0 && next.Cursor.Col == 0 {
+		return boundary(next, key)
+	}
+	next.Cursor.Row = 0
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func moveDocumentEnd(state State, key string) Result {
+	next := copyState(state)
+	targetRow := len(next.Lines) - 1
+	if next.Cursor.Row == targetRow && next.Cursor.Col == 0 {
+		return boundary(next, key)
+	}
+	next.Cursor.Row = targetRow
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
 	return Result{
 		State: copyState(next),
 		Events: []Event{{
@@ -471,6 +584,9 @@ func normalizeState(state State) State {
 	}
 	if next.Mode != ModeCommand {
 		next.CommandLine = ""
+	}
+	if next.Mode != ModeNormal {
+		next.PendingKey = ""
 	}
 	if next.Cursor.Row < 0 {
 		next.Cursor.Row = 0

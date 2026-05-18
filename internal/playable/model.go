@@ -129,7 +129,7 @@ func (m Model) View() string {
 	if view.LastCommand != "" {
 		b.WriteString(fmt.Sprintf("Command: %s\n", view.LastCommand))
 	}
-	b.WriteString("Keys: h/j/k/l/w/b/e move  ?: hint  r: retry  q: quit  :: command")
+	b.WriteString("Keys: h/j/k/l/w/b/e/g/G/0/$ move  ?: hint  r: retry  q: quit  :: command")
 	return b.String()
 }
 

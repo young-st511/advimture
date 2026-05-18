@@ -316,3 +316,139 @@ exercise:
     pass_condition: "cursor.row == 0 && cursor.col == 12"
     optimal_key_count: 2
 ```
+
+### whole-file-navigation-001
+
+```yaml
+exercise:
+  id: whole-file-navigation-001
+  status: approved
+  command_cluster: whole-file-navigation
+  engine_support: implemented
+  trained_commands: ["gg"]
+  reviewed_commands: ["G"]
+  mistake_focus: ["파일 처음으로 갈 때 k를 반복한다."]
+  replay_status: pass
+  title: 파일 처음으로 돌아가기
+  goal_for_player: "커서를 파일 첫 줄 첫 칸으로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor: {row: 2, col: 4}
+    buffer: |
+      server {
+      route api
+      error here
+  target_state:
+    mode: NORMAL
+    cursor: {row: 0, col: 0}
+  optimal_keys: "g g"
+  allowed_keys: ["g", "G", "0", "$", "h", "j", "k", "l", "esc"]
+  forbidden_keys: ["up", "down", "left", "right"]
+  hints:
+    - "g는 prefix입니다. 한 번 더 g를 눌러 파일 처음으로 이동합니다."
+    - "gg는 파일의 처음으로 이동합니다."
+  grading:
+    pass_condition: "cursor.row == 0 && cursor.col == 0"
+    optimal_key_count: 2
+```
+
+### whole-file-navigation-002
+
+```yaml
+exercise:
+  id: whole-file-navigation-002
+  status: approved
+  command_cluster: whole-file-navigation
+  engine_support: implemented
+  trained_commands: ["G"]
+  reviewed_commands: ["gg"]
+  mistake_focus: ["파일 끝으로 갈 때 j를 반복한다."]
+  replay_status: pass
+  title: 파일 끝으로 이동하기
+  goal_for_player: "커서를 파일 마지막 줄 첫 칸으로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor: {row: 0, col: 2}
+    buffer: |
+      server {
+      route api
+      status ok
+  target_state:
+    mode: NORMAL
+    cursor: {row: 2, col: 0}
+  optimal_keys: "G"
+  allowed_keys: ["g", "G", "0", "$", "h", "j", "k", "l", "esc"]
+  forbidden_keys: ["up", "down", "left", "right"]
+  hints:
+    - "G는 파일 마지막 줄로 이동합니다."
+    - "여러 번 j를 누르지 않아도 됩니다."
+  grading:
+    pass_condition: "cursor.row == 2 && cursor.col == 0"
+    optimal_key_count: 1
+```
+
+### whole-file-navigation-003
+
+```yaml
+exercise:
+  id: whole-file-navigation-003
+  status: approved
+  command_cluster: whole-file-navigation
+  engine_support: implemented
+  trained_commands: ["0"]
+  reviewed_commands: ["$"]
+  mistake_focus: ["줄 시작으로 갈 때 h를 반복한다."]
+  replay_status: pass
+  title: 현재 줄 시작으로 이동하기
+  goal_for_player: "커서를 현재 줄 첫 칸으로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor: {row: 0, col: 10}
+    buffer: |
+      route api backend
+  target_state:
+    mode: NORMAL
+    cursor: {row: 0, col: 0}
+  optimal_keys: "0"
+  allowed_keys: ["0", "$", "h", "l", "w", "b", "e", "esc"]
+  forbidden_keys: ["left", "right"]
+  hints:
+    - "0은 현재 줄의 첫 칸으로 이동합니다."
+    - "긴 줄에서 h를 반복하지 않아도 됩니다."
+  grading:
+    pass_condition: "cursor.row == 0 && cursor.col == 0"
+    optimal_key_count: 1
+```
+
+### whole-file-navigation-004
+
+```yaml
+exercise:
+  id: whole-file-navigation-004
+  status: approved
+  command_cluster: whole-file-navigation
+  engine_support: implemented
+  trained_commands: ["$"]
+  reviewed_commands: ["0"]
+  mistake_focus: ["줄 끝으로 갈 때 l을 반복한다."]
+  replay_status: pass
+  title: 현재 줄 끝으로 이동하기
+  goal_for_player: "커서를 현재 줄 마지막 글자로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor: {row: 0, col: 0}
+    buffer: |
+      route api backend
+  target_state:
+    mode: NORMAL
+    cursor: {row: 0, col: 16}
+  optimal_keys: "$"
+  allowed_keys: ["0", "$", "h", "l", "w", "b", "e", "esc"]
+  forbidden_keys: ["left", "right"]
+  hints:
+    - "$는 현재 줄의 마지막 글자로 이동합니다."
+    - "긴 줄에서 l을 반복하지 않아도 됩니다."
+  grading:
+    pass_condition: "cursor.row == 0 && cursor.col == 16"
+    optimal_key_count: 1
+```

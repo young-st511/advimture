@@ -44,7 +44,8 @@ func MapInput(input string) Action {
 }
 
 func MapInputForMode(input string, mode vimengine.Mode) Action {
-	normalized := strings.ToLower(strings.TrimSpace(input))
+	trimmed := strings.TrimSpace(input)
+	normalized := strings.ToLower(trimmed)
 	if normalized == "ctrl+c" {
 		return Action{Type: ActionQuit}
 	}
@@ -59,6 +60,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		default:
 			return Action{Type: ActionIgnored}
 		}
+	}
+	if trimmed == vimengine.KeyShiftG {
+		return Action{Type: ActionKey, Key: vimengine.KeyShiftG}
 	}
 
 	switch normalized {
@@ -82,6 +86,12 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyB}
 	case "e":
 		return Action{Type: ActionKey, Key: vimengine.KeyE}
+	case "g":
+		return Action{Type: ActionKey, Key: vimengine.KeyG}
+	case "0":
+		return Action{Type: ActionKey, Key: vimengine.KeyZero}
+	case "$":
+		return Action{Type: ActionKey, Key: vimengine.KeyDollar}
 	case "?":
 		return Action{Type: ActionHint}
 	case "r":

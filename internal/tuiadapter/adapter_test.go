@@ -71,6 +71,22 @@ func TestMapInputMapsCommandLineKeys(t *testing.T) {
 	}
 }
 
+func TestMapInputMapsNavigationKeys(t *testing.T) {
+	cases := map[string]string{
+		"g": vimengine.KeyG,
+		"G": vimengine.KeyShiftG,
+		"0": vimengine.KeyZero,
+		"$": vimengine.KeyDollar,
+	}
+
+	for input, wantKey := range cases {
+		action := MapInput(input)
+		if action.Type != ActionKey || action.Key != wantKey {
+			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
+		}
+	}
+}
+
 func TestMapInputIgnoresUnknownInput(t *testing.T) {
 	action := MapInput("space")
 	if action.Type != ActionIgnored {

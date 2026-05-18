@@ -16,14 +16,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 3 {
-		t.Fatalf("command clusters = %d, want 3", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 4 {
+		t.Fatalf("command clusters = %d, want 4", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 8 {
-		t.Fatalf("exercises = %d, want 8", len(lib.Exercises))
+	if len(lib.Exercises) != 12 {
+		t.Fatalf("exercises = %d, want 12", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 8 {
-		t.Fatalf("scenarios = %d, want 8", len(lib.Scenarios))
+	if len(lib.Scenarios) != 12 {
+		t.Fatalf("scenarios = %d, want 12", len(lib.Scenarios))
 	}
 	if len(lib.Playlists) != 1 {
 		t.Fatalf("playlists = %d, want 1", len(lib.Playlists))
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 7 {
-		t.Fatalf("playable exercises = %d, want 7: %+v", len(playable), playable)
+	if len(playable) != 11 {
+		t.Fatalf("playable exercises = %d, want 11: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "normal-motion-basic-001" {
 		t.Fatalf("playable[0].ID = %q, want normal-motion-basic-001", playable[0].ID)
@@ -48,6 +48,10 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"survival-save-quit-001",
 		"survival-save-quit-002",
 		"survival-save-quit-003",
+		"whole-file-navigation-001",
+		"whole-file-navigation-002",
+		"whole-file-navigation-003",
+		"whole-file-navigation-004",
 		"word-motion-basic-001",
 		"word-motion-basic-002",
 		"word-motion-basic-003",
@@ -139,6 +143,26 @@ func TestCoverageReportsSurvivalCommandsCovered(t *testing.T) {
 	assertStrings(t, survival.Covered, []string{"esc", ":q!", ":wq"})
 	if len(survival.Missing) != 0 {
 		t.Fatalf("survival missing coverage = %+v, want empty", survival.Missing)
+	}
+}
+
+func TestCoverageReportsNavigationCommandsCovered(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	var navigation CoverageReport
+	for _, report := range lib.CoverageReports() {
+		if report.CommandClusterID == "whole-file-navigation" {
+			navigation = report
+			break
+		}
+	}
+
+	assertStrings(t, navigation.Covered, []string{"gg", "G", "0", "$"})
+	if len(navigation.Missing) != 0 {
+		t.Fatalf("navigation missing coverage = %+v, want empty", navigation.Missing)
 	}
 }
 

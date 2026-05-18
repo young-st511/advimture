@@ -17,7 +17,7 @@
 | 9 | VIM-012 | completed | 다음 command cluster: `w/b/e` word motion |
 | 10 | EXERCISE-001 | completed | word motion exercise set |
 | 11 | SURVIVAL-001 | completed | `esc`, `:q!`, `:wq` 생존/종료 루프 |
-| 12 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
+| 12 | NAV-001 | completed | 후반 navigation 확장: `gg`, `G`, line/file motion |
 | 13 | EXCMD-001 | planned | `:` 명령어, substitute, range command 기반 |
 | 14 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 자동 저장, 피드백 구조 |
 
@@ -32,7 +32,7 @@
 | VIM-012 | word-motion cluster approved | `w/b/e` engine, oracle fixtures | `go test ./internal/vimengine/...`, oracle comparison | completed: word boundary, 공백, 문장부호, 줄 경계, unsupported mode, DesiredCol 회귀를 고정했다. |
 | EXERCISE-001 | VIM-012 통과 | word motion exercise set | replay validator, verifier OK | completed: `w`, `b`, `e`가 각각 approved exercise optimal trace에 등장하고 replay gate를 통과한다. |
 | SURVIVAL-001 | command-line scope 승인 | `esc`, `:q!`, `:wq` runtime/app semantics | unit tests, E2E smoke | completed: app exit와 mission success를 분리하고 command-line replay/goal gate를 통과했다. |
-| NAV-001 | movement fundamentals 통과 | `gg`, `G`, line/file motion clusters | vimengine/oracle tests | 후반 범용 이동은 `coverage_required` 중심으로 범위를 좁힌다. |
+| NAV-001 | movement fundamentals 통과 | `gg`, `G`, line/file motion clusters | vimengine/oracle tests | completed: `gg`, `G`, `0`, `$`로 범위를 좁히고 replay/coverage gate를 통과했다. |
 | EXCMD-001 | command-line engine 기반 | `:` 명령어, substitute, range command | parser/runtime tests | Ex command는 편집 engine과 scenario success를 분리한다. |
 | GAMELOOP-001 | file-backed multi exercise 가능 | playlist/unlock/retry/hint/autosave loop | E2E first-5-minute | 자동 저장은 기존 `.advimture` progress 경계를 유지한다. |
 
@@ -47,4 +47,4 @@
 
 ## 현재 판단
 
-현재 active slice는 없다. 다음 작업 후보는 **NAV-001 후반 navigation 확장**이다.
+현재 active slice는 없다. 다음 작업 후보는 **EXCMD-001 `:` 명령어 확장**이다.
