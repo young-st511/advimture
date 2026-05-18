@@ -224,6 +224,9 @@ func TestRetryResetsFailedSession(t *testing.T) {
 	if state.Attempts != 2 {
 		t.Fatalf("attempts = %d, want 2", state.Attempts)
 	}
+	if state.AttemptLimit != 0 {
+		t.Fatalf("attempt limit = %d, want 0", state.AttemptLimit)
+	}
 }
 
 func TestHintIsDeterministicByKeyTraceLength(t *testing.T) {

@@ -187,6 +187,9 @@ func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.
 	if !strings.Contains(model.View(), "Retry: r or enter") {
 		t.Fatalf("view = %q, want retry prompt", model.View())
 	}
+	if !strings.Contains(model.View(), "Attempts: 1/unlimited") {
+		t.Fatalf("view = %q, want attempt count", model.View())
+	}
 	if !strings.Contains(model.View(), "Inputs left: 1/2") {
 		t.Fatalf("view = %q, want remaining inputs", model.View())
 	}

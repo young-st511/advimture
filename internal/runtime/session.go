@@ -47,15 +47,16 @@ type Goal struct {
 }
 
 type State struct {
-	ExerciseID string
-	Status     Status
-	Vim        vimengine.State
-	KeyTrace   []string
-	Attempts   int
-	MaxInputs  int
-	InputsLeft int
-	Failure    FailureReason
-	Message    string
+	ExerciseID   string
+	Status       Status
+	Vim          vimengine.State
+	KeyTrace     []string
+	Attempts     int
+	AttemptLimit int
+	MaxInputs    int
+	InputsLeft   int
+	Failure      FailureReason
+	Message      string
 }
 
 type StepResult struct {
@@ -109,15 +110,16 @@ func NewSession(exercise Exercise) *Session {
 
 func (s *Session) State() State {
 	return State{
-		ExerciseID: s.exercise.ID,
-		Status:     s.status,
-		Vim:        copyVimState(s.engine.State()),
-		KeyTrace:   copyStrings(s.keyTrace),
-		Attempts:   s.attempts,
-		MaxInputs:  s.exercise.Constraints.MaxInputs,
-		InputsLeft: s.inputsLeft(),
-		Failure:    s.failure,
-		Message:    s.message,
+		ExerciseID:   s.exercise.ID,
+		Status:       s.status,
+		Vim:          copyVimState(s.engine.State()),
+		KeyTrace:     copyStrings(s.keyTrace),
+		Attempts:     s.attempts,
+		AttemptLimit: s.exercise.Constraints.AttemptLimit,
+		MaxInputs:    s.exercise.Constraints.MaxInputs,
+		InputsLeft:   s.inputsLeft(),
+		Failure:      s.failure,
+		Message:      s.message,
 	}
 }
 

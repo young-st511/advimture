@@ -10,10 +10,10 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### FAILURE-001. Failure and retry UX
+### QA-001. Constraint E2E hardening
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: 실패 화면, 남은 입력 수 UI, `r`/`enter` retry UX를 완성한다.
+- 목표: forbidden input, max input 초과, non-intended route, retry/hint E2E를 보강한다.
 
 ## 방금 완료한 슬라이스
 
@@ -30,6 +30,11 @@ Phase: Vim Learning Foundation
 ### SCORING-002. Command intent scoring
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/scoring-002-command-intent.md`
+- 완료일: 2026-05-18
+
+### FAILURE-001. Failure and retry UX
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/failure-001-failure-retry-ux.md`
 - 완료일: 2026-05-18
 
 ## 완료된 초기 세팅

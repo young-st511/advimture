@@ -21,6 +21,7 @@ assert:
   screen_contains:
     - "Grade: A"
     - "Inputs left: 0/2"
+    - "Attempts: 1/unlimited"
     - "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
   exit_code: 0
   progress_file_exists: true

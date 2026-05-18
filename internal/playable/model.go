@@ -162,6 +162,7 @@ func (m Model) View() string {
 			b.WriteString("Playlist complete\n")
 		}
 	} else if state.Status == exerciseruntime.StatusFailed {
+		b.WriteString(fmt.Sprintf("Attempts: %d/%s\n", state.Runtime.Attempts, attemptLimitLabel(state.Runtime.AttemptLimit)))
 		b.WriteString("Retry: r or enter\n")
 	}
 	if view.Mode == string(vimengine.ModeCommand) {
@@ -418,6 +419,13 @@ func renderLine(line string, row int, cursorRow int, cursorCol int) string {
 		cursorCol = len(runes) - 1
 	}
 	return fmt.Sprintf("> %s[%s]%s", string(runes[:cursorCol]), string(runes[cursorCol]), string(runes[cursorCol+1:]))
+}
+
+func attemptLimitLabel(limit int) string {
+	if limit <= 0 {
+		return "unlimited"
+	}
+	return fmt.Sprintf("%d", limit)
 }
 
 var _ tea.Model = Model{}
