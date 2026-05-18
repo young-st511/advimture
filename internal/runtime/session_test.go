@@ -88,6 +88,89 @@ func TestUnsupportedKeyIsRecorded(t *testing.T) {
 	}
 }
 
+func TestSessionFailsForbiddenInputWithoutMoving(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "forbidden",
+		Initial: vimengine.NewState([]string{"abc"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 2),
+		},
+		Constraints: Constraints{
+			ForbiddenKeys: []string{vimengine.KeyW},
+		},
+	})
+
+	result := session.ApplyKey(vimengine.KeyW)
+
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status = %q, want %q", result.State.Status, StatusFailed)
+	}
+	if result.State.Failure != FailureForbiddenInput {
+		t.Fatalf("failure = %q, want %q", result.State.Failure, FailureForbiddenInput)
+	}
+	if result.State.Vim.Cursor.Col != 0 {
+		t.Fatalf("cursor col = %d, want unchanged 0", result.State.Vim.Cursor.Col)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyW})
+}
+
+func TestSessionFailsWhenMaxInputsExceededWithoutMoving(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "max-inputs",
+		Initial: vimengine.NewState([]string{"abcd"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 3),
+		},
+		Constraints: Constraints{
+			MaxInputs: 2,
+		},
+	})
+
+	session.ApplyKey(vimengine.KeyH)
+	session.ApplyKey(vimengine.KeyH)
+	result := session.ApplyKey(vimengine.KeyL)
+
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status = %q, want %q", result.State.Status, StatusFailed)
+	}
+	if result.State.Failure != FailureMaxInputsExceeded {
+		t.Fatalf("failure = %q, want %q", result.State.Failure, FailureMaxInputsExceeded)
+	}
+	if result.State.Vim.Cursor.Col != 0 {
+		t.Fatalf("cursor col = %d, want unchanged 0", result.State.Vim.Cursor.Col)
+	}
+	if result.State.InputsLeft != 0 {
+		t.Fatalf("inputs left = %d, want 0", result.State.InputsLeft)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyH, vimengine.KeyH, vimengine.KeyL})
+}
+
+func TestSessionFailsWhenGoalReachedWithoutRequiredKey(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "required-key",
+		Initial: vimengine.NewState([]string{"abc"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 2),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyL},
+		},
+	})
+
+	result := session.ApplyKey(vimengine.KeyDollar)
+
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status = %q, want %q", result.State.Status, StatusFailed)
+	}
+	if result.State.Failure != FailureRequiredKeysMissing {
+		t.Fatalf("failure = %q, want %q", result.State.Failure, FailureRequiredKeysMissing)
+	}
+	if result.MatchedGoal {
+		t.Fatal("MatchedGoal = true, want false")
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyDollar})
+}
+
 func TestRetryResetsSessionAndIncrementsAttempts(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "retry",
@@ -111,6 +194,35 @@ func TestRetryResetsSessionAndIncrementsAttempts(t *testing.T) {
 	}
 	if len(state.KeyTrace) != 0 {
 		t.Fatalf("key trace = %+v, want empty", state.KeyTrace)
+	}
+}
+
+func TestRetryResetsFailedSession(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "retry-failed",
+		Initial: vimengine.NewState([]string{"abc"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 2),
+		},
+		Constraints: Constraints{
+			ForbiddenKeys: []string{vimengine.KeyW},
+		},
+	})
+
+	session.ApplyKey(vimengine.KeyW)
+	state := session.Retry()
+
+	if state.Status != StatusRunning {
+		t.Fatalf("status = %q, want %q", state.Status, StatusRunning)
+	}
+	if state.Failure != FailureNone {
+		t.Fatalf("failure = %q, want none", state.Failure)
+	}
+	if state.Message != "" {
+		t.Fatalf("message = %q, want empty", state.Message)
+	}
+	if state.Attempts != 2 {
+		t.Fatalf("attempts = %d, want 2", state.Attempts)
 	}
 }
 

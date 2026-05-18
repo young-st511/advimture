@@ -23,6 +23,11 @@ func TestCompileExerciseProducesRuntimeExercise(t *testing.T) {
 		Hints: []HintSpec{
 			{AfterKeys: 1, Text: "Use l to move right."},
 		},
+		Constraints: ConstraintSpec{
+			MaxInputs:     2,
+			RequiredKeys:  []string{vimengine.KeyL},
+			ForbiddenKeys: []string{vimengine.KeyW},
+		},
 		ExpectedKeys: []string{vimengine.KeyL, vimengine.KeyL},
 		AllowedKeys:  []string{vimengine.KeyH, vimengine.KeyJ, vimengine.KeyK, vimengine.KeyL},
 	})
@@ -39,6 +44,11 @@ func TestCompileExerciseProducesRuntimeExercise(t *testing.T) {
 	}
 	assertStrings(t, compiled.ExpectedKeys, []string{vimengine.KeyL, vimengine.KeyL})
 	assertStrings(t, compiled.AllowedKeys, []string{vimengine.KeyH, vimengine.KeyJ, vimengine.KeyK, vimengine.KeyL})
+	if compiled.Exercise.Constraints.MaxInputs != 2 {
+		t.Fatalf("max inputs = %d, want 2", compiled.Exercise.Constraints.MaxInputs)
+	}
+	assertStrings(t, compiled.Exercise.Constraints.RequiredKeys, []string{vimengine.KeyL})
+	assertStrings(t, compiled.Exercise.Constraints.ForbiddenKeys, []string{vimengine.KeyW})
 }
 
 func TestCompileExerciseProducesCommandGoal(t *testing.T) {
@@ -156,6 +166,20 @@ func TestCompileExerciseRequiresAtLeastOneGoal(t *testing.T) {
 	_, err := CompileExercise(ExerciseSpec{
 		ID:      "no-goal",
 		Initial: StateSpec{Lines: []string{"abc"}},
+	})
+	if err == nil {
+		t.Fatal("CompileExercise error = nil, want error")
+	}
+}
+
+func TestCompileExerciseRejectsNegativeConstraints(t *testing.T) {
+	_, err := CompileExercise(ExerciseSpec{
+		ID:      "bad-constraints",
+		Initial: StateSpec{Lines: []string{"abc"}},
+		Goal:    GoalSpec{Cursor: CursorSpecPtr(0, 1)},
+		Constraints: ConstraintSpec{
+			MaxInputs: -1,
+		},
 	})
 	if err == nil {
 		t.Fatal("CompileExercise error = nil, want error")

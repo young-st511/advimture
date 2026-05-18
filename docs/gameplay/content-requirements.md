@@ -15,6 +15,8 @@
 - retired playlist는 과거 스냅샷으로 보관할 수 있지만 default playable path에는 포함하지 않는다.
 - 새 command 학습 문항은 최대 입력 수, 필수 command, 금지 입력, 금지 우회 전략, 실패 코칭을 함께 정의해야 한다.
 - 최대 입력 수 초과나 금지 입력 사용은 즉시 실패이며, 초반 튜토리얼 재시도는 기본 무제한이다.
+- `constraints.max_inputs`는 입력 횟수 제한, `constraints.required_keys`는 의도 command 사용 여부, `constraints.forbidden_keys`는 명시적으로 막을 우회 입력을 표현한다.
+- `constraints.attempt_limit: 0`은 무제한 재시도이며, 후반 콘텐츠에서 제한을 켤 여지를 남긴다.
 
 ## First 5-Minute Loop
 
@@ -174,8 +176,12 @@ content/
 
 - `optimal_keys`는 사람이 쓰기 쉬운 문자열과 runner가 쓰기 쉬운 배열 표현 중 하나로 정규화되어야 한다.
 - `target_state.buffer`는 선택 값이어야 한다. cursor-only exercise가 필요하다.
-- `forbidden_keys`는 runtime 차단용이 아니라 피드백/검증용으로 시작해도 된다.
+- `forbidden_keys`는 과거 호환 필드로 유지하며, compile 시 `constraints.forbidden_keys`와 합쳐 runtime enforcement에 사용한다.
 - command-line sequence는 `":"`, `"q"`, `"!"`, `"enter"`처럼 key trace로 풀어 저장해야 한다.
+- `constraints.max_inputs`
+- `constraints.required_keys`
+- `constraints.forbidden_keys`
+- `constraints.attempt_limit`
 
 ### scenarios
 
@@ -235,5 +241,4 @@ content/
 
 ## Open Questions
 
-- `forbidden_keys`를 runtime enforcement로 볼지, coaching feedback으로 볼지 결정이 필요하다.
 - JSON import/export를 언제 지원할지 결정이 필요하다.

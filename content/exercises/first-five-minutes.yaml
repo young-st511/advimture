@@ -143,6 +143,11 @@ exercises:
     optimal_keys: ["l", "l"]
     allowed_keys: ["h", "j", "k", "l", "esc"]
     forbidden_keys: ["right", "left", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["l"]
+      forbidden_keys: ["w"]
+      attempt_limit: 0
     hints:
       - after_keys: 1
         text: "오른쪽으로 한 칸 더 이동해야 합니다."

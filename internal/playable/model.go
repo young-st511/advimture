@@ -92,6 +92,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		switch action.Type {
 		case tuiadapter.ActionKey:
+			if m.run.State().Status == exerciseruntime.StatusFailed && action.Key == vimengine.KeyEnter {
+				m.retryCurrent()
+				break
+			}
 			if m.run.State().Status == exerciseruntime.StatusSucceeded && action.Key == vimengine.KeyEnter {
 				m.advanceToNext()
 				break
@@ -103,8 +107,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				_ = hint
 			}
 		case tuiadapter.ActionRetry:
-			m.run.Retry()
-			m.saved = false
+			m.retryCurrent()
 		case tuiadapter.ActionQuit:
 			_ = m.writeE2EState()
 			return m, tea.Quit
@@ -145,6 +148,9 @@ func (m Model) View() string {
 	if view.Grade != "" {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
 	}
+	if state.Runtime.MaxInputs > 0 {
+		b.WriteString(fmt.Sprintf("Inputs left: %d/%d\n", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
+	}
 	if state.Status == exerciseruntime.StatusSucceeded {
 		if m.current+1 < len(m.entries) {
 			if m.nextEntryStartsNewPlaylist() {
@@ -155,6 +161,8 @@ func (m Model) View() string {
 		} else {
 			b.WriteString("Playlist complete\n")
 		}
+	} else if state.Status == exerciseruntime.StatusFailed {
+		b.WriteString("Retry: r or enter\n")
 	}
 	if view.Mode == string(vimengine.ModeCommand) {
 		b.WriteString(":" + view.CommandLine + "\n")
@@ -230,6 +238,12 @@ func (m *Model) advanceToNext() {
 	m.startedAt = m.now()
 }
 
+func (m *Model) retryCurrent() {
+	m.run.Retry()
+	m.saved = false
+	m.startedAt = m.now()
+}
+
 func (m Model) writeE2EState() error {
 	return e2estate.Write(m.e2eStatePath, m.State())
 }
@@ -297,6 +311,7 @@ func runForEntry(root string, entry gameEntry) (*scenario.Run, error) {
 		Title:       scenarioDoc.MissionTitle,
 		Briefing:    scenarioDoc.Briefing,
 		SuccessText: scenarioDoc.MentorSuccess,
+		FailureText: scenarioDoc.MentorFailure,
 		Exercise:    compiled,
 	})
 }

@@ -1,0 +1,46 @@
+id: playable_constraint_max_inputs
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 100
+  height: 30
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - send: "h"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "l"
+  - wait_screen_contains: "입력 제한을 초과했습니다."
+  - send: "q"
+assert:
+  screen_contains:
+    - "Status: failed"
+    - "Grade: F"
+    - "Inputs left: 0/2"
+    - "Retry: r or enter"
+    - "입력 제한을 초과했습니다."
+  exit_code: 0
+  progress_file_exists: false
+  key_trace:
+    - "h"
+    - "h"
+    - "l"
+    - "q"
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    status: "failed"
+    progress:
+      mission_id: "normal-motion-basic-001"
+      completed: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

@@ -165,6 +165,58 @@ func TestPlayableAutosavesEachCompletedExercise(t *testing.T) {
 	}
 }
 
+func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.T) {
+	saveCalls := 0
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+		SaveProgress: func(*progress.Progress) error {
+			saveCalls++
+			return nil
+		},
+	})
+
+	model, _ = updateWithKey(t, model, "w")
+
+	if model.State().Status != "failed" {
+		t.Fatalf("status = %q, want failed", model.State().Status)
+	}
+	if saveCalls != 0 {
+		t.Fatalf("saveCalls = %d, want 0", saveCalls)
+	}
+	if !strings.Contains(model.View(), "Retry: r or enter") {
+		t.Fatalf("view = %q, want retry prompt", model.View())
+	}
+	if !strings.Contains(model.View(), "Inputs left: 1/2") {
+		t.Fatalf("view = %q, want remaining inputs", model.View())
+	}
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	if model.State().Status != "running" {
+		t.Fatalf("status after retry = %q, want running", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "Exercise: 1/4") {
+		t.Fatalf("view = %q, want same exercise after retry", model.View())
+	}
+}
+
+func TestPlayableFailsShortcutThatSkipsRequiredInput(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+	})
+
+	model, _ = updateWithKey(t, model, "$")
+
+	if model.State().Status != "failed" {
+		t.Fatalf("status = %q, want failed", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "의도한 입력을 사용하지 않았습니다") {
+		t.Fatalf("view = %q, want required input coaching", model.View())
+	}
+}
+
 func TestPlayableWritesE2EState(t *testing.T) {
 	path := filepath.Join(t.TempDir(), ".advimture", "e2e_state.json")
 	model := New(Options{

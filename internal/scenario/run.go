@@ -14,6 +14,7 @@ type Spec struct {
 	Title       string
 	Briefing    string
 	SuccessText string
+	FailureText string
 	Exercise    content.CompiledExercise
 }
 
@@ -77,6 +78,9 @@ func (r *Run) ApplyKey(key string) StepResult {
 	if step.State.Status == exerciseruntime.StatusSucceeded {
 		r.message = r.spec.SuccessText
 		r.scoreIfSucceeded()
+	} else if step.State.Status == exerciseruntime.StatusFailed {
+		r.message = r.failureMessage(step.State.Message)
+		r.scoreIfFailed()
 	}
 	return StepResult{
 		State:   r.State(),
@@ -117,6 +121,31 @@ func (r *Run) scoreIfSucceeded() {
 		HintsUsed:    r.hintsUsed,
 	})
 	r.score = &result
+}
+
+func (r *Run) scoreIfFailed() {
+	state := r.session.State()
+	result := scoring.Evaluate(scoring.Input{
+		Status:       state.Status,
+		KeyTrace:     state.KeyTrace,
+		ExpectedKeys: r.spec.Exercise.ExpectedKeys,
+		Attempts:     state.Attempts,
+		HintsUsed:    r.hintsUsed,
+	})
+	r.score = &result
+}
+
+func (r *Run) failureMessage(runtimeMessage string) string {
+	if strings.TrimSpace(r.spec.FailureText) != "" {
+		if strings.TrimSpace(runtimeMessage) != "" {
+			return r.spec.FailureText + " " + runtimeMessage
+		}
+		return r.spec.FailureText
+	}
+	if strings.TrimSpace(runtimeMessage) != "" {
+		return runtimeMessage
+	}
+	return "아직 목표를 달성하지 못했습니다. 다시 시도하세요."
 }
 
 func copySpec(spec Spec) Spec {

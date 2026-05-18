@@ -10,16 +10,21 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### CONSTRAINT-001. Exercise constraint runtime
+### SCORING-002. Command intent scoring
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: max input, required command, forbidden input/strategy schema와 runtime 실패 처리를 구현한다.
+- 목표: 의도 command 사용 여부를 grade/coaching에 반영한다.
 
 ## 방금 완료한 슬라이스
 
 ### TUTORIAL-001. Split first tour into tutorial episodes
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/tutorial-001-split-first-tour-playlists.md`
+- 완료일: 2026-05-18
+
+### CONSTRAINT-001. Exercise constraint runtime
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/constraint-001-exercise-constraints.md`
 - 완료일: 2026-05-18
 
 ## 완료된 초기 세팅

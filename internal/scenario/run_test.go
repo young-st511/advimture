@@ -97,6 +97,39 @@ func TestRetryResetsRunState(t *testing.T) {
 	}
 }
 
+func TestRunShowsFailureTextAndScoresF(t *testing.T) {
+	run := newConstrainedRun(t)
+
+	result := run.ApplyKey(vimengine.KeyW)
+
+	if result.State.Status != exerciseruntime.StatusFailed {
+		t.Fatalf("status = %q, want %q", result.State.Status, exerciseruntime.StatusFailed)
+	}
+	if result.State.Message != "Try the intended command. 이 입력은 이번 문항에서 사용할 수 없습니다." {
+		t.Fatalf("message = %q, want failure coaching", result.State.Message)
+	}
+	if result.State.Score == nil || result.State.Score.Grade != scoring.GradeF {
+		t.Fatalf("score = %+v, want F", result.State.Score)
+	}
+}
+
+func TestRunRetryClearsFailure(t *testing.T) {
+	run := newConstrainedRun(t)
+
+	run.ApplyKey(vimengine.KeyW)
+	state := run.Retry()
+
+	if state.Status != exerciseruntime.StatusRunning {
+		t.Fatalf("status = %q, want %q", state.Status, exerciseruntime.StatusRunning)
+	}
+	if state.Message != "Reach the marked column." {
+		t.Fatalf("message = %q, want briefing", state.Message)
+	}
+	if state.Score != nil {
+		t.Fatalf("score = %+v, want nil", state.Score)
+	}
+}
+
 func newTestRun(t *testing.T) *Run {
 	t.Helper()
 
@@ -124,6 +157,40 @@ func newTestRun(t *testing.T) *Run {
 		Title:       "Open the door",
 		Briefing:    "Reach the marked column.",
 		SuccessText: "Door opened.",
+		Exercise:    compiled,
+	})
+	if err != nil {
+		t.Fatalf("NewRun returned error: %v", err)
+	}
+	return run
+}
+
+func newConstrainedRun(t *testing.T) *Run {
+	t.Helper()
+
+	compiled, err := content.CompileExercise(content.ExerciseSpec{
+		ID: "constrained",
+		Initial: content.StateSpec{
+			Lines: []string{"abc"},
+		},
+		Goal: content.GoalSpec{
+			Cursor: content.CursorSpecPtr(0, 2),
+		},
+		Constraints: content.ConstraintSpec{
+			ForbiddenKeys: []string{vimengine.KeyW},
+		},
+		ExpectedKeys: []string{vimengine.KeyL, vimengine.KeyL},
+	})
+	if err != nil {
+		t.Fatalf("CompileExercise returned error: %v", err)
+	}
+
+	run, err := NewRun(Spec{
+		ID:          "constrained-door",
+		Title:       "Open the door",
+		Briefing:    "Reach the marked column.",
+		SuccessText: "Door opened.",
+		FailureText: "Try the intended command.",
 		Exercise:    compiled,
 	})
 	if err != nil {

@@ -1,0 +1,43 @@
+id: playable_constraint_required_key
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 100
+  height: 30
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - send: "$"
+  - wait_screen_contains: "목표에는 도착했지만"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Status: failed"
+    - "Grade: F"
+    - "Retry: r or enter"
+    - "지금은 오른쪽 이동 감각을 익히는 단계입니다."
+    - "목표에는 도착했지만"
+  exit_code: 0
+  progress_file_exists: false
+  key_trace:
+    - "$"
+    - "q"
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 2
+    mode: "normal"
+    status: "failed"
+    score:
+      grade: "F"
+      passed: false
+    progress:
+      mission_id: "normal-motion-basic-001"
+      completed: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

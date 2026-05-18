@@ -1,0 +1,49 @@
+id: playable_constraint_forbidden_retry
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 100
+  height: 30
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - send: "w"
+  - wait_screen_contains: "Retry: r or enter"
+  - send: "enter"
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - send: "l"
+  - wait_ms: 50
+  - send: "l"
+  - wait_screen_contains: "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
+  - send: "q"
+assert:
+  screen_contains:
+    - "Grade: A"
+    - "Inputs left: 0/2"
+    - "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"normal-motion-basic-001\""
+  key_trace:
+    - "w"
+    - "enter"
+    - "l"
+    - "l"
+    - "q"
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 2
+    mode: "normal"
+    status: "succeeded"
+    progress:
+      mission_id: "normal-motion-basic-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

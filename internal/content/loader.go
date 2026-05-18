@@ -75,6 +75,7 @@ type ExerciseDocument struct {
 	AllowedKeys      []string         `yaml:"allowed_keys"`
 	ForbiddenKeys    []string         `yaml:"forbidden_keys"`
 	Hints            []HintSpec       `yaml:"hints"`
+	Constraints      ConstraintSpec   `yaml:"constraints"`
 	Grading          GradingSpec      `yaml:"grading"`
 	E2EAssertions    E2EAssertionSpec `yaml:"e2e_assertions"`
 }
@@ -360,8 +361,14 @@ func (e ExerciseDocument) ToExerciseSpec() ExerciseSpec {
 		Initial:          e.InitialState.toStateSpec(),
 		Goal:             e.TargetState.toGoalSpec(),
 		Hints:            copyHints(e.Hints),
-		ExpectedKeys:     copyStrings(e.OptimalKeys),
-		AllowedKeys:      copyStrings(e.AllowedKeys),
+		Constraints: ConstraintSpec{
+			MaxInputs:     e.Constraints.MaxInputs,
+			RequiredKeys:  copyStrings(e.Constraints.RequiredKeys),
+			ForbiddenKeys: append(copyStrings(e.ForbiddenKeys), e.Constraints.ForbiddenKeys...),
+			AttemptLimit:  e.Constraints.AttemptLimit,
+		},
+		ExpectedKeys: copyStrings(e.OptimalKeys),
+		AllowedKeys:  copyStrings(e.AllowedKeys),
 	}
 }
 
@@ -404,6 +411,12 @@ func (l Library) validateExerciseDocument(exercise ExerciseDocument) error {
 	}
 	if exercise.Grading.OptimalKeyCount != len(exercise.OptimalKeys) {
 		return fmt.Errorf("exercise %q optimal_key_count = %d, want %d", exercise.ID, exercise.Grading.OptimalKeyCount, len(exercise.OptimalKeys))
+	}
+	if exercise.Constraints.MaxInputs < 0 {
+		return fmt.Errorf("exercise %q constraints.max_inputs must be non-negative", exercise.ID)
+	}
+	if exercise.Constraints.AttemptLimit < 0 {
+		return fmt.Errorf("exercise %q constraints.attempt_limit must be non-negative", exercise.ID)
 	}
 	if err := validateKeys(exercise); err != nil {
 		return err

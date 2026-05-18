@@ -51,6 +51,10 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 실패 횟수는 기본 무제한이며, 후반 콘텐츠를 위해 `attempt_limit` 설정 여지는 남긴다.
 - 실패 후 재시도는 `r`과 `enter`를 모두 허용한다.
 - 초반 튜토리얼 코칭은 개념 힌트 중심이지만, 새 command 첫 소개에서는 command 의미를 명시한다.
+- exercise YAML은 `constraints.max_inputs`, `constraints.required_keys`, `constraints.forbidden_keys`, `constraints.attempt_limit`를 선언할 수 있다.
+- `constraints.max_inputs` 초과와 `constraints.forbidden_keys` 입력은 Vim state를 추가 진행시키지 않고 즉시 실패한다.
+- 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 실패한다.
+- 실패 상태는 progress를 저장하지 않으며, 실패 화면은 `Grade: F`, 남은 입력 수, 재시도 안내를 보여준다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 
@@ -82,3 +86,4 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - playable exercise 목록은 replay gate를 통과한 exercise만 반환한다.
 - playable playlist 목록은 approved/implemented playlist만 반환하며 ID 순서로 정렬된다.
 - approved/implemented tutorial playlist는 8문항을 초과하면 load에 실패한다.
+- `constraints.max_inputs`와 `constraints.attempt_limit`는 0 이상이어야 한다. 0은 제한 없음이다.

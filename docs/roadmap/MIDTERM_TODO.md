@@ -54,8 +54,8 @@
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
 | 1 | TUTORIAL-001 | completed | 17개 first tour를 8문항 이하 tutorial episode playlist로 분리 |
-| 2 | CONSTRAINT-001 | planning | max input, required command, forbidden input/strategy schema와 runtime 실패 처리 |
-| 3 | SCORING-002 | pending | 의도 command 사용 여부를 grade/coaching에 반영 |
+| 2 | CONSTRAINT-001 | completed | max input, required command, forbidden input/strategy schema와 runtime 실패 처리 |
+| 3 | SCORING-002 | planning | 의도 command 사용 여부를 grade/coaching에 반영 |
 | 4 | FAILURE-001 | pending | 실패 화면, 남은 입력 수 UI, `r`/`enter` retry UX 완성 |
 | 5 | QA-001 | pending | forbidden input, max input 초과, non-intended route, retry/hint E2E 보강 |
 | 6 | CONTENT-003 | pending | Ex command를 중반 고급 튜토리얼로 위치시키고 first tour pacing 재검증 |

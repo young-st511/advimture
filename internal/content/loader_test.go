@@ -265,6 +265,30 @@ func TestLoadLibraryPreservesHintThresholds(t *testing.T) {
 	}
 }
 
+func TestLoadLibraryPreservesExerciseConstraints(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	exercise := lib.Exercises["normal-motion-basic-001"]
+	if exercise.Constraints.MaxInputs != 2 {
+		t.Fatalf("max inputs = %d, want 2", exercise.Constraints.MaxInputs)
+	}
+	assertStrings(t, exercise.Constraints.RequiredKeys, []string{"l"})
+	assertStrings(t, exercise.Constraints.ForbiddenKeys, []string{"w"})
+
+	compiled, err := lib.CompileExercise("normal-motion-basic-001")
+	if err != nil {
+		t.Fatalf("CompileExercise returned error: %v", err)
+	}
+	if compiled.Exercise.Constraints.MaxInputs != 2 {
+		t.Fatalf("compiled max inputs = %d, want 2", compiled.Exercise.Constraints.MaxInputs)
+	}
+	assertStrings(t, compiled.Exercise.Constraints.RequiredKeys, []string{"l"})
+	assertStrings(t, compiled.Exercise.Constraints.ForbiddenKeys, []string{"right", "left", "up", "down", "w"})
+}
+
 func TestLoadLibraryRejectsMissingCommandClusterReference(t *testing.T) {
 	root := validLibraryFixture(t)
 	writeYAML(t, filepath.Join(root, "exercises", "bad.yaml"), `
@@ -623,6 +647,35 @@ exercises:
 	_, err := LoadLibrary(root)
 	if err == nil || !strings.Contains(err.Error(), "not allowed") {
 		t.Fatalf("LoadLibrary error = %v, want not allowed key", err)
+	}
+}
+
+func TestLoadLibraryRejectsNegativeConstraintValues(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: bad-constraint
+    status: draft
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    title: Bad
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    constraints:
+      max_inputs: -1
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 1
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "constraints.max_inputs") {
+		t.Fatalf("LoadLibrary error = %v, want constraints.max_inputs", err)
 	}
 }
 

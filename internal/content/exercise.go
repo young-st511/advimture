@@ -16,6 +16,7 @@ type ExerciseSpec struct {
 	Initial          StateSpec
 	Goal             GoalSpec
 	Hints            []HintSpec
+	Constraints      ConstraintSpec
 	ExpectedKeys     []string
 	AllowedKeys      []string
 }
@@ -41,6 +42,13 @@ type CursorSpec struct {
 type HintSpec struct {
 	AfterKeys int    `yaml:"after_keys"`
 	Text      string `yaml:"text"`
+}
+
+type ConstraintSpec struct {
+	MaxInputs     int      `yaml:"max_inputs"`
+	RequiredKeys  []string `yaml:"required_keys"`
+	ForbiddenKeys []string `yaml:"forbidden_keys"`
+	AttemptLimit  int      `yaml:"attempt_limit"`
 }
 
 type CompiledExercise struct {
@@ -86,10 +94,11 @@ func CompileExercise(spec ExerciseSpec) (CompiledExercise, error) {
 
 	return CompiledExercise{
 		Exercise: exerciseruntime.Exercise{
-			ID:      spec.ID,
-			Initial: initial,
-			Goal:    goal,
-			Hints:   hints,
+			ID:          spec.ID,
+			Initial:     initial,
+			Goal:        goal,
+			Hints:       hints,
+			Constraints: compileConstraints(spec.Constraints),
 		},
 		CommandClusterID: spec.CommandClusterID,
 		Title:            spec.Title,
@@ -139,7 +148,22 @@ func validateExerciseSpec(spec ExerciseSpec) error {
 			return fmt.Errorf("hint %d text is required", index)
 		}
 	}
+	if spec.Constraints.MaxInputs < 0 {
+		return fmt.Errorf("constraints.max_inputs must be non-negative")
+	}
+	if spec.Constraints.AttemptLimit < 0 {
+		return fmt.Errorf("constraints.attempt_limit must be non-negative")
+	}
 	return nil
+}
+
+func compileConstraints(spec ConstraintSpec) exerciseruntime.Constraints {
+	return exerciseruntime.Constraints{
+		MaxInputs:     spec.MaxInputs,
+		RequiredKeys:  copyStrings(spec.RequiredKeys),
+		ForbiddenKeys: copyStrings(spec.ForbiddenKeys),
+		AttemptLimit:  spec.AttemptLimit,
+	}
 }
 
 func compileGoal(spec GoalSpec) (exerciseruntime.Goal, error) {
