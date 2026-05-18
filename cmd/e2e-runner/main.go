@@ -212,7 +212,7 @@ func runScenario(sc scenario) (runResult, error) {
 		"TERM=xterm-256color",
 		"ADVIMTURE_E2E=1",
 	)
-	cmd.Env = append(cmd.Env, goCacheEnv()...)
+	cmd.Env = append(cmd.Env, goToolEnv(homeDir)...)
 
 	ptmx, err := pty.StartWithSize(cmd, &pty.Winsize{
 		Rows: sc.Terminal.Height,
@@ -605,21 +605,29 @@ func terminate(cmd *exec.Cmd) {
 	}
 }
 
-func goCacheEnv() []string {
+func goToolEnv(homeDir string) []string {
 	var env []string
-	for _, key := range []string{"GOCACHE", "GOMODCACHE"} {
+	if os.Getenv("GOCACHE") == "" {
+		env = append(env, "GOCACHE="+filepath.Join(homeDir, ".cache", "go-build"))
+	}
+	for _, key := range []string{"GOPATH", "GOMODCACHE"} {
 		if os.Getenv(key) != "" {
 			continue
 		}
-		value, err := exec.Command("go", "env", key).Output()
+		value, err := lookupGoEnv(key)
 		if err != nil {
 			continue
 		}
-		if trimmed := strings.TrimSpace(string(value)); trimmed != "" {
+		if trimmed := strings.TrimSpace(value); trimmed != "" {
 			env = append(env, key+"="+trimmed)
 		}
 	}
 	return env
+}
+
+var lookupGoEnv = func(key string) (string, error) {
+	value, err := exec.Command("go", "env", key).Output()
+	return string(value), err
 }
 
 func respondTerminalQueries(w io.Writer, p []byte) {

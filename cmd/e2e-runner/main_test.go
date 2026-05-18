@@ -234,6 +234,68 @@ func TestBuildSummaryRecordsAppStateLoaded(t *testing.T) {
 	}
 }
 
+func TestGoToolEnvSetsTempGoCacheWhenUnset(t *testing.T) {
+	t.Setenv("GOCACHE", "")
+	t.Setenv("GOPATH", "/existing/go")
+	t.Setenv("GOMODCACHE", "/existing/go/pkg/mod")
+	home := t.TempDir()
+
+	env := goToolEnv(home)
+	want := "GOCACHE=" + filepath.Join(home, ".cache", "go-build")
+
+	if len(env) != 1 || env[0] != want {
+		t.Fatalf("goToolEnv() = %v, want %q", env, want)
+	}
+}
+
+func TestGoToolEnvRespectsExistingGoCache(t *testing.T) {
+	t.Setenv("GOCACHE", "/custom/cache")
+	t.Setenv("GOPATH", "/existing/go")
+	t.Setenv("GOMODCACHE", "/existing/go/pkg/mod")
+
+	if env := goToolEnv(t.TempDir()); len(env) != 0 {
+		t.Fatalf("goToolEnv() = %v, want no override", env)
+	}
+}
+
+func TestGoToolEnvPinsParentGoModuleCacheWhenHomeChanges(t *testing.T) {
+	t.Setenv("GOCACHE", "")
+	t.Setenv("GOPATH", "")
+	t.Setenv("GOMODCACHE", "")
+	previousLookup := lookupGoEnv
+	t.Cleanup(func() {
+		lookupGoEnv = previousLookup
+	})
+	lookupGoEnv = func(key string) (string, error) {
+		switch key {
+		case "GOPATH":
+			return "/parent/go\n", nil
+		case "GOMODCACHE":
+			return "/parent/go/pkg/mod\n", nil
+		default:
+			return "", nil
+		}
+	}
+
+	env := goToolEnv(t.TempDir())
+
+	if !containsString(env, "GOPATH=/parent/go") {
+		t.Fatalf("goToolEnv() = %v, want GOPATH pin", env)
+	}
+	if !containsString(env, "GOMODCACHE=/parent/go/pkg/mod") {
+		t.Fatalf("goToolEnv() = %v, want GOMODCACHE pin", env)
+	}
+}
+
+func containsString(values []string, target string) bool {
+	for _, value := range values {
+		if value == target {
+			return true
+		}
+	}
+	return false
+}
+
 type assertError string
 
 func (e assertError) Error() string {

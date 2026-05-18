@@ -38,6 +38,11 @@ Phase: Vim Learning Foundation
 - ExecPlan: `docs/exec-plans/completed/e2e-003-app-state-summary-assertion.md`
 - 완료일: 2026-05-18
 
+### E2E-004. Go cache isolation for E2E runner
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-004-go-cache-isolation.md`
+- 완료일: 2026-05-18
+
 ### PLAY-001. First playable vertical slice
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/play-001-first-playable-slice.md`
@@ -91,6 +96,11 @@ Phase: Vim Learning Foundation
 ### VIM-011. Legacy archive pass
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/vim-011-legacy-archive-pass.md`
+- 완료일: 2026-05-18
+
+### LEGACY-001. Archive old implementation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/legacy-001-archive-old-implementation.md`
 - 완료일: 2026-05-18
 
 ## Backlog

@@ -1,6 +1,6 @@
 # Legacy Inventory
 
-> 새 엔진 모듈을 기준으로 기존 구현을 어떻게 다룰지 정리한다. 실제 archive는 충돌이 발생하는 slice에서 작게 수행한다.
+> 새 엔진 모듈을 기준으로 기존 구현을 어떻게 다룰지 정리한다. LEGACY-001에서 active code path와 충돌하는 옛 구현을 archive했다.
 
 ## 원칙
 
@@ -13,11 +13,11 @@
 
 | 패키지 | 현재 판단 | 이유 | Archive Trigger |
 |--------|-----------|------|-----------------|
-| `internal/editor` | archive 후보 | 새 `internal/vimengine`과 Vim semantics 책임이 겹친다. | 새 app/runtime이 `vimengine`을 사용하기 시작하고 기존 editor import가 제거될 때 |
-| `internal/game` | archive 후보 | 기존 tutorial/mission/grader가 새 `runtime/scenario/scoring`과 책임이 겹친다. | 첫 새 scenario runtime 기반 mission이 app에 연결될 때 |
-| `internal/app` | review | 기존 Bubble Tea app entry와 화면 전환을 포함한다. | 새 TUI adapter를 Bubble Tea model에 연결할 때 |
-| `internal/ui` | review | 기존 menu/result view는 재사용 가능성이 있다. | 새 view model과 맞지 않는 UI state를 강제할 때 |
-| `internal/data` | review | 기존 YAML loader는 참고 가능하지만 새 content schema와 다르다. | VIM-005 spec용 loader를 만들 때 기존 schema와 충돌하면 archive |
+| `internal/editor` | archived | 새 `internal/vimengine`과 Vim semantics 책임이 겹친다. | `docs/archived/legacy-code/2026-05-18/internal/editor/*.go.txt` |
+| `internal/game` | archived | 기존 tutorial/mission/grader가 새 `runtime/scenario/scoring/playable`과 책임이 겹친다. | `docs/archived/legacy-code/2026-05-18/internal/game/*.go.txt` |
+| `internal/app` | keep | 새 playable model을 기본 앱 경로로 감싸는 얇은 Bubble Tea entry다. | 새 multi-screen game loop가 필요할 때 별도 ExecPlan에서 확장 |
+| `internal/ui` | archived | 기존 menu/result view가 새 playable/view model 경계를 강제하지 않도록 격리했다. | `docs/archived/legacy-code/2026-05-18/internal/ui/*.go.txt` |
+| `internal/data` | archived | 기존 YAML loader/schema는 새 `internal/content` schema와 다르다. | `docs/archived/legacy-code/2026-05-18/internal/data/**` |
 | `internal/progress` | keep with caution | 기존 저장 포맷과 테스트가 있고, 새 progress adapter가 이를 감싼다. | save schema 변경이 필요해지는 별도 승인 slice |
 
 ## 새 모듈 기준
@@ -32,11 +32,11 @@
 | `internal/tuiadapter` | TUI input/action, state/view model 변환 |
 | `internal/progressadapter` | scenario result를 progress model로 변환 |
 | `internal/vimoracle` | optional oracle comparison |
+| `internal/playable` | 첫 playable vertical slice의 Bubble Tea model |
+| `internal/e2estate` | E2E app state summary schema |
 
-## 다음 Archive 후보
+## Archive 결과
 
-1. `internal/editor`
-2. `internal/game`
-3. 기존 `internal/data` YAML schema
-
-단, 실제 이동은 새 app wiring 또는 content loader slice에서 import graph를 확인한 뒤 진행한다.
+- 2026-05-18: `internal/editor`, `internal/game`, `internal/data`, `internal/ui`를 `docs/archived/legacy-code/2026-05-18/`로 이동했다.
+- 2026-05-18: obsolete FTUE scenario `test/e2e/ftue_ctrl_c_quit.yaml`을 `docs/archived/legacy-e2e/2026-05-18/`로 이동했다.
+- 2026-05-18: archived Go source는 `*.go.txt`로 보관하여 `go test ./...` 대상에서 제외했다.

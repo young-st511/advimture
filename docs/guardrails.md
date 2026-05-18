@@ -5,9 +5,9 @@
 ## 현재 설정된 가드레일
 
 - Go 테스트: `go test ./...`
-- 패키지별 테스트: `internal/editor`, `internal/game`, `internal/data`, `internal/progress`
+- 패키지별 테스트: `internal/vimengine`, `internal/runtime`, `internal/content`, `internal/scoring`, `internal/scenario`, `internal/tuiadapter`, `internal/progressadapter`, `internal/vimoracle`, `internal/playable`, `internal/progress`
 - E2E smoke: `make e2e-smoke`
-- Makefile: `make run`, `make e2e-smoke`
+- Makefile: `make run`, `make e2e-smoke`, `make e2e-playable`
 - `.gitignore`: 바이너리, IDE 파일, OS 파일, `coverage.out`, `artifacts/`
 
 ## 현재 비어 있는 부분
@@ -51,7 +51,7 @@
 - 새 의존성 추가
 - 저장 포맷 변경
 - `~/.advimture/progress.json` 호환성 변경
-- 미션/튜토리얼 YAML ID 변경
+- 새 content schema ID 변경
 - Bubble Tea 앱 구조 대개편
 - TUI E2E 러너가 실제 사용자 HOME에 쓰는 변경
 

@@ -1,6 +1,6 @@
 id: playable_hjkl_success
-command: ["env", "ADVIMTURE_PLAYABLE_SLICE=1", "go", "run", "."]
-timeout_ms: 8000
+command: ["go", "run", "."]
+timeout_ms: 20000
 terminal:
   width: 100
   height: 30

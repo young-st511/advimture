@@ -2,8 +2,6 @@ package progress
 
 import (
 	"time"
-
-	"github.com/young-st511/advimture/internal/data"
 )
 
 // Progress holds all player progress data.
@@ -22,19 +20,19 @@ type Progress struct {
 type TutorialProgress struct {
 	Completed   bool      `json:"completed"`
 	CompletedAt time.Time `json:"completed_at,omitempty"`
-	BestTime    float64   `json:"best_time,omitempty"`    // seconds
+	BestTime    float64   `json:"best_time,omitempty"` // seconds
 	Keystrokes  int       `json:"keystrokes,omitempty"`
 	Attempts    int       `json:"attempts"`
 }
 
 // MissionProgress tracks completion of a single mission.
 type MissionProgress struct {
-	Completed       bool      `json:"completed"`
-	CompletedAt     time.Time `json:"completed_at,omitempty"`
-	BestGrade       string    `json:"best_grade,omitempty"`    // "S", "A", "B", "C"
-	BestKeystrokes  int       `json:"best_keystrokes,omitempty"`
-	BestTimeMs      int64     `json:"best_time_ms,omitempty"`
-	Attempts        int       `json:"attempts"`
+	Completed      bool      `json:"completed"`
+	CompletedAt    time.Time `json:"completed_at,omitempty"`
+	BestGrade      string    `json:"best_grade,omitempty"` // "S", "A", "B", "C"
+	BestKeystrokes int       `json:"best_keystrokes,omitempty"`
+	BestTimeMs     int64     `json:"best_time_ms,omitempty"`
+	Attempts       int       `json:"attempts"`
 }
 
 // NewProgress creates a new empty progress.
@@ -73,26 +71,6 @@ func (p *Progress) CompletedMissionCount() int {
 // CurrentRank returns the player's current rank.
 func (p *Progress) CurrentRank() Rank {
 	return CalculateRank(p.CompletedTutorialCount(), p.CompletedMissionCount())
-}
-
-// IsMissionUnlocked returns true if all of the mission's required tutorials are completed.
-func IsMissionUnlocked(m *data.MissionData, p *Progress) bool {
-	if m == nil {
-		return false
-	}
-	if len(m.RequiredTutorials) == 0 {
-		return true
-	}
-	if p == nil {
-		return false
-	}
-	for _, id := range m.RequiredTutorials {
-		tp, ok := p.Tutorials[id]
-		if !ok || !tp.Completed {
-			return false
-		}
-	}
-	return true
 }
 
 // gradeOrder maps grade strings to numeric priority (higher = better).

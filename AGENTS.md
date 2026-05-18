@@ -9,21 +9,26 @@
 - Run: `go run .`
 - Build: `go build .`
 - Test all: `go test ./...`
-- Test editor: `go test ./internal/editor/...`
-- Test game: `go test ./internal/game/...`
-- Test data: `go test ./internal/data/...`
+- Test vim engine: `go test ./internal/vimengine/...`
+- Test runtime: `go test ./internal/runtime/...`
+- Test content: `go test ./internal/content/...`
+- Test playable: `go test ./internal/playable/...`
 - Test progress: `go test ./internal/progress/...`
-- E2E smoke: `go run ./cmd/e2e-runner --scenario test/e2e/ftue_ctrl_c_quit.yaml` 또는 `make e2e-smoke`
-- Makefile: `make run`, `make e2e-smoke`
+- E2E smoke: `make e2e-smoke`
+- Makefile: `make run`, `make e2e-smoke`, `make e2e-playable`
 - Lint: 전용 린터 설정 없음. 필요 시 `go vet ./...`를 수동 실행한다.
 
 ## Project Structure
 - 현재 구조는 작업 시작 시 `rg --files`로 직접 확인할 것. 정적 트리를 외워서 판단하지 말 것.
 - 새 Go 앱 코드는 `internal/` 아래 책임별 패키지에 둔다.
-- TUI 화면 전환은 `internal/app/`, 화면 컴포넌트는 `internal/ui/`, 게임 상태/미션 진행은 `internal/game/`에 둔다.
-- Vim 유사 편집 동작은 `internal/editor/`에 둔다.
-- 튜토리얼/미션 데이터와 검증 로직은 `internal/data/`에 둔다.
-- 진행 저장은 `internal/progress/`에 둔다.
+- 앱 진입점은 `internal/app/`, 첫 playable vertical slice는 `internal/playable/`에 둔다.
+- Vim 유사 편집 동작은 `internal/vimengine/`에 둔다.
+- Exercise runtime은 `internal/runtime/`, content schema/validation은 `internal/content/`에 둔다.
+- 점수 평가는 `internal/scoring/`, scenario orchestration은 `internal/scenario/`에 둔다.
+- TUI input/view model 변환은 `internal/tuiadapter/`, scenario 결과와 저장 모델 연결은 `internal/progressadapter/`에 둔다.
+- Oracle 비교는 `internal/vimoracle/`, E2E state summary 모델은 `internal/e2estate/`에 둔다.
+- 진행 저장 포맷과 로컬 저장소는 `internal/progress/`에 둔다.
+- 기존 `internal/editor`, `internal/game`, `internal/data`, `internal/ui` 구현은 `docs/archived/legacy-code/` 아래의 과거 참고 자료다.
 - 테스트는 같은 패키지의 `*_test.go`로 둔다.
 - 기획, 실행 계획, 검증 루프 문서는 `docs/` 아래에 둔다.
 
@@ -102,9 +107,9 @@ ExecPlan은 작성 → `active/` 진행 → 완료 시 `completed/`로 이동한
 
 - `internal/progress/` 저장 포맷 변경 — 사용자 승인 필수 (→ `docs/gameplay/domain-contract.md`)
 - `go.mod`, `go.sum` 의존성 변경 — ExecPlan과 사용자 승인 필수 (→ `docs/guardrails.md`)
-- `internal/data/tutorials/`, `internal/data/missions/` YAML ID/파일명 변경 — 기획 승인 필수 (→ `docs/gameplay/domain-contract.md`)
+- 새 content schema의 ID/파일명 변경 — 기획 승인 필수 (→ `docs/gameplay/domain-contract.md`)
 - TUI E2E 러너가 실제 `~/.advimture`를 쓰도록 만드는 변경 금지. 테스트 전용 HOME 또는 progress path 주입을 사용할 것 (→ `docs/verification/domain-contract.md`)
-- 기존 구현을 canonical spec처럼 문서화하는 작업 금지. 재기획 승인 전까지 현재 코드는 참고 자료로만 취급할 것.
+- `docs/archived/legacy-code/`의 기존 구현을 canonical spec처럼 문서화하는 작업 금지. 필요한 아이디어만 새 docs로 승격할 것.
 
 ## Reporting
 최종 보고는 항상 `변경 내용 / 이유 / 검증 결과` 순서로 간결하게 작성한다.

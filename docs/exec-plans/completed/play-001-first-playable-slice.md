@@ -58,3 +58,4 @@ Allowed-Paths:
 
 - 2026-05-18: 기존 FTUE/menu 흐름은 유지하고 `ADVIMTURE_PLAYABLE_SLICE=1`에서만 새 playable path로 시작하게 했다. 기존 구현을 즉시 archive하기 전에 새 path를 검증하기 위함이다.
 - 2026-05-18: E2E 입력 사이에 짧은 wait를 넣었다. Bubble Tea raw input 준비 직후 키 손실을 줄이기 위한 flake 방지다.
+- 2026-05-18: LEGACY-001 이후 playable path가 기본 앱 경로가 되었고 `ADVIMTURE_PLAYABLE_SLICE` gate는 제거됐다. 이 문서는 PLAY-001 당시의 완료 기록으로 보존한다.
