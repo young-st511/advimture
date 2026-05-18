@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-19 — 중반 생존 어드벤처 톤과 operator grammar 순서 확정
+
+이전 가정: 중반부터 생존 어드벤처 비중을 높인다는 방향은 있었지만, 생존감의 범위와 다음 콘텐츠 시퀀스가 구체적으로 고정되지 않았다.
+
+새 가정: 중반 톤은 `docs/gameplay/scenario-tone.md`의 “터미널 문제 해결 생존 어드벤처”를 따른다. 생존감은 전투, 체력, 인벤토리가 아니라 로그, 설정, 통신, 임시 패치, 저장/폐기 판단 같은 텍스트 조작 압력에서 온다. 다음 중기 플랜은 `delete-with-motion`, `change-with-motion` 중심의 operator grammar adventure intro로 진행한다.
+
+이유: 작은 수정 튜토리얼 이후 Vim이 실무 도구처럼 느껴지려면 `operator + motion` 문법으로 넘어가는 것이 자연스럽다. 시나리오가 command 학습을 가리지 않도록 톤 가드레일을 먼저 고정했다.
+
+영향: `docs/gameplay/scenario-tone.md`, `docs/gameplay/vim-curriculum-map.md`, `docs/roadmap/MIDTERM_TODO.md`, `docs/roadmap/PROGRAM.md`를 기준으로 다음 루프를 진행한다.
+
 ## 2026-05-18 — 튜토리얼 페이싱과 제약 설계 원칙 확정
 
 이전 가정: 첫 playable pack은 17개 exercise를 한 번에 완주하는 vertical slice이며, 초반/중반 튜토리얼 분리와 실패/재시도/입력 제약 기준은 아직 열려 있었다.

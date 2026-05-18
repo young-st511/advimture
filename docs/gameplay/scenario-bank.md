@@ -9,6 +9,7 @@
 - scenario는 exercise의 정답, target state, allowed keys를 바꾸지 않는다.
 - briefing과 피드백은 Vim command 학습 목표를 강화해야 한다.
 - 스토리를 제거해도 exercise는 독립적으로 성립해야 한다.
+- 중반 이후 시나리오 톤은 `docs/gameplay/scenario-tone.md`의 “터미널 문제 해결 생존 어드벤처” 기준을 따른다.
 
 ## 상태 값
 

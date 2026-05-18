@@ -222,6 +222,8 @@ Scenario 방향:
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 중반 고급 명령”으로 이어진다.
 
+중반부터는 `docs/gameplay/scenario-tone.md`의 터미널 문제 해결 생존 어드벤처 톤을 따른다. 생존감은 command 학습을 가리지 않는 배경 압력이며, 첫 operator grammar playpack은 `dw`, `d$`, `cw`, `c$`, `dd`, `u` 복습을 우선 후보로 둔다.
+
 ## Coverage Rubric
 
 - Chapter 0-4는 다음 playable milestone 전에 최소 draft cluster가 있어야 한다.

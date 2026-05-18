@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### SCENARIO-TONE-001. Midgame survival adventure tone
+### OPERATOR-GAP-001. Operator grammar engine gap
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: 중반 생존 어드벤처 톤 원칙과 적용 범위를 확정한다.
+- 목표: `d/c` operator grammar 구현 범위와 vimengine/runtime gap을 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### SCENARIO-TONE-001. Midgame survival adventure tone
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/scenario-tone-001-midgame-survival.md`
+- 완료일: 2026-05-19
 
 ### UX-002. Ctrl-C input guard
 - 상태: completed

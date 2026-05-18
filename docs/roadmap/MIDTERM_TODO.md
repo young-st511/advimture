@@ -70,4 +70,15 @@
 | 4 | VIM-014 | completed | `i`, `a`, `A` insert mode entry와 printable insertion 구현 |
 | 5 | VIM-015 | completed | `u`, `ctrl+r` undo/redo stack 구현 |
 | 6 | PLAYPACK-002 | completed | 7문항짜리 “편집 기본기” 튜토리얼 playpack 설계/구현 |
-| 7 | SCENARIO-TONE-001 | planning | 중반 생존 어드벤처 톤 원칙과 적용 범위 확정 |
+| 7 | SCENARIO-TONE-001 | completed | 중반 생존 어드벤처 톤 원칙과 적용 범위 확정 |
+
+## 다음 중기 플랜: Operator Grammar Adventure Intro
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | OPERATOR-GAP-001 | planning | `d/c` operator grammar 구현 범위와 vimengine/runtime gap 결정 |
+| 2 | VIM-016 | pending | operator pending mode와 `operator + motion` 전이 기반 구현 |
+| 3 | VIM-017 | pending | `delete-with-motion` (`dw`, `d$`, `dd`) 엔진/테스트 구현 |
+| 4 | VIM-018 | pending | `change-with-motion` (`cw`, `c$`, `cc`) 엔진/테스트 구현 |
+| 5 | PLAYPACK-003 | pending | 6문항짜리 operator grammar adventure intro content/E2E 구현 |
+| 6 | YANK-TEXT-001 | pending | `y/p`와 text object 후보를 다음 playpack으로 설계 |
