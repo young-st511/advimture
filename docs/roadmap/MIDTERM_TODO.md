@@ -13,7 +13,10 @@
 | 5 | VIM-CURRICULUM-001 | completed | Vim curriculum map과 scenario production harness |
 | 6 | CONTENT-001 | planned | 새 content schema용 YAML/JSON loader |
 | 7 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
-| 8 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 피드백 구조 |
+| 8 | SURVIVAL-001 | planned | `esc`, `:q!`, `:wq` 생존/종료 루프 |
+| 9 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
+| 10 | EXCMD-001 | planned | `:` 명령어, substitute, range command 기반 |
+| 11 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 자동 저장, 피드백 구조 |
 
 ## 진행 원칙
 

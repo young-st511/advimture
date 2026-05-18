@@ -12,7 +12,7 @@
 6. 현재 엔진이 지원하지 않는 command는 `engine_support: planned`로 남기고 playable 후보에서 제외한다.
 7. `OK`는 작성 Agent가 아니라 별도 검증 Agent가 준다.
 8. approved/implemented exercise는 optimal key replay로 target state와 일치해야 한다.
-9. cluster 안의 모든 command는 최소 1개 exercise의 optimal key trace에 실제로 등장해야 한다.
+9. cluster coverage는 `coverage_required`를 기준으로 판단한다. 초반 기본 이동처럼 방향 감각 자체가 목표인 cluster는 모든 command가 optimal trace에 등장해야 하지만, 후반 범용 이동/조합 cluster는 학습 목표에 맞춰 coverage를 좁힐 수 있다.
 
 ## Roles
 
@@ -90,6 +90,7 @@ Reject 조건:
 - engine support가 planned인데 implemented처럼 다룬다.
 - exact tier인데 oracle 검증 전략이 없다.
 - cluster의 일부 command가 allowed key에만 있고 optimal path에 등장하지 않는다.
+- `coverage_required`가 비어 있는데 cluster가 너무 넓어 실제 훈련 범위를 판단할 수 없다.
 
 ## OK Gate: Exercise
 
@@ -225,7 +226,14 @@ cluster_id
   oracle_status: required | optional | none | pending
 ```
 
-allowed key에 포함된 것만으로는 훈련된 것으로 보지 않는다. command는 optimal trace에 등장해야 coverage로 인정한다.
+allowed key에 포함된 것만으로는 훈련된 것으로 보지 않는다. `coverage_required` command는 optimal trace에 등장해야 coverage로 인정한다.
+
+## Scenario Tone
+
+- 기본 톤은 DevOps/터미널 문제 해결이다.
+- 로그, 설정 파일, 배포 전 점검, 서비스 라우팅, 환경변수, 터미널 지도 같은 소재를 우선한다.
+- 약간의 과하지 않은 억까 상황은 허용한다. 단, 플레이어가 무엇을 해야 하는지 흐리면 reject한다.
+- 실제 장애처럼 과하게 무겁거나 긴 세계관 설명은 피한다.
 
 ## Hint Policy
 

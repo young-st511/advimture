@@ -22,10 +22,13 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - Command cluster는 `exact`, `pedagogical`, `unsupported` 중 하나의 Vim compatibility tier를 가진다.
 - Exercise는 `docs/gameplay/exercise-bank.md`에 축적한다.
 - Scenario는 `docs/gameplay/scenario-bank.md`에 축적한다.
+- 게임이 읽는 콘텐츠 파일은 repo root `content/` 아래 YAML을 우선한다.
+- 시나리오 톤은 DevOps/터미널 문제 해결을 기본으로 하되, 과하지 않은 억까 상황은 허용한다.
 - 시나리오에서 출발해 문항을 끼워 맞추지 않는다.
 - 스토리나 세계관은 문항을 더 기억에 남게 해야 하며, command 학습 목표를 방해하면 안 된다.
 - Vim runtime은 작은 Go Vim-like engine으로 구현한다. Neovim은 런타임이 아니라 optional oracle test로만 사용한다.
 - 엔진은 `State + Key -> State + Events` 순수 전이를 기본 계약으로 삼는다.
+- 진행 사항은 자동 저장을 기본으로 하며, 기존 `.advimture` 계열 progress 저장 경계를 유지한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

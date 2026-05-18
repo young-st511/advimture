@@ -115,6 +115,7 @@ Scenario 방향:
 - `substitute-line`: `:s/foo/bar/`
 - `substitute-file`: `:%s/foo/bar/g`
 - `range-command-basic`: `:3,8s`, visual range substitute
+- `ex-command-navigation`: `:set`, `:nohlsearch`, `:help`, command-line editing basics
 
 Exercise 방향:
 
@@ -221,6 +222,8 @@ Scenario 방향:
 
 - Chapter 0-3은 첫 playable milestone 전에 최소 draft cluster가 있어야 한다.
 - approved cluster는 `coverage_required`의 모든 command가 exercise optimal trace에 등장해야 한다.
+- 초반 기본 이동 cluster는 방향 감각 자체가 목표이므로 모든 방향 command를 optimal trace에 포함해야 한다.
+- 후반 범용 이동/조합 cluster는 모든 Vim 기능을 억지로 한 루프에 넣지 않고, cluster의 `coverage_required`로 핵심 학습 범위를 정의한다.
 - exact tier cluster는 implemented 승격 전에 engine unit test 또는 oracle comparison 계획이 있어야 한다.
 - chapter가 넓어질수록 scenario보다 replay 가능한 exercise coverage를 먼저 늘린다.
 - coverage matrix는 `cluster -> trained commands -> exercise count -> replay status -> oracle status -> e2e status` 순서로 본다.
@@ -230,3 +233,5 @@ Scenario 방향:
 - `normal-motion-basic`: 현재 draft는 `l`, `j` 중심이다. `h`, `k` optimal trace exercise가 필요하다.
 - `survival-save-quit`: command-line mode와 app exit semantics가 필요하다.
 - `word-motion-basic`: `w/b/e` engine support와 word boundary oracle fixture가 필요하다.
+- `file-motion-basic`: `gg`, `G`, `{count}G`는 후반 navigation-at-scale 전에 필요하다.
+- `ex-command-navigation`: `:` command-line 입력, range, substitute를 폭넓게 다루기 위한 별도 engine/runtime 설계가 필요하다.

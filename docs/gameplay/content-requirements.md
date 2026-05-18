@@ -6,6 +6,8 @@
 
 - 콘텐츠는 항상 `command_cluster -> exercise -> scenario -> playlist` 순서로 연결된다.
 - scenario는 exercise의 목표, 정답, 허용 키를 바꾸지 않는다.
+- 콘텐츠 파일은 YAML을 우선하며 repo root의 `content/` 아래에 둔다.
+- draft 콘텐츠도 파일로 보관할 수 있다. 단 `status: draft` 또는 `engine_support: planned`는 playable 후보에서 제외한다.
 - loader는 사람이 읽기 쉬운 작성 단위와 엔진이 소비하기 쉬운 compiled 단위를 분리해야 한다.
 - 현재 엔진이 지원하지 않는 command를 포함한 콘텐츠는 `engine_support: planned`로 남기고 playable path에 연결하지 않는다.
 - 모든 playable 콘텐츠는 TUI E2E가 재현할 수 있는 key trace와 app state assertion을 가져야 한다.
@@ -208,6 +210,7 @@ content/
 
 ## CONTENT-001 Acceptance Draft
 
+- [draft] loader는 repo root `content/` 아래의 YAML 파일을 우선 읽어야 한다.
 - [draft] loader는 command cluster, exercise, scenario, playlist 파일을 각각 읽을 수 있어야 한다.
 - [draft] loader는 `engine_support: planned` 콘텐츠를 로드하되 playable 후보에서는 제외할 수 있어야 한다.
 - [draft] loader는 `normal-motion-basic-001`을 현재 hardcoded playable exercise와 같은 compiled exercise로 변환할 수 있어야 한다.
@@ -224,6 +227,5 @@ content/
 
 ## Open Questions
 
-- command cluster 승인 전 draft 콘텐츠를 fixture로 둘지, docs에만 둘지 결정이 필요하다.
 - `forbidden_keys`를 runtime enforcement로 볼지, coaching feedback으로 볼지 결정이 필요하다.
-- `survival-save-quit`을 첫 5분 시작에 둘지, 현재 엔진 구현 순서에 맞춰 뒤로 미룰지 결정이 필요하다.
+- JSON import/export를 언제 지원할지 결정이 필요하다.
