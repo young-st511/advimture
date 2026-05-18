@@ -15,13 +15,19 @@ steps:
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "편집 중인 줄에 갇혔습니다"
+  - wait_screen_contains: "부팅 로그에서 WARN 줄을 놓쳤습니다"
+  - wait_ms: 100
+  - send: "j"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "입력 모드에 커서가 묶였습니다"
   - wait_ms: 100
   - send: "esc"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "command-line에 :q!를 실행하세요"
+  - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
   - send: ":"
   - wait_screen_contains: "Keys: type command"
   - wait_ms: 100
@@ -33,7 +39,7 @@ steps:
   - wait_screen_contains: "Command: :q!"
   - send: "enter"
 
-  - wait_screen_contains: "command-line에 :wq를 실행하세요"
+  - wait_screen_contains: "변경을 남긴 채 세션을 닫아야 하니 저장 후 종료하세요"
   - send: ":"
   - wait_screen_contains: "Keys: type command"
   - wait_ms: 100
@@ -45,19 +51,19 @@ steps:
   - wait_screen_contains: "Command: :wq"
   - send: "enter"
 
-  - wait_screen_contains: "backend 항목으로 빠르게 이동해야 합니다"
+  - wait_screen_contains: "라우팅 설정 한 줄에서 backend로 바로 이동해야 합니다"
   - send: "w"
   - wait_ms: 50
   - send: "w"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "backend를 지나쳐 enabled까지 와버렸습니다"
+  - wait_screen_contains: "enabled까지 지나쳤습니다"
   - send: "b"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "backend 토큰의 끝 글자를 확인해야 합니다"
+  - wait_screen_contains: "backend 토큰이 정확히 끝나는 지점을 확인해야 합니다"
   - send: "e"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
@@ -187,12 +193,13 @@ assert:
   screen_contains:
     - "좋습니다. range를 붙이면 필요한 구간만 조심스럽게 고칠 수 있습니다."
     - "Command: :2,3s/error/ok/"
-    - "Exercise: 14/14"
+    - "Exercise: 15/15"
     - "Playlist complete"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"normal-motion-basic-001\""
+    - "\"normal-motion-basic-002\""
     - "\"survival-save-quit-001\""
     - "\"survival-save-quit-002\""
     - "\"survival-save-quit-003\""

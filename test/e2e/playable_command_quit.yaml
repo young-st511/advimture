@@ -11,12 +11,13 @@ setup:
       "tutorials": {},
       "missions": {
         "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
         "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1}
       },
       "total_keystrokes": 0
     }
 steps:
-  - wait_screen_contains: "command-line에 :q!를 실행하세요"
+  - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
   - send: ":"
   - wait_screen_contains: "Keys: type command"
   - wait_ms: 100
@@ -25,12 +26,12 @@ steps:
   - send: "!"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
+  - wait_screen_contains: "좋습니다. :q!는 저장하지 않는다는 판단이 끝난 뒤 쓰는 안전한 종료입니다."
   - send: "q"
 assert:
   screen_contains:
     - "Command: :q!"
-    - "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
+    - "좋습니다. :q!는 저장하지 않는다는 판단이 끝난 뒤 쓰는 안전한 종료입니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

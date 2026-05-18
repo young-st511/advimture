@@ -75,7 +75,7 @@ func TestPlayableAdvancesToNextExerciseAfterSuccess(t *testing.T) {
 	if model.State().Status != "running" {
 		t.Fatalf("status after next = %q, want running", model.State().Status)
 	}
-	if !strings.Contains(model.View(), "편집 중인 줄에 갇혔습니다") {
+	if !strings.Contains(model.View(), "부팅 로그에서 WARN 줄을 놓쳤습니다") {
 		t.Fatalf("view = %q, want second exercise briefing", model.View())
 	}
 }
@@ -89,7 +89,7 @@ func TestPlayableStartsAtFirstIncompleteExercise(t *testing.T) {
 		Progress:    p,
 	})
 
-	if !strings.Contains(model.View(), "편집 중인 줄에 갇혔습니다") {
+	if !strings.Contains(model.View(), "부팅 로그에서 WARN 줄을 놓쳤습니다") {
 		t.Fatalf("view = %q, want first incomplete exercise", model.View())
 	}
 }
@@ -113,10 +113,10 @@ func TestPlayableAutosavesEachCompletedExercise(t *testing.T) {
 	}
 
 	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
-	model, _ = updateWithSpecialKey(t, model, tea.KeyEsc)
+	model, _ = updateWithKey(t, model, "j")
 	if saved == nil ||
 		!saved.Missions["normal-motion-basic-001"].Completed ||
-		!saved.Missions["survival-save-quit-001"].Completed {
+		!saved.Missions["normal-motion-basic-002"].Completed {
 		t.Fatalf("saved progress = %+v, want both first exercises completed", saved)
 	}
 }

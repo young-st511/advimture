@@ -37,14 +37,15 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 14 {
-		t.Fatalf("playable exercises = %d, want 14: %+v", len(playable), playable)
+	if len(playable) != 15 {
+		t.Fatalf("playable exercises = %d, want 15: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "normal-motion-basic-001" {
 		t.Fatalf("playable[0].ID = %q, want normal-motion-basic-001", playable[0].ID)
 	}
 	assertPlayableIDs(t, playable, []string{
 		"normal-motion-basic-001",
+		"normal-motion-basic-002",
 		"survival-save-quit-001",
 		"survival-save-quit-002",
 		"survival-save-quit-003",
@@ -105,8 +106,8 @@ func TestCoverageReportsMissingCommandsWithoutFailingLoad(t *testing.T) {
 		}
 	}
 
-	assertStrings(t, normal.Covered, []string{"l"})
-	assertStrings(t, normal.Missing, []string{"h", "j", "k"})
+	assertStrings(t, normal.Covered, []string{"j", "l"})
+	assertStrings(t, normal.Missing, []string{"h", "k"})
 }
 
 func TestCoverageReportsWordMotionCommandsCovered(t *testing.T) {

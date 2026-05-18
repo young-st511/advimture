@@ -21,31 +21,31 @@ setup:
       "total_keystrokes": 0
     }
 steps:
-  - wait_screen_contains: "편집 중인 줄에 갇혔습니다"
-  - send: "esc"
-  - wait_screen_contains: "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
+  - wait_screen_contains: "부팅 로그에서 WARN 줄을 놓쳤습니다"
+  - send: "j"
+  - wait_screen_contains: "좋습니다. j는 아래 줄의 단서를 빠르게 잡을 때 쓰는 기본 이동입니다."
   - send: "q"
 assert:
   screen_contains:
-    - "Exercise: 2/14"
-    - "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
+    - "Exercise: 2/15"
+    - "좋습니다. j는 아래 줄의 단서를 빠르게 잡을 때 쓰는 기본 이동입니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"normal-motion-basic-001\""
-    - "\"survival-save-quit-001\""
+    - "\"normal-motion-basic-002\""
   key_trace:
-    - "esc"
+    - "j"
     - "q"
   app_state:
-    buffer: ["draft"]
+    buffer: ["INFO boot", "WARN disk", "INFO done"]
     cursor:
-      row: 0
+      row: 1
       col: 0
     mode: "normal"
     status: "succeeded"
     progress:
-      mission_id: "survival-save-quit-001"
+      mission_id: "normal-motion-basic-002"
       completed: true
 evidence:
   save_raw_ansi: true

@@ -208,13 +208,13 @@ exercise:
 ```yaml
 exercise:
   id: normal-motion-basic-002
-  status: draft
+  status: approved
   command_cluster: normal-motion-basic
   engine_support: implemented
   trained_commands: ["j"]
   reviewed_commands: ["k"]
   mistake_focus: ["confusing j and k"]
-  replay_status: pending
+  replay_status: pass
   title: 경고 지점으로 이동하기
   goal_for_player: "커서를 WARN 표시의 W 위로 이동하세요."
   initial_state:

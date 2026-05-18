@@ -6,10 +6,10 @@ scenarios:
     learning_reinforcement: "esc는 현재 mode를 빠져나와 Normal mode로 돌아온다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "일단 빠져나오기"
-    briefing: "편집 중인 줄에 갇혔습니다. 무언가 더 입력하기 전에 Normal mode로 돌아오세요."
+    briefing: "입력 모드에 커서가 묶였습니다. 더 입력하기 전에 먼저 Normal mode로 복귀하세요."
     context_role: "당황한 터미널 입력"
-    mentor_success: "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
-    mentor_failure: "지금은 빠져나오는 연습입니다. esc를 눌러 Normal mode로 돌아오세요."
+    mentor_success: "좋습니다. 터미널에서 당황했을 때 첫 수습은 esc로 Normal mode를 되찾는 것입니다."
+    mentor_failure: "아직 편집을 계속하는 흐름입니다. 빠져나오려면 esc로 mode를 먼저 정리하세요."
     story_constraints:
       - "저장이나 종료를 요구하지 않는다."
       - "esc의 mode 복귀 의미만 강조한다."
@@ -21,10 +21,10 @@ scenarios:
     learning_reinforcement: ":q!는 변경을 버리고 나가는 command-line 명령이다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "실험 파일 버리고 나가기"
-    briefing: "실험용 설정 파일을 잘못 열었습니다. 저장하지 않고 빠져나가야 합니다. command-line에 :q!를 실행하세요."
+    briefing: "임시 설정을 잘못 열었습니다. 이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요."
     context_role: "버려도 되는 임시 설정"
-    mentor_success: "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
-    mentor_failure: "저장하지 않고 나가는 상황입니다. :를 누른 뒤 q!를 실행하세요."
+    mentor_success: "좋습니다. :q!는 저장하지 않는다는 판단이 끝난 뒤 쓰는 안전한 종료입니다."
+    mentor_failure: "저장하면 안 되는 임시 작업입니다. command-line을 열고 버리고 나가는 흐름을 떠올려보세요."
     story_constraints:
       - "실제 파일 삭제나 저장을 수행하지 않는다."
       - "앱 종료 단축키 q와 Vim 명령 :q!를 구분한다."
@@ -36,10 +36,10 @@ scenarios:
     learning_reinforcement: ":wq는 저장하고 나가는 command-line 명령이다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "수정 저장 후 종료"
-    briefing: "설정 변경을 끝냈습니다. 저장하고 나가야 합니다. command-line에 :wq를 실행하세요."
+    briefing: "배포 전 설정 수정이 끝났습니다. 변경을 남긴 채 세션을 닫아야 하니 저장 후 종료하세요."
     context_role: "수정한 배포 설정"
-    mentor_success: "좋습니다. :wq는 저장하고 종료해야 할 때 쓰는 기본 생존 명령입니다."
-    mentor_failure: "이번에는 저장 후 종료입니다. :를 누른 뒤 wq를 실행하세요."
+    mentor_success: "좋습니다. :wq는 검증한 변경을 저장하고 세션을 닫는 기본 마무리입니다."
+    mentor_failure: "이번 작업은 버리면 안 됩니다. command-line에서 저장 후 종료하는 명령을 조립하세요."
     story_constraints:
       - "실제 파일 저장을 수행하지 않는다."
       - ":q!와 :wq의 의도 차이를 강조한다."
@@ -60,16 +60,16 @@ scenarios:
       - "기본 이동의 방향 학습에 집중한다."
 
   - id: normal-motion-basic-002-scenario
-    status: draft
+    status: approved
     exercise_id: normal-motion-basic-002
     engine_support: implemented
     learning_reinforcement: "j는 아래 줄로 이동한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "경고 줄 찾기"
-    briefing: "부팅 로그에서 경고가 난 줄로 이동해야 합니다. 아래 줄로 내려가 WARN 표시를 확인하세요."
+    briefing: "부팅 로그에서 WARN 줄을 놓쳤습니다. 아래 줄로 내려가 경고 표시의 첫 글자를 확인하세요."
     context_role: "짧은 시스템 로그"
-    mentor_success: "좋습니다. 위아래 이동을 써서 필요한 줄을 잡았습니다."
-    mentor_failure: "지금은 아래 줄로 내려가는 연습입니다. j 방향을 떠올려보세요."
+    mentor_success: "좋습니다. j는 아래 줄의 단서를 빠르게 잡을 때 쓰는 기본 이동입니다."
+    mentor_failure: "목표는 아래 줄입니다. 커서를 한 줄 내리는 Normal mode 이동을 떠올려보세요."
     story_constraints:
       - "편집이나 검색을 요구하지 않는다."
       - "j의 아래 방향 학습에 집중한다."
@@ -81,10 +81,10 @@ scenarios:
     learning_reinforcement: "w는 다음 단어 시작점으로 이동한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "서비스 이름 찾기"
-    briefing: "배포 설정 한 줄에서 backend 항목으로 빠르게 이동해야 합니다. 한 글자씩 걷지 말고 단어 단위로 이동하세요."
+    briefing: "라우팅 설정 한 줄에서 backend로 바로 이동해야 합니다. l을 반복하지 말고 다음 단어 시작점으로 건너뛰세요."
     context_role: "서비스 라우팅 설정"
-    mentor_success: "좋아요. 단어 단위 이동을 쓰면 긴 설정 줄에서도 금방 위치를 잡을 수 있습니다."
-    mentor_failure: "지금 목표는 속도입니다. w로 다음 단어 시작점까지 뛰어가보세요."
+    mentor_success: "좋습니다. w는 설정 줄을 훑을 때 단어 시작점만 밟고 빠르게 이동하게 해줍니다."
+    mentor_failure: "한 글자씩 가면 늦습니다. 다음 단어의 시작으로 이동하는 motion을 사용하세요."
     story_constraints:
       - "편집을 요구하지 않는다."
       - "w의 효율을 l 반복과 비교해 체감하게 한다."
@@ -96,10 +96,10 @@ scenarios:
     learning_reinforcement: "b는 이전 단어 시작점으로 이동한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "잘못 지나친 항목 복귀"
-    briefing: "배포 설정을 훑다가 backend를 지나쳐 enabled까지 와버렸습니다. 한 글자씩 되돌아가지 말고 이전 단어 시작점으로 복귀하세요."
+    briefing: "enabled까지 지나쳤습니다. 왼쪽으로 한 칸씩 되돌리지 말고 이전 단어 시작점인 backend로 복귀하세요."
     context_role: "서비스 라우팅 설정"
-    mentor_success: "좋습니다. b를 쓰면 지나친 단어도 빠르게 다시 잡을 수 있습니다."
-    mentor_failure: "지금 목표는 이전 단어 시작점입니다. b로 backend까지 되돌아가보세요."
+    mentor_success: "좋습니다. b는 지나친 토큰을 다시 잡을 때 손실을 줄여줍니다."
+    mentor_failure: "목표는 이전 단어의 시작입니다. 한 글자 후퇴보다 단어 단위 후퇴를 떠올려보세요."
     story_constraints:
       - "편집을 요구하지 않는다."
       - "b의 이전 단어 시작점 이동만 강조한다."
@@ -111,10 +111,10 @@ scenarios:
     learning_reinforcement: "e는 현재 또는 다음 단어 끝으로 이동한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "토큰 끝 확인"
-    briefing: "backend 토큰의 끝 글자를 확인해야 합니다. 오른쪽으로 여러 번 걷지 말고 단어 끝으로 바로 이동하세요."
+    briefing: "backend 토큰이 정확히 끝나는 지점을 확인해야 합니다. 여러 번 오른쪽으로 가지 말고 단어 끝으로 이동하세요."
     context_role: "서비스 라우팅 설정"
-    mentor_success: "좋습니다. e를 쓰면 단어 끝 위치를 빠르게 확인할 수 있습니다."
-    mentor_failure: "지금 목표는 단어의 끝입니다. e로 backend 마지막 글자에 도착해보세요."
+    mentor_success: "좋습니다. e는 토큰 끝을 확인하거나 다음 조작 범위를 잡을 때 유용합니다."
+    mentor_failure: "지금은 단어 시작이 아니라 끝입니다. 단어 끝으로 이동하는 motion을 떠올려보세요."
     story_constraints:
       - "편집을 요구하지 않는다."
       - "e의 단어 끝 이동만 강조한다."

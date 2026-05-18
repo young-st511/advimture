@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. 첫 5분 playable playlist는 pty E2E로 처음부터 끝까지 완주 검증된다.
+현재 active slice는 없다. 첫 플레이팩은 15개 playable exercise를 pty E2E로 처음부터 끝까지 완주 검증한다.
 
 ## 완료된 초기 세팅
 
@@ -167,6 +167,11 @@ Phase: Vim Learning Foundation
 ### E2E-006. Full first 5-minute playlist E2E
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/e2e-006-full-first-five-minute-run.md`
+- 완료일: 2026-05-18
+
+### SCENARIO-FLOW-001. Reusable scenario flow and first playpack polish
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/scenario-flow-001-first-playpack-polish.md`
 - 완료일: 2026-05-18
 
 ## Backlog

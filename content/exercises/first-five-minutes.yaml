@@ -160,13 +160,13 @@ exercises:
       status: succeeded
 
   - id: normal-motion-basic-002
-    status: draft
+    status: approved
     command_cluster: normal-motion-basic
     engine_support: implemented
     trained_commands: ["j"]
     reviewed_commands: ["k"]
     mistake_focus: ["j와 k 방향을 헷갈린다."]
-    replay_status: pending
+    replay_status: pass
     title: "경고 지점으로 이동하기"
     goal_for_player: "커서를 WARN 표시의 W 위로 이동하세요."
     initial_state:
@@ -194,6 +194,13 @@ exercises:
     grading:
       pass_condition: "cursor.row == 1 && cursor.col == 0"
       optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["INFO boot", "WARN disk", "INFO done"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
 
   - id: word-motion-basic-001
     status: approved

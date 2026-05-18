@@ -14,23 +14,30 @@ steps:
   - send: "l"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
-  - wait_screen_contains: "편집 중인 줄에 갇혔습니다"
+  - wait_screen_contains: "부팅 로그에서 WARN 줄을 놓쳤습니다"
+  - send: "j"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+  - wait_screen_contains: "입력 모드에 커서가 묶였습니다"
   - send: "esc"
-  - wait_screen_contains: "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
+  - wait_screen_contains: "좋습니다. 터미널에서 당황했을 때 첫 수습은 esc로 Normal mode를 되찾는 것입니다."
   - send: "q"
 assert:
   screen_contains:
-    - "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
-    - "Exercise: 2/14"
+    - "좋습니다. 터미널에서 당황했을 때 첫 수습은 esc로 Normal mode를 되찾는 것입니다."
+    - "Exercise: 3/15"
     - "Grade: S"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"normal-motion-basic-001\""
+    - "\"normal-motion-basic-002\""
     - "\"survival-save-quit-001\""
   key_trace:
     - "l"
     - "l"
+    - "enter"
+    - "j"
     - "enter"
     - "esc"
     - "q"

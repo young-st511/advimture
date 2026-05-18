@@ -54,10 +54,10 @@ scenario:
   learning_reinforcement: "`esc`는 현재 mode를 빠져나와 Normal mode로 돌아온다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "일단 빠져나오기"
-  briefing: "편집 중인 줄에 갇혔습니다. 무언가 더 입력하기 전에 Normal mode로 돌아오세요."
+  briefing: "입력 모드에 커서가 묶였습니다. 더 입력하기 전에 먼저 Normal mode로 복귀하세요."
   context_role: "당황한 터미널 입력"
-  mentor_success: "좋습니다. 당황하면 먼저 esc로 Normal mode에 돌아오면 됩니다."
-  mentor_failure: "지금은 빠져나오는 연습입니다. esc를 눌러 Normal mode로 돌아오세요."
+  mentor_success: "좋습니다. 터미널에서 당황했을 때 첫 수습은 esc로 Normal mode를 되찾는 것입니다."
+  mentor_failure: "아직 편집을 계속하는 흐름입니다. 빠져나오려면 esc로 mode를 먼저 정리하세요."
   story_constraints:
     - "저장이나 종료를 요구하지 않는다."
     - "esc의 mode 복귀 의미만 강조한다."
@@ -94,10 +94,10 @@ scenario:
   learning_reinforcement: "`:q!`는 변경을 버리고 나가는 command-line 명령이다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "실험 파일 버리고 나가기"
-  briefing: "실험용 설정 파일을 잘못 열었습니다. 저장하지 않고 빠져나가야 합니다. command-line에 :q!를 실행하세요."
+  briefing: "임시 설정을 잘못 열었습니다. 이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요."
   context_role: "버려도 되는 임시 설정"
-  mentor_success: "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
-  mentor_failure: "저장하지 않고 나가는 상황입니다. :를 누른 뒤 q!를 실행하세요."
+  mentor_success: "좋습니다. :q!는 저장하지 않는다는 판단이 끝난 뒤 쓰는 안전한 종료입니다."
+  mentor_failure: "저장하면 안 되는 임시 작업입니다. command-line을 열고 버리고 나가는 흐름을 떠올려보세요."
   story_constraints:
     - "실제 파일 삭제나 저장을 수행하지 않는다."
     - "앱 종료 단축키 q와 Vim 명령 :q!를 구분한다."
@@ -114,10 +114,10 @@ scenario:
   learning_reinforcement: "`:wq`는 저장하고 나가는 command-line 명령이다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "수정 저장 후 종료"
-  briefing: "설정 변경을 끝냈습니다. 저장하고 나가야 합니다. command-line에 :wq를 실행하세요."
+  briefing: "배포 전 설정 수정이 끝났습니다. 변경을 남긴 채 세션을 닫아야 하니 저장 후 종료하세요."
   context_role: "수정한 배포 설정"
-  mentor_success: "좋습니다. :wq는 저장하고 종료해야 할 때 쓰는 기본 생존 명령입니다."
-  mentor_failure: "이번에는 저장 후 종료입니다. :를 누른 뒤 wq를 실행하세요."
+  mentor_success: "좋습니다. :wq는 검증한 변경을 저장하고 세션을 닫는 기본 마무리입니다."
+  mentor_failure: "이번 작업은 버리면 안 됩니다. command-line에서 저장 후 종료하는 명령을 조립하세요."
   story_constraints:
     - "실제 파일 저장을 수행하지 않는다."
     - ":q!와 :wq의 의도 차이를 강조한다."
@@ -128,16 +128,16 @@ scenario:
 ```yaml
 scenario:
   id: normal-motion-basic-002-scenario
-  status: draft
+  status: approved
   exercise_id: normal-motion-basic-002
   engine_support: implemented
   learning_reinforcement: "`j`는 아래 줄로 이동한다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
   mission_title: "경고 줄 찾기"
-  briefing: "부팅 로그에서 경고가 난 줄로 이동해야 합니다. 아래 줄로 내려가 WARN 표시를 확인하세요."
+  briefing: "부팅 로그에서 WARN 줄을 놓쳤습니다. 아래 줄로 내려가 경고 표시의 첫 글자를 확인하세요."
   context_role: "짧은 시스템 로그"
-  mentor_success: "좋습니다. 위아래 이동을 써서 필요한 줄을 잡았습니다."
-  mentor_failure: "지금은 아래 줄로 내려가는 연습입니다. `j` 방향을 떠올려보세요."
+  mentor_success: "좋습니다. `j`는 아래 줄의 단서를 빠르게 잡을 때 쓰는 기본 이동입니다."
+  mentor_failure: "목표는 아래 줄입니다. 커서를 한 줄 내리는 Normal mode 이동을 떠올려보세요."
   story_constraints:
     - "편집이나 검색을 요구하지 않는다."
     - "`j`의 아래 방향 학습에 집중한다."
