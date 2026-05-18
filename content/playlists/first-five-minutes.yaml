@@ -1,7 +1,7 @@
 playlists:
   - id: first-5-minute
-    status: draft
-    title: "첫 5분 Vim 생존 루프"
+    status: retired
+    title: "첫 5분 Vim 생존 루프 (legacy vertical slice)"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
     beats:
@@ -102,6 +102,136 @@ playlists:
         scenario_id: vim-ex-command-substitute-002-scenario
         engine_support: implemented
       - id: first-5-minute-013
+        role: range_substitute
+        command_cluster: vim-ex-command-substitute
+        exercise_id: vim-ex-command-substitute-003
+        scenario_id: vim-ex-command-substitute-003-scenario
+        engine_support: implemented
+
+  - id: tutorial-0-movement
+    status: approved
+    title: "Tutorial 0: 커서 감각 회상"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-0-001
+        role: first_success
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: tutorial-0-002
+        role: spatial_practice
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-002
+        scenario_id: normal-motion-basic-002-scenario
+        engine_support: implemented
+      - id: tutorial-0-003
+        role: spatial_recovery_left
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-003
+        scenario_id: normal-motion-basic-003-scenario
+        engine_support: implemented
+      - id: tutorial-0-004
+        role: spatial_recovery_up
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-004
+        scenario_id: normal-motion-basic-004-scenario
+        engine_support: implemented
+
+  - id: tutorial-1-survival
+    status: approved
+    title: "Tutorial 1: Vim 생존 키트"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-1-001
+        role: survival_escape
+        command_cluster: survival-save-quit
+        exercise_id: survival-save-quit-001
+        scenario_id: survival-save-quit-001-scenario
+        engine_support: implemented
+      - id: tutorial-1-002
+        role: survival_discard
+        command_cluster: survival-save-quit
+        exercise_id: survival-save-quit-002
+        scenario_id: survival-save-quit-002-scenario
+        engine_support: implemented
+      - id: tutorial-1-003
+        role: survival_save
+        command_cluster: survival-save-quit
+        exercise_id: survival-save-quit-003
+        scenario_id: survival-save-quit-003-scenario
+        engine_support: implemented
+
+  - id: tutorial-2-fast-navigation
+    status: approved
+    title: "Tutorial 2: 빠르게 훑기"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-2-001
+        role: efficiency_teaser
+        command_cluster: word-motion-basic
+        exercise_id: word-motion-basic-001
+        scenario_id: word-motion-basic-001-scenario
+        engine_support: implemented
+      - id: tutorial-2-002
+        role: recovery
+        command_cluster: word-motion-basic
+        exercise_id: word-motion-basic-002
+        scenario_id: word-motion-basic-002-scenario
+        engine_support: implemented
+      - id: tutorial-2-003
+        role: precision
+        command_cluster: word-motion-basic
+        exercise_id: word-motion-basic-003
+        scenario_id: word-motion-basic-003-scenario
+        engine_support: implemented
+      - id: tutorial-2-004
+        role: file_start
+        command_cluster: whole-file-navigation
+        exercise_id: whole-file-navigation-001
+        scenario_id: whole-file-navigation-001-scenario
+        engine_support: implemented
+      - id: tutorial-2-005
+        role: file_end
+        command_cluster: whole-file-navigation
+        exercise_id: whole-file-navigation-002
+        scenario_id: whole-file-navigation-002-scenario
+        engine_support: implemented
+      - id: tutorial-2-006
+        role: line_start
+        command_cluster: whole-file-navigation
+        exercise_id: whole-file-navigation-003
+        scenario_id: whole-file-navigation-003-scenario
+        engine_support: implemented
+      - id: tutorial-2-007
+        role: line_end
+        command_cluster: whole-file-navigation
+        exercise_id: whole-file-navigation-004
+        scenario_id: whole-file-navigation-004-scenario
+        engine_support: implemented
+
+  - id: tutorial-3-ex-command
+    status: approved
+    title: "Mid Tutorial: Ex command 고급 튜토리얼"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-3-001
+        role: current_line_substitute
+        command_cluster: vim-ex-command-substitute
+        exercise_id: vim-ex-command-substitute-001
+        scenario_id: vim-ex-command-substitute-001-scenario
+        engine_support: implemented
+      - id: tutorial-3-002
+        role: whole_file_substitute
+        command_cluster: vim-ex-command-substitute
+        exercise_id: vim-ex-command-substitute-002
+        scenario_id: vim-ex-command-substitute-002-scenario
+        engine_support: implemented
+      - id: tutorial-3-003
         role: range_substitute
         command_cluster: vim-ex-command-substitute
         exercise_id: vim-ex-command-substitute-003

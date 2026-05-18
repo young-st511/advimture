@@ -32,6 +32,8 @@ steps:
   - send: "q"
 assert:
   screen_contains:
+    - "Tutorial 1: Vim 생존 키트"
+    - "Exercise: 2/3"
     - "Command: :q!"
     - "좋습니다. :q!는 저장하지 않는다는 판단이 끝난 뒤 쓰는 안전한 종료입니다."
   exit_code: 0

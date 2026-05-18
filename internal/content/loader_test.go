@@ -25,8 +25,8 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.Scenarios) != 17 {
 		t.Fatalf("scenarios = %d, want 17", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 1 {
-		t.Fatalf("playlists = %d, want 1", len(lib.Playlists))
+	if len(lib.Playlists) != 5 {
+		t.Fatalf("playlists = %d, want 5", len(lib.Playlists))
 	}
 }
 
@@ -66,6 +66,43 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		if exercise.ReplayStatus != ReplayStatusPass {
 			t.Fatalf("exercise %q ReplayStatus = %q, want pass", exercise.ID, exercise.ReplayStatus)
 		}
+	}
+}
+
+func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	playlists := lib.PlayablePlaylists()
+	got := make([]string, 0, len(playlists))
+	for _, playlist := range playlists {
+		got = append(got, playlist.ID)
+		if len(playlist.Beats) > maxTutorialPlaylistBeats {
+			t.Fatalf("playlist %q has %d beats, want at most %d", playlist.ID, len(playlist.Beats), maxTutorialPlaylistBeats)
+		}
+	}
+	assertStrings(t, got, []string{
+		"tutorial-0-movement",
+		"tutorial-1-survival",
+		"tutorial-2-fast-navigation",
+		"tutorial-3-ex-command",
+	})
+}
+
+func TestLoadLibraryAllowsRetiredLegacyPlaylistLongerThanTutorialLimit(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	legacy := lib.Playlists["first-5-minute"]
+	if legacy.Status != StatusRetired {
+		t.Fatalf("legacy status = %q, want retired", legacy.Status)
+	}
+	if len(legacy.Beats) <= maxTutorialPlaylistBeats {
+		t.Fatalf("legacy beats = %d, want more than %d", len(legacy.Beats), maxTutorialPlaylistBeats)
 	}
 }
 
@@ -419,6 +456,67 @@ scenarios:
 	_, err := LoadLibrary(root)
 	if err == nil || !strings.Contains(err.Error(), "missing exercise") {
 		t.Fatalf("LoadLibrary error = %v, want missing exercise", err)
+	}
+}
+
+func TestLoadLibraryRejectsApprovedPlaylistOverTutorialLimit(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
+playlists:
+  - id: too-long
+    status: approved
+    title: Too long
+    beats:
+      - id: beat-1
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-2
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-3
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-4
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-5
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-6
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-7
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-8
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-9
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "want at most 8") {
+		t.Fatalf("LoadLibrary error = %v, want tutorial limit", err)
 	}
 }
 

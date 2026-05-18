@@ -27,7 +27,7 @@ steps:
   - send: "q"
 assert:
   screen_contains:
-    - "Exercise: 2/17"
+    - "Exercise: 2/4"
     - "좋습니다. j는 아래 줄의 단서를 빠르게 잡을 때 쓰는 기본 이동입니다."
   exit_code: 0
   progress_file_exists: true

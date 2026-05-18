@@ -42,7 +42,10 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `gg/G`는 NAV-001에서 파일 처음/끝 줄의 첫 column으로 이동하는 pedagogical motion으로 다룬다.
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
-- playable은 `first-5-minute` playlist beat 순서로 17개 replay-pass exercise를 실행한다.
+- playable은 approved/implemented tutorial playlist를 ID 순서로 실행한다.
+- `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
+- 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
+- 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
 - 향후 exercise constraint는 최대 입력 수 초과와 금지 입력/금지 우회 전략 사용을 즉시 실패로 처리해야 한다.
 - 실패 횟수는 기본 무제한이며, 후반 콘텐츠를 위해 `attempt_limit` 설정 여지는 남긴다.
@@ -77,3 +80,5 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - approved + implemented exercise는 `replay_status: pass`가 아니면 load에 실패한다.
 - `replay_status: pass`인 approved + implemented exercise는 `optimal_keys` 재생 결과가 목표 상태와 E2E assertion을 만족해야 한다.
 - playable exercise 목록은 replay gate를 통과한 exercise만 반환한다.
+- playable playlist 목록은 approved/implemented playlist만 반환하며 ID 순서로 정렬된다.
+- approved/implemented tutorial playlist는 8문항을 초과하면 load에 실패한다.

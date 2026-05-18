@@ -2,7 +2,6 @@ package playable
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 	"time"
 
@@ -40,8 +39,12 @@ type Model struct {
 }
 
 type gameEntry struct {
-	ExerciseID string
-	ScenarioID string
+	PlaylistID      string
+	PlaylistTitle   string
+	ExerciseID      string
+	ScenarioID      string
+	IndexInPlaylist int
+	TotalInPlaylist int
 }
 
 func New(options Options) Model {
@@ -125,6 +128,9 @@ func (m Model) View() string {
 	view := tuiadapter.RenderState(state)
 	var b strings.Builder
 	b.WriteString("A D V I M T U R E - Playable Slice\n\n")
+	if entry, ok := m.currentEntry(); ok {
+		b.WriteString(entry.PlaylistTitle + "\n")
+	}
 	b.WriteString(view.Title + "\n")
 	b.WriteString(view.Message + "\n\n")
 	for row, line := range view.BufferLines {
@@ -133,15 +139,19 @@ func (m Model) View() string {
 	}
 	b.WriteString("\n")
 	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", view.Mode, view.Status, view.CursorRow, view.CursorCol))
-	if len(m.entries) > 0 {
-		b.WriteString(fmt.Sprintf("Exercise: %d/%d\n", m.current+1, len(m.entries)))
+	if entry, ok := m.currentEntry(); ok {
+		b.WriteString(fmt.Sprintf("Exercise: %d/%d\n", entry.IndexInPlaylist+1, entry.TotalInPlaylist))
 	}
 	if view.Grade != "" {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
 	}
 	if state.Status == exerciseruntime.StatusSucceeded {
 		if m.current+1 < len(m.entries) {
-			b.WriteString("Next: enter\n")
+			if m.nextEntryStartsNewPlaylist() {
+				b.WriteString("Next tutorial: enter\n")
+			} else {
+				b.WriteString("Next: enter\n")
+			}
 		} else {
 			b.WriteString("Playlist complete\n")
 		}
@@ -238,6 +248,20 @@ func (m Model) currentExerciseID() string {
 	return m.entries[m.current].ExerciseID
 }
 
+func (m Model) currentEntry() (gameEntry, bool) {
+	if len(m.entries) == 0 || m.current < 0 || m.current >= len(m.entries) {
+		return gameEntry{}, false
+	}
+	return m.entries[m.current], true
+}
+
+func (m Model) nextEntryStartsNewPlaylist() bool {
+	if m.current+1 >= len(m.entries) {
+		return false
+	}
+	return m.entries[m.current].PlaylistID != m.entries[m.current+1].PlaylistID
+}
+
 func newGameFromContent(root string, progressState *progress.Progress) ([]gameEntry, int, *scenario.Run, error) {
 	library, err := content.LoadLibrary(root)
 	if err != nil {
@@ -278,31 +302,36 @@ func runForEntry(root string, entry gameEntry) (*scenario.Run, error) {
 }
 
 func playlistEntries(library content.Library) ([]gameEntry, error) {
-	var playlists []content.PlaylistDocument
-	for _, playlist := range library.Playlists {
-		playlists = append(playlists, playlist)
-	}
-	sort.Slice(playlists, func(i, j int) bool {
-		return playlists[i].ID < playlists[j].ID
-	})
+	playlists := library.PlayablePlaylists()
 	if len(playlists) == 0 {
 		return nil, fmt.Errorf("no playlists found")
 	}
 
 	var entries []gameEntry
-	for _, beat := range playlists[0].Beats {
-		exercise, ok := library.Exercises[beat.ExerciseID]
-		if !ok || !isPlayableExercise(exercise) {
-			continue
+	for _, playlist := range playlists {
+		var playlistEntries []gameEntry
+		for _, beat := range playlist.Beats {
+			exercise, ok := library.Exercises[beat.ExerciseID]
+			if !ok || !isPlayableExercise(exercise) {
+				continue
+			}
+			scenarioDoc, ok := library.Scenarios[beat.ScenarioID]
+			if !ok || !isPlayableScenario(scenarioDoc) {
+				continue
+			}
+			playlistEntries = append(playlistEntries, gameEntry{
+				PlaylistID:    playlist.ID,
+				PlaylistTitle: playlist.Title,
+				ExerciseID:    beat.ExerciseID,
+				ScenarioID:    beat.ScenarioID,
+			})
 		}
-		scenarioDoc, ok := library.Scenarios[beat.ScenarioID]
-		if !ok || !isPlayableScenario(scenarioDoc) {
-			continue
+		total := len(playlistEntries)
+		for index := range playlistEntries {
+			playlistEntries[index].IndexInPlaylist = index
+			playlistEntries[index].TotalInPlaylist = total
 		}
-		entries = append(entries, gameEntry{
-			ExerciseID: beat.ExerciseID,
-			ScenarioID: beat.ScenarioID,
-		})
+		entries = append(entries, playlistEntries...)
 	}
 	return entries, nil
 }

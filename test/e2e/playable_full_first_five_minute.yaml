@@ -32,7 +32,7 @@ steps:
   - wait_screen_contains: "로그를 한 줄 더 내려가 버렸습니다"
   - wait_ms: 100
   - send: "k"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "enter"
 
   - wait_screen_contains: "입력 모드에 커서가 묶였습니다"
@@ -62,7 +62,7 @@ steps:
   - send: "q"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Command: :wq"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "enter"
 
   - wait_screen_contains: "라우팅 설정 한 줄에서 backend로 바로 이동해야 합니다"
@@ -101,7 +101,7 @@ steps:
 
   - wait_screen_contains: "현재 줄의 마지막 토큰 끝을 확인해야 합니다"
   - send: "$"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "enter"
 
   - wait_screen_contains: "현재 줄만 긴급 수정"
@@ -206,8 +206,9 @@ steps:
 assert:
   screen_contains:
     - "좋습니다. range를 붙이면 필요한 구간만 조심스럽게 고칠 수 있습니다."
+    - "Mid Tutorial: Ex command 고급 튜토리얼"
     - "Command: :2,3s/error/ok/"
-    - "Exercise: 17/17"
+    - "Exercise: 3/3"
     - "Playlist complete"
   exit_code: 0
   progress_file_exists: true

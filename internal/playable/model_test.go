@@ -21,6 +21,12 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "터미널 지도에서 목표 문자까지 커서를 이동하세요.") {
 		t.Fatalf("view = %q, want briefing", model.View())
 	}
+	if !strings.Contains(model.View(), "Tutorial 0: 커서 감각 회상") {
+		t.Fatalf("view = %q, want tutorial title", model.View())
+	}
+	if !strings.Contains(model.View(), "Exercise: 1/4") {
+		t.Fatalf("view = %q, want episode-local count", model.View())
+	}
 }
 
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
@@ -78,6 +84,9 @@ func TestPlayableAdvancesToNextExerciseAfterSuccess(t *testing.T) {
 	if !strings.Contains(model.View(), "부팅 로그에서 WARN 줄을 놓쳤습니다") {
 		t.Fatalf("view = %q, want second exercise briefing", model.View())
 	}
+	if !strings.Contains(model.View(), "Exercise: 2/4") {
+		t.Fatalf("view = %q, want second exercise in first tutorial", model.View())
+	}
 }
 
 func TestPlayableStartsAtFirstIncompleteExercise(t *testing.T) {
@@ -91,6 +100,41 @@ func TestPlayableStartsAtFirstIncompleteExercise(t *testing.T) {
 
 	if !strings.Contains(model.View(), "부팅 로그에서 WARN 줄을 놓쳤습니다") {
 		t.Fatalf("view = %q, want first incomplete exercise", model.View())
+	}
+	if !strings.Contains(model.View(), "Exercise: 2/4") {
+		t.Fatalf("view = %q, want episode-local count", model.View())
+	}
+}
+
+func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
+	p := progress.NewProgress()
+	p.CompleteMission("normal-motion-basic-001", "S", 2, 1000)
+	p.CompleteMission("normal-motion-basic-002", "S", 1, 1000)
+	p.CompleteMission("normal-motion-basic-003", "S", 2, 1000)
+
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    p,
+	})
+
+	if !strings.Contains(model.View(), "로그를 한 줄 더 내려가 버렸습니다") {
+		t.Fatalf("view = %q, want last movement exercise", model.View())
+	}
+	model, _ = updateWithKey(t, model, "k")
+
+	if !strings.Contains(model.View(), "Next tutorial: enter") {
+		t.Fatalf("view = %q, want next tutorial transition", model.View())
+	}
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+	if !strings.Contains(model.View(), "Tutorial 1: Vim 생존 키트") {
+		t.Fatalf("view = %q, want survival tutorial title", model.View())
+	}
+	if !strings.Contains(model.View(), "Exercise: 1/3") {
+		t.Fatalf("view = %q, want first survival exercise count", model.View())
+	}
+	if !strings.Contains(model.View(), "입력 모드에 커서가 묶였습니다") {
+		t.Fatalf("view = %q, want first survival exercise", model.View())
 	}
 }
 

@@ -36,6 +36,8 @@ const (
 	ReplayStatusFail    ReplayStatus = "fail"
 )
 
+const maxTutorialPlaylistBeats = 8
+
 type CommandCluster struct {
 	ID                 string        `yaml:"id"`
 	Status             Status        `yaml:"status"`
@@ -291,6 +293,19 @@ func (l Library) PlayableExercises() []ExerciseDocument {
 	return exercises
 }
 
+func (l Library) PlayablePlaylists() []PlaylistDocument {
+	playlists := make([]PlaylistDocument, 0)
+	for _, playlist := range l.Playlists {
+		if isApprovedLike(playlist.Status) {
+			playlists = append(playlists, playlist)
+		}
+	}
+	sort.Slice(playlists, func(i, j int) bool {
+		return playlists[i].ID < playlists[j].ID
+	})
+	return playlists
+}
+
 func (l Library) CoverageReports() []CoverageReport {
 	reports := make([]CoverageReport, 0, len(l.CommandClusters))
 	for _, cluster := range l.CommandClusters {
@@ -443,7 +458,16 @@ func (l Library) validatePlaylistDocument(playlist PlaylistDocument) error {
 	if strings.TrimSpace(playlist.ID) == "" {
 		return fmt.Errorf("playlist id is required")
 	}
+	if !validStatus(playlist.Status) {
+		return fmt.Errorf("playlist %q has invalid status %q", playlist.ID, playlist.Status)
+	}
+	if isApprovedLike(playlist.Status) && len(playlist.Beats) > maxTutorialPlaylistBeats {
+		return fmt.Errorf("playlist %q has %d beats, want at most %d", playlist.ID, len(playlist.Beats), maxTutorialPlaylistBeats)
+	}
 	for _, beat := range playlist.Beats {
+		if !validEngineSupport(beat.EngineSupport) {
+			return fmt.Errorf("playlist %q beat %q has invalid engine_support %q", playlist.ID, beat.ID, beat.EngineSupport)
+		}
 		if _, ok := l.CommandClusters[beat.CommandCluster]; !ok {
 			return fmt.Errorf("playlist %q beat %q references missing command cluster %q", playlist.ID, beat.ID, beat.CommandCluster)
 		}
