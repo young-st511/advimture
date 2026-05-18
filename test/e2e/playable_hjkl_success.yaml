@@ -21,7 +21,7 @@ assert:
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
-    - "\"mission-1\""
+    - "\"normal-motion-basic-001\""
     - "\"best_grade\": \"S\""
   key_trace:
     - "l"
@@ -38,7 +38,7 @@ assert:
       grade: "S"
       passed: true
     progress:
-      mission_id: "mission-1"
+      mission_id: "normal-motion-basic-001"
       completed: true
 evidence:
   save_raw_ansi: true

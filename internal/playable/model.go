@@ -2,6 +2,7 @@ package playable
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -16,8 +17,6 @@ import (
 	"github.com/young-st511/advimture/internal/vimengine"
 )
 
-const missionID = "mission-1"
-
 type Options struct {
 	Progress     *progress.Progress
 	SaveProgress func(*progress.Progress) error
@@ -28,6 +27,9 @@ type Options struct {
 
 type Model struct {
 	run          *scenario.Run
+	entries      []gameEntry
+	current      int
+	contentRoot  string
 	progress     *progress.Progress
 	saveProgress func(*progress.Progress) error
 	e2eStatePath string
@@ -35,6 +37,11 @@ type Model struct {
 	startedAt    time.Time
 	saved        bool
 	err          error
+}
+
+type gameEntry struct {
+	ExerciseID string
+	ScenarioID string
 }
 
 func New(options Options) Model {
@@ -47,9 +54,13 @@ func New(options Options) Model {
 		p = progress.NewProgress()
 	}
 
-	run, err := newRunFromContent(contentRoot(options.ContentRoot))
+	root := contentRoot(options.ContentRoot)
+	entries, current, run, err := newGameFromContent(root, p)
 	model := Model{
 		run:          run,
+		entries:      entries,
+		current:      current,
+		contentRoot:  root,
 		progress:     p,
 		saveProgress: options.SaveProgress,
 		e2eStatePath: options.E2EStatePath,
@@ -78,6 +89,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		switch action.Type {
 		case tuiadapter.ActionKey:
+			if m.run.State().Status == exerciseruntime.StatusSucceeded && action.Key == vimengine.KeyEnter {
+				m.advanceToNext()
+				break
+			}
 			m.run.ApplyKey(action.Key)
 			m.applyProgressIfSucceeded()
 		case tuiadapter.ActionHint:
@@ -118,8 +133,18 @@ func (m Model) View() string {
 	}
 	b.WriteString("\n")
 	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", view.Mode, view.Status, view.CursorRow, view.CursorCol))
+	if len(m.entries) > 0 {
+		b.WriteString(fmt.Sprintf("Exercise: %d/%d\n", m.current+1, len(m.entries)))
+	}
 	if view.Grade != "" {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
+	}
+	if state.Status == exerciseruntime.StatusSucceeded {
+		if m.current+1 < len(m.entries) {
+			b.WriteString("Next: enter\n")
+		} else {
+			b.WriteString("Playlist complete\n")
+		}
 	}
 	if view.Mode == string(vimengine.ModeCommand) {
 		b.WriteString(":" + view.CommandLine + "\n")
@@ -146,7 +171,7 @@ func (m Model) State() e2estate.State {
 		}
 	}
 	progressState := e2estate.Progress{
-		MissionID: missionID,
+		MissionID: m.currentExerciseID(),
 		Completed: state.Status == exerciseruntime.StatusSucceeded,
 	}
 	return e2estate.State{
@@ -167,7 +192,7 @@ func (m Model) applyProgressIfSucceeded() {
 	if m.saved || m.run.State().Status != exerciseruntime.StatusSucceeded {
 		return
 	}
-	completion, err := progressadapter.MissionCompletionFromScenario(missionID, m.run.State(), m.now().Sub(m.startedAt))
+	completion, err := progressadapter.MissionCompletionFromScenario(m.currentExerciseID(), m.run.State(), m.now().Sub(m.startedAt))
 	if err != nil {
 		return
 	}
@@ -177,6 +202,22 @@ func (m Model) applyProgressIfSucceeded() {
 		_ = m.saveProgress(m.progress)
 	}
 	m.saved = true
+}
+
+func (m *Model) advanceToNext() {
+	if m.current+1 >= len(m.entries) {
+		return
+	}
+	nextIndex := m.current + 1
+	run, err := runForEntry(m.contentRoot, m.entries[nextIndex])
+	if err != nil {
+		m.err = err
+		return
+	}
+	m.current = nextIndex
+	m.run = run
+	m.saved = false
+	m.startedAt = m.now()
 }
 
 func (m Model) writeE2EState() error {
@@ -190,21 +231,40 @@ func (m Model) inputMode() vimengine.Mode {
 	return m.run.State().Runtime.Vim.Mode
 }
 
-func newRunFromContent(root string) (*scenario.Run, error) {
+func (m Model) currentExerciseID() string {
+	if len(m.entries) == 0 || m.current < 0 || m.current >= len(m.entries) {
+		return ""
+	}
+	return m.entries[m.current].ExerciseID
+}
+
+func newGameFromContent(root string, progressState *progress.Progress) ([]gameEntry, int, *scenario.Run, error) {
+	library, err := content.LoadLibrary(root)
+	if err != nil {
+		return nil, 0, nil, err
+	}
+	entries, err := playlistEntries(library)
+	if err != nil {
+		return nil, 0, nil, err
+	}
+	if len(entries) == 0 {
+		return nil, 0, nil, fmt.Errorf("no playable exercises in %s", root)
+	}
+	current := firstIncompleteIndex(entries, progressState)
+	run, err := runForEntry(root, entries[current])
+	if err != nil {
+		return nil, 0, nil, err
+	}
+	return entries, current, run, nil
+}
+
+func runForEntry(root string, entry gameEntry) (*scenario.Run, error) {
 	library, err := content.LoadLibrary(root)
 	if err != nil {
 		return nil, err
 	}
-	playable := library.PlayableExercises()
-	if len(playable) == 0 {
-		return nil, fmt.Errorf("no playable exercises in %s", root)
-	}
-	exercise := playable[0]
-	scenarioDoc, err := scenarioForExercise(library, exercise.ID)
-	if err != nil {
-		return nil, err
-	}
-	compiled, err := library.CompileExercise(exercise.ID)
+	scenarioDoc := library.Scenarios[entry.ScenarioID]
+	compiled, err := library.CompileExercise(entry.ExerciseID)
 	if err != nil {
 		return nil, err
 	}
@@ -215,6 +275,59 @@ func newRunFromContent(root string) (*scenario.Run, error) {
 		SuccessText: scenarioDoc.MentorSuccess,
 		Exercise:    compiled,
 	})
+}
+
+func playlistEntries(library content.Library) ([]gameEntry, error) {
+	var playlists []content.PlaylistDocument
+	for _, playlist := range library.Playlists {
+		playlists = append(playlists, playlist)
+	}
+	sort.Slice(playlists, func(i, j int) bool {
+		return playlists[i].ID < playlists[j].ID
+	})
+	if len(playlists) == 0 {
+		return nil, fmt.Errorf("no playlists found")
+	}
+
+	var entries []gameEntry
+	for _, beat := range playlists[0].Beats {
+		exercise, ok := library.Exercises[beat.ExerciseID]
+		if !ok || !isPlayableExercise(exercise) {
+			continue
+		}
+		scenarioDoc, ok := library.Scenarios[beat.ScenarioID]
+		if !ok || !isPlayableScenario(scenarioDoc) {
+			continue
+		}
+		entries = append(entries, gameEntry{
+			ExerciseID: beat.ExerciseID,
+			ScenarioID: beat.ScenarioID,
+		})
+	}
+	return entries, nil
+}
+
+func isPlayableExercise(exercise content.ExerciseDocument) bool {
+	return (exercise.Status == content.StatusApproved || exercise.Status == content.StatusImplemented) &&
+		exercise.EngineSupport == content.EngineSupportImplemented &&
+		exercise.ReplayStatus == content.ReplayStatusPass
+}
+
+func isPlayableScenario(scenarioDoc content.ScenarioDocument) bool {
+	return (scenarioDoc.Status == content.StatusApproved || scenarioDoc.Status == content.StatusImplemented) &&
+		scenarioDoc.EngineSupport == content.EngineSupportImplemented
+}
+
+func firstIncompleteIndex(entries []gameEntry, progressState *progress.Progress) int {
+	if progressState == nil {
+		return 0
+	}
+	for index, entry := range entries {
+		if !progressState.Missions[entry.ExerciseID].Completed {
+			return index
+		}
+	}
+	return len(entries) - 1
 }
 
 func scenarioForExercise(library content.Library, exerciseID string) (content.ScenarioDocument, error) {

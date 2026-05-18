@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. 다음 후보는 `GAMELOOP-001`이다.
+현재 active slice는 없다. 중기 플랜의 플랫폼 기반 루프는 완료됐다.
 
 ## 완료된 초기 세팅
 
@@ -152,6 +152,11 @@ Phase: Vim Learning Foundation
 ### EXCMD-001. Ex substitute and range command foundation
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/excmd-001-substitute-range.md`
+- 완료일: 2026-05-18
+
+### GAMELOOP-001. Playlist progression and autosave loop
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/gameloop-001-playlist-progression.md`
 - 완료일: 2026-05-18
 
 ## Backlog

@@ -38,6 +38,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `gg/G`는 NAV-001에서 파일 처음/끝 줄의 첫 column으로 이동하는 pedagogical motion으로 다룬다.
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
+- playable은 `first-5-minute` playlist beat 순서로 replay-pass exercise를 실행한다.
+- exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

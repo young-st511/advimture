@@ -58,6 +58,67 @@ func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	}
 }
 
+func TestPlayableAdvancesToNextExerciseAfterSuccess(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+	})
+
+	model, _ = updateWithKey(t, model, "l")
+	model, _ = updateWithKey(t, model, "l")
+	if model.State().Status != "succeeded" {
+		t.Fatalf("status = %q, want succeeded", model.State().Status)
+	}
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	if model.State().Status != "running" {
+		t.Fatalf("status after next = %q, want running", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "편집 중인 줄에 갇혔습니다") {
+		t.Fatalf("view = %q, want second exercise briefing", model.View())
+	}
+}
+
+func TestPlayableStartsAtFirstIncompleteExercise(t *testing.T) {
+	p := progress.NewProgress()
+	p.CompleteMission("normal-motion-basic-001", "S", 2, 1000)
+
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    p,
+	})
+
+	if !strings.Contains(model.View(), "편집 중인 줄에 갇혔습니다") {
+		t.Fatalf("view = %q, want first incomplete exercise", model.View())
+	}
+}
+
+func TestPlayableAutosavesEachCompletedExercise(t *testing.T) {
+	var saved *progress.Progress
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+		SaveProgress: func(p *progress.Progress) error {
+			copy := *p
+			saved = &copy
+			return nil
+		},
+	})
+
+	model, _ = updateWithKey(t, model, "l")
+	model, _ = updateWithKey(t, model, "l")
+	if saved == nil || !saved.Missions["normal-motion-basic-001"].Completed {
+		t.Fatalf("saved progress = %+v, want normal-motion-basic-001 completed", saved)
+	}
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEsc)
+	if saved == nil || !saved.Missions["survival-save-quit-001"].Completed {
+		t.Fatalf("saved progress = %+v, want survival-save-quit-001 completed", saved)
+	}
+}
+
 func TestPlayableWritesE2EState(t *testing.T) {
 	path := filepath.Join(t.TempDir(), ".advimture", "e2e_state.json")
 	model := New(Options{
@@ -120,6 +181,17 @@ func updateWithKey(t *testing.T, model Model, key string) (Model, tea.Cmd) {
 		Type:  tea.KeyRunes,
 		Runes: []rune(key),
 	})
+	next, ok := updated.(Model)
+	if !ok {
+		t.Fatalf("updated model type = %T, want playable.Model", updated)
+	}
+	return next, cmd
+}
+
+func updateWithSpecialKey(t *testing.T, model Model, key tea.KeyType) (Model, tea.Cmd) {
+	t.Helper()
+
+	updated, cmd := model.Update(tea.KeyMsg{Type: key})
 	next, ok := updated.(Model)
 	if !ok {
 		t.Fatalf("updated model type = %T, want playable.Model", updated)
