@@ -63,7 +63,7 @@ command_cluster:
 ```yaml
 command_cluster:
   id: survival-save-quit
-  status: draft
+  status: approved
   compatibility_tier: pedagogical
   engine_support: planned
   curriculum_area: chapter-0-survival
@@ -96,7 +96,7 @@ command_cluster:
 ```yaml
 command_cluster:
   id: normal-motion-basic
-  status: draft
+  status: approved
   compatibility_tier: exact
   engine_support: implemented
   curriculum_area: chapter-1-movement
@@ -128,7 +128,7 @@ command_cluster:
 ```yaml
 command_cluster:
   id: word-motion-basic
-  status: draft
+  status: approved
   compatibility_tier: exact
   engine_support: planned
   curriculum_area: chapter-1-movement
@@ -157,7 +157,7 @@ command_cluster:
 
 ## First 5-Minute Discovery Notes
 
-- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 유일한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 approval 전 보강이 필요하다.
+- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 유일한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
 - `survival-save-quit`은 첫 경험의 불안감을 줄이는 데 중요하지만 command-line 입력과 app exit semantics가 필요하다.
 - `word-motion-basic`은 첫 5분 후반의 효율성 체감에 적합하지만 `w/b/e` engine support와 oracle comparison이 먼저 필요하다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
@@ -168,8 +168,8 @@ command_cluster:
 
 추천:
 
-- `normal-motion-basic`: 현재 `approved` 승격 후보. 단 `h`, `k` coverage exercise를 후속 루프에서 반드시 보강한다.
-- `survival-save-quit`: `approved` 승격 후보지만 `engine_support: planned`를 유지한다.
-- `word-motion-basic`: `approved` 승격 후보지만 `engine_support: planned`를 유지한다.
+- `normal-motion-basic`: `approved`. 단 `h`, `k` coverage exercise를 후속 루프에서 반드시 보강한다.
+- `survival-save-quit`: `approved`, `engine_support: planned`.
+- `word-motion-basic`: `approved`, `engine_support: planned`.
 
 주의: `approved`는 학습 우선순위 승인이고, `implemented` 또는 playable 연결을 의미하지 않는다.

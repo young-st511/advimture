@@ -22,7 +22,7 @@
 
 | ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |----|----------|-------------|------|---------------|
-| VIM-001 | curriculum defaults 결정 완료 | 첫 5분 command cluster approval packet | `rg`, `go test ./...` | 사람이 command cluster를 명시 승인하기 전 `approved`로 바꾸지 않는다. |
+| VIM-001 | curriculum defaults 결정 완료 | 첫 5분 command cluster approval packet | `rg`, `go test ./...` | completed: 사용자 승인 후 3개 cluster를 `approved`로 승격했다. |
 | CONTENT-001 | VIM-001 승인 또는 approval packet 준비 | root `content/` YAML fixture, loader, validator | `go test ./internal/content/...`, `go test ./...` | draft/planned 콘텐츠는 로드하되 playable 후보에서 제외한다. |
 | PLAY-002 | CONTENT-001 통과 | hardcoded playable 제거, file-backed playable | `go test ./internal/playable/...`, `make e2e-smoke` | screen assertion만 믿지 않고 app state/progress를 함께 본다. |
 | CONTENT-002 | file-backed playable 통과 | replay/coverage validator | content replay tests, coverage report | `coverage_required`와 `replay_status` 없이는 approved/playable 승격 금지. |
@@ -44,4 +44,4 @@
 
 ## 현재 판단
 
-현재 active slice는 **VIM-001 첫 command cluster 설계**다. 사용자 결정으로 첫 playable 순서는 `normal-motion-basic -> survival-save-quit -> word-motion-basic`이며, CONTENT-001은 VIM-001 approval packet을 입력으로 사용한다.
+현재 active slice는 없다. 다음 작업은 **CONTENT-001 새 content schema용 YAML loader**이며, VIM-001에서 승인된 `normal-motion-basic`, `survival-save-quit`, `word-motion-basic`을 입력으로 사용한다.
