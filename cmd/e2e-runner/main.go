@@ -609,6 +609,14 @@ func keyBytes(key string) string {
 		return "\t"
 	case "space":
 		return " "
+	case "up":
+		return "\x1b[A"
+	case "down":
+		return "\x1b[B"
+	case "right":
+		return "\x1b[C"
+	case "left":
+		return "\x1b[D"
 	default:
 		return key
 	}

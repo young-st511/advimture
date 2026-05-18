@@ -125,6 +125,9 @@ func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
 	if !strings.Contains(model.View(), "Next tutorial: enter") {
 		t.Fatalf("view = %q, want next tutorial transition", model.View())
 	}
+	if !strings.Contains(model.View(), "ACTION") {
+		t.Fatalf("view = %q, want action panel", model.View())
+	}
 
 	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
 	if !strings.Contains(model.View(), "Tutorial 1: Vim 생존 키트") {
@@ -187,6 +190,9 @@ func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.
 	if !strings.Contains(model.View(), "Retry: r or enter") {
 		t.Fatalf("view = %q, want retry prompt", model.View())
 	}
+	if !strings.Contains(model.View(), "ACTION") {
+		t.Fatalf("view = %q, want action panel", model.View())
+	}
 	if !strings.Contains(model.View(), "Attempts: 1/unlimited") {
 		t.Fatalf("view = %q, want attempt count", model.View())
 	}
@@ -201,6 +207,33 @@ func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.
 	}
 	if !strings.Contains(model.View(), "Exercise: 1/4") {
 		t.Fatalf("view = %q, want same exercise after retry", model.View())
+	}
+}
+
+func TestPlayableFailsArrowKeyShortcutWithoutSaving(t *testing.T) {
+	saveCalls := 0
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+		SaveProgress: func(*progress.Progress) error {
+			saveCalls++
+			return nil
+		},
+	})
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyRight)
+
+	if model.State().Status != "failed" {
+		t.Fatalf("status = %q, want failed", model.State().Status)
+	}
+	if saveCalls != 0 {
+		t.Fatalf("saveCalls = %d, want 0", saveCalls)
+	}
+	if !strings.Contains(model.View(), "이 입력은 이번 문항에서 사용할 수 없습니다.") {
+		t.Fatalf("view = %q, want forbidden input message", model.View())
+	}
+	if !strings.Contains(model.View(), "Retry: r or enter") {
+		t.Fatalf("view = %q, want retry prompt", model.View())
 	}
 }
 
@@ -280,6 +313,9 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	view := model.View()
 	if !strings.Contains(view, ":") {
 		t.Fatalf("view = %q, want command prompt", view)
+	}
+	if !strings.Contains(view, "ACTION") {
+		t.Fatalf("view = %q, want action panel", view)
 	}
 	if strings.Contains(view, "q: quit") {
 		t.Fatalf("view = %q, should not show q quit hint in command mode", view)

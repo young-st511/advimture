@@ -6,6 +6,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/young-st511/advimture/internal/content"
 	"github.com/young-st511/advimture/internal/e2estate"
 	"github.com/young-st511/advimture/internal/progress"
@@ -46,6 +47,12 @@ type gameEntry struct {
 	IndexInPlaylist int
 	TotalInPlaylist int
 }
+
+var actionPanelStyle = lipgloss.NewStyle().
+	Border(lipgloss.NormalBorder()).
+	BorderForeground(lipgloss.Color("63")).
+	Padding(0, 1).
+	Width(58)
 
 func New(options Options) Model {
 	now := options.Now
@@ -148,32 +155,16 @@ func (m Model) View() string {
 	if view.Grade != "" {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
 	}
-	if state.Runtime.MaxInputs > 0 {
-		b.WriteString(fmt.Sprintf("Inputs left: %d/%d\n", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
-	}
-	if state.Status == exerciseruntime.StatusSucceeded {
-		if m.current+1 < len(m.entries) {
-			if m.nextEntryStartsNewPlaylist() {
-				b.WriteString("Next tutorial: enter\n")
-			} else {
-				b.WriteString("Next: enter\n")
-			}
-		} else {
-			b.WriteString("Playlist complete\n")
-		}
-	} else if state.Status == exerciseruntime.StatusFailed {
-		b.WriteString(fmt.Sprintf("Attempts: %d/%s\n", state.Runtime.Attempts, attemptLimitLabel(state.Runtime.AttemptLimit)))
-		b.WriteString("Retry: r or enter\n")
-	}
+	b.WriteString("\n")
 	if view.Mode == string(vimengine.ModeCommand) {
-		b.WriteString(":" + view.CommandLine + "\n")
-		b.WriteString("Keys: type command  enter: run  esc: normal  ctrl+c: quit")
+		b.WriteString(":" + view.CommandLine + "\n\n")
+		b.WriteString(m.renderActionPanel(state, view))
 		return b.String()
 	}
 	if view.LastCommand != "" {
 		b.WriteString(fmt.Sprintf("Command: %s\n", view.LastCommand))
 	}
-	b.WriteString("Keys: h/j/k/l/w/b/e/g/G/0/$ move  ?: hint  r: retry  q: quit  :: command")
+	b.WriteString(m.renderActionPanel(state, view))
 	return b.String()
 }
 
@@ -419,6 +410,38 @@ func renderLine(line string, row int, cursorRow int, cursorCol int) string {
 		cursorCol = len(runes) - 1
 	}
 	return fmt.Sprintf("> %s[%s]%s", string(runes[:cursorCol]), string(runes[cursorCol]), string(runes[cursorCol+1:]))
+}
+
+func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel) string {
+	lines := []string{"ACTION"}
+	switch {
+	case view.Mode == string(vimengine.ModeCommand):
+		lines = append(lines, "Keys: type command  enter: run  esc: normal  ctrl+c: quit")
+	case state.Status == exerciseruntime.StatusSucceeded:
+		if m.current+1 < len(m.entries) {
+			if m.nextEntryStartsNewPlaylist() {
+				lines = append(lines, "Next tutorial: enter")
+			} else {
+				lines = append(lines, "Next: enter")
+			}
+		} else {
+			lines = append(lines, "Playlist complete")
+			lines = append(lines, "q: quit")
+		}
+	case state.Status == exerciseruntime.StatusFailed:
+		if state.Runtime.MaxInputs > 0 {
+			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
+		}
+		lines = append(lines, fmt.Sprintf("Attempts: %d/%s", state.Runtime.Attempts, attemptLimitLabel(state.Runtime.AttemptLimit)))
+		lines = append(lines, "Retry: r or enter")
+		lines = append(lines, "?: hint  q: quit")
+	default:
+		if state.Runtime.MaxInputs > 0 {
+			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
+		}
+		lines = append(lines, "?: hint  q: quit")
+	}
+	return actionPanelStyle.Render(strings.Join(lines, "\n"))
 }
 
 func attemptLimitLabel(limit int) string {

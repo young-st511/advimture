@@ -9,22 +9,27 @@ import (
 	"github.com/young-st511/advimture/internal/vimengine"
 )
 
-func TestMapInputMapsVimAndArrowKeys(t *testing.T) {
+func TestMapInputMapsVimMovementKeys(t *testing.T) {
 	cases := map[string]string{
-		"h":     vimengine.KeyH,
-		"left":  vimengine.KeyH,
-		"j":     vimengine.KeyJ,
-		"down":  vimengine.KeyJ,
-		"k":     vimengine.KeyK,
-		"up":    vimengine.KeyK,
-		"l":     vimengine.KeyL,
-		"right": vimengine.KeyL,
+		"h": vimengine.KeyH,
+		"j": vimengine.KeyJ,
+		"k": vimengine.KeyK,
+		"l": vimengine.KeyL,
 	}
 
 	for input, wantKey := range cases {
 		action := MapInput(input)
 		if action.Type != ActionKey || action.Key != wantKey {
 			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
+		}
+	}
+}
+
+func TestMapInputPreservesArrowKeysForExerciseConstraints(t *testing.T) {
+	for _, input := range []string{"left", "down", "up", "right"} {
+		action := MapInput(input)
+		if action.Type != ActionKey || action.Key != input {
+			t.Fatalf("MapInput(%q) = %+v, want preserved key %q", input, action, input)
 		}
 	}
 }

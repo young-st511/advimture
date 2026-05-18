@@ -17,6 +17,10 @@ func TestKeyBytes(t *testing.T) {
 		"esc":    "\x1b",
 		"ctrl+c": "\x03",
 		"ctrl+r": "\x12",
+		"right":  "\x1b[C",
+		"left":   "\x1b[D",
+		"up":     "\x1b[A",
+		"down":   "\x1b[B",
 		"space":  " ",
 		"x":      "x",
 	}
