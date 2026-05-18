@@ -237,6 +237,25 @@ func TestPlayableFailsArrowKeyShortcutWithoutSaving(t *testing.T) {
 	}
 }
 
+func TestPlayableDoesNotQuitOnCtrlC(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+	})
+
+	model, cmd := updateWithSpecialKey(t, model, tea.KeyCtrlC)
+
+	if cmd != nil {
+		t.Fatal("cmd != nil, want no quit command")
+	}
+	if model.State().Status != "running" {
+		t.Fatalf("status = %q, want running", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "커서 위치 맞추기") {
+		t.Fatalf("view = %q, want still on first exercise", model.View())
+	}
+}
+
 func TestPlayableRetriesFailedExerciseWithR(t *testing.T) {
 	model := New(Options{
 		ContentRoot: contentRootForTest(),
@@ -319,6 +338,9 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	}
 	if strings.Contains(view, "q: quit") {
 		t.Fatalf("view = %q, should not show q quit hint in command mode", view)
+	}
+	if strings.Contains(view, "ctrl+c: quit") {
+		t.Fatalf("view = %q, should not show ctrl+c quit hint in command mode", view)
 	}
 }
 

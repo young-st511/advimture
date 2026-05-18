@@ -47,7 +47,7 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	trimmed := strings.TrimSpace(input)
 	normalized := strings.ToLower(trimmed)
 	if normalized == "ctrl+c" {
-		return Action{Type: ActionQuit}
+		return Action{Type: ActionKey, Key: "ctrl+c"}
 	}
 	if normalized == "ctrl+r" {
 		return Action{Type: ActionKey, Key: vimengine.KeyCtrlR}

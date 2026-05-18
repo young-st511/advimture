@@ -38,6 +38,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `survival-save-quit`은 `esc`, `:q!`, `:wq` 각각이 `trained_commands`와 command goal coverage에 등장하는 approved + implemented exercise set을 가진다.
 - `:q!`, `:wq`는 실제 파일 작업이 아니라 command-line key trace replay와 runtime command goal로 검증한다.
 - 앱 종료 단축키 `q`와 command-line mode의 `q` 입력은 분리한다.
+- `ctrl+c`는 앱 종료 단축키가 아니며 runtime key trace로 전달한다. 종료는 playable 일반 모드의 `q`를 기본으로 한다.
 - `whole-file-navigation`은 `gg`, `G`, `0`, `$` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - `gg/G`는 NAV-001에서 파일 처음/끝 줄의 첫 column으로 이동하는 pedagogical motion으로 다룬다.
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
@@ -56,6 +57,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - exercise YAML은 `constraints.max_inputs`, `constraints.required_keys`, `constraints.forbidden_keys`, `constraints.attempt_limit`를 선언할 수 있다.
 - `constraints.max_inputs` 초과와 `constraints.forbidden_keys` 입력은 Vim state를 추가 진행시키지 않고 즉시 실패한다.
 - `left/right/up/down` 화살표 입력은 `h/j/k/l`로 변환하지 않고 원래 key name으로 runtime에 전달해 `forbidden_keys`가 검출할 수 있어야 한다.
+- `ctrl+c` 입력도 quit으로 가로채지 않고 원래 key name으로 runtime에 전달해 content constraint나 unsupported key handling이 처리하게 한다.
 - 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 실패한다.
 - 실패 상태는 progress를 저장하지 않으며, 실패 화면은 `Grade: F`, 남은 입력 수, 재시도 안내를 보여준다.
 - 실패 화면은 attempt count를 표시하며 `attempt_limit: 0`은 `unlimited`로 표현한다.

@@ -416,7 +416,7 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 	lines := []string{"ACTION"}
 	switch {
 	case view.Mode == string(vimengine.ModeCommand):
-		lines = append(lines, "Keys: type command  enter: run  esc: normal  ctrl+c: quit")
+		lines = append(lines, "Keys: type command  enter: run  esc: normal")
 	case state.Status == exerciseruntime.StatusSucceeded:
 		if m.current+1 < len(m.entries) {
 			if m.nextEntryStartsNewPlaylist() {

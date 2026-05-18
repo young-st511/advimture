@@ -17,6 +17,11 @@ Phase: Vim Learning Foundation
 
 ## 방금 완료한 슬라이스
 
+### UX-002. Ctrl-C input guard
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ux-002-ctrl-c-input-guard.md`
+- 완료일: 2026-05-19
+
 ### UX-001. Action modal and arrow guard
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/ux-001-action-modal-and-arrow-guard.md`

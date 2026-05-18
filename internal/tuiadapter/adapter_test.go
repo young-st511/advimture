@@ -36,9 +36,8 @@ func TestMapInputPreservesArrowKeysForExerciseConstraints(t *testing.T) {
 
 func TestMapInputMapsCommands(t *testing.T) {
 	cases := map[string]ActionType{
-		"?":      ActionHint,
-		"ctrl+c": ActionQuit,
-		"q":      ActionQuit,
+		"?": ActionHint,
+		"q": ActionQuit,
 	}
 
 	for input, want := range cases {
@@ -46,6 +45,14 @@ func TestMapInputMapsCommands(t *testing.T) {
 		if action.Type != want {
 			t.Fatalf("MapInput(%q) = %q, want %q", input, action.Type, want)
 		}
+	}
+}
+
+func TestMapInputPassesCtrlCToRuntime(t *testing.T) {
+	action := MapInput("ctrl+c")
+
+	if action.Type != ActionKey || action.Key != "ctrl+c" {
+		t.Fatalf("MapInput(ctrl+c) = %+v, want runtime key", action)
 	}
 }
 
