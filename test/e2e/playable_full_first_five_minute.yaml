@@ -1,0 +1,227 @@
+id: playable_full_first_five_minute
+command: ["go", "run", "."]
+timeout_ms: 40000
+terminal:
+  width: 120
+  height: 40
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - wait_ms: 200
+  - send: "l"
+  - wait_ms: 50
+  - send: "l"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "편집 중인 줄에 갇혔습니다"
+  - wait_ms: 100
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "command-line에 :q!를 실행하세요"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "q"
+  - wait_ms: 30
+  - send: "!"
+  - wait_ms: 30
+  - send: "enter"
+  - wait_screen_contains: "Command: :q!"
+  - send: "enter"
+
+  - wait_screen_contains: "command-line에 :wq를 실행하세요"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "w"
+  - wait_ms: 30
+  - send: "q"
+  - wait_ms: 30
+  - send: "enter"
+  - wait_screen_contains: "Command: :wq"
+  - send: "enter"
+
+  - wait_screen_contains: "backend 항목으로 빠르게 이동해야 합니다"
+  - send: "w"
+  - wait_ms: 50
+  - send: "w"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "backend를 지나쳐 enabled까지 와버렸습니다"
+  - send: "b"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "backend 토큰의 끝 글자를 확인해야 합니다"
+  - send: "e"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "파일 맨 위 선언부"
+  - send: "g"
+  - wait_ms: 50
+  - send: "g"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "파일 마지막 줄에 현재 상태가 적혀 있습니다"
+  - send: "G"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "현재 줄의 키 이름을 다시 확인해야 하니 줄 시작으로 이동하세요"
+  - send: "0"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "현재 줄의 마지막 토큰 끝을 확인해야 합니다"
+  - send: "$"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "현재 줄만 긴급 수정"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "s"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "a"
+  - wait_ms: 30
+  - send: "p"
+  - wait_ms: 30
+  - send: "i"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "w"
+  - wait_ms: 30
+  - send: "e"
+  - wait_ms: 30
+  - send: "b"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "enter"
+  - wait_screen_contains: "Command: :s/api/web/"
+  - send: "enter"
+
+  - wait_screen_contains: "파일 전체의 TODO를 DONE으로 바꾸세요"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "%"
+  - wait_ms: 30
+  - send: "s"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "T"
+  - wait_ms: 30
+  - send: "O"
+  - wait_ms: 30
+  - send: "D"
+  - wait_ms: 30
+  - send: "O"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "D"
+  - wait_ms: 30
+  - send: "O"
+  - wait_ms: 30
+  - send: "N"
+  - wait_ms: 30
+  - send: "E"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "g"
+  - wait_ms: 30
+  - send: "enter"
+  - wait_screen_contains: "Command: :%s/TODO/DONE/g"
+  - send: "enter"
+
+  - wait_screen_contains: "2~3번째 줄의 error만 ok로 바꾸세요"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "2"
+  - wait_ms: 30
+  - send: ","
+  - wait_ms: 30
+  - send: "3"
+  - wait_ms: 30
+  - send: "s"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "e"
+  - wait_ms: 30
+  - send: "r"
+  - wait_ms: 30
+  - send: "r"
+  - wait_ms: 30
+  - send: "o"
+  - wait_ms: 30
+  - send: "r"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "o"
+  - wait_ms: 30
+  - send: "k"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "enter"
+  - wait_screen_contains: "Playlist complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "좋습니다. range를 붙이면 필요한 구간만 조심스럽게 고칠 수 있습니다."
+    - "Command: :2,3s/error/ok/"
+    - "Exercise: 14/14"
+    - "Playlist complete"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"normal-motion-basic-001\""
+    - "\"survival-save-quit-001\""
+    - "\"survival-save-quit-002\""
+    - "\"survival-save-quit-003\""
+    - "\"word-motion-basic-001\""
+    - "\"word-motion-basic-002\""
+    - "\"word-motion-basic-003\""
+    - "\"whole-file-navigation-001\""
+    - "\"whole-file-navigation-002\""
+    - "\"whole-file-navigation-003\""
+    - "\"whole-file-navigation-004\""
+    - "\"vim-ex-command-substitute-001\""
+    - "\"vim-ex-command-substitute-002\""
+    - "\"vim-ex-command-substitute-003\""
+  app_state:
+    buffer: ["error one", "ok two", "ok three"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    command: ":2,3s/error/ok/"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "vim-ex-command-substitute-003"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

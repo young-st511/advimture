@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. E2E-005까지 완료되어 playable loop의 주요 TUI 경로가 pty E2E로 검증된다.
+현재 active slice는 없다. 첫 5분 playable playlist는 pty E2E로 처음부터 끝까지 완주 검증된다.
 
 ## 완료된 초기 세팅
 
@@ -162,6 +162,11 @@ Phase: Vim Learning Foundation
 ### E2E-005. Playlist and command-mode E2E hardening
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/e2e-005-playlist-command-loop.md`
+- 완료일: 2026-05-18
+
+### E2E-006. Full first 5-minute playlist E2E
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-006-full-first-five-minute-run.md`
 - 완료일: 2026-05-18
 
 ## Backlog

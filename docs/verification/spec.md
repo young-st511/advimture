@@ -29,7 +29,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
 - runner는 `summary.json`, raw ANSI log, cleaned final screen, key trace를 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.
-- `make e2e-playable`은 첫 문제 smoke, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute 경로를 모두 검증한다.
+- `make e2e-playable`은 첫 문제 smoke, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute, full first-5-minute playlist 완주 경로를 모두 검증한다.
 
 ## 미확인 사항
 
@@ -39,6 +39,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - [x] E2E runner는 app state summary 기반 buffer/cursor/mode/status/score/progress assertion을 지원한다.
 - [x] 첫 playable slice에서 실제 앱이 `ADVIMTURE_E2E=1`일 때 app state summary를 쓴다.
 - [x] progress fixture 기반 resume E2E와 command-mode E2E를 지원한다.
+- [x] full first-5-minute playlist를 pty E2E로 처음부터 끝까지 완주 검증한다.
 
 ---
 

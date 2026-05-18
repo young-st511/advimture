@@ -102,6 +102,7 @@ evidence:
 - `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
 - `app_state`: test HOME 내부 app state summary JSON 검증
 - `setup.progress_file`: test HOME의 `.advimture/progress.json`에 미리 쓸 JSON fixture
+- `playable_full_first_five_minute`: 첫 5분 playable playlist 전체 완주 E2E
 
 ### `assert.app_state`
 
