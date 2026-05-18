@@ -32,6 +32,9 @@ const (
 	KeyDollar = "$"
 	KeyX      = "x"
 	KeyR      = "r"
+	KeyI      = "i"
+	KeyA      = "a"
+	KeyShiftA = "A"
 )
 
 type Cursor struct {
@@ -61,6 +64,7 @@ const (
 	EventCommandExecuted EventType = "command_executed"
 	EventPendingKey      EventType = "pending_key"
 	EventChanged         EventType = "changed"
+	EventInsertMode      EventType = "insert_mode"
 )
 
 type Event struct {
@@ -136,6 +140,8 @@ func Apply(state State, key string) Result {
 		next.Mode = ModeNormal
 		next.CommandLine = ""
 		next.PendingKey = ""
+		next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+		next.Cursor.DesiredCol = next.Cursor.Col
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -148,6 +154,11 @@ func Apply(state State, key string) Result {
 	if next.Mode == ModeCommand {
 		next.PendingKey = ""
 		return applyCommandKey(next, key)
+	}
+
+	if next.Mode == ModeInsert {
+		next.PendingKey = ""
+		return insertPrintable(next, key)
 	}
 
 	if next.Mode != ModeNormal {
@@ -217,6 +228,12 @@ func Apply(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	case KeyI:
+		return enterInsertMode(next, key, next.Cursor.Col)
+	case KeyA:
+		return enterInsertMode(next, key, next.Cursor.Col+1)
+	case KeyShiftA:
+		return enterInsertMode(next, key, lineRuneLen(next.Lines[next.Cursor.Row]))
 	default:
 		return Result{
 			State: copyState(next),
@@ -226,6 +243,48 @@ func Apply(state State, key string) Result {
 				Message: "key is not supported",
 			}},
 		}
+	}
+}
+
+func enterInsertMode(state State, key string, insertCol int) Result {
+	next := copyState(state)
+	next.Mode = ModeInsert
+	next.Cursor.Col = clampInsertCol(insertCol, next.Lines[next.Cursor.Row])
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventInsertMode,
+			Key:  key,
+		}},
+	}
+}
+
+func insertPrintable(state State, key string) Result {
+	next := copyState(state)
+	inserted := []rune(key)
+	if len(inserted) != 1 {
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "insert requires one character",
+			}},
+		}
+	}
+	line := []rune(next.Lines[next.Cursor.Row])
+	col := clampInsertCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	line = append(line[:col], append(inserted, line[col:]...)...)
+	next.Lines[next.Cursor.Row] = string(line)
+	next.Cursor.Col = col + 1
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
 	}
 }
 
@@ -769,7 +828,11 @@ func normalizeState(state State) State {
 	if next.Cursor.Row >= len(next.Lines) {
 		next.Cursor.Row = len(next.Lines) - 1
 	}
-	next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	if next.Mode == ModeInsert {
+		next.Cursor.Col = clampInsertCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	} else {
+		next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	}
 	if next.Cursor.DesiredCol < 0 {
 		next.Cursor.DesiredCol = next.Cursor.Col
 	}
@@ -790,12 +853,27 @@ func clampCol(col int, line string) int {
 	return col
 }
 
+func clampInsertCol(col int, line string) int {
+	if col < 0 {
+		return 0
+	}
+	maxCol := lineRuneLen(line)
+	if col > maxCol {
+		return maxCol
+	}
+	return col
+}
+
 func maxCursorCol(line string) int {
 	length := utf8.RuneCountInString(line)
 	if length == 0 {
 		return 0
 	}
 	return length - 1
+}
+
+func lineRuneLen(line string) int {
+	return utf8.RuneCountInString(line)
 }
 
 func copyState(state State) State {

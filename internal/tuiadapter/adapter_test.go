@@ -48,6 +48,9 @@ func TestMapInputMapsSingleCharEditKeys(t *testing.T) {
 	cases := map[string]string{
 		"x": vimengine.KeyX,
 		"r": vimengine.KeyR,
+		"i": vimengine.KeyI,
+		"a": vimengine.KeyA,
+		"A": vimengine.KeyShiftA,
 		"Z": "Z",
 	}
 
@@ -56,6 +59,27 @@ func TestMapInputMapsSingleCharEditKeys(t *testing.T) {
 		if action.Type != ActionKey || action.Key != wantKey {
 			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
 		}
+	}
+}
+
+func TestMapInputInInsertModePassesPrintableCharacters(t *testing.T) {
+	for _, input := range []string{"q", "x", "A", "!"} {
+		action := MapInputForMode(input, vimengine.ModeInsert)
+		if action.Type != ActionKey || action.Key != input {
+			t.Fatalf("MapInputForMode(%q, insert) = %+v, want key %q", input, action, input)
+		}
+	}
+}
+
+func TestMapInputInInsertModeMapsEscButIgnoresEnter(t *testing.T) {
+	action := MapInputForMode("esc", vimengine.ModeInsert)
+	if action.Type != ActionKey || action.Key != vimengine.KeyEsc {
+		t.Fatalf("esc action = %+v, want esc key", action)
+	}
+
+	action = MapInputForMode("enter", vimengine.ModeInsert)
+	if action.Type != ActionIgnored {
+		t.Fatalf("enter action = %+v, want ignored", action)
 	}
 }
 

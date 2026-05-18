@@ -266,9 +266,9 @@ command_cluster:
 ```yaml
 command_cluster:
   id: insert-mode-entry
-  status: draft
+  status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-2-small-edits
   title: Insert mode 진입과 작은 추가
   commands: ["i", "a", "A"]

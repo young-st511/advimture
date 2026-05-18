@@ -10,10 +10,10 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-014. Insert mode text engine
+### VIM-015. Undo redo engine
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `i`, `a`, `A` insert mode entry와 printable insertion을 구현한다.
+- 목표: `u`, `<C-r>` undo/redo stack을 구현한다.
 
 ## 방금 완료한 슬라이스
 
@@ -60,6 +60,11 @@ Phase: Vim Learning Foundation
 ### VIM-013. Single-char edit engine
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/vim-013-single-char-edit-engine.md`
+- 완료일: 2026-05-19
+
+### VIM-014. Insert mode text engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-014-insert-mode-text-engine.md`
 - 완료일: 2026-05-19
 
 ## 완료된 초기 세팅

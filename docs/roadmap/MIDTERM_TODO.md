@@ -67,7 +67,7 @@
 | 1 | CURRICULUM-001 | completed | Vim 핵심 커버리지 루브릭과 다음 command cluster 우선순위 확정 |
 | 2 | ENGINE-GAP-001 | completed | 다음 playpack에 필요한 vimengine/runtime gap 식별과 구현 순서 결정 |
 | 3 | VIM-013 | completed | `x`, `r` buffer mutation engine 구현 |
-| 4 | VIM-014 | planning | `i`, `a`, `A` insert mode entry와 printable insertion 구현 |
-| 5 | VIM-015 | pending | `u`, `<C-r>` undo/redo stack 구현 |
+| 4 | VIM-014 | completed | `i`, `a`, `A` insert mode entry와 printable insertion 구현 |
+| 5 | VIM-015 | planning | `u`, `<C-r>` undo/redo stack 구현 |
 | 6 | PLAYPACK-002 | pending | 6~8문항짜리 “편집 기본기” 튜토리얼 playpack 설계/구현 |
 | 7 | SCENARIO-TONE-001 | pending | 중반 생존 어드벤처 톤 원칙과 적용 범위 확정 |

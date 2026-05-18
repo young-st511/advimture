@@ -49,6 +49,15 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	if normalized == "ctrl+c" {
 		return Action{Type: ActionQuit}
 	}
+	if mode == vimengine.ModeInsert {
+		if normalized == "esc" {
+			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
+		}
+		if len([]rune(trimmed)) == 1 {
+			return Action{Type: ActionKey, Key: trimmed}
+		}
+		return Action{Type: ActionIgnored}
+	}
 	if mode == vimengine.ModeCommand {
 		switch normalized {
 		case "enter":
@@ -66,6 +75,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	}
 	if trimmed == vimengine.KeyShiftG {
 		return Action{Type: ActionKey, Key: vimengine.KeyShiftG}
+	}
+	if trimmed == vimengine.KeyShiftA {
+		return Action{Type: ActionKey, Key: vimengine.KeyShiftA}
 	}
 
 	switch normalized {
@@ -99,6 +111,10 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyX}
 	case "r":
 		return Action{Type: ActionKey, Key: vimengine.KeyR}
+	case "i":
+		return Action{Type: ActionKey, Key: vimengine.KeyI}
+	case "a":
+		return Action{Type: ActionKey, Key: vimengine.KeyA}
 	case "?":
 		return Action{Type: ActionHint}
 	case "q":

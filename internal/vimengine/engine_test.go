@@ -120,7 +120,7 @@ func TestWordMotionReportsBoundaryAtDocumentEdges(t *testing.T) {
 	assertApply(t, engine, KeyW, 0, 2, EventBoundary)
 }
 
-func TestWordMotionUnsupportedOutsideNormalMode(t *testing.T) {
+func TestWordMotionKeyInInsertModeInsertsText(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeInsert,
 		Lines: []string{"alpha beta"},
@@ -128,10 +128,10 @@ func TestWordMotionUnsupportedOutsideNormalMode(t *testing.T) {
 
 	result := engine.Apply(KeyW)
 
-	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
-		t.Fatalf("Cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	if result.State.Lines[0] != "walpha beta" {
+		t.Fatalf("line = %q, want walpha beta", result.State.Lines[0])
 	}
-	assertEvent(t, result, EventUnsupportedKey)
+	assertEvent(t, result, EventChanged)
 }
 
 func TestWordMotionUpdatesDesiredColumnForVerticalMovement(t *testing.T) {
@@ -307,6 +307,93 @@ func TestReplaceCurrentCharRejectsMultiCharacterReplacement(t *testing.T) {
 	}
 	if result.State.PendingKey != "" {
 		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
+func TestInsertBeforeCursor(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"ac"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        1,
+			DesiredCol: 1,
+		},
+	})
+
+	assertApply(t, engine, KeyI, 0, 1, EventInsertMode)
+	result := engine.Apply("b")
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line = %q, want abc", result.State.Lines[0])
+	}
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 2 {
+		t.Fatalf("cursor col = %d, want insert position 2", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestAppendAfterCursor(t *testing.T) {
+	engine := New([]string{"ac"})
+
+	assertApply(t, engine, KeyA, 0, 1, EventInsertMode)
+	result := engine.Apply("b")
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line = %q, want abc", result.State.Lines[0])
+	}
+}
+
+func TestAppendAtLineEnd(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"abc"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        0,
+			DesiredCol: 0,
+		},
+	})
+
+	assertApply(t, engine, KeyShiftA, 0, 3, EventInsertMode)
+	result := engine.Apply("!")
+
+	if result.State.Lines[0] != "abc!" {
+		t.Fatalf("line = %q, want abc!", result.State.Lines[0])
+	}
+	if result.State.Cursor.Col != 4 {
+		t.Fatalf("cursor col = %d, want insert position 4", result.State.Cursor.Col)
+	}
+}
+
+func TestEscFromInsertModeClampsToNormalCursor(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	engine.Apply(KeyShiftA)
+	engine.Apply("!")
+	result := engine.Apply(KeyEsc)
+
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 3 {
+		t.Fatalf("cursor col = %d, want 3", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventModeReset)
+}
+
+func TestInsertModeRejectsMultiCharacterInput(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	engine.Apply(KeyI)
+	result := engine.Apply("enter")
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line = %q, want abc", result.State.Lines[0])
 	}
 	assertEvent(t, result, EventUnsupportedKey)
 }
