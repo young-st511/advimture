@@ -10,10 +10,10 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### SCORING-002. Command intent scoring
+### FAILURE-001. Failure and retry UX
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: 의도 command 사용 여부를 grade/coaching에 반영한다.
+- 목표: 실패 화면, 남은 입력 수 UI, `r`/`enter` retry UX를 완성한다.
 
 ## 방금 완료한 슬라이스
 
@@ -25,6 +25,11 @@ Phase: Vim Learning Foundation
 ### CONSTRAINT-001. Exercise constraint runtime
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/constraint-001-exercise-constraints.md`
+- 완료일: 2026-05-18
+
+### SCORING-002. Command intent scoring
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/scoring-002-command-intent.md`
 - 완료일: 2026-05-18
 
 ## 완료된 초기 세팅

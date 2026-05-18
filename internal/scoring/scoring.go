@@ -14,6 +14,7 @@ const (
 
 type Input struct {
 	Status       exerciseruntime.Status
+	Failure      exerciseruntime.FailureReason
 	KeyTrace     []string
 	ExpectedKeys []string
 	Attempts     int
@@ -22,6 +23,8 @@ type Input struct {
 
 type Result struct {
 	Passed           bool
+	IntentSatisfied  bool
+	Failure          exerciseruntime.FailureReason
 	ExactKeys        bool
 	Efficiency       float64
 	Penalty          float64
@@ -35,6 +38,7 @@ func Evaluate(input Input) Result {
 	keyTrace := copyStrings(input.KeyTrace)
 	expectedKeys := copyStrings(input.ExpectedKeys)
 	passed := input.Status == exerciseruntime.StatusSucceeded
+	intentSatisfied := input.Failure != exerciseruntime.FailureRequiredKeysMissing
 	exactKeys := keysMatch(keyTrace, expectedKeys)
 	efficiency := calculateEfficiency(len(expectedKeys), len(keyTrace))
 	penalty := calculatePenalty(input.Attempts, input.HintsUsed)
@@ -42,6 +46,8 @@ func Evaluate(input Input) Result {
 	if !passed {
 		return Result{
 			Passed:           false,
+			IntentSatisfied:  intentSatisfied,
+			Failure:          input.Failure,
 			ExactKeys:        exactKeys,
 			Efficiency:       efficiency,
 			Penalty:          penalty,
@@ -62,6 +68,8 @@ func Evaluate(input Input) Result {
 
 	return Result{
 		Passed:           true,
+		IntentSatisfied:  true,
+		Failure:          input.Failure,
 		ExactKeys:        exactKeys,
 		Efficiency:       efficiency,
 		Penalty:          penalty,

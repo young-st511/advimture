@@ -55,6 +55,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `constraints.max_inputs` 초과와 `constraints.forbidden_keys` 입력은 Vim state를 추가 진행시키지 않고 즉시 실패한다.
 - 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 실패한다.
 - 실패 상태는 progress를 저장하지 않으며, 실패 화면은 `Grade: F`, 남은 입력 수, 재시도 안내를 보여준다.
+- scoring result는 runtime failure reason을 보존하며, `required_keys_missing`은 `IntentSatisfied=false`, `Grade=F`로 평가한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

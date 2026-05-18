@@ -19,6 +19,9 @@ func TestEvaluatePerfectRun(t *testing.T) {
 	if !result.Passed {
 		t.Fatal("Passed = false, want true")
 	}
+	if !result.IntentSatisfied {
+		t.Fatal("IntentSatisfied = false, want true")
+	}
 	if !result.ExactKeys {
 		t.Fatal("ExactKeys = false, want true")
 	}
@@ -40,6 +43,29 @@ func TestEvaluateFailsWhenRuntimeDidNotSucceed(t *testing.T) {
 
 	if result.Passed {
 		t.Fatal("Passed = true, want false")
+	}
+	if result.Grade != GradeF {
+		t.Fatalf("Grade = %q, want %q", result.Grade, GradeF)
+	}
+}
+
+func TestEvaluateRequiredKeyFailureMarksIntentUnsatisfied(t *testing.T) {
+	result := Evaluate(Input{
+		Status:       exerciseruntime.StatusFailed,
+		Failure:      exerciseruntime.FailureRequiredKeysMissing,
+		KeyTrace:     []string{vimengine.KeyDollar},
+		ExpectedKeys: []string{vimengine.KeyL, vimengine.KeyL},
+		Attempts:     1,
+	})
+
+	if result.Passed {
+		t.Fatal("Passed = true, want false")
+	}
+	if result.IntentSatisfied {
+		t.Fatal("IntentSatisfied = true, want false")
+	}
+	if result.Failure != exerciseruntime.FailureRequiredKeysMissing {
+		t.Fatalf("Failure = %q, want %q", result.Failure, exerciseruntime.FailureRequiredKeysMissing)
 	}
 	if result.Grade != GradeF {
 		t.Fatalf("Grade = %q, want %q", result.Grade, GradeF)

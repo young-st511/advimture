@@ -115,6 +115,7 @@ func (r *Run) scoreIfSucceeded() {
 	}
 	result := scoring.Evaluate(scoring.Input{
 		Status:       state.Status,
+		Failure:      state.Failure,
 		KeyTrace:     state.KeyTrace,
 		ExpectedKeys: r.spec.Exercise.ExpectedKeys,
 		Attempts:     state.Attempts,
@@ -127,6 +128,7 @@ func (r *Run) scoreIfFailed() {
 	state := r.session.State()
 	result := scoring.Evaluate(scoring.Input{
 		Status:       state.Status,
+		Failure:      state.Failure,
 		KeyTrace:     state.KeyTrace,
 		ExpectedKeys: r.spec.Exercise.ExpectedKeys,
 		Attempts:     state.Attempts,
