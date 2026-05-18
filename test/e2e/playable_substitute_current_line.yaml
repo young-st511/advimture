@@ -1,0 +1,92 @@
+id: playable_substitute_current_line
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 100
+  height: 30
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "현재 줄만 긴급 수정"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "s"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "a"
+  - wait_ms: 30
+  - send: "p"
+  - wait_ms: 30
+  - send: "i"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "w"
+  - wait_ms: 30
+  - send: "e"
+  - wait_ms: 30
+  - send: "b"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "enter"
+  - wait_screen_contains: "좋습니다. :s는 현재 줄의 작은 치환을 빠르게 처리할 때 유용합니다."
+  - send: "q"
+assert:
+  screen_contains:
+    - "Command: :s/api/web/"
+    - "좋습니다. :s는 현재 줄의 작은 치환을 빠르게 처리할 때 유용합니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"vim-ex-command-substitute-001\""
+  key_trace:
+    - ":"
+    - "s"
+    - "/"
+    - "a"
+    - "p"
+    - "i"
+    - "/"
+    - "w"
+    - "e"
+    - "b"
+    - "/"
+    - "enter"
+    - "q"
+  app_state:
+    buffer: ["web api", "api worker"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    command: ":s/api/web/"
+    status: "succeeded"
+    progress:
+      mission_id: "vim-ex-command-substitute-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

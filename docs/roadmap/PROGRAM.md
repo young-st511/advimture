@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. 중기 플랜의 플랫폼 기반 루프는 완료됐다.
+현재 active slice는 없다. E2E-005까지 완료되어 playable loop의 주요 TUI 경로가 pty E2E로 검증된다.
 
 ## 완료된 초기 세팅
 
@@ -157,6 +157,11 @@ Phase: Vim Learning Foundation
 ### GAMELOOP-001. Playlist progression and autosave loop
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/gameloop-001-playlist-progression.md`
+- 완료일: 2026-05-18
+
+### E2E-005. Playlist and command-mode E2E hardening
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-005-playlist-command-loop.md`
 - 완료일: 2026-05-18
 
 ## Backlog

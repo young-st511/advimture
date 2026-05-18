@@ -1,0 +1,59 @@
+id: playable_command_quit
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 100
+  height: 30
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "command-line에 :q!를 실행하세요"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - wait_ms: 100
+  - send: "q"
+  - wait_ms: 50
+  - send: "!"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_screen_contains: "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
+  - send: "q"
+assert:
+  screen_contains:
+    - "Command: :q!"
+    - "좋습니다. :q!는 저장하지 않고 나가야 할 때 쓰는 탈출구입니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"survival-save-quit-002\""
+  key_trace:
+    - ":"
+    - "q"
+    - "!"
+    - "enter"
+    - "q"
+  app_state:
+    buffer: ["throwaway draft"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    command: ":q!"
+    status: "succeeded"
+    progress:
+      mission_id: "survival-save-quit-002"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

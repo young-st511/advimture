@@ -39,6 +39,7 @@ type terminalConfig struct {
 type setupConfig struct {
 	Home            string `yaml:"home"`
 	AllowUnsafeHome bool   `yaml:"allow_unsafe_home"`
+	ProgressFile    string `yaml:"progress_file"`
 }
 
 type step struct {
@@ -286,6 +287,10 @@ func setupHome(sc scenario) (string, func(), error) {
 		if err != nil {
 			return "", func() {}, err
 		}
+		if err := writeProgressFixture(dir, sc.Setup.ProgressFile); err != nil {
+			_ = os.RemoveAll(dir)
+			return "", func() {}, err
+		}
 		return dir, func() { _ = os.RemoveAll(dir) }, nil
 	}
 	abs, err := filepath.Abs(sc.Setup.Home)
@@ -295,7 +300,28 @@ func setupHome(sc scenario) (string, func(), error) {
 	if err := guardHome(abs, sc.Setup.AllowUnsafeHome); err != nil {
 		return "", func() {}, err
 	}
+	if err := writeProgressFixture(abs, sc.Setup.ProgressFile); err != nil {
+		return "", func() {}, err
+	}
 	return abs, func() {}, nil
+}
+
+func writeProgressFixture(homeDir string, raw string) error {
+	if strings.TrimSpace(raw) == "" {
+		return nil
+	}
+	dir := filepath.Join(homeDir, ".advimture")
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return fmt.Errorf("progress fixture dir: %w", err)
+	}
+	if !json.Valid([]byte(raw)) {
+		return fmt.Errorf("progress fixture must be valid JSON")
+	}
+	path := filepath.Join(dir, "progress.json")
+	if err := os.WriteFile(path, []byte(raw), 0o644); err != nil {
+		return fmt.Errorf("progress fixture write: %w", err)
+	}
+	return nil
 }
 
 func guardHome(path string, allowUnsafe bool) error {

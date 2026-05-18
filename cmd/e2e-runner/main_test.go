@@ -182,6 +182,27 @@ func TestSetupHomeRejectsRealHomeByDefault(t *testing.T) {
 	}
 }
 
+func TestSetupHomeWritesProgressFixture(t *testing.T) {
+	home, cleanup, err := setupHome(scenario{
+		Setup: setupConfig{
+			Home:         "temp",
+			ProgressFile: `{"missions":{"normal-motion-basic-001":{"completed":true}}}`,
+		},
+	})
+	defer cleanup()
+	if err != nil {
+		t.Fatalf("setupHome returned error: %v", err)
+	}
+
+	raw, err := os.ReadFile(filepath.Join(home, ".advimture", "progress.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(raw), "normal-motion-basic-001") {
+		t.Fatalf("progress fixture = %s, want normal-motion-basic-001", raw)
+	}
+}
+
 func TestWriteEvidenceWritesSummary(t *testing.T) {
 	root := t.TempDir()
 	runErr := assertError("screen mismatch")

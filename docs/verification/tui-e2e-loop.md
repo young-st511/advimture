@@ -67,6 +67,8 @@ terminal:
   height: 30
 setup:
   home: temp
+  progress_file: |
+    {"missions":{}}
 steps:
   - send: "esc"
   - send: ":"
@@ -99,6 +101,7 @@ evidence:
 - `key_trace`: runner가 실제 전송한 key trace와 기대 trace의 exact match
 - `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
 - `app_state`: test HOME 내부 app state summary JSON 검증
+- `setup.progress_file`: test HOME의 `.advimture/progress.json`에 미리 쓸 JSON fixture
 
 ### `assert.app_state`
 
@@ -117,7 +120,7 @@ assert:
       grade: "S"
       passed: true
     progress:
-      mission_id: "mission-1"
+      mission_id: "normal-motion-basic-001"
       completed: true
 ```
 
@@ -131,6 +134,7 @@ assert:
 ## Safety Guard
 
 - `setup.home: temp`가 기본 권장값이다.
+- resume 검증은 `setup.progress_file` fixture를 사용해 test HOME에만 progress를 만든다.
 - 실제 사용자 HOME은 기본적으로 거부한다.
 - 기존 progress file이 보이는 HOME도 기본적으로 거부한다.
 - 예외가 꼭 필요할 때만 `setup.allow_unsafe_home: true`를 명시한다.

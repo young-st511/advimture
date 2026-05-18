@@ -188,7 +188,7 @@ func (m Model) State() e2estate.State {
 	}
 }
 
-func (m Model) applyProgressIfSucceeded() {
+func (m *Model) applyProgressIfSucceeded() {
 	if m.saved || m.run.State().Status != exerciseruntime.StatusSucceeded {
 		return
 	}

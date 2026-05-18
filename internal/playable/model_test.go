@@ -114,8 +114,10 @@ func TestPlayableAutosavesEachCompletedExercise(t *testing.T) {
 
 	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
 	model, _ = updateWithSpecialKey(t, model, tea.KeyEsc)
-	if saved == nil || !saved.Missions["survival-save-quit-001"].Completed {
-		t.Fatalf("saved progress = %+v, want survival-save-quit-001 completed", saved)
+	if saved == nil ||
+		!saved.Missions["normal-motion-basic-001"].Completed ||
+		!saved.Missions["survival-save-quit-001"].Completed {
+		t.Fatalf("saved progress = %+v, want both first exercises completed", saved)
 	}
 }
 
