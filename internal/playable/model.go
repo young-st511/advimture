@@ -13,7 +13,6 @@ import (
 	exerciseruntime "github.com/young-st511/advimture/internal/runtime"
 	"github.com/young-st511/advimture/internal/scenario"
 	"github.com/young-st511/advimture/internal/tuiadapter"
-	"github.com/young-st511/advimture/internal/vimengine"
 )
 
 const missionID = "mission-1"
@@ -22,6 +21,7 @@ type Options struct {
 	Progress     *progress.Progress
 	SaveProgress func(*progress.Progress) error
 	E2EStatePath string
+	ContentRoot  string
 	Now          func() time.Time
 }
 
@@ -46,7 +46,7 @@ func New(options Options) Model {
 		p = progress.NewProgress()
 	}
 
-	run, err := newRun()
+	run, err := newRunFromContent(contentRoot(options.ContentRoot))
 	model := Model{
 		run:          run,
 		progress:     p,
@@ -65,13 +65,16 @@ func (m Model) Init() tea.Cmd {
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	if m.err != nil {
-		return m, nil
-	}
-
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		action := tuiadapter.MapInput(msg.String())
+		if m.err != nil {
+			if action.Type == tuiadapter.ActionQuit {
+				_ = m.writeE2EState()
+				return m, tea.Quit
+			}
+			return m, nil
+		}
 		switch action.Type {
 		case tuiadapter.ActionKey:
 			m.run.ApplyKey(action.Key)
@@ -87,6 +90,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			_ = m.writeE2EState()
 			return m, tea.Quit
 		}
+	}
+
+	if m.err != nil {
+		return m, nil
 	}
 
 	_ = m.writeE2EState()
@@ -166,35 +173,60 @@ func (m Model) writeE2EState() error {
 	return e2estate.Write(m.e2eStatePath, m.State())
 }
 
-func newRun() (*scenario.Run, error) {
-	compiled, err := content.CompileExercise(content.ExerciseSpec{
-		ID:               "move-right",
-		CommandClusterID: "normal-motion-basic",
-		Title:            "Move right twice",
-		Initial: content.StateSpec{
-			Lines: []string{"abc"},
-			Mode:  string(vimengine.ModeNormal),
-		},
-		Goal: content.GoalSpec{
-			Cursor: content.CursorSpecPtr(0, 2),
-			Mode:   string(vimengine.ModeNormal),
-		},
-		Hints: []content.HintSpec{
-			{AfterKeys: 1, Text: "Use l twice."},
-		},
-		ExpectedKeys: []string{vimengine.KeyL, vimengine.KeyL},
-		AllowedKeys:  []string{vimengine.KeyH, vimengine.KeyJ, vimengine.KeyK, vimengine.KeyL},
-	})
+func newRunFromContent(root string) (*scenario.Run, error) {
+	library, err := content.LoadLibrary(root)
+	if err != nil {
+		return nil, err
+	}
+	playable := library.PlayableExercises()
+	if len(playable) == 0 {
+		return nil, fmt.Errorf("no playable exercises in %s", root)
+	}
+	exercise := playable[0]
+	scenarioDoc, err := scenarioForExercise(library, exercise.ID)
+	if err != nil {
+		return nil, err
+	}
+	compiled, err := library.CompileExercise(exercise.ID)
 	if err != nil {
 		return nil, err
 	}
 	return scenario.NewRun(scenario.Spec{
-		ID:          "door",
-		Title:       "Open the door",
-		Briefing:    "Reach the marked column.",
-		SuccessText: "Door opened.",
+		ID:          scenarioDoc.ID,
+		Title:       scenarioDoc.MissionTitle,
+		Briefing:    scenarioDoc.Briefing,
+		SuccessText: scenarioDoc.MentorSuccess,
 		Exercise:    compiled,
 	})
+}
+
+func scenarioForExercise(library content.Library, exerciseID string) (content.ScenarioDocument, error) {
+	var selected content.ScenarioDocument
+	for _, scenarioDoc := range library.Scenarios {
+		if scenarioDoc.ExerciseID != exerciseID {
+			continue
+		}
+		if scenarioDoc.EngineSupport != content.EngineSupportImplemented {
+			continue
+		}
+		if scenarioDoc.Status != content.StatusApproved && scenarioDoc.Status != content.StatusImplemented {
+			continue
+		}
+		if selected.ID == "" || scenarioDoc.ID < selected.ID {
+			selected = scenarioDoc
+		}
+	}
+	if selected.ID == "" {
+		return content.ScenarioDocument{}, fmt.Errorf("no playable scenario for exercise %q", exerciseID)
+	}
+	return selected, nil
+}
+
+func contentRoot(root string) string {
+	if root != "" {
+		return root
+	}
+	return "content"
 }
 
 func renderLine(line string, row int, cursorRow int, cursorCol int) string {

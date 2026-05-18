@@ -152,6 +152,25 @@ scenarios:
 	}
 }
 
+func TestLoadLibraryRejectsBlankPlayableScenarioCopy(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "scenarios", "scenarios.yaml"), `
+scenarios:
+  - id: normal-motion-basic-001-scenario
+    status: approved
+    exercise_id: normal-motion-basic-001
+    engine_support: implemented
+    mission_title: Move right
+    briefing: Move right
+    mentor_success: ""
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "mentor_success") {
+		t.Fatalf("LoadLibrary error = %v, want mentor_success", err)
+	}
+}
+
 func TestLoadLibraryRejectsOutOfRangeCursor(t *testing.T) {
 	root := validLibraryFixture(t)
 	writeYAML(t, filepath.Join(root, "exercises", "bad.yaml"), `
@@ -284,6 +303,7 @@ scenarios:
     engine_support: implemented
     mission_title: Move right
     briefing: Move right
+    mentor_success: Done
 `)
 	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
 playlists:

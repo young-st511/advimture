@@ -7,16 +7,16 @@ terminal:
 setup:
   home: temp
 steps:
-  - wait_screen_contains: "Reach the marked column."
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
   - wait_ms: 200
   - send: "l"
   - wait_ms: 100
   - send: "l"
-  - wait_screen_contains: "Door opened."
+  - wait_screen_contains: "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
   - send: "q"
 assert:
   screen_contains:
-    - "Door opened."
+    - "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
     - "Grade: S"
   exit_code: 0
   progress_file_exists: true

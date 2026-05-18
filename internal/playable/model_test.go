@@ -13,12 +13,12 @@ import (
 )
 
 func TestPlayableStartsWithBriefing(t *testing.T) {
-	model := New(Options{})
+	model := New(Options{ContentRoot: contentRootForTest()})
 
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !strings.Contains(model.View(), "Reach the marked column.") {
+	if !strings.Contains(model.View(), "터미널 지도에서 목표 문자까지 커서를 이동하세요.") {
 		t.Fatalf("view = %q, want briefing", model.View())
 	}
 }
@@ -26,7 +26,8 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	saveCalls := 0
 	model := New(Options{
-		Progress: progress.NewProgress(),
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
 		Now: func() time.Time {
 			return time.Unix(10, 0)
 		},
@@ -62,6 +63,7 @@ func TestPlayableWritesE2EState(t *testing.T) {
 	model := New(Options{
 		Progress:     progress.NewProgress(),
 		E2EStatePath: path,
+		ContentRoot:  contentRootForTest(),
 		SaveProgress: func(*progress.Progress) error {
 			return nil
 		},
@@ -79,6 +81,24 @@ func TestPlayableWritesE2EState(t *testing.T) {
 	}
 }
 
+func TestPlayableReportsContentLoadError(t *testing.T) {
+	model := New(Options{ContentRoot: filepath.Join(t.TempDir(), "missing")})
+
+	if !strings.Contains(model.View(), "Playable error:") {
+		t.Fatalf("view = %q, want content load error", model.View())
+	}
+}
+
+func TestPlayableCanQuitFromContentLoadError(t *testing.T) {
+	model := New(Options{ContentRoot: filepath.Join(t.TempDir(), "missing")})
+
+	_, cmd := updateWithKey(t, model, "q")
+
+	if cmd == nil {
+		t.Fatal("cmd = nil, want quit command")
+	}
+}
+
 func updateWithKey(t *testing.T, model Model, key string) (Model, tea.Cmd) {
 	t.Helper()
 
@@ -91,4 +111,8 @@ func updateWithKey(t *testing.T, model Model, key string) (Model, tea.Cmd) {
 		t.Fatalf("updated model type = %T, want playable.Model", updated)
 	}
 	return next, cmd
+}
+
+func contentRootForTest() string {
+	return filepath.Join("..", "..", "content")
 }

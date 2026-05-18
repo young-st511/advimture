@@ -20,6 +20,7 @@ func New() Model {
 			Progress:     p,
 			SaveProgress: progress.Save,
 			E2EStatePath: e2eStatePath(),
+			ContentRoot:  "content",
 		}),
 	}
 }

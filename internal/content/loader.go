@@ -395,6 +395,17 @@ func (l Library) validateScenarioDocument(scenario ScenarioDocument) error {
 	if isApprovedLike(scenario.Status) && !isApprovedLike(exercise.Status) {
 		return fmt.Errorf("approved scenario %q references non-approved exercise %q", scenario.ID, exercise.ID)
 	}
+	if isApprovedLike(scenario.Status) && scenario.EngineSupport == EngineSupportImplemented {
+		if strings.TrimSpace(scenario.MissionTitle) == "" {
+			return fmt.Errorf("playable scenario %q mission_title is required", scenario.ID)
+		}
+		if strings.TrimSpace(scenario.Briefing) == "" {
+			return fmt.Errorf("playable scenario %q briefing is required", scenario.ID)
+		}
+		if strings.TrimSpace(scenario.MentorSuccess) == "" {
+			return fmt.Errorf("playable scenario %q mentor_success is required", scenario.ID)
+		}
+	}
 	return nil
 }
 

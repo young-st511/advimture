@@ -12,11 +12,13 @@
 | 4 | SCENARIO-001 | completed | 첫 5분 시나리오 워크플로우로 content loader 요구사항 발견 |
 | 5 | VIM-CURRICULUM-001 | completed | Vim curriculum map과 scenario production harness |
 | 6 | CONTENT-001 | completed | 새 content schema용 YAML loader |
-| 7 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
-| 8 | SURVIVAL-001 | planned | `esc`, `:q!`, `:wq` 생존/종료 루프 |
-| 9 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
-| 10 | EXCMD-001 | planned | `:` 명령어, substitute, range command 기반 |
-| 11 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 자동 저장, 피드백 구조 |
+| 7 | PLAY-002 | completed | hardcoded playable 제거, file-backed playable |
+| 8 | CONTENT-002 | planned | replay/coverage validator |
+| 9 | VIM-012 | planned | 다음 command cluster: `w/b/e` word motion |
+| 10 | SURVIVAL-001 | planned | `esc`, `:q!`, `:wq` 생존/종료 루프 |
+| 11 | NAV-001 | planned | 후반 navigation 확장: `gg`, `G`, line/file motion |
+| 12 | EXCMD-001 | planned | `:` 명령어, substitute, range command 기반 |
+| 13 | GAMELOOP-001 | planned | 반복 학습 루프, unlock, 자동 저장, 피드백 구조 |
 
 ## 루프별 출구 조건
 
@@ -24,7 +26,7 @@
 |----|----------|-------------|------|---------------|
 | VIM-001 | curriculum defaults 결정 완료 | 첫 5분 command cluster approval packet | `rg`, `go test ./...` | completed: 사용자 승인 후 3개 cluster를 `approved`로 승격했다. |
 | CONTENT-001 | VIM-001 승인 완료 | root `content/` YAML fixture, loader, validator | `go test ./internal/content/...`, `go test ./...` | completed: draft/planned 콘텐츠는 로드하되 playable 후보에서 제외한다. |
-| PLAY-002 | CONTENT-001 통과 | hardcoded playable 제거, file-backed playable | `go test ./internal/playable/...`, `make e2e-smoke` | screen assertion만 믿지 않고 app state/progress를 함께 본다. |
+| PLAY-002 | CONTENT-001 통과 | hardcoded playable 제거, file-backed playable | `go test ./internal/playable/...`, `make e2e-smoke` | completed: screen assertion과 app state/progress를 함께 검증했다. |
 | CONTENT-002 | file-backed playable 통과 | replay/coverage validator | content replay tests, coverage report | `coverage_required`와 `replay_status` 없이는 approved/playable 승격 금지. |
 | VIM-012 | word-motion cluster approved | `w/b/e` engine, oracle fixtures | `go test ./internal/vimengine/...`, oracle comparison | word boundary, 공백, 문장부호 edge case를 먼저 고정한다. |
 | EXERCISE-001 | VIM-012 통과 | word motion exercise set | replay validator, verifier OK | `w`, `b`, `e`가 각각 optimal trace에 등장해야 한다. |
@@ -44,4 +46,4 @@
 
 ## 현재 판단
 
-현재 active slice는 없다. 다음 작업은 **PLAY-002 file-backed playable**이며, CONTENT-001의 `LoadLibrary`와 root `content/` YAML fixture를 입력으로 사용한다.
+현재 active slice는 없다. 다음 작업 후보는 **CONTENT-002 replay/coverage validator**다. 이후 `VIM-012 w/b/e word motion`으로 넘어간다.
