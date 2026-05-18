@@ -21,6 +21,20 @@ steps:
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
+  - wait_screen_contains: "표시 지점을 오른쪽으로 지나쳤습니다"
+  - wait_ms: 100
+  - send: "h"
+  - wait_ms: 50
+  - send: "h"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "로그를 한 줄 더 내려가 버렸습니다"
+  - wait_ms: 100
+  - send: "k"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
   - wait_screen_contains: "입력 모드에 커서가 묶였습니다"
   - wait_ms: 100
   - send: "esc"
@@ -193,13 +207,15 @@ assert:
   screen_contains:
     - "좋습니다. range를 붙이면 필요한 구간만 조심스럽게 고칠 수 있습니다."
     - "Command: :2,3s/error/ok/"
-    - "Exercise: 15/15"
+    - "Exercise: 17/17"
     - "Playlist complete"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"normal-motion-basic-001\""
     - "\"normal-motion-basic-002\""
+    - "\"normal-motion-basic-003\""
+    - "\"normal-motion-basic-004\""
     - "\"survival-save-quit-001\""
     - "\"survival-save-quit-002\""
     - "\"survival-save-quit-003\""

@@ -18,6 +18,8 @@ ID: `first-5-minute`
 
 목적: 플레이어가 Vim에서 당황하지 않고, Normal mode에서 커서를 움직이며, 짧은 목표를 정확히 달성하는 첫 성공 경험을 만든다.
 
+> 현재 구현 메모: 이 섹션의 beat 예시는 CONTENT-001 이전 discovery 기록이다. 현재 playable content의 canonical source는 `content/` YAML과 `docs/gameplay/spec.md`이며, `first-5-minute` playlist는 `h/j/k/l`, survival, word motion, file navigation, substitute까지 포함한 17개 replay-pass exercise로 확장됐다.
+
 ### Beat 1. Panic Exit
 
 ```yaml

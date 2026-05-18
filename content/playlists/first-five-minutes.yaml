@@ -17,6 +17,18 @@ playlists:
         exercise_id: normal-motion-basic-002
         scenario_id: normal-motion-basic-002-scenario
         engine_support: implemented
+      - id: first-5-minute-003h
+        role: spatial_recovery_left
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-003
+        scenario_id: normal-motion-basic-003-scenario
+        engine_support: implemented
+      - id: first-5-minute-003k
+        role: spatial_recovery_up
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-004
+        scenario_id: normal-motion-basic-004-scenario
+        engine_support: implemented
       - id: first-5-minute-003a
         role: survival_escape
         command_cluster: survival-save-quit

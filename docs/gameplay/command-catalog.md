@@ -227,7 +227,7 @@ command_cluster:
 
 ## First 5-Minute Discovery Notes
 
-- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
+- `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
 - `survival-save-quit`은 command-line 입력과 app exit semantics를 분리해 구현됐다. 실제 파일 저장/폐기는 아직 수행하지 않는다.
 - `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
 - `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
@@ -240,7 +240,7 @@ command_cluster:
 
 추천:
 
-- `normal-motion-basic`: `approved`. 단 `h`, `k` coverage exercise를 후속 루프에서 반드시 보강한다.
+- `normal-motion-basic`: `approved`, `engine_support: implemented`. `h/j/k/l` coverage exercise가 모두 replay gate를 통과한다.
 - `survival-save-quit`: `approved`, `engine_support: implemented`. 단 실제 파일 저장/폐기는 후속 앱/파일 작업 루프에서만 다룬다.
 - `word-motion-basic`: `approved`, `engine_support: implemented`. 단 exercise/scenario playable 승격은 후속 루프에서 진행한다.
 

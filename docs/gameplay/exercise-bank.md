@@ -247,37 +247,75 @@ exercise:
 ```yaml
 exercise:
   id: normal-motion-basic-003
-  status: draft
+  status: approved
   command_cluster: normal-motion-basic
   engine_support: implemented
-  trained_commands: ["j", "l"]
-  reviewed_commands: ["h", "k"]
-  mistake_focus: ["losing row/column orientation"]
-  replay_status: pending
-  title: 짧은 경로 조합하기
-  goal_for_player: "커서를 X 표시 위로 이동하세요."
+  trained_commands: ["h"]
+  reviewed_commands: ["l"]
+  mistake_focus: ["왼쪽으로 돌아갈 때 h와 l 방향을 헷갈린다."]
+  replay_status: pass
+  title: 줄 앞쪽 단서로 되돌아가기
+  goal_for_player: "커서를 첫 번째 a 위로 이동하세요."
   initial_state:
     mode: NORMAL
     cursor:
       row: 0
+      col: 2
+    buffer: |
+      abc
+  target_state:
+    mode: NORMAL
+    cursor:
+      row: 0
+      col: 0
+  optimal_keys: "h h"
+  allowed_keys: ["h", "j", "k", "l", "esc"]
+  forbidden_keys: ["right", "left", "up", "down"]
+  hints:
+    - "목표는 왼쪽입니다. 오른쪽 이동과 반대 방향을 떠올려보세요."
+    - "`h`는 왼쪽으로 한 칸 이동합니다."
+  grading:
+    pass_condition: "cursor.row == 0 && cursor.col == 0"
+    optimal_key_count: 2
+```
+
+### normal-motion-basic-004
+
+```yaml
+exercise:
+  id: normal-motion-basic-004
+  status: approved
+  command_cluster: normal-motion-basic
+  engine_support: implemented
+  trained_commands: ["k"]
+  reviewed_commands: ["j"]
+  mistake_focus: ["위로 올라갈 때 j와 k 방향을 헷갈린다."]
+  replay_status: pass
+  title: 위쪽 로그 줄로 복귀하기
+  goal_for_player: "커서를 WARN 표시의 W 위로 이동하세요."
+  initial_state:
+    mode: NORMAL
+    cursor:
+      row: 2
       col: 0
     buffer: |
-      .....
-      ..X..
+      INFO boot
+      WARN disk
+      INFO done
   target_state:
     mode: NORMAL
     cursor:
       row: 1
-      col: 2
-  optimal_keys: "j l l"
+      col: 0
+  optimal_keys: "k"
   allowed_keys: ["h", "j", "k", "l", "esc"]
   forbidden_keys: ["right", "left", "up", "down"]
   hints:
-    - "아래로 이동한 뒤 오른쪽으로 이동하면 됩니다."
-    - "`j` 다음 `l`을 두 번 눌러보세요."
+    - "목표는 위쪽 줄입니다. 아래 이동과 반대 방향을 떠올려보세요."
+    - "`k`는 위로 한 줄 이동합니다."
   grading:
-    pass_condition: "cursor.row == 1 && cursor.col == 2"
-    optimal_key_count: 3
+    pass_condition: "cursor.row == 1 && cursor.col == 0"
+    optimal_key_count: 1
 ```
 
 ### word-motion-basic-001

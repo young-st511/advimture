@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. 첫 플레이팩은 15개 playable exercise를 pty E2E로 처음부터 끝까지 완주 검증한다.
+현재 active slice는 없다. 첫 플레이팩은 17개 playable exercise를 pty E2E로 처음부터 끝까지 완주 검증한다.
 
 ## 완료된 초기 세팅
 
@@ -172,6 +172,11 @@ Phase: Vim Learning Foundation
 ### SCENARIO-FLOW-001. Reusable scenario flow and first playpack polish
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/scenario-flow-001-first-playpack-polish.md`
+- 완료일: 2026-05-18
+
+### SCENARIO-FLOW-002. First playpack scenario completion
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/scenario-flow-002-first-playpack-completion.md`
 - 완료일: 2026-05-18
 
 ## Backlog

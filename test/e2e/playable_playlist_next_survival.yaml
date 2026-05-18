@@ -18,6 +18,16 @@ steps:
   - send: "j"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
+  - wait_screen_contains: "표시 지점을 오른쪽으로 지나쳤습니다"
+  - send: "h"
+  - wait_ms: 50
+  - send: "h"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+  - wait_screen_contains: "로그를 한 줄 더 내려가 버렸습니다"
+  - send: "k"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
   - wait_screen_contains: "입력 모드에 커서가 묶였습니다"
   - send: "esc"
   - wait_screen_contains: "좋습니다. 터미널에서 당황했을 때 첫 수습은 esc로 Normal mode를 되찾는 것입니다."
@@ -25,19 +35,26 @@ steps:
 assert:
   screen_contains:
     - "좋습니다. 터미널에서 당황했을 때 첫 수습은 esc로 Normal mode를 되찾는 것입니다."
-    - "Exercise: 3/15"
+    - "Exercise: 5/17"
     - "Grade: S"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"normal-motion-basic-001\""
     - "\"normal-motion-basic-002\""
+    - "\"normal-motion-basic-003\""
+    - "\"normal-motion-basic-004\""
     - "\"survival-save-quit-001\""
   key_trace:
     - "l"
     - "l"
     - "enter"
     - "j"
+    - "enter"
+    - "h"
+    - "h"
+    - "enter"
+    - "k"
     - "enter"
     - "esc"
     - "q"

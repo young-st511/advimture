@@ -19,11 +19,11 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 5 {
 		t.Fatalf("command clusters = %d, want 5", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 15 {
-		t.Fatalf("exercises = %d, want 15", len(lib.Exercises))
+	if len(lib.Exercises) != 17 {
+		t.Fatalf("exercises = %d, want 17", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 15 {
-		t.Fatalf("scenarios = %d, want 15", len(lib.Scenarios))
+	if len(lib.Scenarios) != 17 {
+		t.Fatalf("scenarios = %d, want 17", len(lib.Scenarios))
 	}
 	if len(lib.Playlists) != 1 {
 		t.Fatalf("playlists = %d, want 1", len(lib.Playlists))
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 15 {
-		t.Fatalf("playable exercises = %d, want 15: %+v", len(playable), playable)
+	if len(playable) != 17 {
+		t.Fatalf("playable exercises = %d, want 17: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "normal-motion-basic-001" {
 		t.Fatalf("playable[0].ID = %q, want normal-motion-basic-001", playable[0].ID)
@@ -46,6 +46,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	assertPlayableIDs(t, playable, []string{
 		"normal-motion-basic-001",
 		"normal-motion-basic-002",
+		"normal-motion-basic-003",
+		"normal-motion-basic-004",
 		"survival-save-quit-001",
 		"survival-save-quit-002",
 		"survival-save-quit-003",
@@ -92,7 +94,7 @@ func TestCompileLoadedExerciseMatchesPlayableTarget(t *testing.T) {
 	assertStrings(t, compiled.AllowedKeys, []string{"h", "j", "k", "l", "esc"})
 }
 
-func TestCoverageReportsMissingCommandsWithoutFailingLoad(t *testing.T) {
+func TestCoverageReportsNormalMotionCommandsCovered(t *testing.T) {
 	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
 	if err != nil {
 		t.Fatalf("LoadLibrary returned error: %v", err)
@@ -106,8 +108,10 @@ func TestCoverageReportsMissingCommandsWithoutFailingLoad(t *testing.T) {
 		}
 	}
 
-	assertStrings(t, normal.Covered, []string{"j", "l"})
-	assertStrings(t, normal.Missing, []string{"h", "k"})
+	assertStrings(t, normal.Covered, []string{"h", "j", "k", "l"})
+	if len(normal.Missing) != 0 {
+		t.Fatalf("normal motion missing coverage = %+v, want empty", normal.Missing)
+	}
 }
 
 func TestCoverageReportsWordMotionCommandsCovered(t *testing.T) {

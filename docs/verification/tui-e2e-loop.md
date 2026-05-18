@@ -102,7 +102,9 @@ evidence:
 - `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
 - `app_state`: test HOME 내부 app state summary JSON 검증
 - `setup.progress_file`: test HOME의 `.advimture/progress.json`에 미리 쓸 JSON fixture
-- `playable_full_first_five_minute`: 첫 5분 playable playlist 전체 완주 E2E
+- `playable_full_first_five_minute`: 17개 exercise로 구성된 첫 5분 playable playlist 전체 완주 E2E
+
+`wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 기다린다. 반복되는 UI 문구를 사용할 수는 있지만, 같은 키를 빠르게 반복 입력할 때는 Bubble Tea가 입력을 묶어 받을 수 있으므로 사람 입력에 가까운 짧은 `wait_ms`를 둔다.
 
 ### `assert.app_state`
 

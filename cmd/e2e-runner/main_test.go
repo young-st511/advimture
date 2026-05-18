@@ -1,11 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 )
 
 func TestKeyBytes(t *testing.T) {
@@ -33,6 +36,38 @@ func TestCleanTerminal(t *testing.T) {
 	}
 	if strings.Contains(clean, "\x1b") {
 		t.Fatalf("cleaned output still contains escape sequence: %q", clean)
+	}
+}
+
+func TestWaitForScreenIgnoresOutputBeforeOffset(t *testing.T) {
+	var raw bytes.Buffer
+	raw.WriteString("old screen\nNext: enter\n")
+	var mu sync.Mutex
+
+	_, err := waitForScreen(&mu, &raw, "Next: enter", time.Now().Add(20*time.Millisecond), raw.Len())
+	if err == nil || !strings.Contains(err.Error(), "timed out") {
+		t.Fatalf("waitForScreen error = %v, want timeout for stale output", err)
+	}
+}
+
+func TestWaitForScreenFindsOutputAfterOffset(t *testing.T) {
+	var raw bytes.Buffer
+	raw.WriteString("old screen\n")
+	var mu sync.Mutex
+	offset := raw.Len()
+	go func() {
+		time.Sleep(10 * time.Millisecond)
+		mu.Lock()
+		defer mu.Unlock()
+		raw.WriteString("new screen\nNext: enter\n")
+	}()
+
+	nextOffset, err := waitForScreen(&mu, &raw, "Next: enter", time.Now().Add(500*time.Millisecond), offset)
+	if err != nil {
+		t.Fatalf("waitForScreen returned error: %v", err)
+	}
+	if nextOffset <= offset {
+		t.Fatalf("nextOffset = %d, want > %d", nextOffset, offset)
 	}
 }
 

@@ -242,13 +242,16 @@ func runScenario(sc scenario) (runResult, error) {
 
 	var trace []string
 	deadline := time.Now().Add(time.Duration(sc.Timeout) * time.Millisecond)
+	waitOffset := 0
 
 	for _, st := range sc.Steps {
 		if st.WaitScreenContains != "" {
-			if err := waitForScreen(&mu, &raw, st.WaitScreenContains, deadline); err != nil {
+			nextOffset, err := waitForScreen(&mu, &raw, st.WaitScreenContains, deadline, waitOffset)
+			if err != nil {
 				terminate(cmd)
 				return collectResult(sc, &mu, &raw, homeDir, trace, exitCode(cmd)), err
 			}
+			waitOffset = nextOffset
 		}
 		if st.WaitMs > 0 {
 			time.Sleep(time.Duration(st.WaitMs) * time.Millisecond)
@@ -348,17 +351,21 @@ func guardHome(path string, allowUnsafe bool) error {
 	return nil
 }
 
-func waitForScreen(mu *sync.Mutex, raw *bytes.Buffer, want string, deadline time.Time) error {
+func waitForScreen(mu *sync.Mutex, raw *bytes.Buffer, want string, deadline time.Time, offset int) (int, error) {
 	for time.Now().Before(deadline) {
 		mu.Lock()
-		clean := cleanTerminal(raw.Bytes())
+		snapshot := append([]byte(nil), raw.Bytes()...)
 		mu.Unlock()
+		if offset < 0 || offset > len(snapshot) {
+			offset = 0
+		}
+		clean := cleanTerminal(snapshot[offset:])
 		if strings.Contains(clean, want) {
-			return nil
+			return len(snapshot), nil
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
-	return fmt.Errorf("timed out waiting for screen to contain %q", want)
+	return offset, fmt.Errorf("timed out waiting for screen to contain %q", want)
 }
 
 func waitWithTimeout(cmd *exec.Cmd, timeout time.Duration) error {

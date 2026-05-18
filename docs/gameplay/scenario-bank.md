@@ -148,19 +148,39 @@ scenario:
 ```yaml
 scenario:
   id: normal-motion-basic-003-scenario
-  status: draft
+  status: approved
   exercise_id: normal-motion-basic-003
   engine_support: implemented
-  learning_reinforcement: "`j`와 `l`을 조합해 행과 열을 맞춘다."
+  learning_reinforcement: "`h`는 Normal mode에서 왼쪽으로 이동한다."
   does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
-  mission_title: "좌표 맞추기"
-  briefing: "터미널 지도에서 X 표시로 커서를 옮기세요. 짧은 이동을 조합하면 됩니다."
-  context_role: "터미널 지도"
-  mentor_success: "좋아요. 짧은 이동을 조합해서 정확한 좌표에 도착했습니다."
-  mentor_failure: "한 번에 멀리 가려 하지 말고, 아래 이동과 오른쪽 이동을 나누어 생각하세요."
+  mission_title: "되돌아온 커서 정렬"
+  briefing: "표시 지점을 오른쪽으로 지나쳤습니다. 화살표 키를 쓰지 말고 왼쪽으로 돌아가 첫 칸 단서를 다시 잡으세요."
+  context_role: "짧은 터미널 지도"
+  mentor_success: "좋습니다. `h`는 오른쪽으로 지나쳤을 때 커서를 왼쪽으로 되돌리는 기본 이동입니다."
+  mentor_failure: "지금은 왼쪽으로 되돌아가는 연습입니다. `l`의 반대 방향을 떠올려보세요."
   story_constraints:
-    - "긴 거리 반복 입력을 요구하지 않는다."
-    - "단어 이동이나 검색을 아직 요구하지 않는다."
+    - "긴 거리 이동을 요구하지 않는다."
+    - "`h`의 왼쪽 방향 학습에 집중한다."
+```
+
+### normal-motion-basic-004-scenario
+
+```yaml
+scenario:
+  id: normal-motion-basic-004-scenario
+  status: approved
+  exercise_id: normal-motion-basic-004
+  engine_support: implemented
+  learning_reinforcement: "`k`는 Normal mode에서 위 줄로 이동한다."
+  does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
+  mission_title: "위쪽 경고 줄 복귀"
+  briefing: "로그를 한 줄 더 내려가 버렸습니다. 아래쪽 INFO에서 위쪽 WARN 줄로 다시 올라가세요."
+  context_role: "짧은 시스템 로그"
+  mentor_success: "좋습니다. `k`는 아래로 지나쳤을 때 위쪽 줄의 단서를 다시 잡는 기본 이동입니다."
+  mentor_failure: "목표는 위쪽 줄입니다. `j`의 반대 방향으로 한 줄 올라가세요."
+  story_constraints:
+    - "편집이나 검색을 요구하지 않는다."
+    - "`k`의 위 방향 학습에 집중한다."
 ```
 
 ### word-motion-basic-001-scenario

@@ -215,10 +215,10 @@ verification_report:
 cluster_id
   commands: [h, j, k, l]
   trained_in_optimal_trace:
-    h: [normal-motion-basic-004]
-    j: [normal-motion-basic-002, normal-motion-basic-003]
-    k: [normal-motion-basic-005]
-    l: [normal-motion-basic-001, normal-motion-basic-003]
+    h: [normal-motion-basic-003]
+    j: [normal-motion-basic-002]
+    k: [normal-motion-basic-004]
+    l: [normal-motion-basic-001]
   edge_cases:
     - line boundary
     - short line clamp
