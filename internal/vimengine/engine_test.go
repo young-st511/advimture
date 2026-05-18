@@ -83,9 +83,68 @@ func TestVerticalMovementHandlesEmptyLines(t *testing.T) {
 	assertApply(t, engine, KeyJ, 2, 1, EventMoved)
 }
 
+func TestWordMotionMovesByWordStarts(t *testing.T) {
+	engine := New([]string{"service api backend enabled"})
+
+	assertApply(t, engine, KeyW, 0, 8, EventMoved)
+	assertApply(t, engine, KeyW, 0, 12, EventMoved)
+	assertApply(t, engine, KeyB, 0, 8, EventMoved)
+	assertApply(t, engine, KeyE, 0, 10, EventMoved)
+}
+
+func TestWordMotionTreatsPunctuationAsWords(t *testing.T) {
+	engine := New([]string{"foo.bar baz"})
+
+	assertApply(t, engine, KeyW, 0, 3, EventMoved)
+	assertApply(t, engine, KeyW, 0, 4, EventMoved)
+	assertApply(t, engine, KeyE, 0, 6, EventMoved)
+	assertApply(t, engine, KeyW, 0, 8, EventMoved)
+}
+
+func TestWordMotionCrossesLineBoundaries(t *testing.T) {
+	engine := New([]string{"abc", "", "  def ghi"})
+
+	assertApply(t, engine, KeyW, 2, 2, EventMoved)
+	assertApply(t, engine, KeyE, 2, 4, EventMoved)
+	assertApply(t, engine, KeyW, 2, 6, EventMoved)
+	assertApply(t, engine, KeyB, 2, 2, EventMoved)
+	assertApply(t, engine, KeyB, 0, 0, EventMoved)
+}
+
+func TestWordMotionReportsBoundaryAtDocumentEdges(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	assertApply(t, engine, KeyB, 0, 0, EventBoundary)
+	assertApply(t, engine, KeyE, 0, 2, EventMoved)
+	assertApply(t, engine, KeyE, 0, 2, EventBoundary)
+	assertApply(t, engine, KeyW, 0, 2, EventBoundary)
+}
+
+func TestWordMotionUnsupportedOutsideNormalMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeInsert,
+		Lines: []string{"alpha beta"},
+	})
+
+	result := engine.Apply(KeyW)
+
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
+		t.Fatalf("Cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
+func TestWordMotionUpdatesDesiredColumnForVerticalMovement(t *testing.T) {
+	engine := New([]string{"alpha beta", "xy", "0123456789"})
+
+	assertApply(t, engine, KeyW, 0, 6, EventMoved)
+	assertApply(t, engine, KeyJ, 1, 1, EventMoved)
+	assertApply(t, engine, KeyJ, 2, 6, EventMoved)
+}
+
 func TestUnsupportedKeyDoesNotMove(t *testing.T) {
 	engine := New([]string{"abc"})
-	result := engine.Apply("w")
+	result := engine.Apply("x")
 
 	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
 		t.Fatalf("Cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)

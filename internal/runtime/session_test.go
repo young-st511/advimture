@@ -58,11 +58,11 @@ func TestUnsupportedKeyIsRecorded(t *testing.T) {
 		},
 	})
 
-	result := session.ApplyKey("w")
+	result := session.ApplyKey("x")
 	if result.State.Status != StatusRunning {
 		t.Fatalf("status = %q, want %q", result.State.Status, StatusRunning)
 	}
-	assertTrace(t, result.State.KeyTrace, []string{"w"})
+	assertTrace(t, result.State.KeyTrace, []string{"x"})
 	if len(result.Vim.Events) != 1 || result.Vim.Events[0].Type != vimengine.EventUnsupportedKey {
 		t.Fatalf("vim events = %+v, want unsupported key event", result.Vim.Events)
 	}

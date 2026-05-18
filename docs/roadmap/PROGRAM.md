@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice 없음. 다음 후보는 `VIM-012`다.
+현재 active slice 없음. 다음 후보는 `EXERCISE-001`이다.
 
 ## 완료된 초기 세팅
 
@@ -127,6 +127,11 @@ Phase: Vim Learning Foundation
 ### CONTENT-002. Replay and coverage validator
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/content-002-replay-coverage-validator.md`
+- 완료일: 2026-05-18
+
+### VIM-012. Word motion engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-012-word-motion-engine.md`
 - 완료일: 2026-05-18
 
 ## Backlog

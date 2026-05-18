@@ -88,6 +88,32 @@ func TestCompareReportsLineMismatch(t *testing.T) {
 	assertMismatch(t, result.Mismatches, "lines")
 }
 
+func TestRunCaseCanLockWordMotionFixture(t *testing.T) {
+	testCase := Case{
+		Name:    "word-motion-starts",
+		Initial: vimengine.NewState([]string{"service api backend enabled"}),
+		Keys:    []string{vimengine.KeyW, vimengine.KeyW, vimengine.KeyE},
+	}
+	executor := fakeExecutor{
+		state: vimengine.State{
+			Mode:  vimengine.ModeNormal,
+			Lines: []string{"service api backend enabled"},
+			Cursor: vimengine.Cursor{
+				Row: 0,
+				Col: 18,
+			},
+		},
+	}
+
+	result, err := RunCase(context.Background(), executor, testCase)
+	if err != nil {
+		t.Fatalf("RunCase returned error: %v", err)
+	}
+	if !result.Matched {
+		t.Fatalf("Matched = false, mismatches = %+v", result.Mismatches)
+	}
+}
+
 type fakeExecutor struct {
 	state vimengine.State
 	err   error

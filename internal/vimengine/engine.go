@@ -1,6 +1,9 @@
 package vimengine
 
-import "unicode/utf8"
+import (
+	"unicode"
+	"unicode/utf8"
+)
 
 type Mode string
 
@@ -16,6 +19,9 @@ const (
 	KeyJ   = "j"
 	KeyK   = "k"
 	KeyL   = "l"
+	KeyW   = "w"
+	KeyB   = "b"
+	KeyE   = "e"
 )
 
 type Cursor struct {
@@ -139,6 +145,12 @@ func Apply(state State, key string) Result {
 		return moveVertical(next, key, 1)
 	case KeyK:
 		return moveVertical(next, key, -1)
+	case KeyW:
+		return moveWordForward(next, key)
+	case KeyB:
+		return moveWordBackward(next, key)
+	case KeyE:
+		return moveWordEnd(next, key)
 	default:
 		return Result{
 			State: copyState(next),
@@ -197,6 +209,175 @@ func moveVertical(state State, key string, delta int) Result {
 		State: copyState(next),
 		Events: []Event{{
 			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+type cellClass int
+
+const (
+	cellSpace cellClass = iota
+	cellKeyword
+	cellSymbol
+)
+
+type documentCell struct {
+	row   int
+	col   int
+	class cellClass
+}
+
+func moveWordForward(state State, key string) Result {
+	cells := documentCells(state.Lines)
+	index, exact := cellIndex(cells, state.Cursor)
+	if len(cells) == 0 {
+		return boundary(state, key)
+	}
+	if exact && cells[index].class != cellSpace {
+		index = endOfWord(cells, index) + 1
+	}
+	target, ok := nextWordStart(cells, index)
+	if !ok {
+		return boundary(state, key)
+	}
+	return moveToCell(state, key, cells[target])
+}
+
+func moveWordBackward(state State, key string) Result {
+	cells := documentCells(state.Lines)
+	index, exact := cellIndex(cells, state.Cursor)
+	if len(cells) == 0 {
+		return boundary(state, key)
+	}
+	if exact && cells[index].class != cellSpace && !isWordStart(cells, index) {
+		return moveToCell(state, key, cells[startOfWord(cells, index)])
+	}
+	index--
+	for index >= 0 && cells[index].class == cellSpace {
+		index--
+	}
+	if index < 0 {
+		return boundary(state, key)
+	}
+	return moveToCell(state, key, cells[startOfWord(cells, index)])
+}
+
+func moveWordEnd(state State, key string) Result {
+	cells := documentCells(state.Lines)
+	index, exact := cellIndex(cells, state.Cursor)
+	if len(cells) == 0 {
+		return boundary(state, key)
+	}
+	if exact && cells[index].class != cellSpace {
+		end := endOfWord(cells, index)
+		if end > index {
+			return moveToCell(state, key, cells[end])
+		}
+		index = end + 1
+	}
+	start, ok := nextWordStart(cells, index)
+	if !ok {
+		return boundary(state, key)
+	}
+	return moveToCell(state, key, cells[endOfWord(cells, start)])
+}
+
+func documentCells(lines []string) []documentCell {
+	var cells []documentCell
+	for row, line := range lines {
+		col := 0
+		for _, r := range line {
+			cells = append(cells, documentCell{
+				row:   row,
+				col:   col,
+				class: classifyRune(r),
+			})
+			col++
+		}
+	}
+	return cells
+}
+
+func classifyRune(r rune) cellClass {
+	if unicode.IsSpace(r) {
+		return cellSpace
+	}
+	if unicode.IsLetter(r) || unicode.IsDigit(r) || r == '_' {
+		return cellKeyword
+	}
+	return cellSymbol
+}
+
+func cellIndex(cells []documentCell, cursor Cursor) (int, bool) {
+	for index, cell := range cells {
+		if cell.row == cursor.Row && cell.col == cursor.Col {
+			return index, true
+		}
+		if cell.row > cursor.Row || (cell.row == cursor.Row && cell.col > cursor.Col) {
+			return index, false
+		}
+	}
+	return len(cells), false
+}
+
+func nextWordStart(cells []documentCell, index int) (int, bool) {
+	for index < len(cells) {
+		if cells[index].class != cellSpace {
+			return index, true
+		}
+		index++
+	}
+	return 0, false
+}
+
+func startOfWord(cells []documentCell, index int) int {
+	for index > 0 && sameWord(cells[index-1], cells[index]) {
+		index--
+	}
+	return index
+}
+
+func endOfWord(cells []documentCell, index int) int {
+	for index+1 < len(cells) && sameWord(cells[index], cells[index+1]) {
+		index++
+	}
+	return index
+}
+
+func isWordStart(cells []documentCell, index int) bool {
+	return cells[index].class != cellSpace && (index == 0 || !sameWord(cells[index-1], cells[index]))
+}
+
+func sameWord(left documentCell, right documentCell) bool {
+	if left.class == cellSpace || right.class == cellSpace || left.class != right.class {
+		return false
+	}
+	return left.row == right.row && left.col+1 == right.col
+}
+
+func moveToCell(state State, key string, cell documentCell) Result {
+	next := copyState(state)
+	if next.Cursor.Row == cell.row && next.Cursor.Col == cell.col {
+		return boundary(next, key)
+	}
+	next.Cursor.Row = cell.row
+	next.Cursor.Col = cell.col
+	next.Cursor.DesiredCol = cell.col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func boundary(state State, key string) Result {
+	return Result{
+		State: copyState(state),
+		Events: []Event{{
+			Type: EventBoundary,
 			Key:  key,
 		}},
 	}

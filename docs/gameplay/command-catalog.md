@@ -130,7 +130,7 @@ command_cluster:
   id: word-motion-basic
   status: approved
   compatibility_tier: exact
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-1-movement
   title: 단어 단위 이동
   commands: ["w", "b", "e"]
@@ -149,7 +149,7 @@ command_cluster:
     - 단어 시작, 단어 끝, 이전 단어의 차이를 구분하지 못한다.
     - 특수문자와 공백에서 커서가 어디로 가는지 예측하지 못한다.
   compatibility_notes:
-    - keyword 경계, 공백, 문장부호 처리는 oracle test로 고정한 뒤 구현한다.
+    - keyword 경계, 공백, 문장부호, 줄 경계는 `internal/vimengine` 단위 테스트와 oracle-style fixture로 고정한다.
   design_notes:
     - `hjkl` 대비 키 입력 수가 줄어드는 문항을 반드시 포함한다.
     - 같은 줄 안 이동과 줄 경계 이동을 별도 exercise로 분리한다.
@@ -157,9 +157,9 @@ command_cluster:
 
 ## First 5-Minute Discovery Notes
 
-- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 유일한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
+- `normal-motion-basic`은 현재 엔진과 playable path에서 바로 파일 기반 콘텐츠로 승격 가능한 cluster다. 다만 현재 draft exercise는 `h`, `k` optimal coverage가 부족하므로 playable 확장 전 보강이 필요하다.
 - `survival-save-quit`은 첫 경험의 불안감을 줄이는 데 중요하지만 command-line 입력과 app exit semantics가 필요하다.
-- `word-motion-basic`은 첫 5분 후반의 효율성 체감에 적합하지만 `w/b/e` engine support와 oracle comparison이 먼저 필요하다.
+- `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001
@@ -170,6 +170,6 @@ command_cluster:
 
 - `normal-motion-basic`: `approved`. 단 `h`, `k` coverage exercise를 후속 루프에서 반드시 보강한다.
 - `survival-save-quit`: `approved`, `engine_support: planned`.
-- `word-motion-basic`: `approved`, `engine_support: planned`.
+- `word-motion-basic`: `approved`, `engine_support: implemented`. 단 exercise/scenario playable 승격은 후속 루프에서 진행한다.
 
 주의: `approved`는 학습 우선순위 승인이고, `implemented` 또는 playable 연결을 의미하지 않는다.
