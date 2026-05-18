@@ -95,13 +95,18 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyZero}
 	case "$":
 		return Action{Type: ActionKey, Key: vimengine.KeyDollar}
+	case "x":
+		return Action{Type: ActionKey, Key: vimengine.KeyX}
+	case "r":
+		return Action{Type: ActionKey, Key: vimengine.KeyR}
 	case "?":
 		return Action{Type: ActionHint}
-	case "r":
-		return Action{Type: ActionRetry}
 	case "q":
 		return Action{Type: ActionQuit}
 	default:
+		if len([]rune(trimmed)) == 1 {
+			return Action{Type: ActionKey, Key: trimmed}
+		}
 		return Action{Type: ActionIgnored}
 	}
 }

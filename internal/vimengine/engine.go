@@ -30,6 +30,8 @@ const (
 	KeyShiftG = "G"
 	KeyZero   = "0"
 	KeyDollar = "$"
+	KeyX      = "x"
+	KeyR      = "r"
 )
 
 type Cursor struct {
@@ -58,6 +60,7 @@ const (
 	EventCommandInput    EventType = "command_input"
 	EventCommandExecuted EventType = "command_executed"
 	EventPendingKey      EventType = "pending_key"
+	EventChanged         EventType = "changed"
 )
 
 type Event struct {
@@ -203,6 +206,17 @@ func Apply(state State, key string) Result {
 		return moveLineStart(next, key)
 	case KeyDollar:
 		return moveLineEnd(next, key)
+	case KeyX:
+		return deleteCurrentChar(next, key)
+	case KeyR:
+		next.PendingKey = key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventPendingKey,
+				Key:  key,
+			}},
+		}
 	default:
 		return Result{
 			State: copyState(next),
@@ -221,6 +235,9 @@ func applyPendingKey(state State, key string) Result {
 	next.PendingKey = ""
 	if pending == KeyG && key == KeyG {
 		return moveDocumentStart(next, key)
+	}
+	if pending == KeyR {
+		return replaceCurrentChar(next, key)
 	}
 	return Result{
 		State: copyState(next),
@@ -296,6 +313,57 @@ func applyCommandKey(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	}
+}
+
+func deleteCurrentChar(state State, key string) Result {
+	next := copyState(state)
+	runes := []rune(next.Lines[next.Cursor.Row])
+	if len(runes) == 0 {
+		return boundary(next, key)
+	}
+	col := clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	runes = append(runes[:col], runes[col+1:]...)
+	next.Lines[next.Cursor.Row] = string(runes)
+	next.Cursor.Col = clampCol(col, next.Lines[next.Cursor.Row])
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func replaceCurrentChar(state State, key string) Result {
+	next := copyState(state)
+	replacement := []rune(key)
+	if len(replacement) != 1 {
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "replace requires one character",
+			}},
+		}
+	}
+	runes := []rune(next.Lines[next.Cursor.Row])
+	if len(runes) == 0 {
+		return boundary(next, key)
+	}
+	col := clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	runes[col] = replacement[0]
+	next.Lines[next.Cursor.Row] = string(runes)
+	next.Cursor.Col = col
+	next.Cursor.DesiredCol = col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
 	}
 }
 

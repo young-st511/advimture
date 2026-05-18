@@ -230,9 +230,9 @@ command_cluster:
 ```yaml
 command_cluster:
   id: single-char-edit
-  status: draft
+  status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-2-small-edits
   title: 문자 하나 고치기
   commands: ["x", "r"]

@@ -204,6 +204,27 @@ func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.
 	}
 }
 
+func TestPlayableRetriesFailedExerciseWithR(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+	})
+
+	model, _ = updateWithKey(t, model, "w")
+	if model.State().Status != "failed" {
+		t.Fatalf("status = %q, want failed", model.State().Status)
+	}
+
+	model, _ = updateWithKey(t, model, "r")
+
+	if model.State().Status != "running" {
+		t.Fatalf("status after retry = %q, want running", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "Exercise: 1/4") {
+		t.Fatalf("view = %q, want same exercise after retry", model.View())
+	}
+}
+
 func TestPlayableFailsShortcutThatSkipsRequiredInput(t *testing.T) {
 	model := New(Options{
 		ContentRoot: contentRootForTest(),

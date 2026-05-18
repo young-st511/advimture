@@ -92,7 +92,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		switch action.Type {
 		case tuiadapter.ActionKey:
-			if m.run.State().Status == exerciseruntime.StatusFailed && action.Key == vimengine.KeyEnter {
+			if m.run.State().Status == exerciseruntime.StatusFailed && (action.Key == vimengine.KeyEnter || action.Key == vimengine.KeyR) {
 				m.retryCurrent()
 				break
 			}

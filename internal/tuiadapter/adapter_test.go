@@ -32,7 +32,6 @@ func TestMapInputMapsVimAndArrowKeys(t *testing.T) {
 func TestMapInputMapsCommands(t *testing.T) {
 	cases := map[string]ActionType{
 		"?":      ActionHint,
-		"r":      ActionRetry,
 		"ctrl+c": ActionQuit,
 		"q":      ActionQuit,
 	}
@@ -41,6 +40,21 @@ func TestMapInputMapsCommands(t *testing.T) {
 		action := MapInput(input)
 		if action.Type != want {
 			t.Fatalf("MapInput(%q) = %q, want %q", input, action.Type, want)
+		}
+	}
+}
+
+func TestMapInputMapsSingleCharEditKeys(t *testing.T) {
+	cases := map[string]string{
+		"x": vimengine.KeyX,
+		"r": vimengine.KeyR,
+		"Z": "Z",
+	}
+
+	for input, wantKey := range cases {
+		action := MapInput(input)
+		if action.Type != ActionKey || action.Key != wantKey {
+			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
 		}
 	}
 }

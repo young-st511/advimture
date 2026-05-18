@@ -192,10 +192,121 @@ func TestDocumentMotionClearsPendingGOnUnsupportedCombo(t *testing.T) {
 
 func TestUnsupportedKeyDoesNotMove(t *testing.T) {
 	engine := New([]string{"abc"})
-	result := engine.Apply("x")
+	result := engine.Apply("z")
 
 	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
 		t.Fatalf("Cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
+func TestDeleteCurrentChar(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcd"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        1,
+			DesiredCol: 1,
+		},
+	})
+
+	result := engine.Apply(KeyX)
+
+	if result.State.Lines[0] != "acd" {
+		t.Fatalf("line = %q, want acd", result.State.Lines[0])
+	}
+	if result.State.Cursor.Col != 1 {
+		t.Fatalf("cursor col = %d, want 1", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteCurrentCharClampsCursorAtLineEnd(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"abc"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	result := engine.Apply(KeyX)
+
+	if result.State.Lines[0] != "ab" {
+		t.Fatalf("line = %q, want ab", result.State.Lines[0])
+	}
+	if result.State.Cursor.Col != 1 {
+		t.Fatalf("cursor col = %d, want 1", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteCurrentCharOnEmptyLineReportsBoundary(t *testing.T) {
+	engine := New([]string{""})
+
+	result := engine.Apply(KeyX)
+
+	if result.State.Lines[0] != "" {
+		t.Fatalf("line = %q, want empty", result.State.Lines[0])
+	}
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestReplaceCurrentChar(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"abz"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	assertApply(t, engine, KeyR, 0, 2, EventPendingKey)
+	result := engine.Apply("c")
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line = %q, want abc", result.State.Lines[0])
+	}
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestReplaceCurrentCharCanBeCanceledWithEsc(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	assertApply(t, engine, KeyR, 0, 0, EventPendingKey)
+	result := engine.Apply(KeyEsc)
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line = %q, want abc", result.State.Lines[0])
+	}
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	assertEvent(t, result, EventModeReset)
+}
+
+func TestReplaceCurrentCharRejectsMultiCharacterReplacement(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	engine.Apply(KeyR)
+	result := engine.Apply("enter")
+
+	if result.State.Lines[0] != "abc" {
+		t.Fatalf("line = %q, want abc", result.State.Lines[0])
+	}
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
 	}
 	assertEvent(t, result, EventUnsupportedKey)
 }
