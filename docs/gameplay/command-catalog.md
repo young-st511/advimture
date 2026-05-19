@@ -404,6 +404,80 @@ command_cluster:
     - `cw`와 `c$`는 delete 범위와 insert entry가 동시에 학습되도록 짧은 문자열로 설계한다.
 ```
 
+### yank-put-basic
+
+```yaml
+command_cluster:
+  id: yank-put-basic
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-operator-grammar
+  title: Operator grammar: 복사와 붙여넣기
+  commands: ["y", "yw", "y$", "yy", "p", "P"]
+  coverage_required: ["yw", "y$", "yy", "p", "P"]
+  oracle: optional
+  purpose: 안전한 텍스트 조각이나 줄을 register에 보관한 뒤 필요한 위치에 재사용한다.
+  prerequisite: ["delete-with-motion", "change-with-motion"]
+  difficulty: intermediate
+  useful_when:
+    - 정상 설정 줄을 아래/위에 복제할 때
+    - 구조 코드나 짧은 토큰을 다시 입력하지 않고 재사용할 때
+    - 위험한 수동 재입력을 피하고 검증된 값을 붙여넣을 때
+  combo_paths:
+    - ["yy", "p"]
+    - ["yy", "P"]
+    - ["yw", "p"]
+    - ["y$", "p"]
+  common_mistakes:
+    - 복사할 수 있는 값을 직접 다시 타이핑한다.
+    - yy가 줄 단위 register를 만든다는 점을 p/P 결과와 연결하지 못한다.
+    - p와 P의 붙여넣기 방향을 혼동한다.
+  compatibility_notes:
+    - 첫 구현은 unnamed register만 다룬다.
+    - named register, numbered register, system clipboard는 후속 milestone으로 미룬다.
+    - 첫 구현은 single-line charwise yank와 linewise yank만 다룬다.
+  design_notes:
+    - VIM-019는 yank/register만 구현하고, VIM-020에서 put을 구현한다.
+    - 첫 playpack은 y/p의 재사용 감각을 먼저 다루고 text object는 다음 playpack으로 분리한다.
+```
+
+### text-object-inner-word
+
+```yaml
+command_cluster:
+  id: text-object-inner-word
+  status: draft
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-operator-grammar
+  title: Text object: 단어 내부를 대상으로 편집
+  commands: ["iw", "diw", "ciw", "yiw"]
+  coverage_required: ["diw", "ciw", "yiw"]
+  oracle: optional
+  purpose: 커서가 단어 중간에 있어도 단어 전체를 대상으로 삭제, 변경, 복사한다.
+  prerequisite: ["yank-put-basic", "delete-with-motion", "change-with-motion"]
+  difficulty: intermediate
+  useful_when:
+    - 커서가 단어 중간에 있을 때도 전체 값을 대상으로 잡을 때
+    - config value나 command argument를 위치보다 구조 기준으로 다룰 때
+    - operator grammar를 motion에서 text object로 확장할 때
+  combo_paths:
+    - ["diw", "u"]
+    - ["ciw", "esc"]
+    - ["yiw", "p"]
+  common_mistakes:
+    - 커서 위치를 단어 시작으로 옮긴 뒤 dw/cw/yw로 처리하려고 한다.
+    - i가 Insert mode가 아니라 text object prefix가 되는 문맥을 놓친다.
+    - quote/pair object까지 한 번에 외우려고 한다.
+  compatibility_notes:
+    - 첫 구현 후보는 iw만 다룬다.
+    - i\", i', i(, i{와 around object는 후속 루프로 미룬다.
+  design_notes:
+    - TEXT-OBJECT-001에서 별도 gap planning을 연 뒤 구현한다.
+    - 첫 text object playpack은 단어 내부 object만 다루며, quote/pair는 별도 고급 튜토리얼로 분리한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -412,6 +486,8 @@ command_cluster:
 - `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
 - `vim-ex-command-substitute`는 literal `:s`, `:%s`, `:2,3s` engine support가 구현됐다. Vim regex와 복잡한 flags는 아직 다루지 않는다.
 - `delete-with-motion`, `change-with-motion`은 VIM-017/VIM-018에서 engine support가 구현됐고 PLAYPACK-003에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
+- `yank-put-basic`은 YANK-TEXT-001에서 approved + planned로 승격됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
+- `text-object-inner-word`는 YANK-TEXT-001에서 draft + planned 후보로 남겼다. `iw` 기반 `diw`, `ciw`, `yiw`는 register 기반 안정 후 별도 루프로 다룬다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

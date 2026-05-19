@@ -27,7 +27,7 @@
 
 ## 다음 루프 후보
 
-현재 진행 중: Operator Grammar Adventure Intro.
+현재 진행 중: Yank / Put and Text Object Bridge.
 
 다음 후보는 `ENGINE-GAP-001`에서 아래 순서로 검토한다.
 
@@ -67,3 +67,16 @@
 | VIM-018 | `cw`, `c$`, `cc` change semantics | completed: vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
 
 `PLAYPACK-003`은 VIM-016~018이 completed된 뒤 YAML content와 E2E를 연결한다.
+
+## YANK-TEXT-001 결정
+
+다음 구현 루프는 `yank-put-basic`을 먼저 다룬다. text object는 register와 put semantics가 안정된 뒤 별도 gap planning으로 넘긴다.
+
+| 루프 | 범위 | 필수 테스트 | E2E |
+|------|------|-------------|-----|
+| VIM-019 | `y` pending, unnamed register, `yw`, `y$`, `yy` | `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
+| VIM-020 | `p`, `P`, charwise/linewise put, undo/redo | vimengine unit, runtime replay smoke | PLAYPACK-004에서 추가 |
+| PLAYPACK-004 | `yank-put-basic` tutorial content | content replay, coverage, playable model | full playlist E2E |
+| TEXT-OBJECT-001 | `iw` 기반 text object gap planning | docs + scope review | 없음 |
+
+첫 `y/p` 구현은 unnamed register만 다루며 named register, clipboard, count prefix, visual selection은 제외한다.

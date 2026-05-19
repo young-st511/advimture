@@ -81,4 +81,14 @@
 | 3 | VIM-017 | completed | `delete-with-motion` (`dw`, `d$`, `dd`) 엔진/테스트 구현 |
 | 4 | VIM-018 | completed | `change-with-motion` (`cw`, `c$`, `cc`) 엔진/테스트 구현 |
 | 5 | PLAYPACK-003 | completed | 6문항짜리 operator grammar adventure intro content/E2E 구현 |
-| 6 | YANK-TEXT-001 | planning | `y/p`와 text object 후보를 다음 playpack으로 설계 |
+| 6 | YANK-TEXT-001 | completed | `y/p`와 text object 후보를 다음 playpack으로 설계 |
+
+## 다음 중기 플랜: Yank / Put and Text Object Bridge
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | YANK-TEXT-001 | completed | `y/p`와 text object 후보를 다음 playpack으로 설계 |
+| 2 | VIM-019 | planning | unnamed register와 `yw`, `y$`, `yy` yank engine 구현 |
+| 3 | VIM-020 | pending | `p`, `P` put engine과 runtime replay smoke 구현 |
+| 4 | PLAYPACK-004 | pending | yank/put basic tutorial content/E2E 구현 |
+| 5 | TEXT-OBJECT-001 | pending | `iw` 기반 text object gap planning |

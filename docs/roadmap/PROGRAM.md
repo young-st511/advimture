@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### YANK-TEXT-001. Yank / put and text object candidates
+### VIM-019. Yank register foundation
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `y/p`와 text object 후보를 다음 playpack으로 설계한다.
+- 목표: unnamed register와 `yw`, `y$`, `yy` yank engine 기반을 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### YANK-TEXT-001. Yank / put and text object candidates
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/yank-text-001-yank-put-text-object-candidates.md`
+- 완료일: 2026-05-19
 
 ### PLAYPACK-003. Operator grammar adventure intro
 - 상태: completed

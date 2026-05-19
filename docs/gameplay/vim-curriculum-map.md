@@ -214,13 +214,15 @@ Scenario 방향:
 3. Tutorial 2: 빠르게 훑기 — `word-motion-basic`, `line-motion-basic`, `file-motion-basic`
 4. Tutorial 3: 작은 수정 — `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`
 5. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
+6. Mid tutorial: Operator grammar 입문 — `dw`, `d$`, `dd`, `cw`, `c$`, `cc`
 
 다음 playable milestone은 아래 순서를 우선한다.
 
-1. Adventure intro: operator grammar — `delete-with-motion`, `change-with-motion`
-2. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
+1. Adventure bridge: yank / put reuse — `yank-put-basic`
+2. Adventure bridge: text object inner word — `text-object-inner-word`
+3. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
 
-이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 중반 고급 명령”으로 이어진다.
+이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
 중반부터는 `docs/gameplay/scenario-tone.md`의 터미널 문제 해결 생존 어드벤처 톤을 따른다. 생존감은 command 학습을 가리지 않는 배경 압력이며, 첫 operator grammar playpack은 `dw`, `d$`, `cw`, `c$`, `dd`, `u` 복습을 우선 후보로 둔다.
 
@@ -238,10 +240,10 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute` |
-| next | 다음 playpack에서 구현/승격할 후보 | `delete-with-motion`, `change-with-motion` |
-| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `open-line-edit`, `repeat-last-change`, `delete-with-motion`, `change-with-motion` |
-| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `search-basic`, `visual-char-line`, `text-object-inner`, `macro-basic`, buffer/window/navigation-at-scale 계열 |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion` |
+| next | 다음 playpack에서 구현/승격할 후보 | `yank-put-basic` |
+| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `text-object-inner-word`, `open-line-edit`, `repeat-last-change` |
+| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `search-basic`, `visual-char-line`, `text-object-inner` quote/pair 계열, `macro-basic`, buffer/window/navigation-at-scale 계열 |
 
 ### Next Playpack Candidate
 
