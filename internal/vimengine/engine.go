@@ -44,6 +44,12 @@ const (
 	KeyCtrlR  = "ctrl+r"
 )
 
+const (
+	pendingDeleteInner = KeyD + KeyI
+	pendingChangeInner = KeyC + KeyI
+	pendingYankInner   = KeyY + KeyI
+)
+
 type Cursor struct {
 	Row        int
 	Col        int
@@ -346,6 +352,9 @@ func applyPendingKey(state State, key string) Result {
 	if pending == KeyY {
 		return yankWithMotion(next, key)
 	}
+	if pending == pendingDeleteInner || pending == pendingChangeInner || pending == pendingYankInner {
+		return unsupportedTextObject(next, key)
+	}
 	return Result{
 		State: copyState(next),
 		Events: []Event{{
@@ -358,6 +367,8 @@ func applyPendingKey(state State, key string) Result {
 
 func deleteWithMotion(state State, key string) Result {
 	switch key {
+	case KeyI:
+		return enterInnerTextObjectPending(state, pendingDeleteInner, key)
 	case KeyW:
 		return deleteWordForward(state, key)
 	case KeyDollar:
@@ -378,6 +389,8 @@ func deleteWithMotion(state State, key string) Result {
 
 func yankWithMotion(state State, key string) Result {
 	switch key {
+	case KeyI:
+		return enterInnerTextObjectPending(state, pendingYankInner, key)
 	case KeyW:
 		return yankWordForward(state, key)
 	case KeyDollar:
@@ -398,6 +411,8 @@ func yankWithMotion(state State, key string) Result {
 
 func changeWithMotion(state State, key string) Result {
 	switch key {
+	case KeyI:
+		return enterInnerTextObjectPending(state, pendingChangeInner, key)
 	case KeyW:
 		return changeWordForward(state, key)
 	case KeyDollar:
@@ -413,6 +428,29 @@ func changeWithMotion(state State, key string) Result {
 				Message: "change sequence is not supported",
 			}},
 		}
+	}
+}
+
+func enterInnerTextObjectPending(state State, pending string, key string) Result {
+	next := copyState(state)
+	next.PendingKey = pending
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventPendingKey,
+			Key:  key,
+		}},
+	}
+}
+
+func unsupportedTextObject(state State, key string) Result {
+	return Result{
+		State: copyState(state),
+		Events: []Event{{
+			Type:    EventUnsupportedKey,
+			Key:     key,
+			Message: "text object sequence is not supported",
+		}},
 	}
 }
 
@@ -540,6 +578,31 @@ func changeWordForward(state State, key string) Result {
 		return boundary(state, key)
 	}
 	return changeLineRange(state, key, start, end)
+}
+
+func innerWordRange(line []rune, cursorCol int) (int, int, bool) {
+	if len(line) == 0 {
+		return 0, 0, false
+	}
+	if cursorCol < 0 {
+		cursorCol = 0
+	}
+	if cursorCol >= len(line) {
+		cursorCol = len(line) - 1
+	}
+	class := classifyRune(line[cursorCol])
+	if class == cellSpace {
+		return 0, 0, false
+	}
+	start := cursorCol
+	for start > 0 && classifyRune(line[start-1]) == class {
+		start--
+	}
+	end := cursorCol + 1
+	for end < len(line) && classifyRune(line[end]) == class {
+		end++
+	}
+	return start, end, true
 }
 
 func deleteToLineEnd(state State, key string) Result {

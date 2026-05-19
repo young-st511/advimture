@@ -366,6 +366,90 @@ func TestYankCurrentLineStoresLinewiseRegister(t *testing.T) {
 	assertEvent(t, result, EventYanked)
 }
 
+func TestOperatorInnerTextObjectEntersPendingMode(t *testing.T) {
+	for _, tt := range []struct {
+		operator string
+		pending  string
+	}{
+		{operator: KeyD, pending: pendingDeleteInner},
+		{operator: KeyC, pending: pendingChangeInner},
+		{operator: KeyY, pending: pendingYankInner},
+	} {
+		t.Run(tt.operator, func(t *testing.T) {
+			engine := NewWithState(State{
+				Mode:  ModeNormal,
+				Lines: []string{"alpha beta"},
+				Cursor: Cursor{
+					Row:        0,
+					Col:        2,
+					DesiredCol: 2,
+				},
+			})
+
+			assertApply(t, engine, tt.operator, 0, 2, EventPendingKey)
+			result := engine.Apply(KeyI)
+
+			if result.State.PendingKey != tt.pending {
+				t.Fatalf("pending key = %q, want %q", result.State.PendingKey, tt.pending)
+			}
+			assertStrings(t, result.State.Lines, []string{"alpha beta"})
+			assertEvent(t, result, EventPendingKey)
+		})
+	}
+}
+
+func TestUnsupportedInnerTextObjectSequenceDoesNotMutate(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 2, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 2, EventPendingKey)
+	result := engine.Apply(KeyE)
+
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
+func TestInnerWordRangeSelectsCurrentWordRun(t *testing.T) {
+	for _, tt := range []struct {
+		name  string
+		line  string
+		col   int
+		start int
+		end   int
+		ok    bool
+	}{
+		{name: "keyword middle", line: "alpha beta", col: 2, start: 0, end: 5, ok: true},
+		{name: "keyword end", line: "alpha beta", col: 9, start: 6, end: 10, ok: true},
+		{name: "symbol run", line: "a==b", col: 1, start: 1, end: 3, ok: true},
+		{name: "space", line: "alpha beta", col: 5, ok: false},
+		{name: "empty", line: "", col: 0, ok: false},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			start, end, ok := innerWordRange([]rune(tt.line), tt.col)
+			if ok != tt.ok {
+				t.Fatalf("ok = %v, want %v", ok, tt.ok)
+			}
+			if !ok {
+				return
+			}
+			if start != tt.start || end != tt.end {
+				t.Fatalf("range = (%d,%d), want (%d,%d)", start, end, tt.start, tt.end)
+			}
+		})
+	}
+}
+
 func TestYankUnsupportedComboClearsPendingWithoutChangingRegister(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,

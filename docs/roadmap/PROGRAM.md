@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-021. Text object pending foundation
+### VIM-022. Inner word text object semantics
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `operator -> i -> w` pending sequence와 inner-word selection 기반을 구현한다.
+- 목표: `diw`, `ciw`, `yiw`의 mutation/register semantics를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-021. Text object pending foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-021-text-object-pending-foundation.md`
+- 완료일: 2026-05-19
 
 ### TEXT-OBJECT-001. Inner word text object gap
 - 상태: completed
