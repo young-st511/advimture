@@ -87,8 +87,8 @@
 
 | 루프 | 범위 | 필수 테스트 | E2E |
 |------|------|-------------|-----|
-| VIM-021 | `operator -> i -> w` pending sequence, inner-word selection helper | `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
-| VIM-022 | `diw`, `ciw`, `yiw` semantics, undo/register/runtime replay | vimengine unit, runtime replay smoke | PLAYPACK-005에서 추가 |
+| VIM-021 | `operator -> i -> w` pending sequence, inner-word selection helper | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
+| VIM-022 | `diw`, `ciw`, `yiw` semantics, undo/register/runtime replay | completed: vimengine unit, runtime replay smoke | PLAYPACK-005에서 추가 |
 | PLAYPACK-005 | `text-object-inner-word` tutorial content | content replay, coverage, playable model | full playlist E2E |
 | E2E-PLAYPACK-005 | text object playpack QA hardening | E2E evidence and assertions | full playlist + forbidden route |
 

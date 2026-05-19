@@ -352,6 +352,15 @@ func applyPendingKey(state State, key string) Result {
 	if pending == KeyY {
 		return yankWithMotion(next, key)
 	}
+	if pending == pendingDeleteInner && key == KeyW {
+		return deleteInnerWord(next, key)
+	}
+	if pending == pendingChangeInner && key == KeyW {
+		return changeInnerWord(next, key)
+	}
+	if pending == pendingYankInner && key == KeyW {
+		return yankInnerWord(next, key)
+	}
 	if pending == pendingDeleteInner || pending == pendingChangeInner || pending == pendingYankInner {
 		return unsupportedTextObject(next, key)
 	}
@@ -578,6 +587,33 @@ func changeWordForward(state State, key string) Result {
 		return boundary(state, key)
 	}
 	return changeLineRange(state, key, start, end)
+}
+
+func deleteInnerWord(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	start, end, ok := innerWordRange(line, state.Cursor.Col)
+	if !ok {
+		return boundary(state, key)
+	}
+	return deleteLineRange(state, key, start, end)
+}
+
+func changeInnerWord(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	start, end, ok := innerWordRange(line, state.Cursor.Col)
+	if !ok {
+		return boundary(state, key)
+	}
+	return changeLineRange(state, key, start, end)
+}
+
+func yankInnerWord(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	start, end, ok := innerWordRange(line, state.Cursor.Col)
+	if !ok {
+		return boundary(state, key)
+	}
+	return yankLineRange(state, key, start, end)
 }
 
 func innerWordRange(line []rune, cursorCol int) (int, int, bool) {

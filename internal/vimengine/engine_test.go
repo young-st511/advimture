@@ -420,6 +420,120 @@ func TestUnsupportedInnerTextObjectSequenceDoesNotMutate(t *testing.T) {
 	assertEvent(t, result, EventUnsupportedKey)
 }
 
+func TestDeleteInnerWordDeletesCurrentWordRun(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode=broken"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        8,
+			DesiredCol: 8,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 8, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 8, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"mode="})
+	if result.State.Cursor.Col != 4 {
+		t.Fatalf("cursor col = %d, want 4", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestChangeInnerWordEntersInsertModeAtRemovedWordStart(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode=broken"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        7,
+			DesiredCol: 7,
+		},
+	})
+
+	assertApply(t, engine, KeyC, 0, 7, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 7, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"mode="})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 5 {
+		t.Fatalf("cursor col = %d, want 5", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestYankInnerWordStoresCurrentWordRunWithoutMutating(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode=stable"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        7,
+			DesiredCol: 7,
+		},
+	})
+
+	assertApply(t, engine, KeyY, 0, 7, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 7, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"mode=stable"})
+	if result.State.Cursor.Col != 7 {
+		t.Fatalf("cursor col = %d, want 7", result.State.Cursor.Col)
+	}
+	if result.State.Register.Text != "stable" {
+		t.Fatalf("register text = %q, want stable", result.State.Register.Text)
+	}
+	if result.State.Register.Linewise {
+		t.Fatal("register linewise = true, want false")
+	}
+	assertEvent(t, result, EventYanked)
+}
+
+func TestInnerWordOnSpaceReportsBoundaryWithoutMutating(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        5,
+			DesiredCol: 5,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 5, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 5, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestDeleteInnerWordCanBeUndone(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode=broken"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        7,
+			DesiredCol: 7,
+		},
+	})
+
+	engine.Apply(KeyD)
+	engine.Apply(KeyI)
+	engine.Apply(KeyW)
+	result := engine.Apply(KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"mode=broken"})
+	assertEvent(t, result, EventChanged)
+}
+
 func TestInnerWordRangeSelectsCurrentWordRun(t *testing.T) {
 	for _, tt := range []struct {
 		name  string

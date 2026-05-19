@@ -252,6 +252,96 @@ func TestSessionReplaysYankPutTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyY, vimengine.KeyY, vimengine.KeyP})
 }
 
+func TestSessionReplaysDeleteInnerWordTrace(t *testing.T) {
+	initial := vimengine.NewState([]string{"mode=broken"})
+	initial.Cursor.Col = 7
+	initial.Cursor.DesiredCol = 7
+	session := NewSession(Exercise{
+		ID:      "delete-inner-word",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"mode="},
+			Cursor: CursorGoal(0, 4),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyD, vimengine.KeyI, vimengine.KeyW},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyD, vimengine.KeyI} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyW)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after w = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyD, vimengine.KeyI, vimengine.KeyW})
+}
+
+func TestSessionReplaysChangeInnerWordTrace(t *testing.T) {
+	initial := vimengine.NewState([]string{"mode=broken"})
+	initial.Cursor.Col = 7
+	initial.Cursor.DesiredCol = 7
+	session := NewSession(Exercise{
+		ID:      "change-inner-word",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"mode=stable"},
+			Cursor: CursorGoal(0, 10),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyC, vimengine.KeyI, vimengine.KeyW, vimengine.KeyEsc},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyC, vimengine.KeyI, vimengine.KeyW, "s", "t", "a", "b", "l", "e"} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEsc)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after esc = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyI, vimengine.KeyW, "s", "t", "a", "b", "l", "e", vimengine.KeyEsc})
+}
+
+func TestSessionReplaysYankInnerWordPutTrace(t *testing.T) {
+	initial := vimengine.NewState([]string{"mode=stable", "mirror="})
+	initial.Cursor.Col = 7
+	initial.Cursor.DesiredCol = 7
+	session := NewSession(Exercise{
+		ID:      "yank-inner-word",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"mode=stable", "mirror=stable"},
+			Cursor: CursorGoal(1, 12),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyY, vimengine.KeyI, vimengine.KeyW, vimengine.KeyP},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyY, vimengine.KeyI, vimengine.KeyW, vimengine.KeyJ, vimengine.KeyDollar} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyP)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after p = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyY, vimengine.KeyI, vimengine.KeyW, vimengine.KeyJ, vimengine.KeyDollar, vimengine.KeyP})
+}
+
 func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
 	initial := vimengine.NewState([]string{"api"})
 	initial.Cursor.Col = 1

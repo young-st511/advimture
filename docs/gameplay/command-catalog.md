@@ -449,7 +449,7 @@ command_cluster:
   id: text-object-inner-word
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-operator-grammar
   title: Text object: 단어 내부를 대상으로 편집
   commands: ["iw", "diw", "ciw", "yiw"]
@@ -475,7 +475,7 @@ command_cluster:
     - i\", i', i(, i{와 around object는 후속 루프로 미룬다.
     - count prefix, visual selection, whitespace 세부 semantics는 후속 hardening으로 미룬다.
   design_notes:
-    - TEXT-OBJECT-001에서 `operator -> i -> w` 3-key pending sequence를 먼저 구현하기로 결정했다.
+    - VIM-021에서 `operator -> i -> w` 3-key pending sequence를 구현했고, VIM-022에서 `diw`, `ciw`, `yiw` semantics를 구현했다.
     - 첫 text object playpack은 단어 내부 object만 다루며, quote/pair는 별도 고급 튜토리얼로 분리한다.
 ```
 
@@ -488,7 +488,7 @@ command_cluster:
 - `vim-ex-command-substitute`는 literal `:s`, `:%s`, `:2,3s` engine support가 구현됐다. Vim regex와 복잡한 flags는 아직 다루지 않는다.
 - `delete-with-motion`, `change-with-motion`은 VIM-017/VIM-018에서 engine support가 구현됐고 PLAYPACK-003에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
 - `yank-put-basic`은 VIM-019/VIM-020에서 engine support가 구현됐고 PLAYPACK-004에서 5문항 tutorial content로 연결됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
-- `text-object-inner-word`는 TEXT-OBJECT-001에서 approved + planned로 승격했다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
+- `text-object-inner-word`는 VIM-021/VIM-022에서 engine support가 구현됐다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

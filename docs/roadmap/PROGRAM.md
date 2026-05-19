@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-022. Inner word text object semantics
+### PLAYPACK-005. Text object inner word tutorial
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `diw`, `ciw`, `yiw`의 mutation/register semantics를 구현한다.
+- 목표: `text-object-inner-word` tutorial content와 E2E를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-022. Inner word text object semantics
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-022-inner-word-text-object-semantics.md`
+- 완료일: 2026-05-19
 
 ### VIM-021. Text object pending foundation
 - 상태: completed

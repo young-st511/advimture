@@ -73,6 +73,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-6-yank-put`은 `yy+p`, `yy+P`, `yw+P`, `y$+p`, `yw+p`를 각각 다루는 5문항 yank/put 재사용 tutorial이다.
 - `yank-put-basic`은 approved + implemented tutorial cluster이며 `yw`, `y$`, `yy`, `p`, `P` coverage와 replay gate, E2E assertion gate를 통과한다.
 - 첫 yank/put 구현은 unnamed register만 다루며 named register, clipboard, count prefix, visual selection, text object는 후속 루프로 분리한다.
+- `text-object-inner-word`는 approved + implemented engine cluster이며 `diw`, `ciw`, `yiw`를 지원한다. playable tutorial 승격은 PLAYPACK-005에서 진행한다.
+- 첫 text object 구현은 `iw`만 다루며 quote/pair object, around object, visual selection, count prefix는 후속 루프로 분리한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 
