@@ -1,0 +1,32 @@
+command_clusters:
+  - id: text-object-inner-word
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-3-operator-grammar
+    title: "Text object: 단어 내부 대상 편집"
+    commands: ["iw", "diw", "ciw", "yiw"]
+    coverage_required: ["diw", "ciw", "yiw"]
+    oracle: optional
+    purpose: "커서가 단어 중간에 있어도 단어 전체를 대상으로 삭제, 변경, 복사한다."
+    prerequisite: ["yank-put-basic", "delete-with-motion", "change-with-motion"]
+    difficulty: intermediate
+    useful_when:
+      - "커서가 값 중간에 있을 때도 전체 값을 한 번에 바꿀 때"
+      - "단어 시작으로 이동하는 준비 동작을 줄일 때"
+      - "복사/붙여넣기와 operator grammar를 구조 대상 기준으로 확장할 때"
+    combo_paths:
+      - ["diw", "u"]
+      - ["ciw", "esc"]
+      - ["yiw", "p"]
+    common_mistakes:
+      - "커서를 단어 시작으로 옮긴 뒤 dw/cw/yw로 처리하려고 한다."
+      - "operator 뒤의 i를 Insert mode로 착각한다."
+      - "quote/pair text object까지 한 번에 외우려고 한다."
+    compatibility_notes:
+      - "첫 구현은 iw만 다룬다."
+      - "quote/pair text object, around object, count prefix, visual selection은 후속 milestone으로 미룬다."
+      - "첫 구현은 현재 cursor가 놓인 keyword/symbol run을 inner word로 다루는 pedagogical semantics다."
+    design_notes:
+      - "문항은 반드시 커서를 단어 중간에 두어 text object의 이점을 체감하게 한다."
+      - "초반 문항은 h/l/w/b/e 이동 우회를 금지해 의도 command를 고정한다."

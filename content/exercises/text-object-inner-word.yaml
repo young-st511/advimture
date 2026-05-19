@@ -1,0 +1,292 @@
+exercises:
+  - id: text-object-inner-word-001
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["diw"]
+    reviewed_commands: ["dw", "x"]
+    mistake_focus: ["단어 시작으로 이동한 뒤 dw를 쓰려고 한다."]
+    replay_status: pass
+    title: "깨진 값만 제거"
+    goal_for_player: "커서가 값 중간에 있습니다. 이동하지 말고 diw로 broken 전체를 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        mode=broken
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 4
+      buffer: |
+        mode=
+    optimal_keys: ["d", "i", "w"]
+    allowed_keys: ["d", "i", "w", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "i", "w"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "d는 operator입니다. 이번 대상은 motion이 아니라 text object입니다."
+      - after_keys: 2
+        text: "diw는 현재 단어 내부 전체를 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["mode="]
+      cursor:
+        row: 0
+        col: 4
+      mode: normal
+      status: succeeded
+
+  - id: text-object-inner-word-002
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["diw"]
+    reviewed_commands: ["dd", "u"]
+    mistake_focus: ["불필요한 토큰만 제거해야 하는데 줄 전체를 지우려고 한다."]
+    replay_status: pass
+    title: "위험 토큰 제거"
+    goal_for_player: "DROP 토큰 중간에 있습니다. 줄은 유지하고 diw로 토큰만 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        cmd DROP safe
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 4
+      buffer: |
+        cmd  safe
+    optimal_keys: ["d", "i", "w"]
+    allowed_keys: ["d", "i", "w", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "i", "w"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "줄 전체가 아니라 현재 단어만 대상입니다."
+      - after_keys: 2
+        text: "i는 여기서 Insert mode가 아니라 inner text object prefix입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["cmd  safe"]
+      cursor:
+        row: 0
+        col: 4
+      mode: normal
+      status: succeeded
+
+  - id: text-object-inner-word-003
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["ciw"]
+    reviewed_commands: ["cw", "esc"]
+    mistake_focus: ["단어 시작으로 이동한 뒤 cw를 쓰려고 한다."]
+    replay_status: pass
+    title: "상태 값 교체"
+    goal_for_player: "down 값 중간에서 ciw로 값 전체를 up으로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        status=down
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 8
+      buffer: |
+        status=up
+    optimal_keys: ["c", "i", "w", "u", "p", "esc"]
+    allowed_keys: ["c", "i", "w", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["c", "i", "w", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "d", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "c도 operator입니다. iw를 대상으로 잡으면 단어 전체를 교체합니다."
+      - after_keys: 3
+        text: "ciw 후에는 Insert mode입니다. 새 값 입력 후 esc로 돌아오세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["status=up"]
+      cursor:
+        row: 0
+        col: 8
+      mode: normal
+      status: succeeded
+
+  - id: text-object-inner-word-004
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["ciw"]
+    reviewed_commands: ["c$", "esc"]
+    mistake_focus: ["값 하나만 바꿔야 하는데 줄 끝 전체를 갈아엎는다."]
+    replay_status: pass
+    title: "목적지 값 교체"
+    goal_for_player: "blackhole 값 중간에서 ciw로 relay로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 8
+      buffer: |
+        route=blackhole
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        route=relay
+    optimal_keys: ["c", "i", "w", "r", "e", "l", "a", "y", "esc"]
+    allowed_keys: ["c", "i", "w", "r", "e", "l", "a", "y", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 9
+      required_keys: ["c", "i", "w", "esc"]
+      forbidden_keys: ["h", "j", "k", "b", "0", "$", "d", "x", "p", "P", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "커서가 단어 중간에 있어도 단어 전체를 대상으로 잡을 수 있습니다."
+      - after_keys: 3
+        text: "ciw는 선택한 단어를 비우고 바로 입력 상태로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 9
+    e2e_assertions:
+      buffer: ["route=relay"]
+      cursor:
+        row: 0
+        col: 10
+      mode: normal
+      status: succeeded
+
+  - id: text-object-inner-word-005
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["yiw"]
+    reviewed_commands: ["p", "j", "$"]
+    mistake_focus: ["값을 다시 입력하거나 단어 시작으로 이동해 yw를 쓰려고 한다."]
+    replay_status: pass
+    title: "ID 값 미러링"
+    goal_for_player: "alpha 값 중간에서 yiw로 값만 복사해 mirror 값에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 4
+      buffer: |
+        id=alpha
+        mirror=
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 11
+      buffer: |
+        id=alpha
+        mirror=alpha
+    optimal_keys: ["y", "i", "w", "j", "$", "p"]
+    allowed_keys: ["y", "i", "w", "j", "$", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "w", "p"]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "y도 iw와 조합하면 현재 단어 전체를 register에 담습니다."
+      - after_keys: 3
+        text: "yiw는 커서를 움직이지 않고 alpha만 복사합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["id=alpha", "mirror=alpha"]
+      cursor:
+        row: 1
+        col: 11
+      mode: normal
+      status: succeeded
+
+  - id: text-object-inner-word-006
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["yiw"]
+    reviewed_commands: ["p", "$"]
+    mistake_focus: ["숫자 값도 text object 대상으로 복사할 수 있음을 놓친다."]
+    replay_status: pass
+    title: "포트 값 복사"
+    goal_for_player: "443 값 중간에서 yiw로 복사해 backup 값에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        port=443
+        backup=
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 9
+      buffer: |
+        port=443
+        backup=443
+    optimal_keys: ["y", "i", "w", "j", "$", "p"]
+    allowed_keys: ["y", "i", "w", "j", "$", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "w", "p"]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "숫자 값도 현재 단어로 다룰 수 있습니다."
+      - after_keys: 3
+        text: "이제 목표 줄 끝으로 이동해 p로 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["port=443", "backup=443"]
+      cursor:
+        row: 1
+        col: 9
+      mode: normal
+      status: succeeded

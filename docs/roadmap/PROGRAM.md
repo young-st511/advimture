@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-005. Text object inner word tutorial
-- 상태: active
+### OPEN-LINE-001. Open line edit gap
+- 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `text-object-inner-word` tutorial content와 E2E를 구현한다.
+- 목표: `o/O` open-line edit의 구현 범위와 제외 항목을 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-005. Text object inner word tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-005-text-object-inner-word.md`
+- 완료일: 2026-05-19
 
 ### VIM-022. Inner word text object semantics
 - 상태: completed

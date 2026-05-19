@@ -1,0 +1,90 @@
+scenarios:
+  - id: text-object-inner-word-001-scenario
+    status: approved
+    exercise_id: text-object-inner-word-001
+    engine_support: implemented
+    learning_reinforcement: "diw는 커서가 단어 중간에 있어도 inner word 전체를 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "깨진 모드 값 제거"
+    briefing: "mode 값 중간에 커서가 멈췄습니다. 단어 시작으로 움직이지 말고 broken 값 전체를 제거하세요."
+    context_role: "깨진 설정 값"
+    mentor_success: "좋습니다. diw로 현재 단어 전체를 바로 제거했습니다."
+    mentor_failure: "이동해서 맞추려 하지 마세요. d 다음 i w로 현재 단어 내부 전체를 잡습니다."
+    story_constraints:
+      - "text object가 이동 준비를 줄인다는 점을 강조한다."
+      - "직접 문자 삭제 우회를 금지한다."
+
+  - id: text-object-inner-word-002-scenario
+    status: approved
+    exercise_id: text-object-inner-word-002
+    engine_support: implemented
+    learning_reinforcement: "diw는 줄 전체가 아니라 현재 단어 run만 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "위험 토큰 분리"
+    briefing: "cmd 줄 안에 DROP 토큰이 끼었습니다. 나머지 명령은 그대로 두고 DROP만 제거하세요."
+    context_role: "부분 오염된 명령 줄"
+    mentor_success: "좋습니다. 줄을 날리지 않고 현재 토큰만 제거했습니다."
+    mentor_failure: "줄 전체 삭제가 아닙니다. DROP 위에서 diw만 입력하세요."
+    story_constraints:
+      - "dd와 diw의 범위 차이를 강조한다."
+      - "불필요한 이동을 유도하지 않는다."
+
+  - id: text-object-inner-word-003-scenario
+    status: approved
+    exercise_id: text-object-inner-word-003
+    engine_support: implemented
+    learning_reinforcement: "ciw는 현재 단어 전체를 비우고 Insert mode로 들어간다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "상태 값 복구"
+    briefing: "status 값이 down으로 내려앉았습니다. 값 중간에서 ciw로 up으로 교체하세요."
+    context_role: "서비스 상태 값"
+    mentor_success: "좋습니다. ciw는 위치를 다시 맞추지 않고 값 전체를 교체합니다."
+    mentor_failure: "cw를 쓰려면 단어 시작으로 가야 합니다. 이번에는 현재 위치에서 ciw를 사용하세요."
+    story_constraints:
+      - "ciw 후 Insert mode 진입과 esc 복귀를 명확히 한다."
+      - "값만 바꾸고 key 이름은 건드리지 않는다."
+
+  - id: text-object-inner-word-004-scenario
+    status: approved
+    exercise_id: text-object-inner-word-004
+    engine_support: implemented
+    learning_reinforcement: "ciw는 긴 위험 값도 현재 위치에서 전체 교체할 수 있다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "블랙홀 라우트 교체"
+    briefing: "route 목적지가 blackhole로 잡혔습니다. 값 중간에서 ciw로 relay로 교체하세요."
+    context_role: "잘못된 라우팅 목적지"
+    mentor_success: "좋습니다. 값 전체를 잡아 relay로 갈아끼웠습니다."
+    mentor_failure: "줄 끝 전체를 덮어쓰지 마세요. 현재 단어만 ciw로 교체합니다."
+    story_constraints:
+      - "c$와 ciw의 범위 차이를 강조한다."
+      - "과한 시나리오 압박보다 조작 차이를 우선한다."
+
+  - id: text-object-inner-word-005-scenario
+    status: approved
+    exercise_id: text-object-inner-word-005
+    engine_support: implemented
+    learning_reinforcement: "yiw는 커서가 단어 중간에 있어도 단어 값만 register에 담는다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "ID 값 미러링"
+    briefing: "alpha ID 값을 mirror에 동기화해야 합니다. 값 중간에서 yiw로 복사해 붙이세요."
+    context_role: "식별자 동기화"
+    mentor_success: "좋습니다. yiw로 값만 안전하게 담아 재사용했습니다."
+    mentor_failure: "alpha를 다시 입력하지 마세요. 현재 값 중간에서 yiw로 복사합니다."
+    story_constraints:
+      - "yiw와 p의 조합을 강조한다."
+      - "수동 타이핑 우회를 금지한다."
+
+  - id: text-object-inner-word-006-scenario
+    status: approved
+    exercise_id: text-object-inner-word-006
+    engine_support: implemented
+    learning_reinforcement: "숫자 값도 inner word 대상으로 복사해 재사용할 수 있다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "포트 값 백업"
+    briefing: "443 포트 값을 backup에도 넣어야 합니다. 숫자 값 중간에서 yiw로 복사해 붙이세요."
+    context_role: "포트 백업 값"
+    mentor_success: "좋습니다. 숫자 값도 yiw로 잡아 안전하게 붙였습니다."
+    mentor_failure: "포트를 다시 치지 마세요. 숫자 위에서도 yiw가 현재 값 전체를 복사합니다."
+    story_constraints:
+      - "숫자 값도 keyword run으로 다룰 수 있음을 보여준다."
+      - "후속 검색/치환 전 값 재사용 감각을 강화한다."

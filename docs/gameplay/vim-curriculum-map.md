@@ -216,13 +216,13 @@ Scenario 방향:
 5. Mid tutorial: Ex command 고급 튜토리얼 — `:s`, `:%s`, range substitute
 6. Mid tutorial: Operator grammar 입문 — `dw`, `d$`, `dd`, `cw`, `c$`, `cc`
 7. Mid tutorial: Yank / put 재사용 — `yy`, `yw`, `y$`, `p`, `P`
+8. Mid tutorial: Text object inner word — `diw`, `ciw`, `yiw`
 
 다음 playable milestone은 아래 순서를 우선한다.
 
-1. Adventure bridge: text object inner word — `text-object-inner-word`
-2. Adventure utility: open-line edit — `open-line-edit`
-3. Adventure utility: repeat last change — `repeat-last-change`
-4. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
+1. Adventure utility: open-line edit — `open-line-edit`
+2. Adventure utility: repeat last change — `repeat-last-change`
+3. Adventure middle: search and replace in survival scenarios — `search-basic`, substitute 응용
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
@@ -242,35 +242,33 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic` |
-| next | 다음 playpack에서 구현/승격할 후보 | `text-object-inner-word` |
-| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `open-line-edit`, `repeat-last-change`, `search-basic` |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word` |
+| next | 다음 playpack에서 구현/승격할 후보 | `open-line-edit` |
+| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `repeat-last-change`, `search-basic` |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `search-basic`, `visual-char-line`, `text-object-inner` quote/pair 계열, `macro-basic`, buffer/window/navigation-at-scale 계열 |
 
 ### Next Playpack Candidate
 
-ID: `playpack-005-text-object-inner-word`
+ID: `playpack-006-open-line-edit`
 
-목표: 플레이어가 단어 시작으로 이동하지 않고도 커서가 놓인 단어 전체를 안전하게 삭제, 변경, 복사한다.
+목표: 플레이어가 현재 줄 주변에 새 줄을 열고 즉시 입력하는 `o`, `O`를 배운다.
 
 Command cluster 후보:
 
 | Cluster | Commands | Engine support | Oracle | 이유 |
 |---------|----------|----------------|--------|------|
-| `text-object-inner-word` | `diw`, `ciw`, `yiw` | planned | optional | operator grammar를 motion 기반에서 구조 대상 기반으로 확장한다. |
+| `open-line-edit` | `o`, `O` | planned | optional | 설정 줄 위/아래에 새 항목을 추가하는 실제 편집 흐름을 만든다. |
 
-TEXT-OBJECT-001 결정:
+다음 gap planning 후보:
 
-- 첫 구현은 `iw`만 다룬다.
-- `diw`, `ciw`, `yiw`만 coverage required로 둔다.
-- `i"`, `i'`, `i(`, `i{`, `aw`, visual selection, count prefix는 제외한다.
-- 엔진은 `operator -> i -> w` 3-key pending sequence를 처리해야 한다.
+- `o`는 현재 줄 아래 새 줄을 열고 Insert mode로 진입한다.
+- `O`는 현재 줄 위 새 줄을 열고 Insert mode로 진입한다.
+- indentation, auto-comment, count prefix는 후속 hardening으로 미룬다.
 
 권장 문항 수:
 
-- `diw`: 2문항
-- `ciw`: 2문항
-- `yiw`: 2문항
+- `o`: 2문항
+- `O`: 2문항
 - `insert-mode-entry`: 3문항
 - `undo-redo-basic`: 2문항
 - 총 7문항 이하

@@ -1,0 +1,96 @@
+id: playable_text_object_inner_word_forbidden_route
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-005": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "mode 값 중간에 커서가 멈췄습니다"
+  - send: "b"
+  - wait_screen_contains: "Retry: r or enter"
+  - send: "enter"
+  - wait_screen_contains: "mode 값 중간에 커서가 멈췄습니다"
+  - send: "d"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Grade: F"
+    - "Grade: A"
+    - "Retry: r or enter"
+    - "좋습니다. diw로 현재 단어 전체를 바로 제거했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"text-object-inner-word-001\""
+  key_trace:
+    - "b"
+    - "enter"
+    - "d"
+    - "i"
+    - "w"
+    - "q"
+  app_state:
+    buffer: ["mode="]
+    cursor:
+      row: 0
+      col: 4
+    mode: "normal"
+    status: "succeeded"
+    progress:
+      mission_id: "text-object-inner-word-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

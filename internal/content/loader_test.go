@@ -16,17 +16,17 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 11 {
-		t.Fatalf("command clusters = %d, want 11", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 12 {
+		t.Fatalf("command clusters = %d, want 12", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 35 {
-		t.Fatalf("exercises = %d, want 35", len(lib.Exercises))
+	if len(lib.Exercises) != 41 {
+		t.Fatalf("exercises = %d, want 41", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 35 {
-		t.Fatalf("scenarios = %d, want 35", len(lib.Scenarios))
+	if len(lib.Scenarios) != 41 {
+		t.Fatalf("scenarios = %d, want 41", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 8 {
-		t.Fatalf("playlists = %d, want 8", len(lib.Playlists))
+	if len(lib.Playlists) != 9 {
+		t.Fatalf("playlists = %d, want 9", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 35 {
-		t.Fatalf("playable exercises = %d, want 35: %+v", len(playable), playable)
+	if len(playable) != 41 {
+		t.Fatalf("playable exercises = %d, want 41: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -62,6 +62,12 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"survival-save-quit-001",
 		"survival-save-quit-002",
 		"survival-save-quit-003",
+		"text-object-inner-word-001",
+		"text-object-inner-word-002",
+		"text-object-inner-word-003",
+		"text-object-inner-word-004",
+		"text-object-inner-word-005",
+		"text-object-inner-word-006",
 		"undo-redo-basic-001",
 		"undo-redo-basic-002",
 		"vim-ex-command-substitute-001",
@@ -109,6 +115,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-4-ex-command",
 		"tutorial-5-operator-grammar",
 		"tutorial-6-yank-put",
+		"tutorial-7-text-object-inner-word",
 	})
 }
 
@@ -309,6 +316,12 @@ func TestCoverageReportsOperatorGrammarCommandsCovered(t *testing.T) {
 	assertStrings(t, yankPutReport.Covered, []string{"yw", "y$", "yy", "p", "P"})
 	if len(yankPutReport.Missing) != 0 {
 		t.Fatalf("yank put missing coverage = %+v, want empty", yankPutReport.Missing)
+	}
+
+	textObjectReport := reports["text-object-inner-word"]
+	assertStrings(t, textObjectReport.Covered, []string{"diw", "ciw", "yiw"})
+	if len(textObjectReport.Missing) != 0 {
+		t.Fatalf("text object missing coverage = %+v, want empty", textObjectReport.Missing)
 	}
 }
 

@@ -1,0 +1,43 @@
+playlists:
+  - id: tutorial-7-text-object-inner-word
+    status: approved
+    title: "Mid Tutorial: Text object inner word"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-7-001
+        role: delete_inner_word_value
+        command_cluster: text-object-inner-word
+        exercise_id: text-object-inner-word-001
+        scenario_id: text-object-inner-word-001-scenario
+        engine_support: implemented
+      - id: tutorial-7-002
+        role: delete_inner_word_token
+        command_cluster: text-object-inner-word
+        exercise_id: text-object-inner-word-002
+        scenario_id: text-object-inner-word-002-scenario
+        engine_support: implemented
+      - id: tutorial-7-003
+        role: change_inner_word_short_value
+        command_cluster: text-object-inner-word
+        exercise_id: text-object-inner-word-003
+        scenario_id: text-object-inner-word-003-scenario
+        engine_support: implemented
+      - id: tutorial-7-004
+        role: change_inner_word_long_value
+        command_cluster: text-object-inner-word
+        exercise_id: text-object-inner-word-004
+        scenario_id: text-object-inner-word-004-scenario
+        engine_support: implemented
+      - id: tutorial-7-005
+        role: yank_inner_word_identifier
+        command_cluster: text-object-inner-word
+        exercise_id: text-object-inner-word-005
+        scenario_id: text-object-inner-word-005-scenario
+        engine_support: implemented
+      - id: tutorial-7-006
+        role: yank_inner_word_number
+        command_cluster: text-object-inner-word
+        exercise_id: text-object-inner-word-006
+        scenario_id: text-object-inner-word-006-scenario
+        engine_support: implemented

@@ -100,5 +100,5 @@
 | 1 | TEXT-OBJECT-001 | completed | `iw` 기반 text object 범위와 제외 항목 결정 |
 | 2 | VIM-021 | completed | `operator -> i -> w` text object pending/selection 기반 구현 |
 | 3 | VIM-022 | completed | `diw`, `ciw`, `yiw` mutation/register semantics 구현 |
-| 4 | PLAYPACK-005 | active | 6문항 text object inner word tutorial content/E2E 구현 |
-| 5 | E2E-PLAYPACK-005 | pending | full playlist, forbidden 우회, progress 저장 검증 |
+| 4 | PLAYPACK-005 | completed | 6문항 text object inner word tutorial content/E2E 구현 |
+| 5 | E2E-PLAYPACK-005 | completed | full playlist, forbidden 우회, progress 저장 검증 |
