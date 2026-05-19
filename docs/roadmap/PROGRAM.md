@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### OPERATOR-GAP-001. Operator grammar engine gap
+### VIM-016. Operator pending mode
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `d/c` operator grammar 구현 범위와 vimengine/runtime gap을 결정한다.
+- 목표: `d/c` operator pending mode와 unsupported combo 처리 기반을 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### OPERATOR-GAP-001. Operator grammar engine gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/operator-gap-001-operator-grammar-gap.md`
+- 완료일: 2026-05-19
 
 ### SCENARIO-TONE-001. Midgame survival adventure tone
 - 상태: completed

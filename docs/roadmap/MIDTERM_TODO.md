@@ -76,7 +76,7 @@
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | OPERATOR-GAP-001 | planning | `d/c` operator grammar 구현 범위와 vimengine/runtime gap 결정 |
+| 1 | OPERATOR-GAP-001 | completed | `d/c` operator grammar 구현 범위와 vimengine/runtime gap 결정 |
 | 2 | VIM-016 | pending | operator pending mode와 `operator + motion` 전이 기반 구현 |
 | 3 | VIM-017 | pending | `delete-with-motion` (`dw`, `d$`, `dd`) 엔진/테스트 구현 |
 | 4 | VIM-018 | pending | `change-with-motion` (`cw`, `c$`, `cc`) 엔진/테스트 구현 |

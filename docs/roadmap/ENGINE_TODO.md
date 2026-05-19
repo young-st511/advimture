@@ -27,7 +27,7 @@
 
 ## 다음 루프 후보
 
-현재 진행 중: 없음. 다음은 PLAYPACK-002 content/runtime 연결이다.
+현재 진행 중: Operator Grammar Adventure Intro.
 
 다음 후보는 `ENGINE-GAP-001`에서 아래 순서로 검토한다.
 
@@ -55,3 +55,15 @@
 | VIM-015 | `u`, `ctrl+r`, mutation history | vimengine unit, scenario scoring regression | completed: mutation snapshot undo/redo 구현. content 승격 시 E2E 추가 |
 
 `PLAYPACK-002`는 VIM-013~015 중 실제 implemented cluster만 playable로 승격한다. engine support가 planned인 cluster는 YAML에 남길 수 있지만 playable path에는 연결하지 않는다.
+
+## OPERATOR-GAP-001 결정
+
+첫 operator grammar 구현은 `d/c + motion`으로 제한한다. text object, yank/put, count prefix는 다음 milestone로 미룬다.
+
+| 루프 | 범위 | 필수 테스트 | E2E |
+|------|------|-------------|-----|
+| VIM-016 | operator pending mode, `d/c` key mapping, unsupported combo | `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
+| VIM-017 | `dw`, `d$`, `dd` 삭제 semantics | vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
+| VIM-018 | `cw`, `c$`, `cc` change semantics | vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
+
+`PLAYPACK-003`은 VIM-016~018이 completed된 뒤 YAML content와 E2E를 연결한다.

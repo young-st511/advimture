@@ -332,6 +332,78 @@ command_cluster:
     - undo/redo는 점수 감점보다 학습 회복 메시지를 우선한다.
 ```
 
+### delete-with-motion
+
+```yaml
+command_cluster:
+  id: delete-with-motion
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-operator-grammar
+  title: Operator grammar: 삭제와 motion
+  commands: ["d", "dw", "d$", "dd"]
+  coverage_required: ["dw", "d$", "dd"]
+  oracle: optional
+  purpose: Vim의 `operator + motion` 문법으로 단어, 줄 끝, 전체 줄을 한 번에 삭제한다.
+  prerequisite: ["word-motion-basic", "whole-file-navigation", "undo-redo-basic"]
+  difficulty: intermediate
+  useful_when:
+    - 위험하거나 불필요한 단어를 한 번에 제거할 때
+    - 현재 위치부터 줄 끝까지 노이즈를 삭제할 때
+    - 오염된 설정 줄 전체를 제거할 때
+  combo_paths:
+    - ["dw", "u"]
+    - ["d$", "u"]
+    - ["dd", "u"]
+  common_mistakes:
+    - `x`를 반복해 단어 전체를 지우려고 한다.
+    - `d`를 누른 뒤 motion을 입력해야 한다는 operator pending 흐름을 놓친다.
+    - `dd`가 줄 전체 삭제라는 점을 잊고 `d$`와 혼동한다.
+  compatibility_notes:
+    - 첫 구현은 count prefix와 text object를 다루지 않는다.
+    - `dw`의 공백 포함 범위는 학습 목적의 pedagogical behavior로 고정하고 후속 exact hardening에서 재검토한다.
+  design_notes:
+    - 첫 playpack은 `dw`, `d$`, `dd`만 다룬다.
+    - 모든 문항은 `constraints.required_keys`로 의도 operator sequence를 고정한다.
+```
+
+### change-with-motion
+
+```yaml
+command_cluster:
+  id: change-with-motion
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-operator-grammar
+  title: Operator grammar: 변경과 motion
+  commands: ["c", "cw", "c$", "cc"]
+  coverage_required: ["cw", "c$", "cc"]
+  oracle: optional
+  purpose: 삭제와 Insert mode 진입을 하나의 operator grammar로 묶어 빠르게 값을 교체한다.
+  prerequisite: ["insert-mode-entry", "delete-with-motion"]
+  difficulty: intermediate
+  useful_when:
+    - 잘못된 설정 단어를 새 값으로 교체할 때
+    - 현재 위치부터 줄 끝까지 새 문구로 바꿀 때
+    - 손상된 한 줄짜리 명령을 통째로 다시 작성할 때
+  combo_paths:
+    - ["cw", "esc"]
+    - ["c$", "esc"]
+    - ["cc", "esc"]
+  common_mistakes:
+    - `d`로 지운 뒤 다시 `i` 또는 `a`를 눌러 두 단계로 처리한다.
+    - change operator 후 Insert mode에 들어간다는 점을 잊는다.
+    - 수정 후 `esc`로 Normal mode에 돌아오지 않는다.
+  compatibility_notes:
+    - 첫 구현은 `cw`, `c$`, `cc`만 지원하고 text object change는 후속 루프에서 다룬다.
+    - Vim의 세부 whitespace semantics는 pedagogical tier로 단순화한다.
+  design_notes:
+    - change 문항은 최종 mode가 Normal mode가 되도록 `esc`를 optimal trace에 포함한다.
+    - `cw`와 `c$`는 delete 범위와 insert entry가 동시에 학습되도록 짧은 문자열로 설계한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -339,6 +411,7 @@ command_cluster:
 - `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
 - `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
 - `vim-ex-command-substitute`는 literal `:s`, `:%s`, `:2,3s` engine support가 구현됐다. Vim regex와 복잡한 flags는 아직 다루지 않는다.
+- `delete-with-motion`, `change-with-motion`은 OPERATOR-GAP-001에서 approved + planned로 승격됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001
