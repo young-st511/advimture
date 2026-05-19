@@ -116,6 +116,10 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyX}
 	case "r":
 		return Action{Type: ActionKey, Key: vimengine.KeyR}
+	case "d":
+		return Action{Type: ActionKey, Key: vimengine.KeyD}
+	case "c":
+		return Action{Type: ActionKey, Key: vimengine.KeyC}
 	case "i":
 		return Action{Type: ActionKey, Key: vimengine.KeyI}
 	case "a":

@@ -76,8 +76,22 @@ func TestMapInputMapsSingleCharEditKeys(t *testing.T) {
 	}
 }
 
+func TestMapInputMapsOperatorKeys(t *testing.T) {
+	cases := map[string]string{
+		"d": vimengine.KeyD,
+		"c": vimengine.KeyC,
+	}
+
+	for input, wantKey := range cases {
+		action := MapInput(input)
+		if action.Type != ActionKey || action.Key != wantKey {
+			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
+		}
+	}
+}
+
 func TestMapInputInInsertModePassesPrintableCharacters(t *testing.T) {
-	for _, input := range []string{"q", "x", "A", "!"} {
+	for _, input := range []string{"q", "x", "A", "!", "d", "c"} {
 		action := MapInputForMode(input, vimengine.ModeInsert)
 		if action.Type != ActionKey || action.Key != input {
 			t.Fatalf("MapInputForMode(%q, insert) = %+v, want key %q", input, action, input)

@@ -190,6 +190,88 @@ func TestDocumentMotionClearsPendingGOnUnsupportedCombo(t *testing.T) {
 	assertApply(t, engine, KeyG, 0, 0, EventMoved)
 }
 
+func TestOperatorKeysEnterPendingMode(t *testing.T) {
+	for _, key := range []string{KeyD, KeyC} {
+		engine := NewWithState(State{
+			Mode:  ModeNormal,
+			Lines: []string{"alpha beta"},
+			Cursor: Cursor{
+				Row:        0,
+				Col:        3,
+				DesiredCol: 3,
+			},
+		})
+
+		result := engine.Apply(key)
+
+		if result.State.PendingKey != key {
+			t.Fatalf("after %q pending key = %q, want %q", key, result.State.PendingKey, key)
+		}
+		if result.State.Lines[0] != "alpha beta" {
+			t.Fatalf("after %q line = %q, want alpha beta", key, result.State.Lines[0])
+		}
+		if result.State.Cursor.Col != 3 {
+			t.Fatalf("after %q cursor col = %d, want 3", key, result.State.Cursor.Col)
+		}
+		assertEvent(t, result, EventPendingKey)
+	}
+}
+
+func TestOperatorPendingClearsUnsupportedComboWithoutMutating(t *testing.T) {
+	for _, tt := range []struct {
+		name     string
+		operator string
+		nextKey  string
+	}{
+		{name: "delete word pending", operator: KeyD, nextKey: KeyW},
+		{name: "change line end pending", operator: KeyC, nextKey: KeyDollar},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			engine := NewWithState(State{
+				Mode:  ModeNormal,
+				Lines: []string{"alpha beta", "gamma"},
+				Cursor: Cursor{
+					Row:        0,
+					Col:        2,
+					DesiredCol: 2,
+				},
+			})
+
+			assertApply(t, engine, tt.operator, 0, 2, EventPendingKey)
+			result := engine.Apply(tt.nextKey)
+
+			assertStrings(t, result.State.Lines, []string{"alpha beta", "gamma"})
+			if result.State.PendingKey != "" {
+				t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+			}
+			if result.State.Mode != ModeNormal {
+				t.Fatalf("mode = %q, want normal", result.State.Mode)
+			}
+			if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 2 {
+				t.Fatalf("cursor = (%d,%d), want (0,2)", result.State.Cursor.Row, result.State.Cursor.Col)
+			}
+			assertEvent(t, result, EventUnsupportedKey)
+		})
+	}
+}
+
+func TestOperatorPendingCanBeCanceledWithEsc(t *testing.T) {
+	for _, key := range []string{KeyD, KeyC} {
+		engine := New([]string{"alpha beta"})
+
+		assertApply(t, engine, key, 0, 0, EventPendingKey)
+		result := engine.Apply(KeyEsc)
+
+		if result.State.PendingKey != "" {
+			t.Fatalf("after %q esc pending key = %q, want empty", key, result.State.PendingKey)
+		}
+		if result.State.Mode != ModeNormal {
+			t.Fatalf("after %q esc mode = %q, want normal", key, result.State.Mode)
+		}
+		assertEvent(t, result, EventModeReset)
+	}
+}
+
 func TestUnsupportedKeyDoesNotMove(t *testing.T) {
 	engine := New([]string{"abc"})
 	result := engine.Apply("z")

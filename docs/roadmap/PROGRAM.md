@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-016. Operator pending mode
+### VIM-017. Delete with motion
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `d/c` operator pending mode와 unsupported combo 처리 기반을 구현한다.
+- 목표: `dw`, `d$`, `dd` 삭제 semantics를 vimengine에 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-016. Operator pending mode
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-016-operator-pending-mode.md`
+- 완료일: 2026-05-19
 
 ### OPERATOR-GAP-001. Operator grammar engine gap
 - 상태: completed

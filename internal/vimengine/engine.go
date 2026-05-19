@@ -32,6 +32,8 @@ const (
 	KeyDollar = "$"
 	KeyX      = "x"
 	KeyR      = "r"
+	KeyD      = "d"
+	KeyC      = "c"
 	KeyI      = "i"
 	KeyA      = "a"
 	KeyShiftA = "A"
@@ -237,6 +239,15 @@ func Apply(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	case KeyD, KeyC:
+		next.PendingKey = key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventPendingKey,
+				Key:  key,
+			}},
+		}
 	case KeyI:
 		return enterInsertMode(next, key, next.Cursor.Col)
 	case KeyA:
@@ -310,6 +321,16 @@ func applyPendingKey(state State, key string) Result {
 	}
 	if pending == KeyR {
 		return replaceCurrentChar(next, key)
+	}
+	if pending == KeyD || pending == KeyC {
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "operator sequence is not supported",
+			}},
+		}
 	}
 	return Result{
 		State: copyState(next),
