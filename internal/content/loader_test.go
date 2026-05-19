@@ -16,17 +16,17 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 8 {
-		t.Fatalf("command clusters = %d, want 8", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 10 {
+		t.Fatalf("command clusters = %d, want 10", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 24 {
-		t.Fatalf("exercises = %d, want 24", len(lib.Exercises))
+	if len(lib.Exercises) != 30 {
+		t.Fatalf("exercises = %d, want 30", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 24 {
-		t.Fatalf("scenarios = %d, want 24", len(lib.Scenarios))
+	if len(lib.Scenarios) != 30 {
+		t.Fatalf("scenarios = %d, want 30", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 6 {
-		t.Fatalf("playlists = %d, want 6", len(lib.Playlists))
+	if len(lib.Playlists) != 7 {
+		t.Fatalf("playlists = %d, want 7", len(lib.Playlists))
 	}
 }
 
@@ -37,13 +37,19 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 24 {
-		t.Fatalf("playable exercises = %d, want 24: %+v", len(playable), playable)
+	if len(playable) != 30 {
+		t.Fatalf("playable exercises = %d, want 30: %+v", len(playable), playable)
 	}
-	if playable[0].ID != "insert-mode-entry-001" {
-		t.Fatalf("playable[0].ID = %q, want insert-mode-entry-001", playable[0].ID)
+	if playable[0].ID != "change-with-motion-001" {
+		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
 	}
 	assertPlayableIDs(t, playable, []string{
+		"change-with-motion-001",
+		"change-with-motion-002",
+		"change-with-motion-003",
+		"delete-with-motion-001",
+		"delete-with-motion-002",
+		"delete-with-motion-003",
 		"insert-mode-entry-001",
 		"insert-mode-entry-002",
 		"insert-mode-entry-003",
@@ -96,6 +102,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-2-fast-navigation",
 		"tutorial-3-small-edits",
 		"tutorial-4-ex-command",
+		"tutorial-5-operator-grammar",
 	})
 }
 
@@ -266,6 +273,30 @@ func TestCoverageReportsSmallEditCommandsCovered(t *testing.T) {
 	assertStrings(t, undo.Covered, []string{"u", "ctrl+r"})
 	if len(undo.Missing) != 0 {
 		t.Fatalf("undo redo missing coverage = %+v, want empty", undo.Missing)
+	}
+}
+
+func TestCoverageReportsOperatorGrammarCommandsCovered(t *testing.T) {
+	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	reports := make(map[string]CoverageReport)
+	for _, report := range lib.CoverageReports() {
+		reports[report.CommandClusterID] = report
+	}
+
+	deleteReport := reports["delete-with-motion"]
+	assertStrings(t, deleteReport.Covered, []string{"dw", "d$", "dd"})
+	if len(deleteReport.Missing) != 0 {
+		t.Fatalf("delete with motion missing coverage = %+v, want empty", deleteReport.Missing)
+	}
+
+	changeReport := reports["change-with-motion"]
+	assertStrings(t, changeReport.Covered, []string{"cw", "c$", "cc"})
+	if len(changeReport.Missing) != 0 {
+		t.Fatalf("change with motion missing coverage = %+v, want empty", changeReport.Missing)
 	}
 }
 

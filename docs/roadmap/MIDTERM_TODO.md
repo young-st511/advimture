@@ -80,5 +80,5 @@
 | 2 | VIM-016 | completed | operator pending mode와 `operator + motion` 전이 기반 구현 |
 | 3 | VIM-017 | completed | `delete-with-motion` (`dw`, `d$`, `dd`) 엔진/테스트 구현 |
 | 4 | VIM-018 | completed | `change-with-motion` (`cw`, `c$`, `cc`) 엔진/테스트 구현 |
-| 5 | PLAYPACK-003 | planning | 6문항짜리 operator grammar adventure intro content/E2E 구현 |
-| 6 | YANK-TEXT-001 | pending | `y/p`와 text object 후보를 다음 playpack으로 설계 |
+| 5 | PLAYPACK-003 | completed | 6문항짜리 operator grammar adventure intro content/E2E 구현 |
+| 6 | YANK-TEXT-001 | planning | `y/p`와 text object 후보를 다음 playpack으로 설계 |

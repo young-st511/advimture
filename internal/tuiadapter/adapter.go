@@ -56,8 +56,11 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		if normalized == "esc" {
 			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
 		}
-		if len([]rune(trimmed)) == 1 {
-			return Action{Type: ActionKey, Key: trimmed}
+		if normalized == "space" {
+			return Action{Type: ActionKey, Key: " "}
+		}
+		if len([]rune(input)) == 1 {
+			return Action{Type: ActionKey, Key: input}
 		}
 		return Action{Type: ActionIgnored}
 	}

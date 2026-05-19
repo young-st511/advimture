@@ -339,7 +339,7 @@ command_cluster:
   id: delete-with-motion
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-operator-grammar
   title: Operator grammar: 삭제와 motion
   commands: ["d", "dw", "d$", "dd"]
@@ -375,7 +375,7 @@ command_cluster:
   id: change-with-motion
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-operator-grammar
   title: Operator grammar: 변경과 motion
   commands: ["c", "cw", "c$", "cc"]
@@ -411,7 +411,7 @@ command_cluster:
 - `word-motion-basic`은 `w/b/e` engine support가 구현됐다. playable 승격 전에는 각 command가 optimal trace에 등장하는 exercise set과 replay gate를 통과해야 한다.
 - `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
 - `vim-ex-command-substitute`는 literal `:s`, `:%s`, `:2,3s` engine support가 구현됐다. Vim regex와 복잡한 flags는 아직 다루지 않는다.
-- `delete-with-motion`, `change-with-motion`은 OPERATOR-GAP-001에서 approved + planned로 승격됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
+- `delete-with-motion`, `change-with-motion`은 VIM-017/VIM-018에서 engine support가 구현됐고 PLAYPACK-003에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

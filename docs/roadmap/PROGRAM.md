@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-003. Operator grammar adventure intro
+### YANK-TEXT-001. Yank / put and text object candidates
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `dw`, `d$`, `dd`, `cw`, `c$`, `cc`를 6문항 operator grammar adventure intro content와 E2E로 연결한다.
+- 목표: `y/p`와 text object 후보를 다음 playpack으로 설계한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-003. Operator grammar adventure intro
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-003-operator-grammar-intro.md`
+- 완료일: 2026-05-19
 
 ### VIM-018. Change with motion
 - 상태: completed

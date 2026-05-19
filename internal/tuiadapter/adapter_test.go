@@ -91,11 +91,19 @@ func TestMapInputMapsOperatorKeys(t *testing.T) {
 }
 
 func TestMapInputInInsertModePassesPrintableCharacters(t *testing.T) {
-	for _, input := range []string{"q", "x", "A", "!", "d", "c"} {
+	for _, input := range []string{"q", "x", "A", "!", "d", "c", " "} {
 		action := MapInputForMode(input, vimengine.ModeInsert)
 		if action.Type != ActionKey || action.Key != input {
 			t.Fatalf("MapInputForMode(%q, insert) = %+v, want key %q", input, action, input)
 		}
+	}
+}
+
+func TestMapInputInInsertModeMapsNamedSpaceToPrintableSpace(t *testing.T) {
+	action := MapInputForMode("space", vimengine.ModeInsert)
+
+	if action.Type != ActionKey || action.Key != " " {
+		t.Fatalf("MapInputForMode(space, insert) = %+v, want printable space", action)
 	}
 }
 

@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented tutorial playlist를 ID 순서로 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
@@ -67,7 +67,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`은 approved + implemented tutorial cluster이며 `x`, `r`, `i`, `a`, `A`, `u`, `ctrl+r` coverage와 replay gate를 통과한다.
 - `tutorial-3-small-edits`는 7문항짜리 작은 수정 튜토리얼이며 Ex command보다 먼저 실행된다.
 - `undo-redo-basic` 문항은 required key 없이 최종 목표에 먼저 도착하지 않도록 target cursor와 optimal trace를 설계한다.
-- 다음 playable milestone은 operator grammar 입문이며 `delete-with-motion`, `change-with-motion`을 먼저 다룬다.
+- `tutorial-5-operator-grammar`는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`를 각각 한 문항씩 다루는 6문항 operator grammar 입문 tutorial이다.
+- `delete-with-motion`, `change-with-motion`은 approved + implemented tutorial cluster이며 replay gate와 E2E assertion gate를 통과한다.
+- 현재 pedagogical `cw`는 `dw`와 같은 범위로 단어 뒤 공백까지 삭제하므로, 단어 교체 문항은 새 단어 뒤 공백 입력을 optimal trace에 포함한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

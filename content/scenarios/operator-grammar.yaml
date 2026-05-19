@@ -1,0 +1,90 @@
+scenarios:
+  - id: delete-with-motion-001-scenario
+    status: approved
+    exercise_id: delete-with-motion-001
+    engine_support: implemented
+    learning_reinforcement: "dw는 현재 위치부터 다음 단어 시작 전까지 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "냉각 로그 플래그 제거"
+    briefing: "냉각 로그에 leak 플래그가 잘못 끼었습니다. 단어 하나만 빼면 자동 차단이 풀립니다."
+    context_role: "오염된 냉각 로그"
+    mentor_success: "좋습니다. dw는 현재 위치의 단어를 한 번에 잘라낼 때 유용합니다."
+    mentor_failure: "x 반복으로는 이번 훈련 의도가 흐려집니다. d 다음에 w로 단어 범위를 주세요."
+    story_constraints:
+      - "삭제 대상은 이미 커서 아래에 둔다."
+      - "단어 하나만 제거한다."
+
+  - id: delete-with-motion-002-scenario
+    status: approved
+    exercise_id: delete-with-motion-002
+    engine_support: implemented
+    learning_reinforcement: "d$는 현재 위치부터 현재 줄 끝까지 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "구조 신호 노이즈 폐기"
+    briefing: "구조 신호 앞부분만 살아 있습니다. 커서 뒤쪽 노이즈는 줄 끝까지 버리세요."
+    context_role: "잡음 섞인 송신 버퍼"
+    mentor_success: "깨끗합니다. d$는 현재 위치부터 줄 끝까지 폐기할 때 빠릅니다."
+    mentor_failure: "노이즈 일부만 지우면 송신기가 다시 깨집니다. 줄 끝까지 잡으려면 d$입니다."
+    story_constraints:
+      - "줄 끝 삭제의 범위를 흐리지 않는다."
+      - "남는 trailing space가 없도록 buffer를 설계한다."
+
+  - id: delete-with-motion-003-scenario
+    status: approved
+    exercise_id: delete-with-motion-003
+    engine_support: implemented
+    learning_reinforcement: "dd는 현재 줄 전체를 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "위험한 배포 줄 제거"
+    briefing: "배포 큐 중간에 위험한 강제 명령이 섞였습니다. 줄 전체를 제거하세요."
+    context_role: "배포 직전 작업 큐"
+    mentor_success: "좋습니다. dd는 현재 줄 전체를 제거합니다."
+    mentor_failure: "d$는 줄 앞부분을 남길 수 있습니다. 줄 자체가 오염됐으면 dd가 맞습니다."
+    story_constraints:
+      - "마지막 한 줄 삭제 특수 케이스를 쓰지 않는다."
+      - "현재 줄 전체 삭제만 요구한다."
+
+  - id: change-with-motion-001-scenario
+    status: approved
+    exercise_id: change-with-motion-001
+    engine_support: implemented
+    learning_reinforcement: "cw는 단어 범위를 지우고 Insert mode로 들어간다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "밸브 상태 교체"
+    briefing: "밸브 상태가 closed로 찍혀 있습니다. 단어 하나를 open으로 교체하고 Normal mode로 돌아오세요."
+    context_role: "압력 밸브 상태 줄"
+    mentor_success: "좋습니다. cw는 단어 삭제와 입력 시작을 한 번에 묶습니다."
+    mentor_failure: "이번 튜토리얼의 cw는 단어 뒤 공백까지 지웁니다. open 뒤 공백을 입력하고 esc로 돌아오세요."
+    story_constraints:
+      - "cw의 공백 포함 pedagogical semantics를 숨기지 않는다."
+      - "수정 완료 후 esc 복귀를 요구한다."
+
+  - id: change-with-motion-002-scenario
+    status: approved
+    exercise_id: change-with-motion-002
+    engine_support: implemented
+    learning_reinforcement: "c$는 현재 위치부터 줄 끝까지 지우고 Insert mode로 들어간다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "라우팅 목적지 교체"
+    briefing: "라우트 목적지가 블랙홀로 틀어졌습니다. 현재 위치부터 줄 끝까지 새 목적지로 바꾸세요."
+    context_role: "잘못된 라우팅 설정"
+    mentor_success: "복구됐습니다. c$는 줄 후반을 통째로 새 내용으로 갈아끼울 때 좋습니다."
+    mentor_failure: "목적지 조각만 고치면 잔여 문자가 남습니다. 현재 위치부터 끝까지 바꾸는 c$를 쓰세요."
+    story_constraints:
+      - "줄 후반 전체 교체의 효용을 강조한다."
+      - "수정 완료 후 esc 복귀를 요구한다."
+
+  - id: change-with-motion-003-scenario
+    status: approved
+    exercise_id: change-with-motion-003
+    engine_support: implemented
+    learning_reinforcement: "cc는 현재 줄을 비우고 Insert mode로 들어간다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "손상 명령 재작성"
+    briefing: "가운데 명령 줄이 깨졌습니다. 부분 수정보다 줄 전체를 다시 쓰는 편이 안전합니다."
+    context_role: "손상된 작업 명령"
+    mentor_success: "좋습니다. cc는 현재 줄을 비우고 바로 새 줄 입력으로 들어갑니다."
+    mentor_failure: "cw나 c$로는 앞뒤 찌꺼기가 남기 쉽습니다. 줄 전체가 손상됐으면 cc입니다."
+    story_constraints:
+      - "줄 전체 교체만 요구한다."
+      - "수정 완료 후 esc 복귀를 요구한다."

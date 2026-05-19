@@ -1,0 +1,43 @@
+playlists:
+  - id: tutorial-5-operator-grammar
+    status: approved
+    title: "Mid Tutorial: Operator grammar 입문"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-5-001
+        role: delete_word
+        command_cluster: delete-with-motion
+        exercise_id: delete-with-motion-001
+        scenario_id: delete-with-motion-001-scenario
+        engine_support: implemented
+      - id: tutorial-5-002
+        role: delete_to_line_end
+        command_cluster: delete-with-motion
+        exercise_id: delete-with-motion-002
+        scenario_id: delete-with-motion-002-scenario
+        engine_support: implemented
+      - id: tutorial-5-003
+        role: delete_line
+        command_cluster: delete-with-motion
+        exercise_id: delete-with-motion-003
+        scenario_id: delete-with-motion-003-scenario
+        engine_support: implemented
+      - id: tutorial-5-004
+        role: change_word
+        command_cluster: change-with-motion
+        exercise_id: change-with-motion-001
+        scenario_id: change-with-motion-001-scenario
+        engine_support: implemented
+      - id: tutorial-5-005
+        role: change_to_line_end
+        command_cluster: change-with-motion
+        exercise_id: change-with-motion-002
+        scenario_id: change-with-motion-002-scenario
+        engine_support: implemented
+      - id: tutorial-5-006
+        role: change_line
+        command_cluster: change-with-motion
+        exercise_id: change-with-motion-003
+        scenario_id: change-with-motion-003-scenario
+        engine_support: implemented

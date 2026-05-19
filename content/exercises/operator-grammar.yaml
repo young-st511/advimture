@@ -1,0 +1,295 @@
+exercises:
+  - id: delete-with-motion-001
+    status: approved
+    command_cluster: delete-with-motion
+    engine_support: implemented
+    trained_commands: ["dw"]
+    reviewed_commands: ["w", "x"]
+    mistake_focus: ["x를 반복해 단어를 지우려고 한다."]
+    replay_status: pass
+    title: "위험 단어 한 번에 삭제"
+    goal_for_player: "냉각 로그에서 잘못 붙은 leak 단어만 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        ALERT leak valve=ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        ALERT valve=ok
+    optimal_keys: ["d", "w"]
+    allowed_keys: ["d", "w", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["d", "w"]
+      forbidden_keys: ["x", "r", "i", "a", "A", ":", "u", "ctrl+r", "left", "right", "up", "down", "ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "d는 다음 입력으로 삭제할 범위를 기다립니다."
+      - after_keys: 2
+        text: "dw는 현재 위치부터 다음 단어 시작 전까지 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["ALERT valve=ok"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: delete-with-motion-002
+    status: approved
+    command_cluster: delete-with-motion
+    engine_support: implemented
+    trained_commands: ["d$"]
+    reviewed_commands: ["$", "dw"]
+    mistake_focus: ["줄 끝까지 지워야 하는데 일부 문자만 지운다."]
+    replay_status: pass
+    title: "줄 끝 노이즈 폐기"
+    goal_for_player: "구조 신호 뒤에 붙은 노이즈를 현재 위치부터 줄 끝까지 폐기하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        tx: SOS###NOISE###
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        tx: SOS
+    optimal_keys: ["d", "$"]
+    allowed_keys: ["d", "$", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["d", "$"]
+      forbidden_keys: ["x", "r", "i", "a", "A", ":", "u", "ctrl+r", "left", "right", "up", "down", "ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "현재 위치 뒤쪽을 줄 끝까지 잡아야 합니다."
+      - after_keys: 2
+        text: "d$는 현재 위치부터 현재 줄 끝까지 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["tx: SOS"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: delete-with-motion-003
+    status: approved
+    command_cluster: delete-with-motion
+    engine_support: implemented
+    trained_commands: ["dd"]
+    reviewed_commands: ["d$"]
+    mistake_focus: ["줄 전체 삭제와 줄 끝 삭제를 혼동한다."]
+    replay_status: pass
+    title: "오염 줄 제거"
+    goal_for_player: "배포 큐 중간의 위험한 줄 전체를 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 4
+      buffer: |
+        deploy: stage
+        DROP_ALL_CACHE --force
+        deploy: verify
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        deploy: stage
+        deploy: verify
+    optimal_keys: ["d", "d"]
+    allowed_keys: ["d", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["d"]
+      forbidden_keys: ["x", "r", "i", "a", "A", ":", "u", "ctrl+r", "left", "right", "up", "down", "ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "현재 줄 전체가 오염됐습니다. motion 대신 d를 한 번 더 누릅니다."
+      - after_keys: 2
+        text: "dd는 현재 줄 전체를 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["deploy: stage", "deploy: verify"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: change-with-motion-001
+    status: approved
+    command_cluster: change-with-motion
+    engine_support: implemented
+    trained_commands: ["cw"]
+    reviewed_commands: ["dw", "i", "esc"]
+    mistake_focus: ["단어 교체를 삭제와 Insert mode 진입으로 나눠서 처리한다."]
+    replay_status: pass
+    title: "상태 단어 교체"
+    goal_for_player: "밸브 상태 단어를 open으로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        valve closed pressure=nominal
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 11
+      buffer: |
+        valve open pressure=nominal
+    optimal_keys: ["c", "w", "o", "p", "e", "n", " ", "esc"]
+    allowed_keys: ["c", "w", "o", "p", "e", "n", " ", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["c", "w", "esc"]
+      forbidden_keys: ["d", "x", "r", "i", "a", "A", ":", "u", "ctrl+r", "left", "right", "up", "down", "ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "c도 d처럼 다음 입력으로 바꿀 범위를 기다립니다."
+      - after_keys: 2
+        text: "cw는 단어 뒤 공백까지 지우고 Insert mode로 들어갑니다. open 뒤 공백까지 입력하세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["valve open pressure=nominal"]
+      cursor:
+        row: 0
+        col: 11
+      mode: normal
+      status: succeeded
+
+  - id: change-with-motion-002
+    status: approved
+    command_cluster: change-with-motion
+    engine_support: implemented
+    trained_commands: ["c$"]
+    reviewed_commands: ["d$", "esc"]
+    mistake_focus: ["줄 후반 전체를 교체해야 하는데 잔여 문자를 남긴다."]
+    replay_status: pass
+    title: "라우팅 목적지 교체"
+    goal_for_player: "현재 위치부터 줄 끝까지 relay-07로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        route -> blackhole.local
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 16
+      buffer: |
+        route -> relay-07
+    optimal_keys: ["c", "$", "r", "e", "l", "a", "y", "-", "0", "7", "esc"]
+    allowed_keys: ["c", "$", "r", "e", "l", "a", "y", "-", "0", "7", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 11
+      required_keys: ["c", "$", "esc"]
+      forbidden_keys: ["d", "x", "i", "A", ":", "u", "ctrl+r", "left", "right", "up", "down", "ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "현재 위치부터 줄 끝까지 새 목적지로 갈아끼워야 합니다."
+      - after_keys: 2
+        text: "c$는 줄 끝까지 지우고 바로 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 11
+    e2e_assertions:
+      buffer: ["route -> relay-07"]
+      cursor:
+        row: 0
+        col: 16
+      mode: normal
+      status: succeeded
+
+  - id: change-with-motion-003
+    status: approved
+    command_cluster: change-with-motion
+    engine_support: implemented
+    trained_commands: ["cc"]
+    reviewed_commands: ["cw", "c$"]
+    mistake_focus: ["줄 전체가 손상됐는데 부분 교체로 해결하려고 한다."]
+    replay_status: pass
+    title: "손상 명령 줄 재작성"
+    goal_for_player: "가운데 명령 줄 전체를 rsync --dry-run ok로 다시 작성하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 7
+      buffer: |
+        job: precheck
+        rsync ??? corrupted
+        job: report
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 17
+      buffer: |
+        job: precheck
+        rsync --dry-run ok
+        job: report
+    optimal_keys: ["c", "c", "r", "s", "y", "n", "c", " ", "-", "-", "d", "r", "y", "-", "r", "u", "n", " ", "o", "k", "esc"]
+    allowed_keys: ["c", "r", "s", "y", "n", " ", "-", "d", "u", "o", "k", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 21
+      required_keys: ["c", "esc"]
+      forbidden_keys: ["x", "i", "a", "A", ":", "ctrl+r", "left", "right", "up", "down", "ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "줄 전체가 손상됐습니다. c를 한 번 더 눌러 현재 줄을 교체하세요."
+      - after_keys: 2
+        text: "cc는 현재 줄을 비우고 바로 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 21
+    e2e_assertions:
+      buffer: ["job: precheck", "rsync --dry-run ok", "job: report"]
+      cursor:
+        row: 1
+        col: 17
+      mode: normal
+      status: succeeded
