@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-018. Change with motion
+### PLAYPACK-003. Operator grammar adventure intro
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `cw`, `c$`, `cc` change semantics와 Insert mode 진입을 vimengine에 구현한다.
+- 목표: `dw`, `d$`, `dd`, `cw`, `c$`, `cc`를 6문항 operator grammar adventure intro content와 E2E로 연결한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-018. Change with motion
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-018-change-with-motion.md`
+- 완료일: 2026-05-19
 
 ### VIM-017. Delete with motion
 - 상태: completed

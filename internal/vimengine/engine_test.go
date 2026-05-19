@@ -224,7 +224,7 @@ func TestOperatorPendingClearsUnsupportedComboWithoutMutating(t *testing.T) {
 		nextKey  string
 	}{
 		{name: "delete unsupported pending", operator: KeyD, nextKey: KeyE},
-		{name: "change line end pending", operator: KeyC, nextKey: KeyDollar},
+		{name: "change unsupported pending", operator: KeyC, nextKey: KeyE},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			engine := NewWithState(State{
@@ -379,6 +379,95 @@ func TestDeleteWithMotionUndoRedo(t *testing.T) {
 	engine.Apply(KeyW)
 	result := engine.Apply(KeyU)
 
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	assertEvent(t, result, EventChanged)
+
+	result = engine.Apply(KeyCtrlR)
+	assertStrings(t, result.State.Lines, []string{"beta"})
+	assertEvent(t, result, EventChanged)
+}
+
+func TestChangeWordMotionEntersInsertMode(t *testing.T) {
+	engine := New([]string{"alpha beta"})
+
+	assertApply(t, engine, KeyC, 0, 0, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"beta"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor col = %d, want 0", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+
+	result = engine.Apply("X")
+	assertStrings(t, result.State.Lines, []string{"Xbeta"})
+	assertEvent(t, result, EventChanged)
+}
+
+func TestChangeToLineEndEntersInsertMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        6,
+			DesiredCol: 6,
+		},
+	})
+
+	engine.Apply(KeyC)
+	result := engine.Apply(KeyDollar)
+
+	assertStrings(t, result.State.Lines, []string{"alpha "})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor col = %d, want insert position 6", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestChangeCurrentLineEntersInsertMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two", "three"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	engine.Apply(KeyC)
+	result := engine.Apply(KeyC)
+
+	assertStrings(t, result.State.Lines, []string{"one", "", "three"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want (1,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestChangeWithMotionUndoRedo(t *testing.T) {
+	engine := New([]string{"alpha beta"})
+
+	engine.Apply(KeyC)
+	engine.Apply(KeyW)
+	engine.Apply("X")
+	engine.Apply(KeyEsc)
+	result := engine.Apply(KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"beta"})
+	assertEvent(t, result, EventChanged)
+
+	result = engine.Apply(KeyU)
 	assertStrings(t, result.State.Lines, []string{"alpha beta"})
 	assertEvent(t, result, EventChanged)
 

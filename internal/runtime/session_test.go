@@ -197,6 +197,33 @@ func TestSessionReplaysDeleteWithMotionTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyD, vimengine.KeyW})
 }
 
+func TestSessionReplaysChangeWithMotionTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "change-word",
+		Initial: vimengine.NewState([]string{"alpha beta"}),
+		Goal: Goal{
+			Lines:  []string{"omega beta"},
+			Cursor: CursorGoal(0, 6),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyC, vimengine.KeyW, vimengine.KeyEsc},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyC, vimengine.KeyW, "o", "m", "e", "g", "a", " "} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEsc)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after esc = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyW, "o", "m", "e", "g", "a", " ", vimengine.KeyEsc})
+}
+
 func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
 	initial := vimengine.NewState([]string{"api"})
 	initial.Cursor.Col = 1
