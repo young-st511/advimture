@@ -322,7 +322,10 @@ func applyPendingKey(state State, key string) Result {
 	if pending == KeyR {
 		return replaceCurrentChar(next, key)
 	}
-	if pending == KeyD || pending == KeyC {
+	if pending == KeyD {
+		return deleteWithMotion(next, key)
+	}
+	if pending == KeyC {
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -339,6 +342,26 @@ func applyPendingKey(state State, key string) Result {
 			Key:     key,
 			Message: "key sequence is not supported",
 		}},
+	}
+}
+
+func deleteWithMotion(state State, key string) Result {
+	switch key {
+	case KeyW:
+		return deleteWordForward(state, key)
+	case KeyDollar:
+		return deleteToLineEnd(state, key)
+	case KeyD:
+		return deleteCurrentLine(state, key)
+	default:
+		return Result{
+			State: copyState(state),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "delete sequence is not supported",
+			}},
+		}
 	}
 }
 
@@ -406,6 +429,105 @@ func applyCommandKey(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	}
+}
+
+func deleteWordForward(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	if len(line) == 0 {
+		return boundary(state, key)
+	}
+	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	end, ok := deleteWordForwardEnd(line, start)
+	if !ok || end <= start {
+		return boundary(state, key)
+	}
+	return deleteLineRange(state, key, start, end)
+}
+
+func deleteWordForwardEnd(line []rune, start int) (int, bool) {
+	if start >= len(line) {
+		return len(line), false
+	}
+	index := start
+	currentClass := classifyRune(line[index])
+	if currentClass != cellSpace {
+		for index < len(line) && classifyRune(line[index]) == currentClass {
+			index++
+		}
+	}
+	for index < len(line) && classifyRune(line[index]) == cellSpace {
+		index++
+	}
+	if index > start {
+		return index, true
+	}
+	return len(line), len(line) > start
+}
+
+func deleteToLineEnd(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	if len(line) == 0 {
+		return boundary(state, key)
+	}
+	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	return deleteLineRange(state, key, start, len(line))
+}
+
+func deleteLineRange(state State, key string, start int, end int) Result {
+	next := pushUndo(state)
+	line := []rune(next.Lines[next.Cursor.Row])
+	if start < 0 {
+		start = 0
+	}
+	if end > len(line) {
+		end = len(line)
+	}
+	if start >= end {
+		return boundary(state, key)
+	}
+	line = append(line[:start], line[end:]...)
+	next.Lines[next.Cursor.Row] = string(line)
+	next.Cursor.Col = clampCol(start, next.Lines[next.Cursor.Row])
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func deleteCurrentLine(state State, key string) Result {
+	next := pushUndo(state)
+	if len(next.Lines) == 1 {
+		next.Lines[0] = ""
+		next.Cursor.Row = 0
+		next.Cursor.Col = 0
+		next.Cursor.DesiredCol = 0
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventChanged,
+				Key:  key,
+			}},
+		}
+	}
+	row := next.Cursor.Row
+	next.Lines = append(next.Lines[:row], next.Lines[row+1:]...)
+	if row >= len(next.Lines) {
+		row = len(next.Lines) - 1
+	}
+	next.Cursor.Row = row
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
 	}
 }
 

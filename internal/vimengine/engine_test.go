@@ -223,7 +223,7 @@ func TestOperatorPendingClearsUnsupportedComboWithoutMutating(t *testing.T) {
 		operator string
 		nextKey  string
 	}{
-		{name: "delete word pending", operator: KeyD, nextKey: KeyW},
+		{name: "delete unsupported pending", operator: KeyD, nextKey: KeyE},
 		{name: "change line end pending", operator: KeyC, nextKey: KeyDollar},
 	} {
 		t.Run(tt.name, func(t *testing.T) {
@@ -270,6 +270,121 @@ func TestOperatorPendingCanBeCanceledWithEsc(t *testing.T) {
 		}
 		assertEvent(t, result, EventModeReset)
 	}
+}
+
+func TestDeleteWordMotionDeletesToNextWordStart(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        0,
+			DesiredCol: 0,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 0, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"beta"})
+	if result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor col = %d, want 0", result.State.Cursor.Col)
+	}
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteWordMotionFromMiddleOfWord(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	engine.Apply(KeyD)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"albeta"})
+	if result.State.Cursor.Col != 2 {
+		t.Fatalf("cursor col = %d, want 2", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteToLineEnd(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        6,
+			DesiredCol: 6,
+		},
+	})
+
+	engine.Apply(KeyD)
+	result := engine.Apply(KeyDollar)
+
+	assertStrings(t, result.State.Lines, []string{"alpha "})
+	if result.State.Cursor.Col != 5 {
+		t.Fatalf("cursor col = %d, want 5", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteCurrentLine(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two", "three"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	engine.Apply(KeyD)
+	result := engine.Apply(KeyD)
+
+	assertStrings(t, result.State.Lines, []string{"one", "three"})
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want (1,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteOnlyLineLeavesEmptyBuffer(t *testing.T) {
+	engine := New([]string{"one"})
+
+	engine.Apply(KeyD)
+	result := engine.Apply(KeyD)
+
+	assertStrings(t, result.State.Lines, []string{""})
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestDeleteWithMotionUndoRedo(t *testing.T) {
+	engine := New([]string{"alpha beta"})
+
+	engine.Apply(KeyD)
+	engine.Apply(KeyW)
+	result := engine.Apply(KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	assertEvent(t, result, EventChanged)
+
+	result = engine.Apply(KeyCtrlR)
+	assertStrings(t, result.State.Lines, []string{"beta"})
+	assertEvent(t, result, EventChanged)
 }
 
 func TestUnsupportedKeyDoesNotMove(t *testing.T) {

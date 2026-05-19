@@ -171,6 +171,32 @@ func TestSessionFailsWhenGoalReachedWithoutRequiredKey(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyDollar})
 }
 
+func TestSessionReplaysDeleteWithMotionTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "delete-word",
+		Initial: vimengine.NewState([]string{"alpha beta"}),
+		Goal: Goal{
+			Lines:  []string{"beta"},
+			Cursor: CursorGoal(0, 0),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyD, vimengine.KeyW},
+		},
+	})
+
+	result := session.ApplyKey(vimengine.KeyD)
+	if result.State.Status != StatusRunning {
+		t.Fatalf("status after d = %q, want running", result.State.Status)
+	}
+
+	result = session.ApplyKey(vimengine.KeyW)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after dw = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyD, vimengine.KeyW})
+}
+
 func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
 	initial := vimengine.NewState([]string{"api"})
 	initial.Cursor.Col = 1

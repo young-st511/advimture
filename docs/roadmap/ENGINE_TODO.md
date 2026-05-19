@@ -63,7 +63,7 @@
 | 루프 | 범위 | 필수 테스트 | E2E |
 |------|------|-------------|-----|
 | VIM-016 | operator pending mode, `d/c` key mapping, unsupported combo | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
-| VIM-017 | `dw`, `d$`, `dd` 삭제 semantics | vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
+| VIM-017 | `dw`, `d$`, `dd` 삭제 semantics | completed: vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
 | VIM-018 | `cw`, `c$`, `cc` change semantics | vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
 
 `PLAYPACK-003`은 VIM-016~018이 completed된 뒤 YAML content와 E2E를 연결한다.
