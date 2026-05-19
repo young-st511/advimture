@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### TEXT-OBJECT-001. Inner word text object gap
-- 상태: planning
+### VIM-021. Text object pending foundation
+- 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `iw` 기반 text object gap과 구현 범위를 결정한다.
+- 목표: `operator -> i -> w` pending sequence와 inner-word selection 기반을 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### TEXT-OBJECT-001. Inner word text object gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/text-object-001-inner-word-gap.md`
+- 완료일: 2026-05-19
 
 ### PLAYPACK-004. Yank / put basic tutorial
 - 상태: completed

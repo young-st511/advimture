@@ -91,4 +91,14 @@
 | 2 | VIM-019 | completed | unnamed register와 `yw`, `y$`, `yy` yank engine 구현 |
 | 3 | VIM-020 | completed | `p`, `P` put engine과 runtime replay smoke 구현 |
 | 4 | PLAYPACK-004 | completed | yank/put basic tutorial content/E2E 구현 |
-| 5 | TEXT-OBJECT-001 | planning | `iw` 기반 text object gap planning |
+| 5 | TEXT-OBJECT-001 | completed | `iw` 기반 text object gap planning |
+
+## 다음 중기 플랜: Text Object Inner Word
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | TEXT-OBJECT-001 | completed | `iw` 기반 text object 범위와 제외 항목 결정 |
+| 2 | VIM-021 | active | `operator -> i -> w` text object pending/selection 기반 구현 |
+| 3 | VIM-022 | pending | `diw`, `ciw`, `yiw` mutation/register semantics 구현 |
+| 4 | PLAYPACK-005 | pending | 6문항 text object inner word tutorial content/E2E 구현 |
+| 5 | E2E-PLAYPACK-005 | pending | full playlist, forbidden 우회, progress 저장 검증 |

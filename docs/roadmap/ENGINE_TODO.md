@@ -80,3 +80,16 @@
 | TEXT-OBJECT-001 | `iw` 기반 text object gap planning | docs + scope review | 없음 |
 
 첫 `y/p` 구현은 unnamed register만 다루며 named register, clipboard, count prefix, visual selection은 제외한다.
+
+## TEXT-OBJECT-001 결정
+
+첫 text object 구현은 `iw`만 다룬다. operator grammar는 기존 `d/c/y + motion`에서 `d/c/y + i + w` 3-key sequence로 확장한다.
+
+| 루프 | 범위 | 필수 테스트 | E2E |
+|------|------|-------------|-----|
+| VIM-021 | `operator -> i -> w` pending sequence, inner-word selection helper | `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
+| VIM-022 | `diw`, `ciw`, `yiw` semantics, undo/register/runtime replay | vimengine unit, runtime replay smoke | PLAYPACK-005에서 추가 |
+| PLAYPACK-005 | `text-object-inner-word` tutorial content | content replay, coverage, playable model | full playlist E2E |
+| E2E-PLAYPACK-005 | text object playpack QA hardening | E2E evidence and assertions | full playlist + forbidden route |
+
+quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual selection, count prefix는 후속 milestone으로 넘긴다.
