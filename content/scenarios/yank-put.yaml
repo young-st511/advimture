@@ -1,0 +1,75 @@
+scenarios:
+  - id: yank-put-basic-001-scenario
+    status: approved
+    exercise_id: yank-put-basic-001
+    engine_support: implemented
+    learning_reinforcement: "yy는 현재 줄을 linewise register에 담고 p는 아래에 붙인다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "정상 라우트 복제"
+    briefing: "정상 라우트 줄을 아래에 한 번 더 복제해 예비 경로를 준비하세요."
+    context_role: "검증된 라우팅 설정"
+    mentor_success: "좋습니다. yy로 안전한 줄을 담고 p로 바로 아래에 재사용했습니다."
+    mentor_failure: "직접 다시 입력하지 마세요. 현재 줄 전체를 yy로 복사한 뒤 p로 아래에 붙입니다."
+    story_constraints:
+      - "linewise register와 p의 아래 방향을 강조한다."
+      - "수동 타이핑 우회를 금지한다."
+
+  - id: yank-put-basic-002-scenario
+    status: approved
+    exercise_id: yank-put-basic-002
+    engine_support: implemented
+    learning_reinforcement: "P는 linewise register를 현재 줄 위에 붙인다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "예비 라우트 위쪽 삽입"
+    briefing: "backup 라우트를 현재 위치 위에도 배치해야 합니다. 같은 줄을 복사한 뒤 위에 붙이세요."
+    context_role: "순서가 중요한 라우팅 설정"
+    mentor_success: "좋습니다. P는 현재 줄 위에 붙일 때 씁니다."
+    mentor_failure: "아래가 아니라 위에 넣어야 합니다. yy로 담고 P를 사용하세요."
+    story_constraints:
+      - "p와 P의 방향 차이를 강조한다."
+      - "현재 줄을 바꾸지 않는다."
+
+  - id: yank-put-basic-003-scenario
+    status: approved
+    exercise_id: yank-put-basic-003
+    engine_support: implemented
+    learning_reinforcement: "yw는 단어와 뒤 공백을 charwise register에 담고 P는 cursor 앞에 붙인다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "서비스 토큰 재사용"
+    briefing: "api 토큰을 다시 치지 말고 복사해서 backup 앞에 붙여 서비스 이름을 보강하세요."
+    context_role: "짧은 서비스 태그"
+    mentor_success: "좋습니다. 단어 하나도 register에 담아 필요한 위치 앞에 붙일 수 있습니다."
+    mentor_failure: "api를 다시 입력하지 마세요. yw로 담고 backup 앞에서 P를 사용하세요."
+    story_constraints:
+      - "yw의 뒤 공백 포함 semantics를 숨기지 않는다."
+      - "P로 cursor 앞에 붙이는 감각을 만든다."
+
+  - id: yank-put-basic-004-scenario
+    status: approved
+    exercise_id: yank-put-basic-004
+    engine_support: implemented
+    learning_reinforcement: "y$는 현재 위치부터 줄 끝까지 charwise register에 담는다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "검증 값 복사"
+    briefing: "src의 안전 값 blue를 dst에도 써야 합니다. 값을 다시 입력하지 말고 복사해 붙이세요."
+    context_role: "동기화할 설정 값"
+    mentor_success: "좋습니다. y$로 줄 끝까지의 값을 담고 p로 재사용했습니다."
+    mentor_failure: "blue를 직접 입력하지 마세요. 현재 위치부터 줄 끝까지 y$로 복사하세요."
+    story_constraints:
+      - "charwise p의 cursor 뒤 삽입을 강조한다."
+      - "값 재사용의 실무감을 살린다."
+
+  - id: yank-put-basic-005-scenario
+    status: approved
+    exercise_id: yank-put-basic-005
+    engine_support: implemented
+    learning_reinforcement: "짧은 토큰도 yw와 p로 안전하게 재사용할 수 있다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "미러 토큰 전송"
+    briefing: "ID 토큰 A를 mirror 값으로 옮겨야 합니다. 토큰을 다시 입력하지 말고 register로 전송하세요."
+    context_role: "짧은 식별자 동기화"
+    mentor_success: "좋습니다. 작은 토큰도 복사해 붙이면 오타 위험이 줄어듭니다."
+    mentor_failure: "한 글자라도 다시 치면 실수 여지가 생깁니다. yw로 담고 목표 위치에서 p를 사용하세요."
+    story_constraints:
+      - "짧은 값 재사용도 yank/put 학습으로 다룬다."
+      - "직접 입력 우회를 금지한다."

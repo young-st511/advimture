@@ -411,7 +411,7 @@ command_cluster:
   id: yank-put-basic
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-operator-grammar
   title: Operator grammar: 복사와 붙여넣기
   commands: ["y", "yw", "y$", "yy", "p", "P"]
@@ -438,7 +438,7 @@ command_cluster:
     - named register, numbered register, system clipboard는 후속 milestone으로 미룬다.
     - 첫 구현은 single-line charwise yank와 linewise yank만 다룬다.
   design_notes:
-    - VIM-019는 yank/register만 구현하고, VIM-020에서 put을 구현한다.
+    - VIM-019는 yank/register를 구현했고, VIM-020에서 put을 구현했다.
     - 첫 playpack은 y/p의 재사용 감각을 먼저 다루고 text object는 다음 playpack으로 분리한다.
 ```
 
@@ -486,7 +486,7 @@ command_cluster:
 - `whole-file-navigation`은 `gg/G/0/$` engine support가 구현됐다. `gg/G`는 현재 pedagogical tier로 첫 column 이동만 다룬다.
 - `vim-ex-command-substitute`는 literal `:s`, `:%s`, `:2,3s` engine support가 구현됐다. Vim regex와 복잡한 flags는 아직 다루지 않는다.
 - `delete-with-motion`, `change-with-motion`은 VIM-017/VIM-018에서 engine support가 구현됐고 PLAYPACK-003에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
-- `yank-put-basic`은 YANK-TEXT-001에서 approved + planned로 승격됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
+- `yank-put-basic`은 VIM-019/VIM-020에서 engine support가 구현됐고 PLAYPACK-004에서 5문항 tutorial content로 연결됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
 - `text-object-inner-word`는 YANK-TEXT-001에서 draft + planned 후보로 남겼다. `iw` 기반 `diw`, `ciw`, `yiw`는 register 기반 안정 후 별도 루프로 다룬다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 

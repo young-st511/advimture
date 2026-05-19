@@ -1,0 +1,33 @@
+command_clusters:
+  - id: yank-put-basic
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-3-operator-grammar
+    title: "Operator grammar: 복사와 붙여넣기"
+    commands: ["y", "yw", "y$", "yy", "p", "P"]
+    coverage_required: ["yw", "y$", "yy", "p", "P"]
+    oracle: optional
+    purpose: "안전한 텍스트 조각이나 줄을 register에 보관한 뒤 필요한 위치에 재사용한다."
+    prerequisite: ["delete-with-motion", "change-with-motion"]
+    difficulty: intermediate
+    useful_when:
+      - "정상 설정 줄을 아래/위에 복제할 때"
+      - "구조 코드나 짧은 토큰을 다시 입력하지 않고 재사용할 때"
+      - "위험한 수동 재입력을 피하고 검증된 값을 붙여넣을 때"
+    combo_paths:
+      - ["yy", "p"]
+      - ["yy", "P"]
+      - ["yw", "p"]
+      - ["y$", "p"]
+    common_mistakes:
+      - "복사할 수 있는 값을 직접 다시 타이핑한다."
+      - "yy가 줄 단위 register를 만든다는 점을 p/P 결과와 연결하지 못한다."
+      - "p와 P의 붙여넣기 방향을 혼동한다."
+    compatibility_notes:
+      - "첫 구현은 unnamed register만 다룬다."
+      - "named register, numbered register, system clipboard는 후속 milestone으로 미룬다."
+      - "첫 구현은 single-line charwise yank와 linewise yank만 다룬다."
+    design_notes:
+      - "첫 playpack은 y/p의 재사용 감각을 먼저 다루고 text object는 다음 playpack으로 분리한다."
+      - "linewise put은 정상 설정 줄 복제, charwise put은 안전한 값 재사용 상황으로 감싼다."

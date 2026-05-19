@@ -1,0 +1,250 @@
+exercises:
+  - id: yank-put-basic-001
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: ["yy", "p"]
+    reviewed_commands: ["dd", "u"]
+    mistake_focus: ["정상 줄을 다시 타이핑하려고 한다."]
+    replay_status: pass
+    title: "정상 라우트 아래에 복제"
+    goal_for_player: "현재 줄을 복사해서 바로 아래에 한 줄 더 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route stable
+        route backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        route stable
+        route stable
+        route backup
+    optimal_keys: ["y", "y", "p"]
+    allowed_keys: ["y", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["y", "p"]
+      forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "y를 한 번 누르면 복사할 대상을 기다립니다."
+      - after_keys: 2
+        text: "yy는 현재 줄 전체를 unnamed register에 담습니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["route stable", "route stable", "route backup"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: yank-put-basic-002
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: ["yy", "P"]
+    reviewed_commands: ["p"]
+    mistake_focus: ["아래에 붙일지 위에 붙일지 p/P 방향을 혼동한다."]
+    replay_status: pass
+    title: "검증 줄 위에 예비 복제"
+    goal_for_player: "현재 줄을 복사해서 바로 위에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        route stable
+        route backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        route stable
+        route backup
+        route backup
+    optimal_keys: ["y", "y", "P"]
+    allowed_keys: ["y", "P", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["y", "P"]
+      forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번에도 먼저 yy로 현재 줄을 복사합니다."
+      - after_keys: 3
+        text: "P는 현재 줄 위에 linewise register를 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["route stable", "route backup", "route backup"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: yank-put-basic-003
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: ["yw", "P"]
+    reviewed_commands: ["w"]
+    mistake_focus: ["값을 다시 타이핑하거나 단어 뒤 공백 포함을 놓친다."]
+    replay_status: pass
+    title: "서비스 토큰 앞에 복제"
+    goal_for_player: "api 토큰을 복사해 backup 앞에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        api backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        api api backup
+    optimal_keys: ["y", "w", "w", "P"]
+    allowed_keys: ["y", "w", "P", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["y", "w", "P"]
+      forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "yw는 현재 단어와 뒤 공백을 register에 담습니다."
+      - after_keys: 3
+        text: "backup 앞에 붙이려면 P를 사용합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["api api backup"]
+      cursor:
+        row: 0
+        col: 7
+      mode: normal
+      status: succeeded
+
+  - id: yank-put-basic-004
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: ["y$", "p"]
+    reviewed_commands: ["$", "j"]
+    mistake_focus: ["줄 끝까지의 값을 다시 입력하려고 한다."]
+    replay_status: pass
+    title: "안전 값 재사용"
+    goal_for_player: "src 값 blue를 복사해 dst 값에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 4
+      buffer: |
+        src=blue
+        dst=
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 7
+      buffer: |
+        src=blue
+        dst=blue
+    optimal_keys: ["y", "$", "j", "p"]
+    allowed_keys: ["y", "$", "j", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["y", "$", "p"]
+      forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "현재 위치부터 줄 끝까지 복사하려면 y$를 사용합니다."
+      - after_keys: 4
+        text: "p는 cursor 뒤에 charwise register를 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["src=blue", "dst=blue"]
+      cursor:
+        row: 1
+        col: 7
+      mode: normal
+      status: succeeded
+
+  - id: yank-put-basic-005
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: ["yw", "p"]
+    reviewed_commands: ["j", "$"]
+    mistake_focus: ["짧은 토큰도 다시 입력하지 않고 register로 재사용할 수 있음을 놓친다."]
+    replay_status: pass
+    title: "ID 토큰 전송"
+    goal_for_player: "A 토큰을 복사해 mirror 값에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 3
+      buffer: |
+        id A
+        mirror=
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 7
+      buffer: |
+        id A
+        mirror=A
+    optimal_keys: ["y", "w", "j", "$", "p"]
+    allowed_keys: ["y", "w", "j", "$", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 5
+      required_keys: ["y", "w", "p"]
+      forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "토큰 하나도 yw로 register에 담을 수 있습니다."
+      - after_keys: 5
+        text: "목표 위치의 = 뒤에서 p로 붙여넣습니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 5
+    e2e_assertions:
+      buffer: ["id A", "mirror=A"]
+      cursor:
+        row: 1
+        col: 7
+      mode: normal
+      status: succeeded

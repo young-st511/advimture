@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-004. Yank / put basic tutorial
+### TEXT-OBJECT-001. Inner word text object gap
 - 상태: planning
 - ExecPlan: 다음 루프에서 작성
-- 목표: `yank-put-basic` tutorial content와 E2E를 구현한다.
+- 목표: `iw` 기반 text object gap과 구현 범위를 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-004. Yank / put basic tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-004-yank-put-basic.md`
+- 완료일: 2026-05-19
 
 ### VIM-020. Put basic
 - 상태: completed

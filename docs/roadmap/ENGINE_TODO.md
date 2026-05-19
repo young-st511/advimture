@@ -76,7 +76,7 @@
 |------|------|-------------|-----|
 | VIM-019 | `y` pending, unnamed register, `yw`, `y$`, `yy` | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
 | VIM-020 | `p`, `P`, charwise/linewise put, undo/redo | completed: vimengine unit, runtime replay smoke | PLAYPACK-004에서 추가 |
-| PLAYPACK-004 | `yank-put-basic` tutorial content | content replay, coverage, playable model | full playlist E2E |
+| PLAYPACK-004 | `yank-put-basic` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E |
 | TEXT-OBJECT-001 | `iw` 기반 text object gap planning | docs + scope review | 없음 |
 
 첫 `y/p` 구현은 unnamed register만 다루며 named register, clipboard, count prefix, visual selection은 제외한다.

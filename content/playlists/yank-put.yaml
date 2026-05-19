@@ -1,0 +1,37 @@
+playlists:
+  - id: tutorial-6-yank-put
+    status: approved
+    title: "Mid Tutorial: Yank / put 재사용"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-6-001
+        role: line_yank_put_below
+        command_cluster: yank-put-basic
+        exercise_id: yank-put-basic-001
+        scenario_id: yank-put-basic-001-scenario
+        engine_support: implemented
+      - id: tutorial-6-002
+        role: line_yank_put_above
+        command_cluster: yank-put-basic
+        exercise_id: yank-put-basic-002
+        scenario_id: yank-put-basic-002-scenario
+        engine_support: implemented
+      - id: tutorial-6-003
+        role: word_yank_put_before
+        command_cluster: yank-put-basic
+        exercise_id: yank-put-basic-003
+        scenario_id: yank-put-basic-003-scenario
+        engine_support: implemented
+      - id: tutorial-6-004
+        role: line_end_yank_put
+        command_cluster: yank-put-basic
+        exercise_id: yank-put-basic-004
+        scenario_id: yank-put-basic-004-scenario
+        engine_support: implemented
+      - id: tutorial-6-005
+        role: token_yank_put_after
+        command_cluster: yank-put-basic
+        exercise_id: yank-put-basic-005
+        scenario_id: yank-put-basic-005-scenario
+        engine_support: implemented

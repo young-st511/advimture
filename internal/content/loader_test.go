@@ -16,17 +16,17 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 10 {
-		t.Fatalf("command clusters = %d, want 10", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 11 {
+		t.Fatalf("command clusters = %d, want 11", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 30 {
-		t.Fatalf("exercises = %d, want 30", len(lib.Exercises))
+	if len(lib.Exercises) != 35 {
+		t.Fatalf("exercises = %d, want 35", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 30 {
-		t.Fatalf("scenarios = %d, want 30", len(lib.Scenarios))
+	if len(lib.Scenarios) != 35 {
+		t.Fatalf("scenarios = %d, want 35", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 7 {
-		t.Fatalf("playlists = %d, want 7", len(lib.Playlists))
+	if len(lib.Playlists) != 8 {
+		t.Fatalf("playlists = %d, want 8", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 30 {
-		t.Fatalf("playable exercises = %d, want 30: %+v", len(playable), playable)
+	if len(playable) != 35 {
+		t.Fatalf("playable exercises = %d, want 35: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -74,6 +74,11 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"word-motion-basic-001",
 		"word-motion-basic-002",
 		"word-motion-basic-003",
+		"yank-put-basic-001",
+		"yank-put-basic-002",
+		"yank-put-basic-003",
+		"yank-put-basic-004",
+		"yank-put-basic-005",
 	})
 	for _, exercise := range playable {
 		if exercise.ReplayStatus != ReplayStatusPass {
@@ -103,6 +108,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-3-small-edits",
 		"tutorial-4-ex-command",
 		"tutorial-5-operator-grammar",
+		"tutorial-6-yank-put",
 	})
 }
 
@@ -297,6 +303,12 @@ func TestCoverageReportsOperatorGrammarCommandsCovered(t *testing.T) {
 	assertStrings(t, changeReport.Covered, []string{"cw", "c$", "cc"})
 	if len(changeReport.Missing) != 0 {
 		t.Fatalf("change with motion missing coverage = %+v, want empty", changeReport.Missing)
+	}
+
+	yankPutReport := reports["yank-put-basic"]
+	assertStrings(t, yankPutReport.Covered, []string{"yw", "y$", "yy", "p", "P"})
+	if len(yankPutReport.Missing) != 0 {
+		t.Fatalf("yank put missing coverage = %+v, want empty", yankPutReport.Missing)
 	}
 }
 

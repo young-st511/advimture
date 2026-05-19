@@ -1,0 +1,159 @@
+id: playable_yank_put_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "정상 라우트 줄을 아래에 한 번 더 복제"
+  - send: "y"
+  - wait_ms: 50
+  - send: "y"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "backup 라우트를 현재 위치 위에도 배치"
+  - send: "y"
+  - wait_ms: 50
+  - send: "y"
+  - wait_ms: 50
+  - send: "P"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "api 토큰을 다시 치지 말고 복사"
+  - send: "y"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "P"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "src의 안전 값 blue를 dst에도 써야 합니다"
+  - send: "y"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "ID 토큰 A를 mirror 값으로 옮겨야 합니다"
+  - send: "y"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - wait_screen_contains: "Playlist complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Yank / put 재사용"
+    - "Exercise: 5/5"
+    - "Playlist complete"
+    - "좋습니다. 작은 토큰도 복사해 붙이면 오타 위험이 줄어듭니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"yank-put-basic-001\""
+    - "\"yank-put-basic-002\""
+    - "\"yank-put-basic-003\""
+    - "\"yank-put-basic-004\""
+    - "\"yank-put-basic-005\""
+  key_trace:
+    - "y"
+    - "y"
+    - "p"
+    - "enter"
+    - "y"
+    - "y"
+    - "P"
+    - "enter"
+    - "y"
+    - "w"
+    - "w"
+    - "P"
+    - "enter"
+    - "y"
+    - "$"
+    - "j"
+    - "p"
+    - "enter"
+    - "y"
+    - "w"
+    - "j"
+    - "$"
+    - "p"
+    - "q"
+  app_state:
+    buffer: ["id A", "mirror=A"]
+    cursor:
+      row: 1
+      col: 7
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "yank-put-basic-005"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
