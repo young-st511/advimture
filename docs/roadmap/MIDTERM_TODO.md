@@ -89,6 +89,6 @@
 |------|----|------|------|
 | 1 | YANK-TEXT-001 | completed | `y/p`와 text object 후보를 다음 playpack으로 설계 |
 | 2 | VIM-019 | completed | unnamed register와 `yw`, `y$`, `yy` yank engine 구현 |
-| 3 | VIM-020 | planning | `p`, `P` put engine과 runtime replay smoke 구현 |
-| 4 | PLAYPACK-004 | pending | yank/put basic tutorial content/E2E 구현 |
+| 3 | VIM-020 | completed | `p`, `P` put engine과 runtime replay smoke 구현 |
+| 4 | PLAYPACK-004 | planning | yank/put basic tutorial content/E2E 구현 |
 | 5 | TEXT-OBJECT-001 | pending | `iw` 기반 text object gap planning |

@@ -224,6 +224,34 @@ func TestSessionReplaysChangeWithMotionTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyW, "o", "m", "e", "g", "a", " ", vimengine.KeyEsc})
 }
 
+func TestSessionReplaysYankPutTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "yank-put-line",
+		Initial: vimengine.NewState([]string{"one", "two"}),
+		Goal: Goal{
+			Lines:  []string{"one", "one", "two"},
+			Cursor: CursorGoal(1, 0),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyY, vimengine.KeyP},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyY, vimengine.KeyY} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+
+	result := session.ApplyKey(vimengine.KeyP)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after p = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyY, vimengine.KeyY, vimengine.KeyP})
+}
+
 func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
 	initial := vimengine.NewState([]string{"api"})
 	initial.Cursor.Col = 1

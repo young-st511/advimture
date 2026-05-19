@@ -35,6 +35,8 @@ const (
 	KeyD      = "d"
 	KeyC      = "c"
 	KeyY      = "y"
+	KeyP      = "p"
+	KeyShiftP = "P"
 	KeyI      = "i"
 	KeyA      = "a"
 	KeyShiftA = "A"
@@ -257,6 +259,10 @@ func Apply(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	case KeyP:
+		return putRegister(next, key, true)
+	case KeyShiftP:
+		return putRegister(next, key, false)
 	case KeyI:
 		return enterInsertMode(next, key, next.Cursor.Col)
 	case KeyA:
@@ -607,6 +613,64 @@ func yankLineRange(state State, key string, start int, end int) Result {
 		State: copyState(next),
 		Events: []Event{{
 			Type: EventYanked,
+			Key:  key,
+		}},
+	}
+}
+
+func putRegister(state State, key string, after bool) Result {
+	if state.Register.Linewise {
+		return putLinewiseRegister(state, key, after)
+	}
+	return putCharwiseRegister(state, key, after)
+}
+
+func putCharwiseRegister(state State, key string, after bool) Result {
+	if state.Register.Text == "" {
+		return boundary(state, key)
+	}
+	next := pushUndo(state)
+	line := []rune(next.Lines[next.Cursor.Row])
+	inserted := []rune(next.Register.Text)
+	col := clampInsertCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
+	insertCol := col
+	if after && len(line) > 0 {
+		insertCol = col + 1
+	}
+	if insertCol > len(line) {
+		insertCol = len(line)
+	}
+	line = append(line[:insertCol], append(inserted, line[insertCol:]...)...)
+	next.Lines[next.Cursor.Row] = string(line)
+	next.Cursor.Col = insertCol + len(inserted) - 1
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func putLinewiseRegister(state State, key string, after bool) Result {
+	if len(state.Register.Lines) == 0 {
+		return boundary(state, key)
+	}
+	next := pushUndo(state)
+	insertRow := next.Cursor.Row
+	if after {
+		insertRow++
+	}
+	lines := copyLines(next.Register.Lines)
+	next.Lines = append(next.Lines[:insertRow], append(lines, next.Lines[insertRow:]...)...)
+	next.Cursor.Row = insertRow
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
 			Key:  key,
 		}},
 	}

@@ -407,6 +407,112 @@ func TestStateCopiesRegisterLines(t *testing.T) {
 	}
 }
 
+func TestPutCharwiseAfterCursor(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"ab"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        0,
+			DesiredCol: 0,
+		},
+		Register: Register{
+			Text: "X",
+		},
+	})
+
+	result := engine.Apply(KeyP)
+
+	assertStrings(t, result.State.Lines, []string{"aXb"})
+	if result.State.Cursor.Col != 1 {
+		t.Fatalf("cursor col = %d, want 1", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestPutCharwiseBeforeCursor(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"ab"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        1,
+			DesiredCol: 1,
+		},
+		Register: Register{
+			Text: "XY",
+		},
+	})
+
+	result := engine.Apply(KeyShiftP)
+
+	assertStrings(t, result.State.Lines, []string{"aXYb"})
+	if result.State.Cursor.Col != 2 {
+		t.Fatalf("cursor col = %d, want 2", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestPutLinewiseBelowAndAboveCurrentLine(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "three"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        1,
+			DesiredCol: 1,
+		},
+		Register: Register{
+			Lines:    []string{"two"},
+			Linewise: true,
+		},
+	}
+
+	engine := NewWithState(state)
+	result := engine.Apply(KeyP)
+	assertStrings(t, result.State.Lines, []string{"one", "two", "three"})
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor after p = (%d,%d), want (1,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+
+	engine = NewWithState(state)
+	result = engine.Apply(KeyShiftP)
+	assertStrings(t, result.State.Lines, []string{"two", "one", "three"})
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor after P = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestPutBoundaryWhenRegisterIsEmpty(t *testing.T) {
+	engine := New([]string{"ab"})
+
+	result := engine.Apply(KeyP)
+
+	assertStrings(t, result.State.Lines, []string{"ab"})
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestPutUndoRedo(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"ab"},
+		Register: Register{
+			Text: "X",
+		},
+	})
+
+	engine.Apply(KeyP)
+	result := engine.Apply(KeyU)
+	assertStrings(t, result.State.Lines, []string{"ab"})
+	assertEvent(t, result, EventChanged)
+
+	result = engine.Apply(KeyCtrlR)
+	assertStrings(t, result.State.Lines, []string{"aXb"})
+	assertEvent(t, result, EventChanged)
+}
+
 func TestDeleteWordMotionDeletesToNextWordStart(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,
