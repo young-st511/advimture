@@ -74,7 +74,7 @@
 
 | 루프 | 범위 | 필수 테스트 | E2E |
 |------|------|-------------|-----|
-| VIM-019 | `y` pending, unnamed register, `yw`, `y$`, `yy` | `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
+| VIM-019 | `y` pending, unnamed register, `yw`, `y$`, `yy` | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
 | VIM-020 | `p`, `P`, charwise/linewise put, undo/redo | vimengine unit, runtime replay smoke | PLAYPACK-004에서 추가 |
 | PLAYPACK-004 | `yank-put-basic` tutorial content | content replay, coverage, playable model | full playlist E2E |
 | TEXT-OBJECT-001 | `iw` 기반 text object gap planning | docs + scope review | 없음 |

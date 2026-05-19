@@ -272,6 +272,141 @@ func TestOperatorPendingCanBeCanceledWithEsc(t *testing.T) {
 	}
 }
 
+func TestYankKeyEntersPendingMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        3,
+			DesiredCol: 3,
+		},
+	})
+
+	result := engine.Apply(KeyY)
+
+	if result.State.PendingKey != KeyY {
+		t.Fatalf("pending key = %q, want %q", result.State.PendingKey, KeyY)
+	}
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	if result.State.Cursor.Col != 3 {
+		t.Fatalf("cursor col = %d, want 3", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventPendingKey)
+}
+
+func TestYankWordStoresCharwiseRegisterWithoutMutating(t *testing.T) {
+	engine := New([]string{"alpha beta"})
+
+	assertApply(t, engine, KeyY, 0, 0, EventPendingKey)
+	result := engine.Apply(KeyW)
+
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	if result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor col = %d, want 0", result.State.Cursor.Col)
+	}
+	if result.State.Register.Text != "alpha " {
+		t.Fatalf("register text = %q, want alpha space", result.State.Register.Text)
+	}
+	if result.State.Register.Linewise {
+		t.Fatal("register linewise = true, want false")
+	}
+	assertEvent(t, result, EventYanked)
+}
+
+func TestYankToLineEndStoresCharwiseRegister(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        6,
+			DesiredCol: 6,
+		},
+	})
+
+	engine.Apply(KeyY)
+	result := engine.Apply(KeyDollar)
+
+	if result.State.Register.Text != "beta" {
+		t.Fatalf("register text = %q, want beta", result.State.Register.Text)
+	}
+	if result.State.Register.Linewise {
+		t.Fatal("register linewise = true, want false")
+	}
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	assertEvent(t, result, EventYanked)
+}
+
+func TestYankCurrentLineStoresLinewiseRegister(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two", "three"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	engine.Apply(KeyY)
+	result := engine.Apply(KeyY)
+
+	assertStrings(t, result.State.Register.Lines, []string{"two"})
+	if !result.State.Register.Linewise {
+		t.Fatal("register linewise = false, want true")
+	}
+	if result.State.Register.Text != "" {
+		t.Fatalf("register text = %q, want empty", result.State.Register.Text)
+	}
+	assertStrings(t, result.State.Lines, []string{"one", "two", "three"})
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 2 {
+		t.Fatalf("cursor = (%d,%d), want (1,2)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventYanked)
+}
+
+func TestYankUnsupportedComboClearsPendingWithoutChangingRegister(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha beta"},
+		Register: Register{
+			Text: "existing",
+		},
+	})
+
+	assertApply(t, engine, KeyY, 0, 0, EventPendingKey)
+	result := engine.Apply(KeyE)
+
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	if result.State.Register.Text != "existing" {
+		t.Fatalf("register text = %q, want existing", result.State.Register.Text)
+	}
+	assertStrings(t, result.State.Lines, []string{"alpha beta"})
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
+func TestStateCopiesRegisterLines(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two"},
+		Register: Register{
+			Lines:    []string{"one"},
+			Linewise: true,
+		},
+	})
+
+	state := engine.State()
+	state.Register.Lines[0] = "mutated"
+
+	got := engine.State().Register.Lines[0]
+	if got != "one" {
+		t.Fatalf("register line = %q, want one", got)
+	}
+}
+
 func TestDeleteWordMotionDeletesToNextWordStart(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,

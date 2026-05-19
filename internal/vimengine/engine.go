@@ -34,6 +34,7 @@ const (
 	KeyR      = "r"
 	KeyD      = "d"
 	KeyC      = "c"
+	KeyY      = "y"
 	KeyI      = "i"
 	KeyA      = "a"
 	KeyShiftA = "A"
@@ -54,8 +55,15 @@ type State struct {
 	CommandLine string
 	LastCommand string
 	PendingKey  string
+	Register    Register
 	UndoStack   []Snapshot
 	RedoStack   []Snapshot
+}
+
+type Register struct {
+	Text     string
+	Lines    []string
+	Linewise bool
 }
 
 type Snapshot struct {
@@ -76,6 +84,7 @@ const (
 	EventPendingKey      EventType = "pending_key"
 	EventChanged         EventType = "changed"
 	EventInsertMode      EventType = "insert_mode"
+	EventYanked          EventType = "yanked"
 )
 
 type Event struct {
@@ -239,7 +248,7 @@ func Apply(state State, key string) Result {
 				Key:  key,
 			}},
 		}
-	case KeyD, KeyC:
+	case KeyD, KeyC, KeyY:
 		next.PendingKey = key
 		return Result{
 			State: copyState(next),
@@ -328,6 +337,9 @@ func applyPendingKey(state State, key string) Result {
 	if pending == KeyC {
 		return changeWithMotion(next, key)
 	}
+	if pending == KeyY {
+		return yankWithMotion(next, key)
+	}
 	return Result{
 		State: copyState(next),
 		Events: []Event{{
@@ -353,6 +365,26 @@ func deleteWithMotion(state State, key string) Result {
 				Type:    EventUnsupportedKey,
 				Key:     key,
 				Message: "delete sequence is not supported",
+			}},
+		}
+	}
+}
+
+func yankWithMotion(state State, key string) Result {
+	switch key {
+	case KeyW:
+		return yankWordForward(state, key)
+	case KeyDollar:
+		return yankToLineEnd(state, key)
+	case KeyY:
+		return yankCurrentLine(state, key)
+	default:
+		return Result{
+			State: copyState(state),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "yank sequence is not supported",
 			}},
 		}
 	}
@@ -478,6 +510,19 @@ func deleteWordForwardEnd(line []rune, start int) (int, bool) {
 	return len(line), len(line) > start
 }
 
+func yankWordForward(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	if len(line) == 0 {
+		return boundary(state, key)
+	}
+	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	end, ok := deleteWordForwardEnd(line, start)
+	if !ok || end <= start {
+		return boundary(state, key)
+	}
+	return yankLineRange(state, key, start, end)
+}
+
 func changeWordForward(state State, key string) Result {
 	line := []rune(state.Lines[state.Cursor.Row])
 	if len(line) == 0 {
@@ -498,6 +543,15 @@ func deleteToLineEnd(state State, key string) Result {
 	}
 	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
 	return deleteLineRange(state, key, start, len(line))
+}
+
+func yankToLineEnd(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	if len(line) == 0 {
+		return boundary(state, key)
+	}
+	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	return yankLineRange(state, key, start, len(line))
 }
 
 func changeToLineEnd(state State, key string) Result {
@@ -529,6 +583,30 @@ func deleteLineRange(state State, key string, start int, end int) Result {
 		State: copyState(next),
 		Events: []Event{{
 			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func yankLineRange(state State, key string, start int, end int) Result {
+	next := copyState(state)
+	line := []rune(next.Lines[next.Cursor.Row])
+	if start < 0 {
+		start = 0
+	}
+	if end > len(line) {
+		end = len(line)
+	}
+	if start >= end {
+		return boundary(state, key)
+	}
+	next.Register = Register{
+		Text: string(line[start:end]),
+	}
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventYanked,
 			Key:  key,
 		}},
 	}
@@ -587,6 +665,21 @@ func deleteCurrentLine(state State, key string) Result {
 		State: copyState(next),
 		Events: []Event{{
 			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func yankCurrentLine(state State, key string) Result {
+	next := copyState(state)
+	next.Register = Register{
+		Lines:    []string{next.Lines[next.Cursor.Row]},
+		Linewise: true,
+	}
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventYanked,
 			Key:  key,
 		}},
 	}
@@ -1174,9 +1267,18 @@ func lineRuneLen(line string) int {
 func copyState(state State) State {
 	next := state
 	next.Lines = copyLines(state.Lines)
+	next.Register = copyRegister(state.Register)
 	next.UndoStack = copySnapshots(state.UndoStack)
 	next.RedoStack = copySnapshots(state.RedoStack)
 	return next
+}
+
+func copyRegister(register Register) Register {
+	return Register{
+		Text:     register.Text,
+		Lines:    copyLines(register.Lines),
+		Linewise: register.Linewise,
+	}
 }
 
 func copySnapshots(snapshots []Snapshot) []Snapshot {

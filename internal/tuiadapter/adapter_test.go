@@ -80,6 +80,7 @@ func TestMapInputMapsOperatorKeys(t *testing.T) {
 	cases := map[string]string{
 		"d": vimengine.KeyD,
 		"c": vimengine.KeyC,
+		"y": vimengine.KeyY,
 	}
 
 	for input, wantKey := range cases {
