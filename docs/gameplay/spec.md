@@ -86,6 +86,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-9-repeat-last-change`는 `A`, `ciw`, `o`, `r<char>` 뒤의 `.` 반복을 각각 다루는 4문항 efficiency tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - `search-basic`은 approved + engine implemented command cluster다. 첫 구현은 `/query enter`, `n`, `N` literal search이며 `?` backward search, regex, highlight, search history는 제외한다.
 - `tutorial-90-search-basic`은 `/`, `n`, `N`, wrap-around literal search를 다루는 4문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
+- 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`를 기준으로 검토한다. mastery, spaced review, daily run은 후보이며, progress 저장 포맷 변경은 별도 승인 전까지 구현하지 않는다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

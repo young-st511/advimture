@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLATFORM-RFC-001. Long-run review platform RFC
-- 상태: active
-- ExecPlan: 다음 루프에서 작성
-- 목표: mastery, spaced review, daily run, progress schema 후보를 저장 포맷 변경 없이 문서화한다.
+### NEXT-PLANNING. Next platform/gameplay slice selection
+- 상태: pending
+- ExecPlan: 다음 사용자 결정 후 작성
+- 목표: `PLATFORM-RFC-001`의 후보 중 저장 변경 없는 review loop 또는 progress schema 승인 루프를 선택한다.
 
 ## 방금 완료한 슬라이스
+
+### PLATFORM-RFC-001. Long-run review platform RFC
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/platform-rfc-001-long-run-review.md`
+- 완료일: 2026-05-21
 
 ### PLAYPACK-008. Search basic tutorial
 - 상태: completed

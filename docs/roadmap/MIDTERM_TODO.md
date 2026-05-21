@@ -119,7 +119,7 @@
 | 8 | SEARCH-GAP-001 | completed | literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 결정 |
 | 9 | VIM-025 | completed | literal search state와 next/previous match 구현 |
 | 10 | PLAYPACK-008 | completed | search-basic tutorial content/E2E 구현 |
-| 11 | PLATFORM-RFC-001 | active | mastery, spaced review, daily run, progress schema 후보 RFC |
+| 11 | PLATFORM-RFC-001 | completed | mastery, spaced review, daily run, progress schema 후보 RFC |
 
 ## Utility Commands and Long-Run Platform 출구 조건
 
@@ -135,7 +135,11 @@
 | SEARCH-GAP-001 | repeat playpack 완료 | completed: literal search scope, `/` command-line/search state, `?` 보류 결정 | completed: docs review | regex, `?`, highlight 검증을 첫 구현에 넣지 않는다 |
 | VIM-025 | SEARCH-GAP-001 승인 | completed: `/`, `n`, `N` literal search engine/runtime 구현 | completed: vimengine/runtime/tuiadapter/playable tests | hint `?` 충돌을 우회 구현하지 않았다 |
 | PLAYPACK-008 | VIM-025 완료 | completed: search-basic tutorial + E2E | completed: content replay, search app_state E2E | 검색 결과는 cursor/mode/key trace로 검증했다 |
-| PLATFORM-RFC-001 | 최소 3개 utility playpack 완료 | mastery/review/daily run progress 후보 RFC | 저장 포맷 영향 리뷰 | 사용자 승인 없이 progress schema 변경 금지 |
+| PLATFORM-RFC-001 | 최소 3개 utility playpack 완료 | completed: mastery/review/daily run progress 후보 RFC | completed: 저장 포맷 영향 리뷰 | 사용자 승인 없이 progress schema 변경 금지 |
+
+## Utility Commands and Long-Run Platform 완료 판단
+
+2026-05-21 기준 이 중기 플랜은 completed다. `o/O`, `.`, `/ n N`는 각각 gap planning, engine, playable tutorial, E2E까지 연결됐다. 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`에 저장 변경 없는 첫 루프와 schema 변경 승인 루프를 분리해 두었다.
 
 ## 2~3개월 주차 계획
 

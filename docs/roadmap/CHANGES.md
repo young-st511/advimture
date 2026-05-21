@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-21 — Utility command tutorial 완료와 장기 반복 학습 RFC 분리
+
+이전 가정: `o/O`, `.`, `/ n N`를 단기 utility command 확장으로 다루되, 이후 장기 반복 학습 플랫폼의 저장 구조는 아직 정리되지 않았다.
+
+새 가정: `open-line-edit`, `repeat-last-change`, `search-basic`은 각각 playable tutorial과 E2E까지 연결된 foundation cluster로 승격한다. 장기 반복 학습은 `PLATFORM-RFC-001`에서 저장 변경 없는 review 후보와 progress schema v2 후보를 분리한다.
+
+이유: Vim 학습 플랫폼은 명령어 추가만으로 완성되지 않고, 복습과 숙련도 추적이 필요하다. 다만 사용자 로컬 저장 포맷은 영향이 크므로 schema 변경은 별도 승인 게이트 뒤에 둔다.
+
+영향: 다음 루프는 저장 변경 없는 `PLATFORM-REVIEW-001`로 시작하거나, 사용자 승인 후 `PROGRESS-SCHEMA-001`로 progress v2를 설계한다.
+
 ## 2026-05-19 — 중반 생존 어드벤처 톤과 operator grammar 순서 확정
 
 이전 가정: 중반부터 생존 어드벤처 비중을 높인다는 방향은 있었지만, 생존감의 범위와 다음 콘텐츠 시퀀스가 구체적으로 고정되지 않았다.
