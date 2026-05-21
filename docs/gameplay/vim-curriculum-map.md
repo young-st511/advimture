@@ -221,9 +221,9 @@ Scenario 방향:
 
 다음 playable milestone은 아래 순서를 우선한다.
 
-1. Platform RFC: mastery, spaced review, daily run, progress schema 후보
-2. Adventure middle: search and replace 응용 — search + substitute 조합
-3. Next Vim capability gap — quote/pair text object 또는 visual selection 후보 검토
+1. Structure editing: quote/pair text object — 설정값, JSON 값, 인자 내부를 구조 기준으로 편집
+2. Adventure middle: search and replace 응용 — search + substitute + quote/pair 조합
+3. Visual planning: visual mode 후보 검토 — 구현은 별도 중기 플랜으로 분리
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
@@ -244,42 +244,45 @@ Scenario 방향:
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic` |
-| next | 다음 playpack에서 구현/승격할 후보 | `platform-review-loop` RFC |
-| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | search + substitute mixed run, quote/pair text object |
-| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `visual-char-line`, `text-object-inner` quote/pair 계열, `macro-basic`, buffer/window/navigation-at-scale 계열 |
+| next | 다음 playpack에서 구현/승격할 후보 | quote/pair text object |
+| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | search + substitute + quote/pair mixed run, visual mode gap planning |
+| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `visual-char-line`, `macro-basic`, buffer/window/navigation-at-scale 계열 |
 
 ### Next Playpack Candidate
 
-ID: `playpack-006-open-line-edit`
+ID: `playpack-009-quote-pair-text-object`
 
-목표: 플레이어가 현재 줄 주변에 새 줄을 열고 즉시 입력하는 `o`, `O`를 배운다.
+목표: 플레이어가 커서 위치를 세밀하게 맞추지 않고 quote/pair 내부 값을 구조 기준으로 삭제, 변경, 복사한다.
 
 Command cluster 후보:
 
 | Cluster | Commands | Engine support | Oracle | 이유 |
 |---------|----------|----------------|--------|------|
-| `open-line-edit` | `o`, `O` | implemented | optional | 설정 줄 위/아래에 새 항목을 추가하는 실제 편집 흐름을 만든다. |
+| `text-object-quote-pair` | `ci"`, `di"`, `yi"` 우선 | planned | optional | JSON/env/config 값과 인자 내부를 수정하는 실무 체감이 크다. |
 
 다음 gap planning 후보:
 
-- `o`는 현재 줄 아래 새 줄을 열고 Insert mode로 진입한다.
-- `O`는 현재 줄 위 새 줄을 열고 Insert mode로 진입한다.
-- indentation, auto-comment, count prefix는 후속 hardening으로 미룬다.
+- 첫 slice는 double quote 내부 object를 우선한다.
+- `ci"`는 quote 내부 값을 삭제하고 Insert mode로 진입한다.
+- `di"`는 quote 내부 값을 삭제하고 Normal mode를 유지한다.
+- `yi"`는 quote 내부 값을 unnamed register에 저장한다.
+- single quote, parenthesis, brace는 gap planning에서 포함 여부를 결정하되 첫 engine slice 과부하는 피한다.
+- nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening으로 미룬다.
 
 권장 문항 수:
 
-- `o`: 2문항
-- `O`: 2문항
-- `insert-mode-entry`: 3문항
-- `undo-redo-basic`: 2문항
-- 총 7문항 이하
+- `ci"`: 2문항
+- `di"`: 1문항
+- `yi"`: 1문항
+- quote/pair 변형 또는 복습: 1~2문항
+- 총 6문항 이하
 
 설계 제약:
 
 - 이동은 필요한 만큼만 복습하고 주목표로 삼지 않는다.
 - 각 문항은 `constraints.required_keys`로 의도 command를 고정한다.
-- 첫 소개 문항은 command 의미를 명시하고, 이후 문항은 개념 힌트 중심으로 둔다.
-- 후반 생존 어드벤처 톤을 얹기 전까지는 튜토리얼 사건을 짧게 유지한다.
+- 첫 소개 문항은 `i`가 Insert mode가 아니라 text object prefix가 되는 문맥을 다시 알려준다.
+- quote/pair object는 scenario보다 buffer/target_state가 먼저 설계되어야 한다.
 
 ## Known Coverage Gaps
 
@@ -287,6 +290,7 @@ Command cluster 후보:
 - `repeat-last-change`: PLAYPACK-007에서 `.` 반복 기본 흐름을 다뤘다. delete/yank/put/search/macro/register/count prefix는 후속 hardening이다.
 - `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했고, VIM-025/PLAYPACK-008에서 engine과 tutorial을 연결했다. `?`, regex, highlight, search history는 후속 hardening으로 남는다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
+- `text-object-quote-pair`: 다음 중기 플랜에서 quote 내부 object를 최소 scope로 승격한다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 
 ## Long-Run Platform Direction
 

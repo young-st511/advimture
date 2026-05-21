@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### NEXT. Plan refresh
+### TEXT-PAIR-GAP-001. Quote/pair text object gap
 - 상태: pending
-- ExecPlan: 미정
-- 목표: Review Queue and Incident Runs 중기 플랜 완료 후 다음 command/content/gameplay 루프를 결정한다.
+- ExecPlan: 다음 루프에서 작성
+- 목표: `ci"`, `di"`, `yi"` 중심의 quote/pair text object 최소 범위와 제외 항목을 고정한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAN-REFRESH-002. Structure editing roadmap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/plan-refresh-002-structure-editing-roadmap.md`
+- 완료일: 2026-05-22
 
 ### COACHING-001. Proactive coaching
 - 상태: completed

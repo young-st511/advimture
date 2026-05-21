@@ -169,6 +169,30 @@
 
 2026-05-22 기준 이 중기 플랜은 completed다. review queue는 저장 변경 없이 첫 화면과 성공 debrief에 연결됐고, playlist ordering은 tutorial/incident category와 order로 명시화됐다. 첫 incident mixed run은 기존 Vim command 조합으로 완주 가능하며, strict constraint 문항의 coaching panel도 focused E2E와 full playable suite로 검증한다.
 
+## 다음 중기 플랜: Structure Editing and Applied Survival
+
+> 목표는 Vim 실무 효용이 큰 구조 내부 편집을 추가하고, 이를 두 번째 incident run에서 기존 search/substitute와 섞어 적용하는 것이다.
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | PLAN-REFRESH-002 | completed | 완료된 후보를 정리하고 새 중기 플랜을 roadmap/curriculum에 고정 |
+| 2 | TEXT-PAIR-GAP-001 | pending | quote/pair text object 최소 범위와 제외 항목 결정 |
+| 3 | VIM-026 | pending | `ci"`, `di"`, `yi"` 중심 quote text object engine 구현 |
+| 4 | PLAYPACK-009 | pending | quote/pair text object 튜토리얼 content/E2E 구현 |
+| 5 | INCIDENT-RUN-002 | pending | search + substitute + quote/pair를 섞은 두 번째 생존 어드벤처 run |
+| 6 | VISUAL-GAP-001 | pending | visual mode 후보 범위와 engine 영향도를 문서로 분리 |
+
+## Structure Editing and Applied Survival 출구 조건
+
+| ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
+|----|----------|-------------|------|---------------|
+| PLAN-REFRESH-002 | Review Queue and Incident Runs 완료 | completed: 새 중기 플랜과 next candidate 갱신 | completed: `git diff --check` | 코드와 content를 건드리지 않는다 |
+| TEXT-PAIR-GAP-001 | text-object-inner-word playable 완료 | command cluster approval packet, VIM-026/PLAYPACK-009 분리 계획 | 문서 리뷰, `git diff --check` | nested pair, escaped quote, around object, count prefix, visual selection 제외 |
+| VIM-026 | TEXT-PAIR-GAP-001 완료 | quote text object engine/runtime tests | `go test ./internal/vimengine/...`, `go test ./internal/runtime/...` | engine과 content/E2E를 섞지 않는다 |
+| PLAYPACK-009 | VIM-026 완료 | quote/pair text object tutorial YAML, scenario, playlist, full E2E | content replay, focused E2E, `make e2e-playable` | 8문항 이하, required key와 우회 금지를 고정한다 |
+| INCIDENT-RUN-002 | PLAYPACK-009 완료 | mixed incident content/scenario/playlist + full E2E | content replay, incident E2E, `make e2e-playable` | 새 engine 기능을 incident에서 추가하지 않는다 |
+| VISUAL-GAP-001 | second incident 완료 | visual mode scope/RFC | 문서 리뷰, `git diff --check` | visual engine 구현은 다음 중기 플랜으로 분리한다 |
+
 ## 2~3개월 주차 계획
 
 | 기간 | 목표 | 닫는 루프 |
