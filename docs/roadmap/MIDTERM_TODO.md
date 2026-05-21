@@ -113,8 +113,8 @@
 | 2 | VIM-023 | completed | `o`, `O` newline insertion, insert mode entry, undo snapshot 구현 |
 | 3 | PLAYPACK-006 | completed | 4~6문항 open-line tutorial content/E2E 구현 |
 | 4 | DEBRIEF-001 | completed | 저장 포맷 변경 없는 성공/playlist 완료 debrief와 best record 표시 |
-| 5 | REPEAT-GAP-001 | active | `.` repeat-last-change transaction 범위 결정 |
-| 6 | VIM-024 | pending | `.` 최소 subset 구현 |
+| 5 | REPEAT-GAP-001 | completed | `.` repeat-last-change transaction 범위 결정 |
+| 6 | VIM-024 | active | `.` 최소 subset 구현 |
 | 7 | PLAYPACK-007 | pending | repeat-last-change efficiency tutorial content/E2E 구현 |
 | 8 | SEARCH-GAP-001 | pending | literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 결정 |
 | 9 | VIM-025 | pending | literal search state와 next/previous match 구현 |
@@ -129,7 +129,7 @@
 | VIM-023 | OPEN-LINE-001 완료 | completed: `o/O` engine, tuiadapter uppercase mapping, runtime replay smoke | completed: `go test ./internal/vimengine/...`, `go test ./internal/tuiadapter/...`, `go test ./internal/runtime/...` | content/E2E와 섞지 않고 engine contract만 닫았다 |
 | PLAYPACK-006 | VIM-023 완료 | completed: `open-line-edit` YAML content, scenario, playlist, full E2E | completed: content replay, `playable_open_line_full.yaml`, forbidden-route E2E, `make e2e-smoke` | 8문항 이하, `o/O` required key와 우회 금지를 고정했다 |
 | DEBRIEF-001 | PLAYPACK-006 완료 | completed: 성공/playlist 완료 화면 debrief, 기존 progress 기반 best record 표시 | completed: playable model tests, focused E2E | `internal/progress/` 저장 JSON 구조를 변경하지 않았다 |
-| REPEAT-GAP-001 | open-line playpack과 debrief 완료 | last-change transaction RFC, 최소 subset 결정 | docs review | `.` 구현 전 undo/insert/yank/put transaction 경계를 먼저 고정 |
+| REPEAT-GAP-001 | open-line playpack과 debrief 완료 | completed: last-change transaction RFC, 최소 subset 결정 | completed: docs review | `.` 구현 전 undo/insert/yank/put transaction 경계를 먼저 고정했다 |
 | VIM-024 | REPEAT-GAP-001 승인 | `.` 최소 subset engine/runtime 구현 | vimengine/runtime tests | macro/register 수준으로 확장하지 않는다 |
 | PLAYPACK-007 | VIM-024 완료 | repeat-last-change tutorial + efficiency run E2E | content replay, full playlist E2E | 수동 재입력 우회를 constraints로 차단 |
 | SEARCH-GAP-001 | repeat playpack 완료 | literal search scope, `/` command-line/search state, `?` 보류 결정 | docs review | regex, `?`, highlight 검증을 첫 구현에 넣지 않는다 |

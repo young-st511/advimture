@@ -516,6 +516,45 @@ command_cluster:
     - PLAYPACK-006은 o/O 각각을 최소 2문항 이상 다루고 full playlist E2E를 추가했다.
 ```
 
+### repeat-last-change
+
+```yaml
+command_cluster:
+  id: repeat-last-change
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-efficiency
+  title: 마지막 변경 반복
+  commands: ["."]
+  coverage_required: ["."]
+  oracle: optional
+  purpose: 같은 변경을 다시 입력하지 않고 현재 위치에 반복 적용한다.
+  prerequisite: ["insert-mode-entry", "change-with-motion", "text-object-inner-word", "open-line-edit"]
+  difficulty: intermediate
+  useful_when:
+    - 여러 줄에 같은 suffix나 flag를 붙일 때
+    - 비슷한 설정 값을 연속해서 같은 값으로 교체할 때
+    - 방금 만든 줄 추가/값 교체 패턴을 다음 위치에서 재사용할 때
+  combo_paths:
+    - ["A", "esc", "."]
+    - ["cw", "esc", "."]
+    - ["ciw", "esc", "."]
+    - ["o", "esc", "."]
+  common_mistakes:
+    - 같은 텍스트를 다시 타이핑해 key count를 늘린다.
+    - dot repeat이 motion이 아니라 마지막 change를 반복한다는 점을 놓친다.
+    - undo/redo나 yank도 같은 방식으로 반복된다고 기대한다.
+  compatibility_notes:
+    - 첫 구현은 pedagogical last-change transaction을 사용한다.
+    - 반복 대상은 x, r<char>, insert transaction, change transaction, open-line transaction으로 제한한다.
+    - delete, yank, put, Ex command, search, macro/register/count prefix는 후속 hardening으로 미룬다.
+    - Vim exact undo block semantics는 후속 hardening으로 미룬다.
+  design_notes:
+    - REPEAT-GAP-001에서 transaction commit/replay 규칙을 고정했다.
+    - VIM-024는 엔진 transaction recorder만 구현하고, PLAYPACK-007에서 efficiency tutorial과 E2E를 추가한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -527,6 +566,7 @@ command_cluster:
 - `yank-put-basic`은 VIM-019/VIM-020에서 engine support가 구현됐고 PLAYPACK-004에서 5문항 tutorial content로 연결됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
 - `text-object-inner-word`는 VIM-021/VIM-022에서 engine support가 구현됐고 PLAYPACK-005에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
 - `open-line-edit`은 OPEN-LINE-001에서 approved로 승격했고, VIM-023에서 engine support를 구현했다. 첫 구현 범위는 `o`, `O`이며 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat은 제외한다.
+- `repeat-last-change`는 REPEAT-GAP-001에서 approved + planned로 승격했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

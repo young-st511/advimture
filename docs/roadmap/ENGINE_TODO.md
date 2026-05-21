@@ -109,4 +109,4 @@ quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual sele
 
 ## REPEAT / SEARCH 장기 후보
 
-`repeat-last-change`는 last-change transaction 정의가 선행되어야 한다. `search-basic`은 literal `/`, `n`, `N`만 우선하며 `?`는 현재 hint key와 충돌하므로 SEARCH-GAP-001에서 별도 결정한다.
+`repeat-last-change`는 REPEAT-GAP-001에서 x, r<char>, insert/change/open-line transaction을 첫 구현 범위로 고정했다. `search-basic`은 literal `/`, `n`, `N`만 우선하며 `?`는 현재 hint key와 충돌하므로 SEARCH-GAP-001에서 별도 결정한다.

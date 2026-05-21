@@ -81,6 +81,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `open-line-edit`은 approved + engine implemented command cluster이며 `o`, `O`는 현재 줄 아래/위에 빈 줄을 삽입하고 Insert mode로 진입한다.
 - `tutorial-8-open-line-edit`은 `o` 3문항, `O` 2문항으로 구성된 5문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 첫 `o/O` 구현은 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat 연계를 제외한다.
+- `repeat-last-change`는 approved + planned command cluster다. 첫 구현의 last-change transaction은 x, r<char>, insert transaction, change transaction, open-line transaction으로 제한한다.
+- `.` repeat 구현에서 delete/yank/put/Ex command/search/macro/register/count prefix와 Vim exact undo block semantics는 후속 hardening으로 미룬다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

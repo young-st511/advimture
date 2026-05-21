@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### REPEAT-GAP-001. Repeat last change gap
+### VIM-024. Repeat last change engine
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `.` repeat-last-change를 구현하기 전에 last-change transaction 범위와 제외 항목을 고정한다.
+- 목표: `.` repeat-last-change의 최소 transaction recorder와 replay를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### REPEAT-GAP-001. Repeat last change gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/repeat-gap-001-last-change-transaction.md`
+- 완료일: 2026-05-21
 
 ### DEBRIEF-001. Success debrief without save schema change
 - 상태: completed
