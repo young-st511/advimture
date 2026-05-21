@@ -135,11 +135,14 @@ func TestMapInputInCommandModeTreatsQAsVimKey(t *testing.T) {
 func TestMapInputMapsCommandLineKeys(t *testing.T) {
 	cases := map[string]string{
 		":":     vimengine.KeyColon,
+		"/":     vimengine.KeySlash,
 		"enter": vimengine.KeyEnter,
 		"esc":   vimengine.KeyEsc,
 		"w":     vimengine.KeyW,
 		"b":     vimengine.KeyB,
 		"e":     vimengine.KeyE,
+		"n":     vimengine.KeyN,
+		"N":     vimengine.KeyShiftN,
 	}
 
 	for input, wantKey := range cases {
@@ -156,6 +159,19 @@ func TestMapInputInCommandModePassesSubstituteCharacters(t *testing.T) {
 		if action.Type != ActionKey || action.Key != input {
 			t.Fatalf("MapInputForMode(%q, command) = %+v, want key %q", input, action, input)
 		}
+	}
+}
+
+func TestMapInputInSearchModePassesSearchCharacters(t *testing.T) {
+	for _, input := range []string{"t", "E", "/", "=", " "} {
+		action := MapInputForMode(input, vimengine.ModeSearch)
+		if action.Type != ActionKey || action.Key != input {
+			t.Fatalf("MapInputForMode(%q, search) = %+v, want key %q", input, action, input)
+		}
+	}
+	action := MapInputForMode("enter", vimengine.ModeSearch)
+	if action.Type != ActionKey || action.Key != vimengine.KeyEnter {
+		t.Fatalf("search enter action = %+v, want enter key", action)
 	}
 }
 

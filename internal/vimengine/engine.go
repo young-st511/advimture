@@ -13,12 +13,14 @@ const (
 	ModeNormal  Mode = "normal"
 	ModeInsert  Mode = "insert"
 	ModeCommand Mode = "command"
+	ModeSearch  Mode = "search"
 )
 
 const (
 	KeyEsc    = "esc"
 	KeyEnter  = "enter"
 	KeyColon  = ":"
+	KeySlash  = "/"
 	KeyH      = "h"
 	KeyJ      = "j"
 	KeyK      = "k"
@@ -35,6 +37,8 @@ const (
 	KeyD      = "d"
 	KeyC      = "c"
 	KeyY      = "y"
+	KeyN      = "n"
+	KeyShiftN = "N"
 	KeyP      = "p"
 	KeyShiftP = "P"
 	KeyI      = "i"
@@ -60,17 +64,19 @@ type Cursor struct {
 }
 
 type State struct {
-	Mode        Mode
-	Lines       []string
-	Cursor      Cursor
-	CommandLine string
-	LastCommand string
-	PendingKey  string
-	Register    Register
-	UndoStack   []Snapshot
-	RedoStack   []Snapshot
-	LastChange  []string
-	Recording   ChangeRecording
+	Mode              Mode
+	Lines             []string
+	Cursor            Cursor
+	CommandLine       string
+	LastCommand       string
+	LastSearch        string
+	LastSearchForward bool
+	PendingKey        string
+	Register          Register
+	UndoStack         []Snapshot
+	RedoStack         []Snapshot
+	LastChange        []string
+	Recording         ChangeRecording
 }
 
 type Register struct {
@@ -201,6 +207,11 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 		}
 	}
 
+	if next.Mode == ModeSearch {
+		next.PendingKey = ""
+		return applySearchKey(next, key)
+	}
+
 	if next.Mode == ModeCommand {
 		next.PendingKey = ""
 		return applyCommandKey(next, key)
@@ -238,6 +249,16 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 	switch key {
 	case KeyColon:
 		next.Mode = ModeCommand
+		next.CommandLine = ""
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventCommandMode,
+				Key:  key,
+			}},
+		}
+	case KeySlash:
+		next.Mode = ModeSearch
 		next.CommandLine = ""
 		return Result{
 			State: copyState(next),
@@ -335,6 +356,10 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 		return result
 	case KeyDot:
 		return repeatLastChange(next, key)
+	case KeyN:
+		return repeatSearch(next, key, true)
+	case KeyShiftN:
+		return repeatSearch(next, key, false)
 	case KeyU:
 		return undoLastChange(next, key)
 	case KeyCtrlR:
@@ -696,6 +721,197 @@ func applyCommandKey(state State, key string) Result {
 			}},
 		}
 	}
+}
+
+func applySearchKey(state State, key string) Result {
+	next := copyState(state)
+	switch key {
+	case KeyEnter:
+		query := next.CommandLine
+		if query == "" {
+			next.Mode = ModeNormal
+			next.CommandLine = ""
+			return boundary(next, key)
+		}
+		next.Mode = ModeNormal
+		next.CommandLine = ""
+		next.LastCommand = KeySlash + query
+		next.LastSearch = query
+		next.LastSearchForward = true
+		return moveToSearchMatch(next, key, query, true)
+	case KeySlash:
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "nested search mode is not supported",
+			}},
+		}
+	default:
+		if len([]rune(key)) != 1 {
+			return Result{
+				State: copyState(next),
+				Events: []Event{{
+					Type:    EventUnsupportedKey,
+					Key:     key,
+					Message: "search input is not supported",
+				}},
+			}
+		}
+		next.CommandLine += key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventCommandInput,
+				Key:  key,
+			}},
+		}
+	}
+}
+
+func repeatSearch(state State, key string, sameDirection bool) Result {
+	if state.LastSearch == "" {
+		return boundary(state, key)
+	}
+	forward := state.LastSearchForward
+	if !sameDirection {
+		forward = !forward
+	}
+	return moveToSearchMatch(state, key, state.LastSearch, forward)
+}
+
+func moveToSearchMatch(state State, key string, query string, forward bool) Result {
+	if query == "" {
+		return boundary(state, key)
+	}
+	next := copyState(state)
+	match, ok := findLiteralMatch(next.Lines, next.Cursor, query, forward)
+	if !ok {
+		return boundary(next, key)
+	}
+	next.Cursor.Row = match.row
+	next.Cursor.Col = match.col
+	next.Cursor.DesiredCol = match.col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func findLiteralMatch(lines []string, cursor Cursor, query string, forward bool) (documentCell, bool) {
+	if forward {
+		if match, ok := findForwardLiteralMatch(lines, cursor, query, false); ok {
+			return match, true
+		}
+		return findForwardLiteralMatch(lines, cursor, query, true)
+	}
+	if match, ok := findBackwardLiteralMatch(lines, cursor, query, false); ok {
+		return match, true
+	}
+	return findBackwardLiteralMatch(lines, cursor, query, true)
+}
+
+func findForwardLiteralMatch(lines []string, cursor Cursor, query string, wrapped bool) (documentCell, bool) {
+	startRow := cursor.Row
+	endRow := len(lines) - 1
+	if wrapped {
+		startRow = 0
+		endRow = cursor.Row
+	}
+	for row := startRow; row <= endRow; row++ {
+		startCol := 0
+		if row == cursor.Row {
+			if wrapped {
+				startCol = 0
+			} else {
+				startCol = cursor.Col + 1
+			}
+		}
+		if matchCol, ok := indexLiteralFrom(lines[row], query, startCol); ok {
+			if wrapped && row == cursor.Row && matchCol > cursor.Col {
+				continue
+			}
+			return documentCell{row: row, col: matchCol}, true
+		}
+	}
+	return documentCell{}, false
+}
+
+func findBackwardLiteralMatch(lines []string, cursor Cursor, query string, wrapped bool) (documentCell, bool) {
+	startRow := cursor.Row
+	endRow := 0
+	if wrapped {
+		startRow = len(lines) - 1
+		endRow = cursor.Row
+	}
+	for row := startRow; row >= endRow; row-- {
+		maxCol := lineRuneLen(lines[row])
+		if row == cursor.Row {
+			if wrapped {
+				maxCol = lineRuneLen(lines[row])
+			} else {
+				maxCol = cursor.Col
+			}
+		}
+		if matchCol, ok := lastIndexLiteralBefore(lines[row], query, maxCol); ok {
+			if wrapped && row == cursor.Row && matchCol < cursor.Col {
+				continue
+			}
+			return documentCell{row: row, col: matchCol}, true
+		}
+	}
+	return documentCell{}, false
+}
+
+func indexLiteralFrom(line string, query string, startCol int) (int, bool) {
+	runes := []rune(line)
+	queryRunes := []rune(query)
+	if len(queryRunes) == 0 || startCol > len(runes)-len(queryRunes) {
+		return 0, false
+	}
+	if startCol < 0 {
+		startCol = 0
+	}
+	for col := startCol; col <= len(runes)-len(queryRunes); col++ {
+		if sameRunes(runes[col:col+len(queryRunes)], queryRunes) {
+			return col, true
+		}
+	}
+	return 0, false
+}
+
+func lastIndexLiteralBefore(line string, query string, beforeCol int) (int, bool) {
+	runes := []rune(line)
+	queryRunes := []rune(query)
+	if len(queryRunes) == 0 {
+		return 0, false
+	}
+	maxStart := beforeCol - len(queryRunes)
+	if maxStart > len(runes)-len(queryRunes) {
+		maxStart = len(runes) - len(queryRunes)
+	}
+	for col := maxStart; col >= 0; col-- {
+		if sameRunes(runes[col:col+len(queryRunes)], queryRunes) {
+			return col, true
+		}
+	}
+	return 0, false
+}
+
+func sameRunes(left []rune, right []rune) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for index := range left {
+		if left[index] != right[index] {
+			return false
+		}
+	}
+	return true
 }
 
 func deleteWordForward(state State, key string) Result {
@@ -1535,7 +1751,7 @@ func normalizeState(state State) State {
 	if next.Mode == "" {
 		next.Mode = ModeNormal
 	}
-	if next.Mode != ModeCommand {
+	if next.Mode != ModeCommand && next.Mode != ModeSearch {
 		next.CommandLine = ""
 	}
 	if next.Mode != ModeNormal {

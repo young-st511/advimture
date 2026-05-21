@@ -307,6 +307,79 @@ func TestDotRepeatsOpenLineTransactionWithoutOverwritingLastChange(t *testing.T)
 	assertStrings(t, result.State.LastChange, []string{KeyO, "x", KeyEsc})
 }
 
+func TestLiteralSearchMovesToNextMatch(t *testing.T) {
+	engine := New([]string{"info", "warn timeout", "error timeout"})
+
+	for _, key := range []string{KeySlash, "t", "i", "m", "e", "o", "u", "t"} {
+		engine.Apply(key)
+	}
+	result := engine.Apply(KeyEnter)
+
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 5 {
+		t.Fatalf("cursor = (%d,%d), want (1,5)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+	if result.State.LastSearch != "timeout" {
+		t.Fatalf("last search = %q, want timeout", result.State.LastSearch)
+	}
+	assertEvent(t, result, EventMoved)
+}
+
+func TestSearchRepeatNextAndPrevious(t *testing.T) {
+	engine := New([]string{"ok timeout", "ok", "next timeout"})
+
+	for _, key := range []string{KeySlash, "t", "i", "m", "e", "o", "u", "t", KeyEnter} {
+		engine.Apply(key)
+	}
+	result := engine.Apply(KeyN)
+	if result.State.Cursor.Row != 2 || result.State.Cursor.Col != 5 {
+		t.Fatalf("cursor after n = (%d,%d), want (2,5)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+
+	result = engine.Apply(KeyShiftN)
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 3 {
+		t.Fatalf("cursor after N = (%d,%d), want (0,3)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+}
+
+func TestLiteralSearchWrapsDocument(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"target", "middle", "tail"},
+		Cursor: Cursor{
+			Row:        2,
+			Col:        0,
+			DesiredCol: 0,
+		},
+	})
+
+	for _, key := range []string{KeySlash, "t", "a", "r", "g", "e", "t"} {
+		engine.Apply(key)
+	}
+	result := engine.Apply(KeyEnter)
+
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want wrapped (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+}
+
+func TestSearchEscCancelsSearchMode(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	engine.Apply(KeySlash)
+	engine.Apply("a")
+	result := engine.Apply(KeyEsc)
+
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.CommandLine != "" || result.State.LastSearch != "" {
+		t.Fatalf("command/search = %q/%q, want empty", result.State.CommandLine, result.State.LastSearch)
+	}
+}
+
 func TestDocumentMotionMovesToFirstAndLastLine(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,

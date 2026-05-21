@@ -371,6 +371,24 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	}
 }
 
+func TestPlayableShowsSearchLineInSearchMode(t *testing.T) {
+	model := New(Options{ContentRoot: contentRootForTest()})
+
+	model, _ = updateWithKey(t, model, "/")
+	model, _ = updateWithKey(t, model, "a")
+
+	view := model.View()
+	if !strings.Contains(view, "/a") {
+		t.Fatalf("view = %q, want search prompt", view)
+	}
+	if !strings.Contains(view, "Keys: type search  enter: find  esc: normal") {
+		t.Fatalf("view = %q, want search action panel", view)
+	}
+	if strings.Contains(view, "?: hint") {
+		t.Fatalf("view = %q, should not show hint prompt in search mode", view)
+	}
+}
+
 func TestPlayableCanQuitFromContentLoadError(t *testing.T) {
 	model := New(Options{ContentRoot: filepath.Join(t.TempDir(), "missing")})
 

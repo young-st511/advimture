@@ -109,4 +109,4 @@ quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual sele
 
 ## REPEAT / SEARCH 장기 후보
 
-`repeat-last-change`는 REPEAT-GAP-001에서 x, r<char>, insert/change/open-line transaction을 첫 구현 범위로 고정했고, VIM-024/PLAYPACK-007에서 playable tutorial까지 연결했다. `search-basic`은 SEARCH-GAP-001에서 literal `/`, `n`, `N`만 첫 scope로 고정했으며 `?`는 현재 hint key와 충돌하므로 제외한다.
+`repeat-last-change`는 REPEAT-GAP-001에서 x, r<char>, insert/change/open-line transaction을 첫 구현 범위로 고정했고, VIM-024/PLAYPACK-007에서 playable tutorial까지 연결했다. `search-basic`은 SEARCH-GAP-001에서 literal `/`, `n`, `N`만 첫 scope로 고정했고, VIM-025에서 engine support를 구현했다. `?`는 현재 hint key와 충돌하므로 제외한다.

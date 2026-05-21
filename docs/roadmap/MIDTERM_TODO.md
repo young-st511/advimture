@@ -117,8 +117,8 @@
 | 6 | VIM-024 | completed | `.` 최소 subset 구현 |
 | 7 | PLAYPACK-007 | completed | repeat-last-change efficiency tutorial content/E2E 구현 |
 | 8 | SEARCH-GAP-001 | completed | literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 결정 |
-| 9 | VIM-025 | active | literal search state와 next/previous match 구현 |
-| 10 | PLAYPACK-008 | pending | search-basic tutorial content/E2E 구현 |
+| 9 | VIM-025 | completed | literal search state와 next/previous match 구현 |
+| 10 | PLAYPACK-008 | active | search-basic tutorial content/E2E 구현 |
 | 11 | PLATFORM-RFC-001 | pending | mastery, spaced review, daily run, progress schema 후보 RFC |
 
 ## Utility Commands and Long-Run Platform 출구 조건
@@ -133,7 +133,7 @@
 | VIM-024 | REPEAT-GAP-001 승인 | completed: `.` 최소 subset engine/runtime 구현 | completed: vimengine/tuiadapter/runtime tests | macro/register 수준으로 확장하지 않았다 |
 | PLAYPACK-007 | VIM-024 완료 | completed: repeat-last-change tutorial + efficiency run E2E | completed: content replay, full playlist E2E | 수동 재입력 우회를 constraints로 차단했다 |
 | SEARCH-GAP-001 | repeat playpack 완료 | completed: literal search scope, `/` command-line/search state, `?` 보류 결정 | completed: docs review | regex, `?`, highlight 검증을 첫 구현에 넣지 않는다 |
-| VIM-025 | SEARCH-GAP-001 승인 | `/`, `n`, `N` literal search engine/runtime 구현 | vimengine/runtime/tuiadapter tests | hint `?` 충돌을 우회 구현하지 않는다 |
+| VIM-025 | SEARCH-GAP-001 승인 | completed: `/`, `n`, `N` literal search engine/runtime 구현 | completed: vimengine/runtime/tuiadapter/playable tests | hint `?` 충돌을 우회 구현하지 않았다 |
 | PLAYPACK-008 | VIM-025 완료 | search-basic tutorial + E2E | content replay, search app_state E2E | 검색 결과는 cursor/mode/key trace로 검증한다 |
 | PLATFORM-RFC-001 | 최소 3개 utility playpack 완료 | mastery/review/daily run progress 후보 RFC | 저장 포맷 영향 리뷰 | 사용자 승인 없이 progress schema 변경 금지 |
 

@@ -69,6 +69,32 @@ func TestSessionSucceedsWhenCommandGoalMatches(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyColon, "w", "q", vimengine.KeyEnter})
 }
 
+func TestSessionReplaysLiteralSearchTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "search-timeout",
+		Initial: vimengine.NewState([]string{"info ok", "warn timeout", "error timeout"}),
+		Goal: Goal{
+			Cursor: CursorGoal(1, 5),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeySlash, vimengine.KeyEnter},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeySlash, "t", "i", "m", "e", "o", "u", "t"} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEnter)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after enter = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeySlash, "t", "i", "m", "e", "o", "u", "t", vimengine.KeyEnter})
+}
+
 func TestUnsupportedKeyIsRecorded(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "unsupported",

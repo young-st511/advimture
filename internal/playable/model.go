@@ -156,8 +156,12 @@ func (m Model) View() string {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
 	}
 	b.WriteString("\n")
-	if view.Mode == string(vimengine.ModeCommand) {
-		b.WriteString(":" + view.CommandLine + "\n\n")
+	if view.Mode == string(vimengine.ModeCommand) || view.Mode == string(vimengine.ModeSearch) {
+		prompt := ":"
+		if view.Mode == string(vimengine.ModeSearch) {
+			prompt = "/"
+		}
+		b.WriteString(prompt + view.CommandLine + "\n\n")
 		b.WriteString(m.renderActionPanel(state, view))
 		return b.String()
 	}
@@ -417,6 +421,8 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 	switch {
 	case view.Mode == string(vimengine.ModeCommand):
 		lines = append(lines, "Keys: type command  enter: run  esc: normal")
+	case view.Mode == string(vimengine.ModeSearch):
+		lines = append(lines, "Keys: type search  enter: find  esc: normal")
 	case state.Status == exerciseruntime.StatusSucceeded:
 		lines = append(lines, m.successDebriefLines(state)...)
 		if m.current+1 < len(m.entries) {

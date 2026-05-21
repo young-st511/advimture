@@ -64,6 +64,21 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		}
 		return Action{Type: ActionIgnored}
 	}
+	if mode == vimengine.ModeSearch {
+		switch normalized {
+		case "enter":
+			return Action{Type: ActionKey, Key: vimengine.KeyEnter}
+		case "esc":
+			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
+		case "space":
+			return Action{Type: ActionKey, Key: " "}
+		default:
+			if len([]rune(input)) == 1 {
+				return Action{Type: ActionKey, Key: input}
+			}
+			return Action{Type: ActionIgnored}
+		}
+	}
 	if mode == vimengine.ModeCommand {
 		switch normalized {
 		case "enter":
@@ -91,10 +106,15 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	if trimmed == vimengine.KeyShiftO {
 		return Action{Type: ActionKey, Key: vimengine.KeyShiftO}
 	}
+	if trimmed == vimengine.KeyShiftN {
+		return Action{Type: ActionKey, Key: vimengine.KeyShiftN}
+	}
 
 	switch normalized {
 	case ":":
 		return Action{Type: ActionKey, Key: vimengine.KeyColon}
+	case "/":
+		return Action{Type: ActionKey, Key: vimengine.KeySlash}
 	case "enter":
 		return Action{Type: ActionKey, Key: vimengine.KeyEnter}
 	case "esc":
@@ -133,6 +153,8 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyC}
 	case "y":
 		return Action{Type: ActionKey, Key: vimengine.KeyY}
+	case "n":
+		return Action{Type: ActionKey, Key: vimengine.KeyN}
 	case "p":
 		return Action{Type: ActionKey, Key: vimengine.KeyP}
 	case "i":
