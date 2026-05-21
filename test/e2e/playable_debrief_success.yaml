@@ -1,0 +1,49 @@
+id: playable_debrief_success
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - send: "l"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - wait_screen_contains: "Playlist: 1/4 complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Grade: S"
+    - "Debrief: grade S, 2 keys"
+    - "Best: grade S, 2 keys"
+    - "Playlist: 1/4 complete"
+    - "Next: enter"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"normal-motion-basic-001\""
+  key_trace:
+    - "l"
+    - "l"
+    - "q"
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 2
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "normal-motion-basic-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

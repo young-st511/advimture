@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### DEBRIEF-001. Success debrief without save schema change
+### REPEAT-GAP-001. Repeat last change gap
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: 저장 포맷 변경 없이 성공/playlist 완료 화면에 debrief와 기존 best record 비교를 추가한다.
+- 목표: `.` repeat-last-change를 구현하기 전에 last-change transaction 범위와 제외 항목을 고정한다.
 
 ## 방금 완료한 슬라이스
+
+### DEBRIEF-001. Success debrief without save schema change
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/debrief-001-success-debrief.md`
+- 완료일: 2026-05-21
 
 ### PLAYPACK-006. Open line edit tutorial
 - 상태: completed

@@ -52,6 +52,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
+- 성공 action panel은 현재 grade/key count debrief, 기존 progress의 best grade/best key count, 현재 playlist 완료 수를 표시한다.
+- playlist 마지막 exercise 성공 화면도 별도 저장 포맷 변경 없이 같은 debrief와 `Playlist complete` 안내를 표시한다.
 - 향후 exercise constraint는 최대 입력 수 초과와 금지 입력/금지 우회 전략 사용을 즉시 실패로 처리해야 한다.
 - 실패 횟수는 기본 무제한이며, 후반 콘텐츠를 위해 `attempt_limit` 설정 여지는 남긴다.
 - 실패 후 재시도는 `r`과 `enter`를 모두 허용한다.

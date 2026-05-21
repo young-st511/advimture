@@ -64,6 +64,30 @@ func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	}
 }
 
+func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+		SaveProgress: func(*progress.Progress) error {
+			return nil
+		},
+	})
+
+	model, _ = updateWithKey(t, model, "l")
+	model, _ = updateWithKey(t, model, "l")
+
+	view := model.View()
+	if !strings.Contains(view, "Debrief: grade S, 2 keys") {
+		t.Fatalf("view = %q, want success debrief", view)
+	}
+	if !strings.Contains(view, "Best: grade S, 2 keys") {
+		t.Fatalf("view = %q, want best record", view)
+	}
+	if !strings.Contains(view, "Playlist: 1/4 complete") {
+		t.Fatalf("view = %q, want playlist completion count", view)
+	}
+}
+
 func TestPlayableAdvancesToNextExerciseAfterSuccess(t *testing.T) {
 	model := New(Options{
 		ContentRoot: contentRootForTest(),
@@ -124,6 +148,9 @@ func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
 
 	if !strings.Contains(model.View(), "Next tutorial: enter") {
 		t.Fatalf("view = %q, want next tutorial transition", model.View())
+	}
+	if !strings.Contains(model.View(), "Playlist: 4/4 complete") {
+		t.Fatalf("view = %q, want completed playlist debrief", model.View())
 	}
 	if !strings.Contains(model.View(), "ACTION") {
 		t.Fatalf("view = %q, want action panel", model.View())

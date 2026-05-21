@@ -418,6 +418,7 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 	case view.Mode == string(vimengine.ModeCommand):
 		lines = append(lines, "Keys: type command  enter: run  esc: normal")
 	case state.Status == exerciseruntime.StatusSucceeded:
+		lines = append(lines, m.successDebriefLines(state)...)
 		if m.current+1 < len(m.entries) {
 			if m.nextEntryStartsNewPlaylist() {
 				lines = append(lines, "Next tutorial: enter")
@@ -442,6 +443,47 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 		lines = append(lines, "?: hint  q: quit")
 	}
 	return actionPanelStyle.Render(strings.Join(lines, "\n"))
+}
+
+func (m Model) successDebriefLines(state scenario.State) []string {
+	if state.Score == nil {
+		return nil
+	}
+
+	lines := []string{
+		fmt.Sprintf("Debrief: grade %s, %d keys", state.Score.Grade, len(state.Runtime.KeyTrace)),
+	}
+	if best, ok := m.progress.Missions[m.currentExerciseID()]; ok && best.Completed {
+		bestGrade := best.BestGrade
+		if bestGrade == "" {
+			bestGrade = "-"
+		}
+		bestKeys := "-"
+		if best.BestKeystrokes > 0 {
+			bestKeys = fmt.Sprintf("%d keys", best.BestKeystrokes)
+		}
+		lines = append(lines, fmt.Sprintf("Best: grade %s, %s", bestGrade, bestKeys))
+	}
+	if entry, ok := m.currentEntry(); ok {
+		completed, total := m.playlistCompletion(entry.PlaylistID)
+		lines = append(lines, fmt.Sprintf("Playlist: %d/%d complete", completed, total))
+	}
+	return lines
+}
+
+func (m Model) playlistCompletion(playlistID string) (int, int) {
+	completed := 0
+	total := 0
+	for _, entry := range m.entries {
+		if entry.PlaylistID != playlistID {
+			continue
+		}
+		total++
+		if m.progress.Missions[entry.ExerciseID].Completed {
+			completed++
+		}
+	}
+	return completed, total
 }
 
 func attemptLimitLabel(limit int) string {
