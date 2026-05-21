@@ -1,6 +1,8 @@
 playlists:
   - id: first-5-minute
     status: retired
+    category: legacy
+    order: 0
     title: "첫 5분 Vim 생존 루프 (legacy vertical slice)"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
@@ -110,6 +112,8 @@ playlists:
 
   - id: tutorial-0-movement
     status: approved
+    category: tutorial
+    order: 0
     title: "Tutorial 0: 커서 감각 회상"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
@@ -141,6 +145,8 @@ playlists:
 
   - id: tutorial-1-survival
     status: approved
+    category: tutorial
+    order: 1
     title: "Tutorial 1: Vim 생존 키트"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
@@ -166,6 +172,8 @@ playlists:
 
   - id: tutorial-2-fast-navigation
     status: approved
+    category: tutorial
+    order: 2
     title: "Tutorial 2: 빠르게 훑기"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
@@ -215,6 +223,8 @@ playlists:
 
   - id: tutorial-3-small-edits
     status: approved
+    category: tutorial
+    order: 3
     title: "Tutorial 3: 작은 수정"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
@@ -264,6 +274,8 @@ playlists:
 
   - id: tutorial-4-ex-command
     status: approved
+    category: tutorial
+    order: 4
     title: "Mid Tutorial: Ex command 고급 튜토리얼"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

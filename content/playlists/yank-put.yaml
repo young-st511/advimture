@@ -1,6 +1,8 @@
 playlists:
   - id: tutorial-6-yank-put
     status: approved
+    category: tutorial
+    order: 6
     title: "Mid Tutorial: Yank / put 재사용"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

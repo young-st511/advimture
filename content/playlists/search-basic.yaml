@@ -1,6 +1,8 @@
 playlists:
   - id: tutorial-90-search-basic
     status: approved
+    category: tutorial
+    order: 10
     title: "Mid Tutorial: Literal search"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

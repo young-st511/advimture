@@ -135,6 +135,80 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 	})
 }
 
+func TestPlayablePlaylistsUseExplicitCategoryOrder(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
+playlists:
+  - id: incident-001
+    status: approved
+    category: incident
+    order: 1
+    title: Incident
+    beats:
+      - id: beat-incident
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+  - id: tutorial-b
+    status: approved
+    category: tutorial
+    order: 2
+    title: Tutorial B
+    beats:
+      - id: beat-b
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+  - id: tutorial-a
+    status: approved
+    category: tutorial
+    order: 1
+    title: Tutorial A
+    beats:
+      - id: beat-a
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+`)
+
+	lib, err := LoadLibrary(root)
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	playlists := lib.PlayablePlaylists()
+	got := make([]string, 0, len(playlists))
+	for _, playlist := range playlists {
+		got = append(got, playlist.ID)
+	}
+	assertStrings(t, got, []string{"tutorial-a", "tutorial-b", "incident-001"})
+}
+
+func TestLoadLibraryRejectsApprovedPlaylistWithoutExplicitOrder(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
+playlists:
+  - id: missing-order
+    status: approved
+    category: tutorial
+    title: Missing order
+    beats:
+      - id: beat-1
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "order") {
+		t.Fatalf("LoadLibrary error = %v, want order", err)
+	}
+}
+
 func TestLoadLibraryAllowsRetiredLegacyPlaylistLongerThanTutorialLimit(t *testing.T) {
 	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
 	if err != nil {

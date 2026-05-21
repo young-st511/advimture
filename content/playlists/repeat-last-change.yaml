@@ -1,6 +1,8 @@
 playlists:
   - id: tutorial-9-repeat-last-change
     status: approved
+    category: tutorial
+    order: 9
     title: "Mid Tutorial: Repeat last change"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

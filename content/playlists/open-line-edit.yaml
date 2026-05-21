@@ -1,6 +1,8 @@
 playlists:
   - id: tutorial-8-open-line-edit
     status: approved
+    category: tutorial
+    order: 8
     title: "Mid Tutorial: Open line edit"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

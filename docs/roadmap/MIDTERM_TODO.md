@@ -152,8 +152,8 @@
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
 | 1 | PLATFORM-REVIEW-001 | completed | 저장 포맷 변경 없는 review 후보 계산과 `재진단 큐`/`잔류 리스크` 표시 |
-| 2 | PLAYLIST-ORDER-001 | active | tutorial/incident 카테고리 순서를 ID hack 없이 명시적으로 정렬 |
-| 3 | INCIDENT-RUN-001 | pending | 기존 command를 섞은 `incident-001` 생존 어드벤처 mixed run |
+| 2 | PLAYLIST-ORDER-001 | completed | tutorial/incident 카테고리 순서를 ID hack 없이 명시적으로 정렬 |
+| 3 | INCIDENT-RUN-001 | active | 기존 command를 섞은 `incident-001` 생존 어드벤처 mixed run |
 | 4 | COACHING-001 | pending | schema 변경 없이 strict constraint 전 사전 코칭 UX 개선 |
 
 ## Review Queue and Incident Runs 출구 조건
@@ -161,7 +161,7 @@
 | ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |----|----------|-------------|------|---------------|
 | PLATFORM-REVIEW-001 | PLATFORM-RFC-001 완료 | completed: review 순수 계산 패키지, TUI read-only 표시, focused E2E | completed: review/playable tests, focused E2E, `go test ./...`, `make e2e-playable` | `internal/progress/` 저장 JSON 구조를 변경하지 않았다 |
-| PLAYLIST-ORDER-001 | review 표시 완료 | playlist ordering contract와 loader/playable 정렬 변경 | content/playable tests, `make e2e-playable` | 기존 progress mission ID 변경 금지 |
+| PLAYLIST-ORDER-001 | review 표시 완료 | completed: playlist ordering contract와 loader/playable 정렬 변경 | completed: content/playable tests, `make e2e-playable` | 기존 progress mission ID를 변경하지 않았다 |
 | INCIDENT-RUN-001 | incident ordering 가능 | `incident-001` content/scenario/playlist + full E2E | content replay, incident E2E | 새 Vim engine 기능 추가 금지 |
 | COACHING-001 | strict constraint UX 리스크 확인 | 사전 coaching 표시 또는 hint 노출 개선 | playable tests, focused E2E | Practice/Challenge schema 분리 보류 |
 

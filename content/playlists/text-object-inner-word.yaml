@@ -1,6 +1,8 @@
 playlists:
   - id: tutorial-7-text-object-inner-word
     status: approved
+    category: tutorial
+    order: 7
     title: "Mid Tutorial: Text object inner word"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

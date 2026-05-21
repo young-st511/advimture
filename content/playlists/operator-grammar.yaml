@@ -1,6 +1,8 @@
 playlists:
   - id: tutorial-5-operator-grammar
     status: approved
+    category: tutorial
+    order: 5
     title: "Mid Tutorial: Operator grammar 입문"
     unlock_policy: sequential
     completion_policy: all_implemented_beats

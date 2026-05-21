@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYLIST-ORDER-001. Explicit playlist ordering
+### INCIDENT-RUN-001. First incident mixed run
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: tutorial/incident 카테고리 순서를 ID hack 없이 명시적으로 정렬한다.
+- 목표: 기존 command를 섞은 `incident-001` 생존 어드벤처 mixed run을 추가한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYLIST-ORDER-001. Explicit playlist ordering
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playlist-order-001-explicit-order.md`
+- 완료일: 2026-05-22
 
 ### PLATFORM-REVIEW-001. Read-only review queue
 - 상태: completed

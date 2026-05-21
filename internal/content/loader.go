@@ -124,6 +124,8 @@ type ScenarioDocument struct {
 type PlaylistDocument struct {
 	ID               string         `yaml:"id"`
 	Status           Status         `yaml:"status"`
+	Category         string         `yaml:"category"`
+	Order            *int           `yaml:"order"`
 	Title            string         `yaml:"title"`
 	UnlockPolicy     string         `yaml:"unlock_policy"`
 	CompletionPolicy string         `yaml:"completion_policy"`
@@ -302,6 +304,14 @@ func (l Library) PlayablePlaylists() []PlaylistDocument {
 		}
 	}
 	sort.Slice(playlists, func(i, j int) bool {
+		leftRank := playlistCategoryRank(playlists[i].Category)
+		rightRank := playlistCategoryRank(playlists[j].Category)
+		if leftRank != rightRank {
+			return leftRank < rightRank
+		}
+		if playlistOrder(playlists[i]) != playlistOrder(playlists[j]) {
+			return playlistOrder(playlists[i]) < playlistOrder(playlists[j])
+		}
 		return playlists[i].ID < playlists[j].ID
 	})
 	return playlists
@@ -477,6 +487,17 @@ func (l Library) validatePlaylistDocument(playlist PlaylistDocument) error {
 	if isApprovedLike(playlist.Status) && len(playlist.Beats) > maxTutorialPlaylistBeats {
 		return fmt.Errorf("playlist %q has %d beats, want at most %d", playlist.ID, len(playlist.Beats), maxTutorialPlaylistBeats)
 	}
+	if isApprovedLike(playlist.Status) {
+		if strings.TrimSpace(playlist.Category) == "" {
+			return fmt.Errorf("playlist %q category is required", playlist.ID)
+		}
+		if playlist.Order == nil {
+			return fmt.Errorf("playlist %q order is required", playlist.ID)
+		}
+		if *playlist.Order < 0 {
+			return fmt.Errorf("playlist %q order must be non-negative", playlist.ID)
+		}
+	}
 	for _, beat := range playlist.Beats {
 		if !validEngineSupport(beat.EngineSupport) {
 			return fmt.Errorf("playlist %q beat %q has invalid engine_support %q", playlist.ID, beat.ID, beat.EngineSupport)
@@ -492,6 +513,24 @@ func (l Library) validatePlaylistDocument(playlist PlaylistDocument) error {
 		}
 	}
 	return nil
+}
+
+func playlistOrder(playlist PlaylistDocument) int {
+	if playlist.Order == nil {
+		return 0
+	}
+	return *playlist.Order
+}
+
+func playlistCategoryRank(category string) int {
+	switch category {
+	case "tutorial":
+		return 0
+	case "incident":
+		return 1
+	default:
+		return 9
+	}
 }
 
 func validateKeys(exercise ExerciseDocument) error {
