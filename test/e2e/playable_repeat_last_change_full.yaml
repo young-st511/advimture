@@ -1,0 +1,194 @@
+id: playable_repeat_last_change_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-006": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-005": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "두 api 라인에 같은 경고 suffix"
+  - send: "A"
+  - wait_ms: 50
+  - send: "!"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "."
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "두 상태 값이 down"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "."
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "svc와 route 아래에 같은 log=ok"
+  - send: "o"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "="
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "k"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "."
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "두 줄 모두 bad가 gad"
+  - send: "r"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "."
+  - wait_ms: 50
+  - wait_screen_contains: "Playlist complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Repeat last change"
+    - "Exercise: 4/4"
+    - "Playlist complete"
+    - "좋습니다. 단일 문자 교체도 .으로 반복했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"repeat-last-change-001\""
+    - "\"repeat-last-change-002\""
+    - "\"repeat-last-change-003\""
+    - "\"repeat-last-change-004\""
+  key_trace:
+    - "A"
+    - "!"
+    - "esc"
+    - "j"
+    - "."
+    - "enter"
+    - "c"
+    - "i"
+    - "w"
+    - "u"
+    - "p"
+    - "esc"
+    - "j"
+    - "."
+    - "enter"
+    - "o"
+    - "l"
+    - "o"
+    - "g"
+    - "="
+    - "o"
+    - "k"
+    - "esc"
+    - "j"
+    - "."
+    - "enter"
+    - "r"
+    - "g"
+    - "j"
+    - "."
+    - "q"
+  app_state:
+    buffer: ["gad", "gad"]
+    cursor:
+      row: 1
+      col: 0
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "repeat-last-change-004"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

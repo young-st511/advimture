@@ -1,0 +1,34 @@
+command_clusters:
+  - id: repeat-last-change
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-3-efficiency
+    title: "마지막 변경 반복"
+    commands: ["."]
+    coverage_required: ["."]
+    oracle: optional
+    purpose: "같은 변경을 다시 입력하지 않고 현재 위치에 반복 적용한다."
+    prerequisite: ["insert-mode-entry", "change-with-motion", "text-object-inner-word", "open-line-edit"]
+    difficulty: intermediate
+    useful_when:
+      - "여러 줄에 같은 suffix나 flag를 붙일 때"
+      - "비슷한 설정 값을 연속해서 같은 값으로 교체할 때"
+      - "방금 만든 줄 추가/값 교체 패턴을 다음 위치에서 재사용할 때"
+    combo_paths:
+      - ["A", "esc", "."]
+      - ["ciw", "esc", "."]
+      - ["o", "esc", "."]
+      - ["r", "."]
+    common_mistakes:
+      - "같은 텍스트를 다시 타이핑해 key count를 늘린다."
+      - "dot repeat이 motion이 아니라 마지막 change를 반복한다는 점을 놓친다."
+      - "undo/redo나 yank도 같은 방식으로 반복된다고 기대한다."
+    compatibility_notes:
+      - "첫 구현은 pedagogical last-change transaction을 사용한다."
+      - "반복 대상은 x, r<char>, insert transaction, change transaction, open-line transaction으로 제한한다."
+      - "delete, yank, put, Ex command, search, macro/register/count prefix는 후속 hardening으로 미룬다."
+      - "Vim exact undo block semantics는 후속 hardening으로 미룬다."
+    design_notes:
+      - "문항은 반드시 .를 required key로 포함한다."
+      - "효율 체감을 위해 수동 재입력보다 key count가 줄어드는 상황을 사용한다."

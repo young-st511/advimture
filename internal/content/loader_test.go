@@ -16,17 +16,17 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 13 {
-		t.Fatalf("command clusters = %d, want 13", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 14 {
+		t.Fatalf("command clusters = %d, want 14", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 46 {
-		t.Fatalf("exercises = %d, want 46", len(lib.Exercises))
+	if len(lib.Exercises) != 50 {
+		t.Fatalf("exercises = %d, want 50", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 46 {
-		t.Fatalf("scenarios = %d, want 46", len(lib.Scenarios))
+	if len(lib.Scenarios) != 50 {
+		t.Fatalf("scenarios = %d, want 50", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 10 {
-		t.Fatalf("playlists = %d, want 10", len(lib.Playlists))
+	if len(lib.Playlists) != 11 {
+		t.Fatalf("playlists = %d, want 11", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 46 {
-		t.Fatalf("playable exercises = %d, want 46: %+v", len(playable), playable)
+	if len(playable) != 50 {
+		t.Fatalf("playable exercises = %d, want 50: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -62,6 +62,10 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"open-line-edit-003",
 		"open-line-edit-004",
 		"open-line-edit-005",
+		"repeat-last-change-001",
+		"repeat-last-change-002",
+		"repeat-last-change-003",
+		"repeat-last-change-004",
 		"single-char-edit-001",
 		"single-char-edit-002",
 		"survival-save-quit-001",
@@ -122,6 +126,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-6-yank-put",
 		"tutorial-7-text-object-inner-word",
 		"tutorial-8-open-line-edit",
+		"tutorial-9-repeat-last-change",
 	})
 }
 
@@ -334,6 +339,12 @@ func TestCoverageReportsOperatorGrammarCommandsCovered(t *testing.T) {
 	assertStrings(t, openLineReport.Covered, []string{"o", "O"})
 	if len(openLineReport.Missing) != 0 {
 		t.Fatalf("open line missing coverage = %+v, want empty", openLineReport.Missing)
+	}
+
+	repeatReport := reports["repeat-last-change"]
+	assertStrings(t, repeatReport.Covered, []string{"."})
+	if len(repeatReport.Missing) != 0 {
+		t.Fatalf("repeat last change missing coverage = %+v, want empty", repeatReport.Missing)
 	}
 }
 

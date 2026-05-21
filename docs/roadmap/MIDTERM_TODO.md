@@ -115,8 +115,8 @@
 | 4 | DEBRIEF-001 | completed | 저장 포맷 변경 없는 성공/playlist 완료 debrief와 best record 표시 |
 | 5 | REPEAT-GAP-001 | completed | `.` repeat-last-change transaction 범위 결정 |
 | 6 | VIM-024 | completed | `.` 최소 subset 구현 |
-| 7 | PLAYPACK-007 | active | repeat-last-change efficiency tutorial content/E2E 구현 |
-| 8 | SEARCH-GAP-001 | pending | literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 결정 |
+| 7 | PLAYPACK-007 | completed | repeat-last-change efficiency tutorial content/E2E 구현 |
+| 8 | SEARCH-GAP-001 | active | literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 결정 |
 | 9 | VIM-025 | pending | literal search state와 next/previous match 구현 |
 | 10 | PLAYPACK-008 | pending | search-basic tutorial content/E2E 구현 |
 | 11 | PLATFORM-RFC-001 | pending | mastery, spaced review, daily run, progress schema 후보 RFC |
@@ -131,7 +131,7 @@
 | DEBRIEF-001 | PLAYPACK-006 완료 | completed: 성공/playlist 완료 화면 debrief, 기존 progress 기반 best record 표시 | completed: playable model tests, focused E2E | `internal/progress/` 저장 JSON 구조를 변경하지 않았다 |
 | REPEAT-GAP-001 | open-line playpack과 debrief 완료 | completed: last-change transaction RFC, 최소 subset 결정 | completed: docs review | `.` 구현 전 undo/insert/yank/put transaction 경계를 먼저 고정했다 |
 | VIM-024 | REPEAT-GAP-001 승인 | completed: `.` 최소 subset engine/runtime 구현 | completed: vimengine/tuiadapter/runtime tests | macro/register 수준으로 확장하지 않았다 |
-| PLAYPACK-007 | VIM-024 완료 | repeat-last-change tutorial + efficiency run E2E | content replay, full playlist E2E | 수동 재입력 우회를 constraints로 차단 |
+| PLAYPACK-007 | VIM-024 완료 | completed: repeat-last-change tutorial + efficiency run E2E | completed: content replay, full playlist E2E | 수동 재입력 우회를 constraints로 차단했다 |
 | SEARCH-GAP-001 | repeat playpack 완료 | literal search scope, `/` command-line/search state, `?` 보류 결정 | docs review | regex, `?`, highlight 검증을 첫 구현에 넣지 않는다 |
 | VIM-025 | SEARCH-GAP-001 승인 | `/`, `n`, `N` literal search engine/runtime 구현 | vimengine/runtime/tuiadapter tests | hint `?` 충돌을 우회 구현하지 않는다 |
 | PLAYPACK-008 | VIM-025 완료 | search-basic tutorial + E2E | content replay, search app_state E2E | 검색 결과는 cursor/mode/key trace로 검증한다 |

@@ -552,7 +552,7 @@ command_cluster:
     - Vim exact undo block semantics는 후속 hardening으로 미룬다.
   design_notes:
     - REPEAT-GAP-001에서 transaction commit/replay 규칙을 고정했다.
-    - VIM-024는 엔진 transaction recorder를 구현했고, PLAYPACK-007에서 efficiency tutorial과 E2E를 추가한다.
+    - VIM-024는 엔진 transaction recorder를 구현했고, PLAYPACK-007에서 efficiency tutorial과 E2E를 추가했다.
 ```
 
 ## First 5-Minute Discovery Notes

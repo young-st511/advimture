@@ -1,0 +1,202 @@
+exercises:
+  - id: repeat-last-change-001
+    status: approved
+    command_cluster: repeat-last-change
+    engine_support: implemented
+    trained_commands: ["."]
+    reviewed_commands: ["A", "esc", "j"]
+    mistake_focus: ["같은 느낌표를 두 번째 줄에도 직접 다시 입력하려고 한다."]
+    replay_status: pass
+    title: "두 줄에 경고 suffix 반복"
+    goal_for_player: "첫 줄 끝에 !를 붙인 뒤 다음 줄로 내려가 .으로 같은 변경을 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        api
+        api
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 3
+      buffer: |
+        api!
+        api!
+    optimal_keys: ["A", "!", "esc", "j", "."]
+    allowed_keys: ["A", "!", "esc", "j", "."]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 5
+      required_keys: ["A", "esc", "."]
+      forbidden_keys: ["i", "a", "o", "O", "c", "d", "y", "p", "P", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "A로 줄 끝에 들어가 첫 변경을 만듭니다."
+      - after_keys: 4
+        text: ".은 마지막 변경 A!esc를 현재 위치에서 반복합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 5
+    e2e_assertions:
+      buffer: ["api!", "api!"]
+      cursor:
+        row: 1
+        col: 3
+      mode: normal
+      status: succeeded
+
+  - id: repeat-last-change-002
+    status: approved
+    command_cluster: repeat-last-change
+    engine_support: implemented
+    trained_commands: ["."]
+    reviewed_commands: ["ciw", "esc", "j"]
+    mistake_focus: ["두 번째 값을 다시 ciw로 교체하려고 한다."]
+    replay_status: pass
+    title: "두 상태 값을 같은 값으로 교체"
+    goal_for_player: "첫 down 값을 ciw로 up으로 바꾼 뒤 다음 줄에서 .으로 같은 교체를 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        mode=down
+        next=down
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 6
+      buffer: |
+        mode=up
+        next=up
+    optimal_keys: ["c", "i", "w", "u", "p", "esc", "j", "."]
+    allowed_keys: ["c", "i", "w", "u", "p", "esc", "j", "."]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["c", "i", "w", "esc", "."]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "$", "d", "y", "x", "r", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "ciw로 만든 값 교체도 repeat 가능한 변경입니다."
+      - after_keys: 7
+        text: "두 번째 줄에서는 다시 타이핑하지 말고 .을 누르세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["mode=up", "next=up"]
+      cursor:
+        row: 1
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: repeat-last-change-003
+    status: approved
+    command_cluster: repeat-last-change
+    engine_support: implemented
+    trained_commands: ["."]
+    reviewed_commands: ["o", "esc", "j"]
+    mistake_focus: ["같은 보정 줄을 다시 직접 입력하려고 한다."]
+    replay_status: pass
+    title: "보정 줄 추가 반복"
+    goal_for_player: "svc 아래에 log=ok를 연 뒤 route 줄 아래에서도 .으로 같은 줄 추가를 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        svc=up
+        route=ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 3
+        col: 5
+      buffer: |
+        svc=up
+        log=ok
+        route=ok
+        log=ok
+    optimal_keys: ["o", "l", "o", "g", "=", "o", "k", "esc", "j", "."]
+    allowed_keys: ["o", "l", "g", "=", "k", "esc", "j", "."]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["o", "esc", "."]
+      forbidden_keys: ["O", "i", "a", "A", "c", "d", "y", "p", "P", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "o로 만든 줄 추가도 마지막 변경으로 기록됩니다."
+      - after_keys: 9
+        text: "route 줄 아래에서도 .만 누르면 log=ok 추가를 반복합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["svc=up", "log=ok", "route=ok", "log=ok"]
+      cursor:
+        row: 3
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: repeat-last-change-004
+    status: approved
+    command_cluster: repeat-last-change
+    engine_support: implemented
+    trained_commands: ["."]
+    reviewed_commands: ["r", "j"]
+    mistake_focus: ["같은 문자 교체를 두 번째 줄에서 r로 다시 반복하려고 한다."]
+    replay_status: pass
+    title: "두 줄의 첫 글자 교정"
+    goal_for_player: "첫 줄의 b를 r g로 고친 뒤 다음 줄에서 .으로 같은 교체를 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        bad
+        bad
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        gad
+        gad
+    optimal_keys: ["r", "g", "j", "."]
+    allowed_keys: ["r", "g", "j", "."]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["r", "."]
+      forbidden_keys: ["h", "k", "l", "i", "a", "A", "o", "O", "c", "d", "y", "p", "P", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "r g도 하나의 마지막 변경으로 기록됩니다."
+      - after_keys: 3
+        text: "두 번째 줄에서는 .으로 같은 문자 교체를 반복하세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["gad", "gad"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
