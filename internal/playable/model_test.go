@@ -8,6 +8,7 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/young-st511/advimture/internal/content"
 	"github.com/young-st511/advimture/internal/progress"
 	"github.com/young-st511/advimture/internal/scoring"
 )
@@ -26,6 +27,9 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	}
 	if !strings.Contains(model.View(), "Exercise: 1/4") {
 		t.Fatalf("view = %q, want episode-local count", model.View())
+	}
+	if !strings.Contains(model.View(), "재진단 큐: 목표 문자까지 이동하기: 미완료") {
+		t.Fatalf("view = %q, want review queue", model.View())
 	}
 }
 
@@ -85,6 +89,23 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 	}
 	if !strings.Contains(view, "Playlist: 1/4 complete") {
 		t.Fatalf("view = %q, want playlist completion count", view)
+	}
+	if !strings.Contains(view, "잔류 리스크: 경고 지점으로 이동하기: 미완료") {
+		t.Fatalf("view = %q, want residual risk recommendation", view)
+	}
+}
+
+func TestPlayableShowsReviewQueueForLowGrade(t *testing.T) {
+	p := progressWithAllPlayableCompleted(t)
+	p.Missions["normal-motion-basic-001"] = progress.MissionProgress{Completed: true, BestGrade: "B", BestKeystrokes: 2, Attempts: 1}
+
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    p,
+	})
+
+	if !strings.Contains(model.View(), "재진단 큐: 목표 문자까지 이동하기: grade B") {
+		t.Fatalf("view = %q, want low grade review queue", model.View())
 	}
 }
 
@@ -426,4 +447,27 @@ func updateWithSpecialKey(t *testing.T, model Model, key tea.KeyType) (Model, te
 
 func contentRootForTest() string {
 	return filepath.Join("..", "..", "content")
+}
+
+func progressWithAllPlayableCompleted(t *testing.T) *progress.Progress {
+	t.Helper()
+	p := progress.NewProgress()
+	library, err := content.LoadLibrary(contentRootForTest())
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+	entries, err := playlistEntries(library)
+	if err != nil {
+		t.Fatalf("playlistEntries returned error: %v", err)
+	}
+	for _, entry := range entries {
+		exercise := library.Exercises[entry.ExerciseID]
+		p.Missions[entry.ExerciseID] = progress.MissionProgress{
+			Completed:      true,
+			BestGrade:      "S",
+			BestKeystrokes: exercise.Grading.OptimalKeyCount,
+			Attempts:       1,
+		}
+	}
+	return p
 }

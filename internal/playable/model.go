@@ -11,6 +11,7 @@ import (
 	"github.com/young-st511/advimture/internal/e2estate"
 	"github.com/young-st511/advimture/internal/progress"
 	"github.com/young-st511/advimture/internal/progressadapter"
+	"github.com/young-st511/advimture/internal/review"
 	exerciseruntime "github.com/young-st511/advimture/internal/runtime"
 	"github.com/young-st511/advimture/internal/scenario"
 	"github.com/young-st511/advimture/internal/tuiadapter"
@@ -37,6 +38,7 @@ type Model struct {
 	startedAt    time.Time
 	saved        bool
 	err          error
+	reviewQueue  []review.Candidate
 }
 
 type gameEntry struct {
@@ -78,6 +80,7 @@ func New(options Options) Model {
 		startedAt:    now(),
 		err:          err,
 	}
+	model.refreshReviewQueue()
 	_ = model.writeE2EState()
 	return model
 }
@@ -140,6 +143,9 @@ func (m Model) View() string {
 	b.WriteString("A D V I M T U R E - Playable Slice\n\n")
 	if entry, ok := m.currentEntry(); ok {
 		b.WriteString(entry.PlaylistTitle + "\n")
+	}
+	if summary := m.reviewQueueSummary(); summary != "" {
+		b.WriteString(summary + "\n")
 	}
 	b.WriteString(view.Title + "\n")
 	b.WriteString(view.Message + "\n\n")
@@ -215,6 +221,7 @@ func (m *Model) applyProgressIfSucceeded() {
 	if m.saveProgress != nil {
 		_ = m.saveProgress(m.progress)
 	}
+	m.refreshReviewQueue()
 	m.saved = true
 }
 
@@ -263,6 +270,50 @@ func (m Model) currentEntry() (gameEntry, bool) {
 		return gameEntry{}, false
 	}
 	return m.entries[m.current], true
+}
+
+func (m *Model) refreshReviewQueue() {
+	if m.progress == nil || m.contentRoot == "" || len(m.entries) == 0 {
+		m.reviewQueue = nil
+		return
+	}
+	library, err := content.LoadLibrary(m.contentRoot)
+	if err != nil {
+		m.reviewQueue = nil
+		return
+	}
+	m.reviewQueue = review.Candidates(library, *m.progress, review.Options{
+		OrderedExerciseIDs: m.exerciseOrder(),
+		Limit:              3,
+	})
+}
+
+func (m Model) exerciseOrder() []string {
+	ids := make([]string, 0, len(m.entries))
+	seen := make(map[string]bool)
+	for _, entry := range m.entries {
+		if !seen[entry.ExerciseID] {
+			seen[entry.ExerciseID] = true
+			ids = append(ids, entry.ExerciseID)
+		}
+	}
+	return ids
+}
+
+func (m Model) reviewQueueSummary() string {
+	if len(m.reviewQueue) == 0 {
+		return ""
+	}
+	return "재진단 큐: " + m.reviewQueue[0].Summary()
+}
+
+func (m Model) residualRiskSummary() string {
+	for _, candidate := range m.reviewQueue {
+		if candidate.ExerciseID != m.currentExerciseID() {
+			return "잔류 리스크: " + candidate.Summary()
+		}
+	}
+	return ""
 }
 
 func (m Model) nextEntryStartsNewPlaylist() bool {
@@ -473,6 +524,9 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 	if entry, ok := m.currentEntry(); ok {
 		completed, total := m.playlistCompletion(entry.PlaylistID)
 		lines = append(lines, fmt.Sprintf("Playlist: %d/%d complete", completed, total))
+	}
+	if residual := m.residualRiskSummary(); residual != "" {
+		lines = append(lines, residual)
 	}
 	return lines
 }

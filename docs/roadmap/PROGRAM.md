@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### NEXT-PLANNING. Next platform/gameplay slice selection
-- 상태: pending
-- ExecPlan: 다음 사용자 결정 후 작성
-- 목표: `PLATFORM-RFC-001`의 후보 중 저장 변경 없는 review loop 또는 progress schema 승인 루프를 선택한다.
+### PLAYLIST-ORDER-001. Explicit playlist ordering
+- 상태: active
+- ExecPlan: 다음 루프에서 작성
+- 목표: tutorial/incident 카테고리 순서를 ID hack 없이 명시적으로 정렬한다.
 
 ## 방금 완료한 슬라이스
+
+### PLATFORM-REVIEW-001. Read-only review queue
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/platform-review-001-review-queue.md`
+- 완료일: 2026-05-22
 
 ### QA-PLATFORM-001. E2E suite refresh
 - 상태: completed
