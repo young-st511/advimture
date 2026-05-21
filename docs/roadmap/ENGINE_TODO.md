@@ -27,17 +27,17 @@
 
 ## 다음 루프 후보
 
-현재 진행 중: Yank / Put and Text Object Bridge.
+현재 진행 중: Utility Commands and Long-Run Platform.
 
-다음 후보는 `ENGINE-GAP-001`에서 아래 순서로 검토한다.
+다음 후보는 2026-05-21 토론 결과에 따라 아래 순서로 검토한다.
 
 | 우선순위 | 후보 | 필요한 엔진 계약 | 비고 |
 |----------|------|------------------|------|
-| 1 | `single-char-edit` | `x`, `r`, buffer mutation, cursor clamp | 다음 playpack의 가장 작은 편집 성공 경험 |
-| 2 | `insert-mode-entry` | `i`, `a`, `A`, insert text input, `esc` 복귀 | Bubble Tea key mapping과 runtime replay 표현 점검 필요 |
-| 3 | `undo-redo-basic` | undo stack, redo stack, mutation event history | 억까/회복 상황을 게임적으로 만들기 좋음 |
-| 4 | `open-line-edit` | `o`, `O`, newline insertion, insert mode entry | insert 모델 안정 후 진행 |
-| 5 | operator grammar | operator pending, `dw`, `dd`, `cw`, `cc` | 작은 수정 playpack 이후 adventure intro 후보 |
+| 1 | `open-line-edit` | `o`, `O`, newline insertion, insert mode entry, undo snapshot | 현재 next playable candidate |
+| 2 | `repeat-last-change` | last-change transaction, replayable mutation, undo/redo 상호작용 | efficiency run의 핵심 |
+| 3 | `search-basic` | literal search state, `/` query input, `n/N` match navigation | `?` hint 충돌과 regex는 보류 |
+| 4 | platform debrief | 기존 progress 기반 best record/read-only summary | 저장 포맷 변경 없이 게임성 강화 |
+| 5 | long-run review | mastery/spaced review/daily run progress 후보 | RFC와 사용자 승인 필요 |
 
 진행 원칙:
 
@@ -93,3 +93,20 @@
 | E2E-PLAYPACK-005 | text object playpack QA hardening | completed: E2E evidence and assertions | completed: full playlist + forbidden route |
 
 quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual selection, count prefix는 후속 milestone으로 넘긴다.
+
+## OPEN-LINE-001 이후 결정 예정
+
+첫 utility command 구현은 `open-line-edit`로 한다. `o/O`는 현재 줄 주변에 새 줄을 열고 즉시 Insert mode로 진입하는 실무 편집 흐름이다.
+
+| 루프 | 범위 | 필수 테스트 | E2E |
+|------|------|-------------|-----|
+| OPEN-LINE-001 | `o/O` scope, 제외 항목, VIM-023/PLAYPACK-006 분리 계획 | docs + scope review | 없음 |
+| VIM-023 | `o`, `O`, newline insertion, insert mode entry, undo snapshot | `internal/vimengine`, `internal/tuiadapter`, `internal/runtime` unit | content 연결 전 E2E 없음 |
+| PLAYPACK-006 | `open-line-edit` tutorial content | content replay, coverage, playable model | full playlist E2E |
+| DEBRIEF-001 | 저장 변경 없는 success/playlist completion debrief | playable model tests | focused E2E |
+
+첫 `o/O` 구현에서는 indentation, auto-comment, count prefix, insert-mode Enter, `.` repeat 연계를 제외한다.
+
+## REPEAT / SEARCH 장기 후보
+
+`repeat-last-change`는 last-change transaction 정의가 선행되어야 한다. `search-basic`은 literal `/`, `n`, `N`만 우선하며 `?`는 현재 hint key와 충돌하므로 SEARCH-GAP-001에서 별도 결정한다.

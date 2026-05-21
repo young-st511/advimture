@@ -282,9 +282,20 @@ Command cluster 후보:
 
 ## Known Coverage Gaps
 
-- `single-char-edit`: `x`, `r` engine support와 replay fixture가 필요하다.
-- `insert-mode-entry`: `i`, `a`, `A` engine support와 insert text 입력 모델 결정이 필요하다.
-- `undo-redo-basic`: Vim state history, undo stack, redo stack의 엔진 계약이 필요하다.
 - `open-line-edit`: `o`, `O`는 insert mode 입력 모델이 안정된 뒤 다룬다.
-- `delete-with-motion`/`change-with-motion`: operator pending mode 또는 단순 pedagogical grammar 결정이 필요하다.
-- `search-basic`: `/`, `?`, `n`, `N`은 command-line 입력과 search state를 분리해야 한다.
+- `repeat-last-change`: `.`는 last-change transaction, undo/redo 상호작용, insert/change/open-line replay 범위를 먼저 결정해야 한다.
+- `search-basic`: `/`, `n`, `N`은 command-line 입력과 search state를 분리해야 한다. `?`는 현재 hint key와 충돌하므로 첫 search 구현에서는 보류한다.
+- `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
+
+## Long-Run Platform Direction
+
+Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한다. 단, 첫 게임성 강화는 새 저장 포맷이 아니라 기존 score/progress를 읽어 성공 화면과 playlist 완료 화면에서 debrief, best record, retry 동기를 제공하는 수준으로 제한한다.
+
+우선순위:
+
+1. `open-line-edit`: 설정 줄 위/아래에 새 라인을 추가하는 실무 편집 감각
+2. `repeat-last-change`: 같은 수정을 반복해 Vim 효율을 체감하는 efficiency run
+3. `search-basic`: 로그/설정에서 literal token을 찾는 navigation run
+4. `platform-review-loop`: mastery/spaced review/daily run RFC
+
+세계관은 현재 터미널 문제 해결 생존 어드벤처를 유지하되, 필요하면 “낡은 원격 시설의 콘솔을 Vim으로 복구하는 오퍼레이터” 정도의 얇은 프레임으로 강화한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

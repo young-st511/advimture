@@ -102,3 +102,47 @@
 | 3 | VIM-022 | completed | `diw`, `ciw`, `yiw` mutation/register semantics 구현 |
 | 4 | PLAYPACK-005 | completed | 6문항 text object inner word tutorial content/E2E 구현 |
 | 5 | E2E-PLAYPACK-005 | completed | full playlist, forbidden 우회, progress 저장 검증 |
+
+## 다음 중기 플랜: Utility Commands and Long-Run Platform
+
+> 2026-05-21 토론 결과를 반영한다. 우선순위는 콘텐츠 확장과 게임성 강화이며, 단기 구현은 저장 포맷 변경 없이 닫는다.
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | OPEN-LINE-001 | planning | `o/O` open-line edit 범위와 제외 항목 결정 |
+| 2 | VIM-023 | pending | `o`, `O` newline insertion, insert mode entry, undo snapshot 구현 |
+| 3 | PLAYPACK-006 | pending | 4~6문항 open-line tutorial content/E2E 구현 |
+| 4 | DEBRIEF-001 | pending | 저장 포맷 변경 없는 성공/playlist 완료 debrief와 best record 표시 |
+| 5 | REPEAT-GAP-001 | pending | `.` repeat-last-change transaction 범위 결정 |
+| 6 | VIM-024 | pending | `.` 최소 subset 구현 |
+| 7 | PLAYPACK-007 | pending | repeat-last-change efficiency tutorial content/E2E 구현 |
+| 8 | SEARCH-GAP-001 | pending | literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 결정 |
+| 9 | VIM-025 | pending | literal search state와 next/previous match 구현 |
+| 10 | PLAYPACK-008 | pending | search-basic tutorial content/E2E 구현 |
+| 11 | PLATFORM-RFC-001 | pending | mastery, spaced review, daily run, progress schema 후보 RFC |
+
+## Utility Commands and Long-Run Platform 출구 조건
+
+| ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
+|----|----------|-------------|------|---------------|
+| OPEN-LINE-001 | `open-line-edit`가 curriculum next 후보 | command cluster draft/approval packet, VIM-023/PLAYPACK-006 분리 계획 | 문서 리뷰, `git diff --check` | indentation, auto-comment, count prefix, insert-mode Enter, dot repeat 제외 |
+| VIM-023 | OPEN-LINE-001 완료 | `o/O` engine, tuiadapter uppercase mapping, runtime replay smoke | `go test ./internal/vimengine/...`, `go test ./internal/tuiadapter/...`, `go test ./internal/runtime/...` | content/E2E와 섞지 않고 engine contract만 닫는다 |
+| PLAYPACK-006 | VIM-023 완료 | `open-line-edit` YAML content, scenario, playlist, full E2E | content replay, `playable_open_line_full.yaml`, `make e2e-smoke` | 8문항 이하, `o/O` required key와 우회 금지 고정 |
+| DEBRIEF-001 | PLAYPACK-006 완료 | 성공/playlist 완료 화면 debrief, 기존 progress 기반 best record 표시 | playable model tests, focused E2E | `internal/progress/` 저장 JSON 구조 변경 금지 |
+| REPEAT-GAP-001 | open-line playpack과 debrief 완료 | last-change transaction RFC, 최소 subset 결정 | docs review | `.` 구현 전 undo/insert/yank/put transaction 경계를 먼저 고정 |
+| VIM-024 | REPEAT-GAP-001 승인 | `.` 최소 subset engine/runtime 구현 | vimengine/runtime tests | macro/register 수준으로 확장하지 않는다 |
+| PLAYPACK-007 | VIM-024 완료 | repeat-last-change tutorial + efficiency run E2E | content replay, full playlist E2E | 수동 재입력 우회를 constraints로 차단 |
+| SEARCH-GAP-001 | repeat playpack 완료 | literal search scope, `/` command-line/search state, `?` 보류 결정 | docs review | regex, `?`, highlight 검증을 첫 구현에 넣지 않는다 |
+| VIM-025 | SEARCH-GAP-001 승인 | `/`, `n`, `N` literal search engine/runtime 구현 | vimengine/runtime/tuiadapter tests | hint `?` 충돌을 우회 구현하지 않는다 |
+| PLAYPACK-008 | VIM-025 완료 | search-basic tutorial + E2E | content replay, search app_state E2E | 검색 결과는 cursor/mode/key trace로 검증한다 |
+| PLATFORM-RFC-001 | 최소 3개 utility playpack 완료 | mastery/review/daily run progress 후보 RFC | 저장 포맷 영향 리뷰 | 사용자 승인 없이 progress schema 변경 금지 |
+
+## 2~3개월 주차 계획
+
+| 기간 | 목표 | 닫는 루프 |
+|------|------|----------|
+| Week 1-2 | `o/O` 범위 확정과 엔진 구현 | OPEN-LINE-001, VIM-023 |
+| Week 3-4 | open-line playable 콘텐츠와 저장 변경 없는 debrief | PLAYPACK-006, DEBRIEF-001 |
+| Week 5-6 | `.` repeat-last-change gap planning과 최소 엔진 | REPEAT-GAP-001, VIM-024 |
+| Week 7-8 | repeat tutorial과 efficiency run 검증 | PLAYPACK-007 |
+| 이후 | literal search와 장기 반복 학습 RFC | SEARCH-GAP-001, VIM-025, PLAYPACK-008, PLATFORM-RFC-001 |
