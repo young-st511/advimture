@@ -516,6 +516,44 @@ command_cluster:
     - PLAYPACK-006은 o/O 각각을 최소 2문항 이상 다루고 full playlist E2E를 추가했다.
 ```
 
+### text-object-quote-pair
+
+```yaml
+command_cluster:
+  id: text-object-quote-pair
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-operator-grammar
+  title: Text object: 따옴표 내부 대상 편집
+  commands: ["i\"", "di\"", "ci\"", "yi\""]
+  coverage_required: ["di\"", "ci\"", "yi\""]
+  oracle: optional
+  purpose: 커서가 따옴표 내부 어디에 있든 값 내부를 삭제, 변경, 복사한다.
+  prerequisite: ["text-object-inner-word", "yank-put-basic", "change-with-motion"]
+  difficulty: intermediate
+  useful_when:
+    - JSON, env, config의 quoted value를 구조 기준으로 바꿀 때
+    - 값 시작으로 이동하지 않고 quote 내부 전체를 잡을 때
+    - 복사/붙여넣기와 operator grammar를 문자열 값 단위로 확장할 때
+  combo_paths:
+    - ["ci\"", "esc"]
+    - ["di\"", "u"]
+    - ["yi\"", "p"]
+    - ["/", "ci\""]
+  common_mistakes:
+    - 커서를 값 시작으로 옮긴 뒤 cw/dw/yw로 처리하려고 한다.
+    - operator 뒤의 i를 Insert mode로 착각한다.
+    - quote 문자까지 지워야 한다고 착각한다.
+  compatibility_notes:
+    - 첫 구현은 double quote 내부 object만 다룬다.
+    - quote 문자는 대상에 포함하지 않는다.
+    - nested pair, escaped quote, single quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 미룬다.
+  design_notes:
+    - TEXT-PAIR-GAP-001은 double quote 내부 object로 첫 scope를 고정했다.
+    - VIM-026은 engine/runtime support만 닫고 content/E2E는 PLAYPACK-009로 분리한다.
+```
+
 ### repeat-last-change
 
 ```yaml

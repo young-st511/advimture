@@ -11,9 +11,9 @@ Phase: Vim Learning Foundation
 ## 활성 슬라이스
 
 ### TEXT-PAIR-GAP-001. Quote/pair text object gap
-- 상태: pending
-- ExecPlan: 다음 루프에서 작성
-- 목표: `ci"`, `di"`, `yi"` 중심의 quote/pair text object 최소 범위와 제외 항목을 고정한다.
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/text-pair-gap-001-quote-pair-scope.md`
+- 목표: `ci"`, `di"`, `yi"` 중심의 quote/pair text object 최소 범위와 제외 항목을 고정했다.
 
 ## 방금 완료한 슬라이스
 

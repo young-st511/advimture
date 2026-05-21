@@ -16,8 +16,8 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 15 {
-		t.Fatalf("command clusters = %d, want 15", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 16 {
+		t.Fatalf("command clusters = %d, want 16", len(lib.CommandClusters))
 	}
 	if len(lib.Exercises) != 60 {
 		t.Fatalf("exercises = %d, want 60", len(lib.Exercises))
