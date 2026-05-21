@@ -39,6 +39,7 @@ type Model struct {
 	saved        bool
 	err          error
 	reviewQueue  []review.Candidate
+	hintMessage  string
 }
 
 type gameEntry struct {
@@ -110,11 +111,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.advanceToNext()
 				break
 			}
+			m.hintMessage = ""
 			m.run.ApplyKey(action.Key)
 			m.applyProgressIfSucceeded()
 		case tuiadapter.ActionHint:
 			if hint, ok := m.run.RequestHint(); ok {
-				_ = hint
+				m.hintMessage = hint
 			}
 		case tuiadapter.ActionRetry:
 			m.retryCurrent()
@@ -238,12 +240,14 @@ func (m *Model) advanceToNext() {
 	m.current = nextIndex
 	m.run = run
 	m.saved = false
+	m.hintMessage = ""
 	m.startedAt = m.now()
 }
 
 func (m *Model) retryCurrent() {
 	m.run.Retry()
 	m.saved = false
+	m.hintMessage = ""
 	m.startedAt = m.now()
 }
 
@@ -491,15 +495,35 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
 		lines = append(lines, fmt.Sprintf("Attempts: %d/%s", state.Runtime.Attempts, attemptLimitLabel(state.Runtime.AttemptLimit)))
+		if coach := coachingLine(state); coach != "" {
+			lines = append(lines, coach)
+		}
+		if m.hintMessage != "" {
+			lines = append(lines, "Hint: "+m.hintMessage)
+		}
 		lines = append(lines, "Retry: r or enter")
 		lines = append(lines, "?: hint  q: quit")
 	default:
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
+		if coach := coachingLine(state); coach != "" {
+			lines = append(lines, coach)
+		}
+		if m.hintMessage != "" {
+			lines = append(lines, "Hint: "+m.hintMessage)
+		}
 		lines = append(lines, "?: hint  q: quit")
 	}
 	return actionPanelStyle.Render(strings.Join(lines, "\n"))
+}
+
+func coachingLine(state scenario.State) string {
+	missing := missingRequiredKeys(state.Runtime.RequiredKeys, state.Runtime.KeyTrace)
+	if len(missing) == 0 {
+		return ""
+	}
+	return "Coach: 훈련 키 " + strings.Join(missing, " ")
 }
 
 func (m Model) successDebriefLines(state scenario.State) []string {
@@ -551,6 +575,25 @@ func attemptLimitLabel(limit int) string {
 		return "unlimited"
 	}
 	return fmt.Sprintf("%d", limit)
+}
+
+func missingRequiredKeys(required []string, trace []string) []string {
+	var missing []string
+	for _, key := range required {
+		if !containsString(trace, key) {
+			missing = append(missing, key)
+		}
+	}
+	return missing
+}
+
+func containsString(values []string, target string) bool {
+	for _, value := range values {
+		if value == target {
+			return true
+		}
+	}
+	return false
 }
 
 var _ tea.Model = Model{}

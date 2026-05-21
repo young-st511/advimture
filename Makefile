@@ -15,6 +15,7 @@ e2e-playable:
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_ctrl_c_does_not_quit.yaml
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_constraint_required_key.yaml
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_constraint_max_inputs.yaml
+	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_coaching_panel.yaml
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_review_queue.yaml
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_playlist_next_survival.yaml
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_resume_first_incomplete.yaml

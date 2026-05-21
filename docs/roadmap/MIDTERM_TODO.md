@@ -154,7 +154,7 @@
 | 1 | PLATFORM-REVIEW-001 | completed | 저장 포맷 변경 없는 review 후보 계산과 `재진단 큐`/`잔류 리스크` 표시 |
 | 2 | PLAYLIST-ORDER-001 | completed | tutorial/incident 카테고리 순서를 ID hack 없이 명시적으로 정렬 |
 | 3 | INCIDENT-RUN-001 | completed | 기존 command를 섞은 `incident-001` 생존 어드벤처 mixed run |
-| 4 | COACHING-001 | pending | schema 변경 없이 strict constraint 전 사전 코칭 UX 개선 |
+| 4 | COACHING-001 | completed | schema 변경 없이 strict constraint 전 사전 코칭 UX 개선 |
 
 ## Review Queue and Incident Runs 출구 조건
 
@@ -163,7 +163,11 @@
 | PLATFORM-REVIEW-001 | PLATFORM-RFC-001 완료 | completed: review 순수 계산 패키지, TUI read-only 표시, focused E2E | completed: review/playable tests, focused E2E, `go test ./...`, `make e2e-playable` | `internal/progress/` 저장 JSON 구조를 변경하지 않았다 |
 | PLAYLIST-ORDER-001 | review 표시 완료 | completed: playlist ordering contract와 loader/playable 정렬 변경 | completed: content/playable tests, `make e2e-playable` | 기존 progress mission ID를 변경하지 않았다 |
 | INCIDENT-RUN-001 | incident ordering 가능 | completed: `incident-001` content/scenario/playlist + full E2E | completed: content replay, incident E2E, `make e2e-playable` | 새 Vim engine 기능을 추가하지 않았다 |
-| COACHING-001 | strict constraint UX 리스크 확인 | 사전 coaching 표시 또는 hint 노출 개선 | playable tests, focused E2E | Practice/Challenge schema 분리 보류 |
+| COACHING-001 | strict constraint UX 리스크 확인 | completed: required key coaching 표시와 `?` hint 노출 개선 | completed: runtime/playable tests, focused E2E, `make e2e-playable` | Practice/Challenge schema 분리 보류 |
+
+## Review Queue and Incident Runs 완료 판단
+
+2026-05-22 기준 이 중기 플랜은 completed다. review queue는 저장 변경 없이 첫 화면과 성공 debrief에 연결됐고, playlist ordering은 tutorial/incident category와 order로 명시화됐다. 첫 incident mixed run은 기존 Vim command 조합으로 완주 가능하며, strict constraint 문항의 coaching panel도 focused E2E와 full playable suite로 검증한다.
 
 ## 2~3개월 주차 계획
 

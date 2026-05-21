@@ -31,6 +31,9 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "재진단 큐: 목표 문자까지 이동하기: 미완료") {
 		t.Fatalf("view = %q, want review queue", model.View())
 	}
+	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
+		t.Fatalf("view = %q, want proactive coaching", model.View())
+	}
 }
 
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
@@ -338,6 +341,29 @@ func TestPlayableFailsShortcutThatSkipsRequiredInput(t *testing.T) {
 	}
 	if !strings.Contains(model.View(), "의도한 입력을 사용하지 않았습니다") {
 		t.Fatalf("view = %q, want required input coaching", model.View())
+	}
+	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
+		t.Fatalf("view = %q, want required key coaching", model.View())
+	}
+}
+
+func TestPlayableShowsRequestedHintInActionPanel(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+	})
+
+	model, _ = updateWithKey(t, model, "l")
+	model, _ = updateWithKey(t, model, "?")
+
+	if model.State().Status != "running" {
+		t.Fatalf("status = %q, want running", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "Hint: 오른쪽으로 한 칸 더 이동해야 합니다.") {
+		t.Fatalf("view = %q, want requested hint", model.View())
+	}
+	if model.State().Progress.Completed {
+		t.Fatal("progress completed = true, want false")
 	}
 }
 

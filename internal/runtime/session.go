@@ -51,6 +51,7 @@ type State struct {
 	Status       Status
 	Vim          vimengine.State
 	KeyTrace     []string
+	RequiredKeys []string
 	Attempts     int
 	AttemptLimit int
 	MaxInputs    int
@@ -114,6 +115,7 @@ func (s *Session) State() State {
 		Status:       s.status,
 		Vim:          copyVimState(s.engine.State()),
 		KeyTrace:     copyStrings(s.keyTrace),
+		RequiredKeys: copyStrings(s.exercise.Constraints.RequiredKeys),
 		Attempts:     s.attempts,
 		AttemptLimit: s.exercise.Constraints.AttemptLimit,
 		MaxInputs:    s.exercise.Constraints.MaxInputs,

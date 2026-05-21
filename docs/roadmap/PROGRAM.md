@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### COACHING-001. Proactive coaching
+### NEXT. Plan refresh
 - 상태: pending
-- ExecPlan: 다음 사용자 결정 후 작성
-- 목표: schema 변경 없이 strict constraint 전 사전 코칭 UX를 개선한다.
+- ExecPlan: 미정
+- 목표: Review Queue and Incident Runs 중기 플랜 완료 후 다음 command/content/gameplay 루프를 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### COACHING-001. Proactive coaching
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/coaching-001-proactive-action-panel.md`
+- 완료일: 2026-05-22
 
 ### INCIDENT-RUN-001. First incident mixed run
 - 상태: completed

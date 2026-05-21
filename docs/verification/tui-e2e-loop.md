@@ -105,6 +105,7 @@ evidence:
 - `playable_small_edits_full`: 7개 small edits exercise와 `ctrl+r` 입력을 검증하는 집중 E2E
 - `playable_arrow_forbidden`: 실제 방향키 escape sequence가 `h/j/k/l`로 우회되지 않고 forbidden input으로 실패하는지 검증하는 E2E
 - `playable_ctrl_c_does_not_quit`: 실제 Ctrl+C가 앱을 즉시 종료하지 않고 key trace에 남는지 검증하는 E2E
+- `playable_coaching_panel`: strict constraint 문항의 required key coaching과 `?` hint 패널 표시를 검증하는 E2E
 - `playable_full_first_five_minute`: movement/survival/navigation/small-edit/Ex command까지의 first-cut tutorial flow E2E
 - `playable_open_line_full`, `playable_repeat_last_change_full`, `playable_search_basic_full`: utility command full playpack E2E
 - `playable_incident_001_full`: 기존 command를 섞은 첫 incident run E2E

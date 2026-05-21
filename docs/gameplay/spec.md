@@ -50,6 +50,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
+- running/failed 상태의 `ACTION` 패널은 아직 쓰지 않은 `constraints.required_keys`를 `Coach: 훈련 키 ...`로 표시한다.
+- `?` hint 요청 결과는 `ACTION` 패널에 `Hint: ...`로 표시하며, command/search mode 패널에는 일반 hint/quit 안내를 섞지 않는다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
 - 성공 action panel은 현재 grade/key count debrief, 기존 progress의 best grade/best key count, 현재 playlist 완료 수를 표시한다.
