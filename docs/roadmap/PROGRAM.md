@@ -17,6 +17,11 @@ Phase: Vim Learning Foundation
 
 ## 방금 완료한 슬라이스
 
+### QA-PLATFORM-001. E2E suite refresh
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/qa-platform-001-e2e-suite-refresh.md`
+- 완료일: 2026-05-21
+
 ### PLATFORM-RFC-001. Long-run review platform RFC
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/platform-rfc-001-long-run-review.md`

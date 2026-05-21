@@ -141,6 +141,12 @@
 
 2026-05-21 기준 이 중기 플랜은 completed다. `o/O`, `.`, `/ n N`는 각각 gap planning, engine, playable tutorial, E2E까지 연결됐다. 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`에 저장 변경 없는 첫 루프와 schema 변경 승인 루프를 분리해 두었다.
 
+## 중간점검 중 즉시 보강한 QA
+
+| 순서 | ID | 상태 | 목표 |
+|------|----|------|------|
+| 1 | QA-PLATFORM-001 | completed | stale full E2E expectation 복구와 `make e2e-playable` 최신 playpack suite 갱신 |
+
 ## 2~3개월 주차 계획
 
 | 기간 | 목표 | 닫는 루프 |

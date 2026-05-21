@@ -105,7 +105,8 @@ evidence:
 - `playable_small_edits_full`: 7개 small edits exercise와 `ctrl+r` 입력을 검증하는 집중 E2E
 - `playable_arrow_forbidden`: 실제 방향키 escape sequence가 `h/j/k/l`로 우회되지 않고 forbidden input으로 실패하는지 검증하는 E2E
 - `playable_ctrl_c_does_not_quit`: 실제 Ctrl+C가 앱을 즉시 종료하지 않고 key trace에 남는지 검증하는 E2E
-- `playable_full_first_five_minute`: 24개 exercise로 구성된 현재 playable tutorial path 전체 완주 E2E
+- `playable_full_first_five_minute`: movement/survival/navigation/small-edit/Ex command까지의 first-cut tutorial flow E2E
+- `playable_open_line_full`, `playable_repeat_last_change_full`, `playable_search_basic_full`: utility command full playpack E2E
 
 `wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 기다린다. 반복되는 UI 문구를 사용할 수는 있지만, 같은 키를 빠르게 반복 입력할 때는 Bubble Tea가 입력을 묶어 받을 수 있으므로 사람 입력에 가까운 짧은 `wait_ms`를 둔다.
 

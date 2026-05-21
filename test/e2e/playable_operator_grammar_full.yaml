@@ -151,13 +151,13 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Playlist complete"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Operator grammar 입문"
     - "Exercise: 6/6"
-    - "Playlist complete"
+    - "Next tutorial: enter"
     - "좋습니다. cc는 현재 줄을 비우고 바로 새 줄 입력으로 들어갑니다."
   exit_code: 0
   progress_file_exists: true

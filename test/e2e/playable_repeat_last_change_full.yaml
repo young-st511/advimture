@@ -127,13 +127,13 @@ steps:
   - wait_ms: 50
   - send: "."
   - wait_ms: 50
-  - wait_screen_contains: "Playlist complete"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Repeat last change"
     - "Exercise: 4/4"
-    - "Playlist complete"
+    - "Next tutorial: enter"
     - "좋습니다. 단일 문자 교체도 .으로 반복했습니다."
   exit_code: 0
   progress_file_exists: true

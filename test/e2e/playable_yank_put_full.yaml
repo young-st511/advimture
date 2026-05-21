@@ -99,13 +99,13 @@ steps:
   - wait_ms: 50
   - send: "p"
   - wait_ms: 50
-  - wait_screen_contains: "Playlist complete"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Yank / put 재사용"
     - "Exercise: 5/5"
-    - "Playlist complete"
+    - "Next tutorial: enter"
     - "좋습니다. 작은 토큰도 복사해 붙이면 오타 위험이 줄어듭니다."
   exit_code: 0
   progress_file_exists: true

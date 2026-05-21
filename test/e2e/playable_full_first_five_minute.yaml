@@ -258,7 +258,7 @@ steps:
   - send: "/"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Playlist complete"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
@@ -266,7 +266,7 @@ assert:
     - "Mid Tutorial: Ex command 고급 튜토리얼"
     - "Command: :2,3s/error/ok/"
     - "Exercise: 3/3"
-    - "Playlist complete"
+    - "Next tutorial: enter"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
