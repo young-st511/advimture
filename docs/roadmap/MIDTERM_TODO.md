@@ -109,8 +109,8 @@
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | OPEN-LINE-001 | planning | `o/O` open-line edit 범위와 제외 항목 결정 |
-| 2 | VIM-023 | pending | `o`, `O` newline insertion, insert mode entry, undo snapshot 구현 |
+| 1 | OPEN-LINE-001 | completed | `o/O` open-line edit 범위와 제외 항목 결정 |
+| 2 | VIM-023 | active | `o`, `O` newline insertion, insert mode entry, undo snapshot 구현 |
 | 3 | PLAYPACK-006 | pending | 4~6문항 open-line tutorial content/E2E 구현 |
 | 4 | DEBRIEF-001 | pending | 저장 포맷 변경 없는 성공/playlist 완료 debrief와 best record 표시 |
 | 5 | REPEAT-GAP-001 | pending | `.` repeat-last-change transaction 범위 결정 |

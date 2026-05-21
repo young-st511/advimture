@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### OPEN-LINE-001. Open line edit gap
-- 상태: planning
+### VIM-023. Open line edit engine
+- 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `o/O` open-line edit의 구현 범위와 제외 항목을 결정한다.
+- 목표: `o`, `O` newline insertion과 insert mode entry를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### OPEN-LINE-001. Open line edit gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/open-line-001-open-line-edit-gap.md`
+- 완료일: 2026-05-21
 
 ### PLAYPACK-005. Text object inner word tutorial
 - 상태: completed

@@ -479,6 +479,43 @@ command_cluster:
     - 첫 text object playpack은 단어 내부 object만 다루며, quote/pair는 별도 고급 튜토리얼로 분리한다.
 ```
 
+### open-line-edit
+
+```yaml
+command_cluster:
+  id: open-line-edit
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-2-small-edits
+  title: 줄 열기와 즉시 입력
+  commands: ["o", "O"]
+  coverage_required: ["o", "O"]
+  oracle: optional
+  purpose: 현재 줄 아래나 위에 새 줄을 열고 바로 입력한다.
+  prerequisite: ["insert-mode-entry", "undo-redo-basic"]
+  difficulty: intermediate
+  useful_when:
+    - 설정 줄 아래에 fallback이나 새 항목을 추가할 때
+    - 현재 줄 위에 guard나 주석을 끼워 넣을 때
+    - 줄 단위 구조를 유지하면서 Insert mode 진입 동작을 줄일 때
+  combo_paths:
+    - ["o", "esc"]
+    - ["O", "esc"]
+    - ["o", "u"]
+  common_mistakes:
+    - 새 줄을 만들려고 A나 i로 기존 줄을 망가뜨린다.
+    - 아래에 열어야 할지 위에 열어야 할지 o/O 방향을 혼동한다.
+    - 입력 후 esc로 Normal mode에 돌아오지 않는다.
+  compatibility_notes:
+    - 첫 구현은 빈 줄을 삽입한 뒤 Insert mode로 진입한다.
+    - indentation, auto-comment, count prefix, insert-mode Enter는 후속 hardening으로 미룬다.
+    - 첫 구현은 dot repeat과 연결하지 않는다.
+  design_notes:
+    - OPEN-LINE-001은 scope를 고정하고, VIM-023에서 engine support를 구현한다.
+    - PLAYPACK-006은 o/O 각각을 최소 2문항 이상 다루고 full playlist E2E를 추가한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -489,6 +526,7 @@ command_cluster:
 - `delete-with-motion`, `change-with-motion`은 VIM-017/VIM-018에서 engine support가 구현됐고 PLAYPACK-003에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`다.
 - `yank-put-basic`은 VIM-019/VIM-020에서 engine support가 구현됐고 PLAYPACK-004에서 5문항 tutorial content로 연결됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
 - `text-object-inner-word`는 VIM-021/VIM-022에서 engine support가 구현됐고 PLAYPACK-005에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
+- `open-line-edit`은 OPEN-LINE-001에서 approved + planned로 승격했다. 첫 구현 범위는 `o`, `O`이며 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat은 제외한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001
