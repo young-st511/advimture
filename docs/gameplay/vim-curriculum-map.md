@@ -242,8 +242,8 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word` |
-| next | 다음 playpack에서 구현/승격할 후보 | `open-line-edit` |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit` |
+| next | 다음 playpack에서 구현/승격할 후보 | `repeat-last-change` |
 | soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | `repeat-last-change`, `search-basic` |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `search-basic`, `visual-char-line`, `text-object-inner` quote/pair 계열, `macro-basic`, buffer/window/navigation-at-scale 계열 |
 
@@ -257,7 +257,7 @@ Command cluster 후보:
 
 | Cluster | Commands | Engine support | Oracle | 이유 |
 |---------|----------|----------------|--------|------|
-| `open-line-edit` | `o`, `O` | planned | optional | 설정 줄 위/아래에 새 항목을 추가하는 실제 편집 흐름을 만든다. |
+| `open-line-edit` | `o`, `O` | implemented | optional | 설정 줄 위/아래에 새 항목을 추가하는 실제 편집 흐름을 만든다. |
 
 다음 gap planning 후보:
 
@@ -282,7 +282,7 @@ Command cluster 후보:
 
 ## Known Coverage Gaps
 
-- `open-line-edit`: `o`, `O`는 insert mode 입력 모델이 안정된 뒤 다룬다.
+- `open-line-edit`: PLAYPACK-006에서 `o`, `O` 기본 흐름을 다뤘다. indentation, auto-comment, count prefix, dot repeat 연계는 후속 hardening으로 남는다.
 - `repeat-last-change`: `.`는 last-change transaction, undo/redo 상호작용, insert/change/open-line replay 범위를 먼저 결정해야 한다.
 - `search-basic`: `/`, `n`, `N`은 command-line 입력과 search state를 분리해야 한다. `?`는 현재 hint key와 충돌하므로 첫 search 구현에서는 보류한다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.

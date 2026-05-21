@@ -1,0 +1,234 @@
+id: playable_open_line_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-006": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "svc 상태 줄 아래에 로그 슬롯"
+  - send: "o"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "="
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "k"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "env 줄 아래에 설정 보정 값"
+  - send: "o"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "="
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "gate 설정 앞에 환경 보정"
+  - send: "O"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "v"
+  - wait_ms: 50
+  - send: "="
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "zone 줄 앞에 설정 줄"
+  - send: "O"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "="
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "sync 줄 아래에 종료 표식"
+  - send: "o"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "d"
+  - wait_ms: 50
+  - send: "="
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "k"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - wait_screen_contains: "Playlist complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Open line edit"
+    - "Exercise: 5/5"
+    - "Playlist complete"
+    - "좋습니다. 아래에 열어야 하는 줄을 o로 정확히 추가했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"open-line-edit-001\""
+    - "\"open-line-edit-002\""
+    - "\"open-line-edit-003\""
+    - "\"open-line-edit-004\""
+    - "\"open-line-edit-005\""
+  key_trace:
+    - "o"
+    - "l"
+    - "o"
+    - "g"
+    - "="
+    - "o"
+    - "k"
+    - "esc"
+    - "enter"
+    - "o"
+    - "s"
+    - "e"
+    - "t"
+    - "="
+    - "u"
+    - "p"
+    - "esc"
+    - "enter"
+    - "O"
+    - "e"
+    - "n"
+    - "v"
+    - "="
+    - "u"
+    - "p"
+    - "esc"
+    - "enter"
+    - "O"
+    - "s"
+    - "e"
+    - "t"
+    - "="
+    - "u"
+    - "p"
+    - "esc"
+    - "enter"
+    - "o"
+    - "e"
+    - "n"
+    - "d"
+    - "="
+    - "o"
+    - "k"
+    - "esc"
+    - "q"
+  app_state:
+    buffer: ["sync=up", "end=ok", "done=ok"]
+    cursor:
+      row: 1
+      col: 5
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "open-line-edit-005"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

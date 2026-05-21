@@ -102,7 +102,7 @@ quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual sele
 |------|------|-------------|-----|
 | OPEN-LINE-001 | `o/O` scope, 제외 항목, VIM-023/PLAYPACK-006 분리 계획 | completed: docs + scope review | 없음 |
 | VIM-023 | `o`, `O`, newline insertion, insert mode entry, undo snapshot | completed: `internal/vimengine`, `internal/tuiadapter`, `internal/runtime` unit | content 연결 전 E2E 없음 |
-| PLAYPACK-006 | `open-line-edit` tutorial content | content replay, coverage, playable model | full playlist E2E |
+| PLAYPACK-006 | `open-line-edit` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E + forbidden route |
 | DEBRIEF-001 | 저장 변경 없는 success/playlist completion debrief | playable model tests | focused E2E |
 
 첫 `o/O` 구현에서는 indentation, auto-comment, count prefix, insert-mode Enter, `.` repeat 연계를 제외한다.

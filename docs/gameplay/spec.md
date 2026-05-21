@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented tutorial playlist를 ID 순서로 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
@@ -77,7 +77,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `text-object-inner-word`는 approved + implemented tutorial cluster이며 `diw`, `ciw`, `yiw` coverage와 replay gate, E2E assertion gate를 통과한다.
 - 첫 text object 구현은 `iw`만 다루며 quote/pair object, around object, visual selection, count prefix는 후속 루프로 분리한다.
 - `open-line-edit`은 approved + engine implemented command cluster이며 `o`, `O`는 현재 줄 아래/위에 빈 줄을 삽입하고 Insert mode로 진입한다.
-- 첫 `o/O` 구현은 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat 연계를 제외한다. 플레이 가능한 튜토리얼 content와 E2E는 PLAYPACK-006에서 연결한다.
+- `tutorial-8-open-line-edit`은 `o` 3문항, `O` 2문항으로 구성된 5문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
+- 첫 `o/O` 구현은 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat 연계를 제외한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

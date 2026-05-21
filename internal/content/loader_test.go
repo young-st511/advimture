@@ -16,17 +16,17 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 12 {
-		t.Fatalf("command clusters = %d, want 12", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 13 {
+		t.Fatalf("command clusters = %d, want 13", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 41 {
-		t.Fatalf("exercises = %d, want 41", len(lib.Exercises))
+	if len(lib.Exercises) != 46 {
+		t.Fatalf("exercises = %d, want 46", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 41 {
-		t.Fatalf("scenarios = %d, want 41", len(lib.Scenarios))
+	if len(lib.Scenarios) != 46 {
+		t.Fatalf("scenarios = %d, want 46", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 9 {
-		t.Fatalf("playlists = %d, want 9", len(lib.Playlists))
+	if len(lib.Playlists) != 10 {
+		t.Fatalf("playlists = %d, want 10", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 41 {
-		t.Fatalf("playable exercises = %d, want 41: %+v", len(playable), playable)
+	if len(playable) != 46 {
+		t.Fatalf("playable exercises = %d, want 46: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -57,6 +57,11 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"normal-motion-basic-002",
 		"normal-motion-basic-003",
 		"normal-motion-basic-004",
+		"open-line-edit-001",
+		"open-line-edit-002",
+		"open-line-edit-003",
+		"open-line-edit-004",
+		"open-line-edit-005",
 		"single-char-edit-001",
 		"single-char-edit-002",
 		"survival-save-quit-001",
@@ -116,6 +121,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-5-operator-grammar",
 		"tutorial-6-yank-put",
 		"tutorial-7-text-object-inner-word",
+		"tutorial-8-open-line-edit",
 	})
 }
 
@@ -322,6 +328,12 @@ func TestCoverageReportsOperatorGrammarCommandsCovered(t *testing.T) {
 	assertStrings(t, textObjectReport.Covered, []string{"diw", "ciw", "yiw"})
 	if len(textObjectReport.Missing) != 0 {
 		t.Fatalf("text object missing coverage = %+v, want empty", textObjectReport.Missing)
+	}
+
+	openLineReport := reports["open-line-edit"]
+	assertStrings(t, openLineReport.Covered, []string{"o", "O"})
+	if len(openLineReport.Missing) != 0 {
+		t.Fatalf("open line missing coverage = %+v, want empty", openLineReport.Missing)
 	}
 }
 

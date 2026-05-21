@@ -1,0 +1,257 @@
+exercises:
+  - id: open-line-edit-001
+    status: approved
+    command_cluster: open-line-edit
+    engine_support: implemented
+    trained_commands: ["o"]
+    reviewed_commands: ["i", "A", "esc"]
+    mistake_focus: ["기존 줄 끝에 붙이거나 아래 줄을 덮어쓰려고 한다."]
+    replay_status: pass
+    title: "상태 줄 아래에 로그 슬롯 추가"
+    goal_for_player: "현재 줄 아래에 o로 새 줄을 열고 log=ok를 입력한 뒤 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        svc=up
+        route=ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 5
+      buffer: |
+        svc=up
+        log=ok
+        route=ok
+    optimal_keys: ["o", "l", "o", "g", "=", "o", "k", "esc"]
+    allowed_keys: ["o", "l", "g", "=", "k", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["o", "esc"]
+      forbidden_keys: ["O", "i", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "o는 현재 줄 아래에 빈 줄을 열고 바로 Insert mode로 들어갑니다."
+      - after_keys: 7
+        text: "값을 다 입력했으면 esc로 Normal mode에 돌아오세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["svc=up", "log=ok", "route=ok"]
+      cursor:
+        row: 1
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: open-line-edit-002
+    status: approved
+    command_cluster: open-line-edit
+    engine_support: implemented
+    trained_commands: ["o"]
+    reviewed_commands: ["a", "A", "esc"]
+    mistake_focus: ["현재 줄을 수정하지 않고 새 설정 줄을 아래에 열어야 한다."]
+    replay_status: pass
+    title: "환경 줄 아래에 라우팅 값 추가"
+    goal_for_player: "env 줄 아래에 o로 새 줄을 열고 set=up을 입력하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        svc=up
+        env=up
+        tail=ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 5
+      buffer: |
+        svc=up
+        env=up
+        set=up
+        tail=ok
+    optimal_keys: ["o", "s", "e", "t", "=", "u", "p", "esc"]
+    allowed_keys: ["o", "s", "e", "t", "=", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["o", "esc"]
+      forbidden_keys: ["O", "i", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번에도 아래 방향입니다. o를 누른 뒤 필요한 줄 내용을 입력합니다."
+      - after_keys: 7
+        text: "Insert mode에서 벗어나야 성공 상태가 됩니다. esc를 누르세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["svc=up", "env=up", "set=up", "tail=ok"]
+      cursor:
+        row: 2
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: open-line-edit-003
+    status: approved
+    command_cluster: open-line-edit
+    engine_support: implemented
+    trained_commands: ["O"]
+    reviewed_commands: ["o", "esc"]
+    mistake_focus: ["위에 들어가야 하는 보정 줄을 아래에 열어 순서를 망친다."]
+    replay_status: pass
+    title: "게이트 앞에 환경 보정 줄 삽입"
+    goal_for_player: "gate 줄 위에 O로 새 줄을 열고 env=up을 입력하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        svc=up
+        gate=up
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 5
+      buffer: |
+        svc=up
+        env=up
+        gate=up
+    optimal_keys: ["O", "e", "n", "v", "=", "u", "p", "esc"]
+    allowed_keys: ["O", "e", "n", "v", "=", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["O", "esc"]
+      forbidden_keys: ["o", "i", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "O는 현재 줄 위에 빈 줄을 열고 바로 Insert mode로 들어갑니다."
+      - after_keys: 7
+        text: "위에 줄을 넣었다면 esc로 Normal mode에 돌아오세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["svc=up", "env=up", "gate=up"]
+      cursor:
+        row: 1
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: open-line-edit-004
+    status: approved
+    command_cluster: open-line-edit
+    engine_support: implemented
+    trained_commands: ["O"]
+    reviewed_commands: ["o", "esc"]
+    mistake_focus: ["대상 줄 앞에 들어가야 하는 안전 줄을 뒤에 추가한다."]
+    replay_status: pass
+    title: "존 앞에 설정 줄 끼우기"
+    goal_for_player: "zone 줄 위에 O로 새 줄을 열고 set=up을 입력하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        mode=ok
+        zone=up
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 5
+      buffer: |
+        mode=ok
+        set=up
+        zone=up
+    optimal_keys: ["O", "s", "e", "t", "=", "u", "p", "esc"]
+    allowed_keys: ["O", "s", "e", "t", "=", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["O", "esc"]
+      forbidden_keys: ["o", "i", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번 줄은 위에 끼워 넣어야 합니다. 아래의 o가 아니라 O를 씁니다."
+      - after_keys: 7
+        text: "입력이 끝났으면 esc로 빠져나옵니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["mode=ok", "set=up", "zone=up"]
+      cursor:
+        row: 1
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: open-line-edit-005
+    status: approved
+    command_cluster: open-line-edit
+    engine_support: implemented
+    trained_commands: ["o"]
+    reviewed_commands: ["O", "esc"]
+    mistake_focus: ["마지막 보정 줄을 대상 줄 위에 넣어 순서를 뒤집는다."]
+    replay_status: pass
+    title: "동기화 줄 아래에 종료 표식 추가"
+    goal_for_player: "sync 줄 아래에 o로 새 줄을 열고 end=ok를 입력하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        sync=up
+        done=ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 5
+      buffer: |
+        sync=up
+        end=ok
+        done=ok
+    optimal_keys: ["o", "e", "n", "d", "=", "o", "k", "esc"]
+    allowed_keys: ["o", "e", "n", "d", "=", "k", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["o", "esc"]
+      forbidden_keys: ["O", "i", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "마지막은 다시 아래 방향입니다. o는 현재 줄 아래를 엽니다."
+      - after_keys: 7
+        text: "end=ok 입력 후 esc로 마무리하세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["sync=up", "end=ok", "done=ok"]
+      cursor:
+        row: 1
+        col: 5
+      mode: normal
+      status: succeeded

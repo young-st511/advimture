@@ -1,0 +1,32 @@
+command_clusters:
+  - id: open-line-edit
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-2-small-edits
+    title: "줄 열기와 즉시 입력"
+    commands: ["o", "O"]
+    coverage_required: ["o", "O"]
+    oracle: optional
+    purpose: "현재 줄 아래나 위에 새 줄을 열고 바로 입력한다."
+    prerequisite: ["insert-mode-entry", "undo-redo-basic"]
+    difficulty: intermediate
+    useful_when:
+      - "설정 줄 아래에 fallback이나 새 항목을 추가할 때"
+      - "현재 줄 위에 guard나 보정 라인을 끼워 넣을 때"
+      - "줄 단위 구조를 유지하면서 Insert mode 진입 동작을 줄일 때"
+    combo_paths:
+      - ["o", "esc"]
+      - ["O", "esc"]
+      - ["o", "u"]
+    common_mistakes:
+      - "새 줄을 만들려고 A나 i로 기존 줄을 망가뜨린다."
+      - "아래에 열어야 할지 위에 열어야 할지 o/O 방향을 혼동한다."
+      - "입력 후 esc로 Normal mode에 돌아오지 않는다."
+    compatibility_notes:
+      - "첫 구현은 빈 줄을 삽입한 뒤 Insert mode로 진입한다."
+      - "indentation, auto-comment, count prefix, insert-mode Enter는 후속 hardening으로 미룬다."
+      - "첫 구현은 dot repeat과 연결하지 않는다."
+    design_notes:
+      - "문항은 아래에 여는 o와 위에 여는 O를 분리해 방향 감각을 반복시킨다."
+      - "PLAYPACK-006은 full playlist E2E와 잘못된 방향 retry E2E를 함께 둔다."

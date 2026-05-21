@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-006. Open line edit tutorial
+### DEBRIEF-001. Success debrief without save schema change
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `o`, `O`를 학습하는 4~6문항 tutorial content와 full playlist E2E를 구현한다.
+- 목표: 저장 포맷 변경 없이 성공/playlist 완료 화면에 debrief와 기존 best record 비교를 추가한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-006. Open line edit tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-006-open-line-edit.md`
+- 완료일: 2026-05-21
 
 ### VIM-023. Open line edit engine
 - 상태: completed

@@ -1,0 +1,75 @@
+scenarios:
+  - id: open-line-edit-001-scenario
+    status: approved
+    exercise_id: open-line-edit-001
+    engine_support: implemented
+    learning_reinforcement: "o는 현재 줄 아래에 새 줄을 열고 Insert mode로 들어간다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "로그 슬롯 확보"
+    briefing: "svc 상태 줄 아래에 로그 슬롯이 빠졌습니다. o로 아래 줄을 열어 log=ok를 추가하세요."
+    context_role: "누락된 로그 설정"
+    mentor_success: "좋습니다. o로 아래에 줄을 열고 값을 넣었습니다."
+    mentor_failure: "기존 줄에 붙이지 마세요. 아래 줄을 열려면 Normal mode에서 o입니다."
+    story_constraints:
+      - "o가 아래 방향 open-line이라는 점을 첫 문항에서 명시한다."
+      - "기존 줄을 직접 수정하는 우회를 유도하지 않는다."
+
+  - id: open-line-edit-002-scenario
+    status: approved
+    exercise_id: open-line-edit-002
+    engine_support: implemented
+    learning_reinforcement: "o는 현재 줄 아래에 새 설정 줄을 추가할 때 유용하다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "라우팅 값 추가"
+    briefing: "env 줄 아래에 설정 보정 값이 필요합니다. 아래 방향으로 줄을 열어 set=up을 넣으세요."
+    context_role: "누락된 보정 설정"
+    mentor_success: "좋습니다. 아래 방향의 새 줄 추가는 o로 충분합니다."
+    mentor_failure: "줄 끝에 이어 쓰면 구조가 깨집니다. 현재 줄 아래를 o로 여세요."
+    story_constraints:
+      - "아래 방향 반복으로 o의 위치 감각을 강화한다."
+      - "시나리오보다 줄 구조 보존 목표를 우선한다."
+
+  - id: open-line-edit-003-scenario
+    status: approved
+    exercise_id: open-line-edit-003
+    engine_support: implemented
+    learning_reinforcement: "O는 현재 줄 위에 새 줄을 열고 Insert mode로 들어간다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "게이트 앞 보정"
+    briefing: "gate 설정 앞에 환경 보정 줄이 먼저 와야 합니다. O로 위에 env=up을 삽입하세요."
+    context_role: "순서가 중요한 설정"
+    mentor_success: "좋습니다. O로 현재 줄 위에 필요한 보정 줄을 넣었습니다."
+    mentor_failure: "이번에는 아래가 아니라 위입니다. O로 현재 줄 위를 여세요."
+    story_constraints:
+      - "o/O 방향 차이를 명확히 드러낸다."
+      - "잘못된 방향 입력은 즉시 재시도로 회복한다."
+
+  - id: open-line-edit-004-scenario
+    status: approved
+    exercise_id: open-line-edit-004
+    engine_support: implemented
+    learning_reinforcement: "O는 대상 줄 앞에 guard나 보정 줄을 끼울 때 적합하다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "존 앞 설정 끼우기"
+    briefing: "zone 줄 앞에 설정 줄이 없으면 뒤쪽 검사가 빗나갑니다. O로 위에 set=up을 넣으세요."
+    context_role: "순서 민감한 존 설정"
+    mentor_success: "좋습니다. 위에 끼워 넣어야 할 때는 O가 빠릅니다."
+    mentor_failure: "아래에 추가하면 순서가 맞지 않습니다. 현재 줄 위를 O로 여세요."
+    story_constraints:
+      - "약한 압박은 허용하되 조작 목표를 흐리지 않는다."
+      - "O의 실무 사용처를 guard/보정 줄로 연결한다."
+
+  - id: open-line-edit-005-scenario
+    status: approved
+    exercise_id: open-line-edit-005
+    engine_support: implemented
+    learning_reinforcement: "o/O 방향을 구분해 줄 구조를 보존하면서 값을 추가한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "동기화 종료 표식"
+    briefing: "sync 줄 아래에 종료 표식이 빠졌습니다. o로 아래 줄을 열어 end=ok를 추가하세요."
+    context_role: "마무리 표식"
+    mentor_success: "좋습니다. 아래에 열어야 하는 줄을 o로 정확히 추가했습니다."
+    mentor_failure: "마무리 표식은 sync 아래에 있어야 합니다. O가 아니라 o를 쓰세요."
+    story_constraints:
+      - "마지막 문항은 o/O 방향 선택을 다시 확인한다."
+      - "성공 메시지는 반복 학습을 가볍게 마무리한다."

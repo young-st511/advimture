@@ -513,7 +513,7 @@ command_cluster:
     - 첫 구현은 dot repeat과 연결하지 않는다.
   design_notes:
     - OPEN-LINE-001은 scope를 고정했고, VIM-023에서 engine support를 구현했다.
-    - PLAYPACK-006은 o/O 각각을 최소 2문항 이상 다루고 full playlist E2E를 추가한다.
+    - PLAYPACK-006은 o/O 각각을 최소 2문항 이상 다루고 full playlist E2E를 추가했다.
 ```
 
 ## First 5-Minute Discovery Notes
