@@ -1,0 +1,39 @@
+playlists:
+  - id: incident-002-structure-recovery
+    status: approved
+    category: incident
+    order: 2
+    title: "Incident 002: 구조 값 복구"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-002-001
+        role: locate_secret_key
+        command_cluster: search-basic
+        exercise_id: incident-structure-001
+        scenario_id: incident-structure-001-scenario
+        engine_support: implemented
+      - id: incident-002-002
+        role: repair_secret_value
+        command_cluster: text-object-quote-pair
+        exercise_id: incident-structure-002
+        scenario_id: incident-structure-002-scenario
+        engine_support: implemented
+      - id: incident-002-003
+        role: mirror_repaired_value
+        command_cluster: text-object-quote-pair
+        exercise_id: incident-structure-003
+        scenario_id: incident-structure-003-scenario
+        engine_support: implemented
+      - id: incident-002-004
+        role: promote_temp_states
+        command_cluster: vim-ex-command-substitute
+        exercise_id: incident-structure-004
+        scenario_id: incident-structure-004-scenario
+        engine_support: implemented
+      - id: incident-002-005
+        role: repeat_quote_value_patch
+        command_cluster: text-object-quote-pair
+        exercise_id: incident-structure-005
+        scenario_id: incident-structure-005-scenario
+        engine_support: implemented

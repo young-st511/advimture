@@ -1,4 +1,4 @@
-id: playable_incident_001_full
+id: playable_incident_002_full
 command: ["go", "run", "."]
 timeout_ms: 30000
 terminal:
@@ -67,219 +67,210 @@ setup:
         "text-object-quote-pair-001": {"completed": true, "best_grade": "S", "attempts": 1},
         "text-object-quote-pair-002": {"completed": true, "best_grade": "S", "attempts": 1},
         "text-object-quote-pair-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "text-object-quote-pair-004": {"completed": true, "best_grade": "S", "attempts": 1}
+        "text-object-quote-pair-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "incident-hotfix-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "incident-hotfix-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "incident-hotfix-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "incident-hotfix-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "incident-hotfix-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "incident-hotfix-006": {"completed": true, "best_grade": "S", "attempts": 1}
       },
       "total_keystrokes": 0
     }
 steps:
-  - wait_screen_contains: "복구 콘솔이 error 토큰"
+  - wait_screen_contains: "구조 복구 콘솔에 secret 설정"
   - send: "/"
+  - wait_ms: 50
+  - send: "s"
   - wait_ms: 50
   - send: "e"
   - wait_ms: 50
-  - send: "r"
+  - send: "c"
   - wait_ms: 50
   - send: "r"
   - wait_ms: 50
-  - send: "o"
+  - send: "e"
   - wait_ms: 50
-  - send: "r"
+  - send: "t"
   - wait_ms: 50
   - send: "enter"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "timeout이 한 번 더"
-  - send: "/"
-  - wait_ms: 50
-  - send: "t"
-  - wait_ms: 50
-  - send: "i"
-  - wait_ms: 50
-  - send: "m"
-  - wait_ms: 50
-  - send: "e"
-  - wait_ms: 50
-  - send: "o"
-  - wait_ms: 50
-  - send: "u"
-  - wait_ms: 50
-  - send: "t"
-  - wait_ms: 50
-  - send: "enter"
-  - wait_ms: 50
-  - send: "n"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-
-  - wait_screen_contains: "상태 값 down"
+  - wait_screen_contains: "secret 값이 stale 상태"
   - send: "c"
   - wait_ms: 50
   - send: "i"
   - wait_ms: 50
-  - send: "w"
+  - send: '"'
   - wait_ms: 50
-  - send: "u"
-  - wait_ms: 50
-  - send: "p"
-  - wait_ms: 50
-  - send: "esc"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-
-  - wait_screen_contains: "guard 줄이 필요"
-  - send: "o"
-  - wait_ms: 50
-  - send: "g"
-  - wait_ms: 50
-  - send: "u"
-  - wait_ms: 50
-  - send: "a"
+  - send: "f"
   - wait_ms: 50
   - send: "r"
   - wait_ms: 50
-  - send: "d"
+  - send: "e"
   - wait_ms: 50
-  - send: "="
+  - send: "s"
   - wait_ms: 50
-  - send: "o"
-  - wait_ms: 50
-  - send: "n"
+  - send: "h"
   - wait_ms: 50
   - send: "esc"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "검증된 route 줄"
+  - wait_screen_contains: "복구된 fresh 값을 mirror"
   - send: "y"
   - wait_ms: 50
-  - send: "y"
+  - send: "i"
   - wait_ms: 50
-  - send: "p"
+  - send: '"'
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "첫 줄은 원인 기록"
+  - wait_screen_contains: "남은 temp 상태를 모두 live"
   - send: ":"
-  - wait_screen_contains: "Keys: type command"
-  - send: "2"
   - wait_ms: 30
-  - send: ","
-  - wait_ms: 30
-  - send: "3"
+  - send: "%"
   - wait_ms: 30
   - send: "s"
   - wait_ms: 30
   - send: "/"
   - wait_ms: 30
+  - send: "t"
+  - wait_ms: 30
   - send: "e"
   - wait_ms: 30
-  - send: "r"
+  - send: "m"
   - wait_ms: 30
-  - send: "r"
-  - wait_ms: 30
-  - send: "o"
-  - wait_ms: 30
-  - send: "r"
+  - send: "p"
   - wait_ms: 30
   - send: "/"
   - wait_ms: 30
-  - send: "o"
+  - send: "l"
   - wait_ms: 30
-  - send: "k"
+  - send: "i"
+  - wait_ms: 30
+  - send: "v"
+  - wait_ms: 30
+  - send: "e"
   - wait_ms: 30
   - send: "/"
+  - wait_ms: 30
+  - send: "g"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "두 줄의 old 값이 같은 방식"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: '"'
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "."
+  - wait_screen_contains: "Playlist complete"
   - send: "q"
 assert:
   screen_contains:
-    - "Incident 001: 로그 추적과 핫픽스"
-    - "Exercise: 6/6"
-    - "Next tutorial: enter"
-    - "좋습니다. 전체 파일이 아니라 문제 구간만 정확히 치환했습니다."
+    - "Incident 002: 구조 값 복구"
+    - "Exercise: 5/5"
+    - "Playlist complete"
+    - "좋습니다. 같은 구조 수정은 다시 타이핑하지 않고 반복했습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
-    - "\"incident-hotfix-001\""
-    - "\"incident-hotfix-002\""
-    - "\"incident-hotfix-003\""
-    - "\"incident-hotfix-004\""
-    - "\"incident-hotfix-005\""
-    - "\"incident-hotfix-006\""
+    - "\"incident-structure-001\""
+    - "\"incident-structure-002\""
+    - "\"incident-structure-003\""
+    - "\"incident-structure-004\""
+    - "\"incident-structure-005\""
   key_trace:
     - "/"
+    - "s"
     - "e"
+    - "c"
     - "r"
-    - "r"
-    - "o"
-    - "r"
-    - "enter"
-    - "enter"
-    - "/"
-    - "t"
-    - "i"
-    - "m"
     - "e"
-    - "o"
-    - "u"
     - "t"
     - "enter"
-    - "n"
     - "enter"
     - "c"
     - "i"
-    - "w"
-    - "u"
-    - "p"
-    - "esc"
-    - "enter"
-    - "o"
-    - "g"
-    - "u"
-    - "a"
+    - '"'
+    - "f"
     - "r"
-    - "d"
-    - "="
-    - "o"
-    - "n"
+    - "e"
+    - "s"
+    - "h"
     - "esc"
     - "enter"
     - "y"
-    - "y"
-    - "p"
+    - "i"
+    - '"'
+    - "j"
+    - "$"
+    - "P"
     - "enter"
     - ":"
-    - "2"
-    - ","
-    - "3"
+    - "%"
     - "s"
     - "/"
+    - "t"
     - "e"
-    - "r"
-    - "r"
-    - "o"
-    - "r"
+    - "m"
+    - "p"
     - "/"
-    - "o"
-    - "k"
+    - "l"
+    - "i"
+    - "v"
+    - "e"
     - "/"
+    - "g"
     - "enter"
+    - "enter"
+    - "c"
+    - "i"
+    - '"'
+    - "n"
+    - "e"
+    - "w"
+    - "esc"
+    - "j"
+    - "h"
+    - "."
     - "q"
   app_state:
-    buffer: ["error source", "ok relay", "ok cache"]
+    buffer: ["a=\"new\"", "b=\"new\""]
     cursor:
-      row: 0
-      col: 0
+      row: 1
+      col: 6
     mode: "normal"
-    command: ":2,3s/error/ok/"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "incident-hotfix-006"
+      mission_id: "incident-structure-005"
       completed: true
 evidence:
   save_raw_ansi: true

@@ -1,0 +1,237 @@
+exercises:
+  - id: incident-structure-001
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["enter"]
+    mistake_focus: ["설정 블록을 한 줄씩 훑느라 quoted key를 늦게 찾는다."]
+    replay_status: pass
+    title: "secret 설정 위치 찾기"
+    goal_for_player: "/secret 검색으로 복구 대상 설정 줄을 찾으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        boot=ok
+        secret="stale"
+        mirror=""
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+    optimal_keys: ["/", "s", "e", "c", "r", "e", "t", "enter"]
+    allowed_keys: ["/", "s", "e", "c", "r", "t", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "Incident에서는 key 이름을 검색해 복구 지점으로 바로 이동합니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["boot=ok", "secret=\"stale\"", "mirror=\"\""]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-structure-002
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci\""]
+    reviewed_commands: ["esc"]
+    mistake_focus: ["quoted value 전체가 아니라 단어 일부만 바꾸려고 한다."]
+    replay_status: pass
+    title: "secret 값 복구"
+    goal_for_player: "stale 값 중간에서 ci\"로 secret 내부 값을 fresh로 교체하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        secret="stale"
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 13
+      buffer: |
+        secret="fresh"
+    optimal_keys: ["c", "i", "\"", "f", "r", "e", "s", "h", "esc"]
+    allowed_keys: ["c", "i", "\"", "f", "r", "e", "s", "h", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 9
+      required_keys: ["c", "i", "\"", "esc"]
+      forbidden_keys: ["j", "k", "l", "b", "0", "$", "d", "y", "x", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "ci\"는 quote 내부 값을 비우고 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 9
+    e2e_assertions:
+      buffer: ["secret=\"fresh\""]
+      cursor:
+        row: 0
+        col: 13
+      mode: normal
+      status: succeeded
+
+  - id: incident-structure-003
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["yi\""]
+    reviewed_commands: ["P", "j", "$"]
+    mistake_focus: ["복구 값을 직접 다시 입력하려고 한다."]
+    replay_status: pass
+    title: "mirror 값 동기화"
+    goal_for_player: "fresh 값을 yi\"로 복사해 mirror 따옴표 내부에 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        secret="fresh"
+        mirror=""
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 12
+      buffer: |
+        secret="fresh"
+        mirror="fresh"
+    optimal_keys: ["y", "i", "\"", "j", "$", "P"]
+    allowed_keys: ["y", "i", "\"", "j", "$", "P", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "\"", "P"]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "yi\"는 quote 내부 값만 register에 담습니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["secret=\"fresh\"", "mirror=\"fresh\""]
+      cursor:
+        row: 1
+        col: 12
+      mode: normal
+      status: succeeded
+
+  - id: incident-structure-004
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: [":%s"]
+    reviewed_commands: [":s", ":2,3s"]
+    mistake_focus: ["전체 상태 토큰을 바꿔야 하는데 현재 줄만 치환한다."]
+    replay_status: pass
+    title: "전체 temp 상태 승격"
+    goal_for_player: "command-line에서 모든 temp 토큰을 live로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        temp api
+        temp worker
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        live api
+        live worker
+    optimal_keys: [":", "%", "s", "/", "t", "e", "m", "p", "/", "l", "i", "v", "e", "/", "g", "enter"]
+    allowed_keys: [":", "%", "s", "/", "t", "e", "m", "p", "l", "i", "v", "g", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    constraints:
+      max_inputs: 18
+      required_keys: [":", "enter"]
+      forbidden_keys: ["ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "% range는 전체 파일을 뜻합니다."
+    grading:
+      pass_condition: "buffer has no temp"
+      optimal_key_count: 16
+    e2e_assertions:
+      buffer: ["live api", "live worker"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+      command: ":%s/temp/live/g"
+
+  - id: incident-structure-005
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci\"", "."]
+    reviewed_commands: ["j", "h", "repeat-last-change"]
+    mistake_focus: ["같은 quoted value 교체를 두 번 타이핑한다."]
+    replay_status: pass
+    title: "반복 quote 값 승격"
+    goal_for_player: "첫 old를 ci\"로 new로 바꾸고 다음 줄 old 안에서 .으로 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 3
+      buffer: |
+        a="old"
+        b="old"
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 6
+      buffer: |
+        a="new"
+        b="new"
+    optimal_keys: ["c", "i", "\"", "n", "e", "w", "esc", "j", "h", "."]
+    allowed_keys: ["c", "i", "\"", "n", "e", "w", "esc", "j", "h", "."]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["c", "i", "\"", "esc", "."]
+      forbidden_keys: ["k", "l", "b", "0", "$", "d", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 8
+        text: "다음 줄의 값 안으로 들어간 뒤 .으로 같은 변경을 반복합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["a=\"new\"", "b=\"new\""]
+      cursor:
+        row: 1
+        col: 6
+      mode: normal
+      status: succeeded

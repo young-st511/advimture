@@ -94,6 +94,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - review queue의 첫 구현은 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재진단 큐`, 성공 debrief에서는 `잔류 리스크`로 표현한다.
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
 - `incident-001-hotfix`는 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이며 replay gate와 full playlist E2E를 통과한다.
+- `incident-002-structure-recovery`는 `/secret`, `ci"`, `yi"` + `P`, `:%s`, `ci"` + `.`를 조합하는 두 번째 mixed run이며 replay gate와 full playlist E2E를 통과한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

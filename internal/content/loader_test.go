@@ -19,14 +19,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 16 {
 		t.Fatalf("command clusters = %d, want 16", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 64 {
-		t.Fatalf("exercises = %d, want 64", len(lib.Exercises))
+	if len(lib.Exercises) != 69 {
+		t.Fatalf("exercises = %d, want 69", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 64 {
-		t.Fatalf("scenarios = %d, want 64", len(lib.Scenarios))
+	if len(lib.Scenarios) != 69 {
+		t.Fatalf("scenarios = %d, want 69", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 14 {
-		t.Fatalf("playlists = %d, want 14", len(lib.Playlists))
+	if len(lib.Playlists) != 15 {
+		t.Fatalf("playlists = %d, want 15", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 64 {
-		t.Fatalf("playable exercises = %d, want 64: %+v", len(playable), playable)
+	if len(playable) != 69 {
+		t.Fatalf("playable exercises = %d, want 69: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -56,6 +56,11 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"incident-hotfix-004",
 		"incident-hotfix-005",
 		"incident-hotfix-006",
+		"incident-structure-001",
+		"incident-structure-002",
+		"incident-structure-003",
+		"incident-structure-004",
+		"incident-structure-005",
 		"insert-mode-entry-001",
 		"insert-mode-entry-002",
 		"insert-mode-entry-003",
@@ -144,6 +149,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-90-search-basic",
 		"tutorial-91-text-object-quote-pair",
 		"incident-001-hotfix",
+		"incident-002-structure-recovery",
 	})
 }
 
