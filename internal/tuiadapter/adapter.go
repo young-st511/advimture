@@ -121,6 +121,8 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyZero}
 	case "$":
 		return Action{Type: ActionKey, Key: vimengine.KeyDollar}
+	case ".":
+		return Action{Type: ActionKey, Key: vimengine.KeyDot}
 	case "x":
 		return Action{Type: ActionKey, Key: vimengine.KeyX}
 	case "r":

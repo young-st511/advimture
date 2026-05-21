@@ -310,6 +310,33 @@ func TestSessionReplaysOpenLineAboveTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyShiftO, "g", "u", "a", "r", "d", vimengine.KeyEsc})
 }
 
+func TestSessionReplaysRepeatLastChangeTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "repeat-last-change",
+		Initial: vimengine.NewState([]string{"api", "api"}),
+		Goal: Goal{
+			Lines:  []string{"api!", "api!"},
+			Cursor: CursorGoal(1, 3),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyShiftA, vimengine.KeyEsc, vimengine.KeyDot},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyShiftA, "!", vimengine.KeyEsc, vimengine.KeyJ} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyDot)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after dot = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyShiftA, "!", vimengine.KeyEsc, vimengine.KeyJ, vimengine.KeyDot})
+}
+
 func TestSessionReplaysDeleteInnerWordTrace(t *testing.T) {
 	initial := vimengine.NewState([]string{"mode=broken"})
 	initial.Cursor.Col = 7

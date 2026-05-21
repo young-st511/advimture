@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-024. Repeat last change engine
+### PLAYPACK-007. Repeat last change efficiency tutorial
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `.` repeat-last-change의 최소 transaction recorder와 replay를 구현한다.
+- 목표: `.`를 required key로 쓰는 efficiency tutorial content와 E2E를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-024. Repeat last change engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-024-repeat-last-change-engine.md`
+- 완료일: 2026-05-21
 
 ### REPEAT-GAP-001. Repeat last change gap
 - 상태: completed

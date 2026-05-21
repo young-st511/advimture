@@ -42,6 +42,7 @@ const (
 	KeyShiftA = "A"
 	KeyO      = "o"
 	KeyShiftO = "O"
+	KeyDot    = "."
 	KeyU      = "u"
 	KeyCtrlR  = "ctrl+r"
 )
@@ -68,12 +69,19 @@ type State struct {
 	Register    Register
 	UndoStack   []Snapshot
 	RedoStack   []Snapshot
+	LastChange  []string
+	Recording   ChangeRecording
 }
 
 type Register struct {
 	Text     string
 	Lines    []string
 	Linewise bool
+}
+
+type ChangeRecording struct {
+	Keys    []string
+	Mutated bool
 }
 
 type Snapshot struct {
@@ -164,14 +172,26 @@ func ApplyKeys(state State, keys []string) Result {
 }
 
 func Apply(state State, key string) Result {
+	return applyWithOptions(state, key, applyOptions{})
+}
+
+type applyOptions struct {
+	replaying bool
+}
+
+func applyWithOptions(state State, key string, options applyOptions) Result {
 	next := normalizeState(state)
 
 	if key == KeyEsc {
+		wasInsert := next.Mode == ModeInsert
 		next.Mode = ModeNormal
 		next.CommandLine = ""
 		next.PendingKey = ""
 		next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
 		next.Cursor.DesiredCol = next.Cursor.Col
+		if wasInsert && !options.replaying {
+			next = commitRecording(next, key)
+		}
 		return Result{
 			State: copyState(next),
 			Events: []Event{{
@@ -188,7 +208,11 @@ func Apply(state State, key string) Result {
 
 	if next.Mode == ModeInsert {
 		next.PendingKey = ""
-		return insertPrintable(next, key)
+		result := insertPrintable(next, key)
+		if !options.replaying && hasEvent(result, EventChanged) {
+			result.State = appendRecording(result.State, key, true)
+		}
+		return result
 	}
 
 	if next.Mode != ModeNormal {
@@ -204,7 +228,11 @@ func Apply(state State, key string) Result {
 	}
 
 	if next.PendingKey != "" {
-		return applyPendingKey(next, key)
+		result := applyPendingKey(next, key)
+		if !options.replaying {
+			result.State = recordPendingChange(next, key, result)
+		}
+		return result
 	}
 
 	switch key {
@@ -248,7 +276,11 @@ func Apply(state State, key string) Result {
 	case KeyDollar:
 		return moveLineEnd(next, key)
 	case KeyX:
-		return deleteCurrentChar(next, key)
+		result := deleteCurrentChar(next, key)
+		if !options.replaying && hasEvent(result, EventChanged) {
+			result.State = rememberLastChange(result.State, []string{key})
+		}
+		return result
 	case KeyR:
 		next.PendingKey = key
 		return Result{
@@ -272,15 +304,37 @@ func Apply(state State, key string) Result {
 	case KeyShiftP:
 		return putRegister(next, key, false)
 	case KeyI:
-		return enterInsertMode(next, key, next.Cursor.Col)
+		result := enterInsertMode(next, key, next.Cursor.Col)
+		if !options.replaying {
+			result.State = startRecording(result.State, []string{key}, false)
+		}
+		return result
 	case KeyA:
-		return enterInsertMode(next, key, next.Cursor.Col+1)
+		result := enterInsertMode(next, key, next.Cursor.Col+1)
+		if !options.replaying {
+			result.State = startRecording(result.State, []string{key}, false)
+		}
+		return result
 	case KeyShiftA:
-		return enterInsertMode(next, key, lineRuneLen(next.Lines[next.Cursor.Row]))
+		result := enterInsertMode(next, key, lineRuneLen(next.Lines[next.Cursor.Row]))
+		if !options.replaying {
+			result.State = startRecording(result.State, []string{key}, false)
+		}
+		return result
 	case KeyO:
-		return openLine(next, key, true)
+		result := openLine(next, key, true)
+		if !options.replaying {
+			result.State = startRecording(result.State, []string{key}, true)
+		}
+		return result
 	case KeyShiftO:
-		return openLine(next, key, false)
+		result := openLine(next, key, false)
+		if !options.replaying {
+			result.State = startRecording(result.State, []string{key}, true)
+		}
+		return result
+	case KeyDot:
+		return repeatLastChange(next, key)
 	case KeyU:
 		return undoLastChange(next, key)
 	case KeyCtrlR:
@@ -295,6 +349,94 @@ func Apply(state State, key string) Result {
 			}},
 		}
 	}
+}
+
+func repeatLastChange(state State, key string) Result {
+	if len(state.LastChange) == 0 {
+		return boundary(state, key)
+	}
+	next := copyState(state)
+	sequence := copyLines(state.LastChange)
+	var events []Event
+	for _, replayKey := range sequence {
+		result := applyWithOptions(next, replayKey, applyOptions{replaying: true})
+		next = result.State
+		events = append(events, result.Events...)
+	}
+	next.LastChange = sequence
+	next.Recording = ChangeRecording{}
+	if len(events) == 0 {
+		events = []Event{{Type: EventChanged, Key: key}}
+	}
+	return Result{
+		State:  copyState(next),
+		Events: events,
+	}
+}
+
+func recordPendingChange(state State, key string, result Result) State {
+	if state.PendingKey == KeyR && hasEvent(result, EventChanged) {
+		return rememberLastChange(result.State, []string{KeyR, key})
+	}
+	if !hasEvent(result, EventInsertMode) {
+		return result.State
+	}
+	switch state.PendingKey {
+	case KeyC:
+		return startRecording(result.State, []string{KeyC, key}, true)
+	case pendingChangeInner:
+		return startRecording(result.State, []string{KeyC, KeyI, key}, true)
+	default:
+		return result.State
+	}
+}
+
+func startRecording(state State, keys []string, mutated bool) State {
+	next := copyState(state)
+	next.Recording = ChangeRecording{
+		Keys:    copyLines(keys),
+		Mutated: mutated,
+	}
+	return next
+}
+
+func appendRecording(state State, key string, mutated bool) State {
+	next := copyState(state)
+	if len(next.Recording.Keys) == 0 {
+		return next
+	}
+	next.Recording.Keys = append(next.Recording.Keys, key)
+	next.Recording.Mutated = next.Recording.Mutated || mutated
+	return next
+}
+
+func commitRecording(state State, key string) State {
+	next := copyState(state)
+	if len(next.Recording.Keys) == 0 {
+		return next
+	}
+	if next.Recording.Mutated {
+		keys := append(copyLines(next.Recording.Keys), key)
+		next.LastChange = keys
+	}
+	next.Recording = ChangeRecording{}
+	return next
+}
+
+func rememberLastChange(state State, keys []string) State {
+	next := copyState(state)
+	next.LastChange = copyLines(keys)
+	next.Recording = ChangeRecording{}
+	return next
+}
+
+func hasEvent(result Result, eventType EventType) bool {
+	for _, event := range result.Events {
+		if event.Type == eventType {
+			return true
+		}
+	}
+	return false
 }
 
 func enterInsertMode(state State, key string, insertCol int) Result {
@@ -1459,6 +1601,11 @@ func copyState(state State) State {
 	next.Register = copyRegister(state.Register)
 	next.UndoStack = copySnapshots(state.UndoStack)
 	next.RedoStack = copySnapshots(state.RedoStack)
+	next.LastChange = copyLines(state.LastChange)
+	next.Recording = ChangeRecording{
+		Keys:    copyLines(state.Recording.Keys),
+		Mutated: state.Recording.Mutated,
+	}
 	return next
 }
 

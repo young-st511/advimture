@@ -523,7 +523,7 @@ command_cluster:
   id: repeat-last-change
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-efficiency
   title: 마지막 변경 반복
   commands: ["."]
@@ -552,7 +552,7 @@ command_cluster:
     - Vim exact undo block semantics는 후속 hardening으로 미룬다.
   design_notes:
     - REPEAT-GAP-001에서 transaction commit/replay 규칙을 고정했다.
-    - VIM-024는 엔진 transaction recorder만 구현하고, PLAYPACK-007에서 efficiency tutorial과 E2E를 추가한다.
+    - VIM-024는 엔진 transaction recorder를 구현했고, PLAYPACK-007에서 efficiency tutorial과 E2E를 추가한다.
 ```
 
 ## First 5-Minute Discovery Notes
@@ -566,7 +566,7 @@ command_cluster:
 - `yank-put-basic`은 VIM-019/VIM-020에서 engine support가 구현됐고 PLAYPACK-004에서 5문항 tutorial content로 연결됐다. 첫 구현 범위는 `yw`, `y$`, `yy`, `p`, `P`다.
 - `text-object-inner-word`는 VIM-021/VIM-022에서 engine support가 구현됐고 PLAYPACK-005에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
 - `open-line-edit`은 OPEN-LINE-001에서 approved로 승격했고, VIM-023에서 engine support를 구현했다. 첫 구현 범위는 `o`, `O`이며 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat은 제외한다.
-- `repeat-last-change`는 REPEAT-GAP-001에서 approved + planned로 승격했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
+- `repeat-last-change`는 REPEAT-GAP-001에서 approved로 승격했고, VIM-024에서 engine support를 구현했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

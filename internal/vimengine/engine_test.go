@@ -228,6 +228,85 @@ func TestOpenLineCanBeUndoneAfterEsc(t *testing.T) {
 	assertEvent(t, result, EventChanged)
 }
 
+func TestDotWithoutLastChangeReportsBoundary(t *testing.T) {
+	engine := New([]string{"abc"})
+
+	result := engine.Apply(KeyDot)
+
+	assertStrings(t, result.State.Lines, []string{"abc"})
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestDotRepeatsAppendInsertTransaction(t *testing.T) {
+	engine := New([]string{"api", "api"})
+
+	for _, key := range []string{KeyShiftA, "!", KeyEsc, KeyJ} {
+		engine.Apply(key)
+	}
+	result := engine.Apply(KeyDot)
+
+	assertStrings(t, result.State.Lines, []string{"api!", "api!"})
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 3 {
+		t.Fatalf("cursor = (%d,%d), want (1,3)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+}
+
+func TestDotRepeatsReplaceCharTransaction(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"bad", "bad"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        0,
+			DesiredCol: 0,
+		},
+	})
+
+	engine.Apply(KeyR)
+	engine.Apply("g")
+	engine.Apply(KeyJ)
+	result := engine.Apply(KeyDot)
+
+	assertStrings(t, result.State.Lines, []string{"gad", "gad"})
+	if result.State.LastChange[0] != KeyR || result.State.LastChange[1] != "g" {
+		t.Fatalf("last change = %+v, want r g", result.State.LastChange)
+	}
+}
+
+func TestDotRepeatsChangeInnerWordTransaction(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode=down", "next=down"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        7,
+			DesiredCol: 7,
+		},
+	})
+
+	for _, key := range []string{KeyC, KeyI, KeyW, "u", "p", KeyEsc, KeyJ} {
+		engine.Apply(key)
+	}
+	result := engine.Apply(KeyDot)
+
+	assertStrings(t, result.State.Lines, []string{"mode=up", "next=up"})
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor = (%d,%d), want (1,6)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+}
+
+func TestDotRepeatsOpenLineTransactionWithoutOverwritingLastChange(t *testing.T) {
+	engine := New([]string{"alpha", "omega"})
+
+	for _, key := range []string{KeyO, "x", KeyEsc, KeyJ} {
+		engine.Apply(key)
+	}
+	result := engine.Apply(KeyDot)
+
+	assertStrings(t, result.State.Lines, []string{"alpha", "x", "omega", "x"})
+	assertStrings(t, result.State.LastChange, []string{KeyO, "x", KeyEsc})
+}
+
 func TestDocumentMotionMovesToFirstAndLastLine(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,
