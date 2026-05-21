@@ -40,6 +40,8 @@ const (
 	KeyI      = "i"
 	KeyA      = "a"
 	KeyShiftA = "A"
+	KeyO      = "o"
+	KeyShiftO = "O"
 	KeyU      = "u"
 	KeyCtrlR  = "ctrl+r"
 )
@@ -275,6 +277,10 @@ func Apply(state State, key string) Result {
 		return enterInsertMode(next, key, next.Cursor.Col+1)
 	case KeyShiftA:
 		return enterInsertMode(next, key, lineRuneLen(next.Lines[next.Cursor.Row]))
+	case KeyO:
+		return openLine(next, key, true)
+	case KeyShiftO:
+		return openLine(next, key, false)
 	case KeyU:
 		return undoLastChange(next, key)
 	case KeyCtrlR:
@@ -296,6 +302,26 @@ func enterInsertMode(state State, key string, insertCol int) Result {
 	next.Mode = ModeInsert
 	next.Cursor.Col = clampInsertCol(insertCol, next.Lines[next.Cursor.Row])
 	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventInsertMode,
+			Key:  key,
+		}},
+	}
+}
+
+func openLine(state State, key string, below bool) Result {
+	next := pushUndo(state)
+	insertRow := next.Cursor.Row
+	if below {
+		insertRow++
+	}
+	next.Lines = append(next.Lines[:insertRow], append([]string{""}, next.Lines[insertRow:]...)...)
+	next.Mode = ModeInsert
+	next.Cursor.Row = insertRow
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
 	return Result{
 		State: copyState(next),
 		Events: []Event{{

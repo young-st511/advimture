@@ -252,6 +252,64 @@ func TestSessionReplaysYankPutTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyY, vimengine.KeyY, vimengine.KeyP})
 }
 
+func TestSessionReplaysOpenLineBelowTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "open-line-below",
+		Initial: vimengine.NewState([]string{"alpha", "omega"}),
+		Goal: Goal{
+			Lines:  []string{"alpha", "guard", "omega"},
+			Cursor: CursorGoal(1, 4),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyO, vimengine.KeyEsc},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyO, "g", "u", "a", "r", "d"} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEsc)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after esc = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyO, "g", "u", "a", "r", "d", vimengine.KeyEsc})
+}
+
+func TestSessionReplaysOpenLineAboveTrace(t *testing.T) {
+	initial := vimengine.NewState([]string{"alpha", "omega"})
+	initial.Cursor.Row = 1
+	initial.Cursor.Col = 2
+	initial.Cursor.DesiredCol = 2
+	session := NewSession(Exercise{
+		ID:      "open-line-above",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"alpha", "guard", "omega"},
+			Cursor: CursorGoal(1, 4),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyShiftO, vimengine.KeyEsc},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyShiftO, "g", "u", "a", "r", "d"} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEsc)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after esc = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyShiftO, "g", "u", "a", "r", "d", vimengine.KeyEsc})
+}
+
 func TestSessionReplaysDeleteInnerWordTrace(t *testing.T) {
 	initial := vimengine.NewState([]string{"mode=broken"})
 	initial.Cursor.Col = 7

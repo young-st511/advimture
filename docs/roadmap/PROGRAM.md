@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-023. Open line edit engine
+### PLAYPACK-006. Open line edit tutorial
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `o`, `O` newline insertion과 insert mode entry를 구현한다.
+- 목표: `o`, `O`를 학습하는 4~6문항 tutorial content와 full playlist E2E를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-023. Open line edit engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-023-open-line-edit-engine.md`
+- 완료일: 2026-05-21
 
 ### OPEN-LINE-001. Open line edit gap
 - 상태: completed

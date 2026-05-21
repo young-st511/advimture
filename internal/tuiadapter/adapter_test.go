@@ -63,6 +63,8 @@ func TestMapInputMapsSingleCharEditKeys(t *testing.T) {
 		"i":      vimengine.KeyI,
 		"a":      vimengine.KeyA,
 		"A":      vimengine.KeyShiftA,
+		"o":      vimengine.KeyO,
+		"O":      vimengine.KeyShiftO,
 		"u":      vimengine.KeyU,
 		"ctrl+r": vimengine.KeyCtrlR,
 		"Z":      "Z",

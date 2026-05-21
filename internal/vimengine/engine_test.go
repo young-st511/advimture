@@ -157,6 +157,77 @@ func TestLineMotionMovesToStartAndEndOfCurrentLine(t *testing.T) {
 	assertApply(t, engine, KeyDollar, 1, 12, EventMoved)
 }
 
+func TestOpenLineBelowEntersInsertMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "omega"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	result := engine.Apply(KeyO)
+
+	assertStrings(t, result.State.Lines, []string{"alpha", "", "omega"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want %q", result.State.Mode, ModeInsert)
+	}
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 0 || result.State.Cursor.DesiredCol != 0 {
+		t.Fatalf("cursor = (%d,%d,%d), want (1,0,0)", result.State.Cursor.Row, result.State.Cursor.Col, result.State.Cursor.DesiredCol)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestOpenLineAboveEntersInsertMode(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "omega"},
+		Cursor: Cursor{
+			Row:        1,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	result := engine.Apply(KeyShiftO)
+
+	assertStrings(t, result.State.Lines, []string{"alpha", "", "omega"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want %q", result.State.Mode, ModeInsert)
+	}
+	if result.State.Cursor.Row != 1 || result.State.Cursor.Col != 0 || result.State.Cursor.DesiredCol != 0 {
+		t.Fatalf("cursor = (%d,%d,%d), want (1,0,0)", result.State.Cursor.Row, result.State.Cursor.Col, result.State.Cursor.DesiredCol)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestOpenLineCanBeUndoneAfterEsc(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "omega"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        2,
+			DesiredCol: 2,
+		},
+	})
+
+	engine.Apply(KeyO)
+	engine.Apply(KeyEsc)
+	result := engine.Apply(KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"alpha", "omega"})
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want %q", result.State.Mode, ModeNormal)
+	}
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 2 || result.State.Cursor.DesiredCol != 2 {
+		t.Fatalf("cursor = (%d,%d,%d), want (0,2,2)", result.State.Cursor.Row, result.State.Cursor.Col, result.State.Cursor.DesiredCol)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
 func TestDocumentMotionMovesToFirstAndLastLine(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,

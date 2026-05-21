@@ -88,6 +88,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	if trimmed == vimengine.KeyShiftP {
 		return Action{Type: ActionKey, Key: vimengine.KeyShiftP}
 	}
+	if trimmed == vimengine.KeyShiftO {
+		return Action{Type: ActionKey, Key: vimengine.KeyShiftO}
+	}
 
 	switch normalized {
 	case ":":
@@ -134,6 +137,8 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyI}
 	case "a":
 		return Action{Type: ActionKey, Key: vimengine.KeyA}
+	case "o":
+		return Action{Type: ActionKey, Key: vimengine.KeyO}
 	case "u":
 		return Action{Type: ActionKey, Key: vimengine.KeyU}
 	case "?":
