@@ -718,6 +718,128 @@ func TestYankInnerWordStoresCurrentWordRunWithoutMutating(t *testing.T) {
 	assertEvent(t, result, EventYanked)
 }
 
+func TestDeleteInnerQuoteDeletesDoubleQuotedValue(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{`mode="broken"`},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        8,
+			DesiredCol: 8,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 8, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 8, EventPendingKey)
+	result := engine.Apply(KeyDoubleQuote)
+
+	assertStrings(t, result.State.Lines, []string{`mode=""`})
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor col = %d, want 6", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestChangeInnerQuoteEntersInsertModeInsideQuotes(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{`mode="broken"`},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        9,
+			DesiredCol: 9,
+		},
+	})
+
+	assertApply(t, engine, KeyC, 0, 9, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 9, EventPendingKey)
+	result := engine.Apply(KeyDoubleQuote)
+
+	assertStrings(t, result.State.Lines, []string{`mode=""`})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor col = %d, want 6", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestYankInnerQuoteStoresValueWithoutMutating(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{`mode="stable"`},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        8,
+			DesiredCol: 8,
+		},
+	})
+
+	assertApply(t, engine, KeyY, 0, 8, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 8, EventPendingKey)
+	result := engine.Apply(KeyDoubleQuote)
+
+	assertStrings(t, result.State.Lines, []string{`mode="stable"`})
+	if result.State.Register.Text != "stable" {
+		t.Fatalf("register text = %q, want stable", result.State.Register.Text)
+	}
+	if result.State.Register.Linewise {
+		t.Fatal("register linewise = true, want false")
+	}
+	assertEvent(t, result, EventYanked)
+}
+
+func TestInnerQuoteWithoutPairDoesNotMutate(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{`mode=broken`},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        6,
+			DesiredCol: 6,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 6, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 6, EventPendingKey)
+	result := engine.Apply(KeyDoubleQuote)
+
+	assertStrings(t, result.State.Lines, []string{`mode=broken`})
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestChangeInnerQuoteCanBeRepeated(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{`a="old"`, `b="old"`},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        3,
+			DesiredCol: 3,
+		},
+	})
+
+	engine.Apply(KeyC)
+	engine.Apply(KeyI)
+	engine.Apply(KeyDoubleQuote)
+	engine.Apply("n")
+	engine.Apply("e")
+	engine.Apply("w")
+	engine.Apply(KeyEsc)
+	engine.Apply(KeyJ)
+	engine.Apply(KeyH)
+	result := engine.Apply(KeyDot)
+
+	assertStrings(t, result.State.Lines, []string{`a="new"`, `b="new"`})
+	if !hasEvent(result, EventInsertMode) {
+		t.Fatalf("events = %+v, want insert mode event", result.Events)
+	}
+}
+
 func TestInnerWordOnSpaceReportsBoundaryWithoutMutating(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,
@@ -774,6 +896,36 @@ func TestInnerWordRangeSelectsCurrentWordRun(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			start, end, ok := innerWordRange([]rune(tt.line), tt.col)
+			if ok != tt.ok {
+				t.Fatalf("ok = %v, want %v", ok, tt.ok)
+			}
+			if !ok {
+				return
+			}
+			if start != tt.start || end != tt.end {
+				t.Fatalf("range = (%d,%d), want (%d,%d)", start, end, tt.start, tt.end)
+			}
+		})
+	}
+}
+
+func TestInnerQuoteRangeSelectsDoubleQuotedContent(t *testing.T) {
+	for _, tt := range []struct {
+		name  string
+		line  string
+		col   int
+		start int
+		end   int
+		ok    bool
+	}{
+		{name: "middle", line: `mode="stable"`, col: 8, start: 6, end: 12, ok: true},
+		{name: "left quote", line: `mode="stable"`, col: 5, ok: false},
+		{name: "right quote", line: `mode="stable"`, col: 12, ok: false},
+		{name: "outside", line: `mode="stable"`, col: 1, ok: false},
+		{name: "missing close", line: `mode="stable`, col: 8, ok: false},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			start, end, ok := innerQuoteRange([]rune(tt.line), tt.col)
 			if ok != tt.ok {
 				t.Fatalf("ok = %v, want %v", ok, tt.ok)
 			}

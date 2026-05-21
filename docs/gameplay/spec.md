@@ -80,7 +80,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-7-text-object-inner-word`는 `diw`, `ciw`, `yiw`를 각각 두 문항씩 다루는 6문항 text object tutorial이다.
 - `text-object-inner-word`는 approved + implemented tutorial cluster이며 `diw`, `ciw`, `yiw` coverage와 replay gate, E2E assertion gate를 통과한다.
 - 첫 text object 구현은 `iw`만 다루며 quote/pair object, around object, visual selection, count prefix는 후속 루프로 분리한다.
-- `text-object-quote-pair`는 approved + planned command cluster다. 첫 scope는 double quote 내부 object `di"`, `ci"`, `yi"`이며, nested pair, escaped quote, single quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 분리한다.
+- `text-object-quote-pair`는 approved + engine implemented command cluster다. 첫 scope는 double quote 내부 object `di"`, `ci"`, `yi"`이며, nested pair, escaped quote, single quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 분리한다.
 - `open-line-edit`은 approved + engine implemented command cluster이며 `o`, `O`는 현재 줄 아래/위에 빈 줄을 삽입하고 Insert mode로 진입한다.
 - `tutorial-8-open-line-edit`은 `o` 3문항, `O` 2문항으로 구성된 5문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 첫 `o/O` 구현은 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat 연계를 제외한다.

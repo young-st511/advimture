@@ -10,12 +10,22 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
+### PLAYPACK-009. Quote/pair text object tutorial
+- 상태: pending
+- ExecPlan: 다음 루프에서 작성
+- 목표: `ci"`, `di"`, `yi"`를 짧은 튜토리얼 content와 full E2E로 연결한다.
+
+## 방금 완료한 슬라이스
+
+### VIM-026. Quote text object engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-026-quote-text-object-engine.md`
+- 완료일: 2026-05-22
+
 ### TEXT-PAIR-GAP-001. Quote/pair text object gap
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/text-pair-gap-001-quote-pair-scope.md`
-- 목표: `ci"`, `di"`, `yi"` 중심의 quote/pair text object 최소 범위와 제외 항목을 고정했다.
-
-## 방금 완료한 슬라이스
+- 완료일: 2026-05-22
 
 ### PLAN-REFRESH-002. Structure editing roadmap
 - 상태: completed

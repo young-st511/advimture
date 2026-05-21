@@ -17,38 +17,39 @@ const (
 )
 
 const (
-	KeyEsc    = "esc"
-	KeyEnter  = "enter"
-	KeyColon  = ":"
-	KeySlash  = "/"
-	KeyH      = "h"
-	KeyJ      = "j"
-	KeyK      = "k"
-	KeyL      = "l"
-	KeyW      = "w"
-	KeyB      = "b"
-	KeyE      = "e"
-	KeyG      = "g"
-	KeyShiftG = "G"
-	KeyZero   = "0"
-	KeyDollar = "$"
-	KeyX      = "x"
-	KeyR      = "r"
-	KeyD      = "d"
-	KeyC      = "c"
-	KeyY      = "y"
-	KeyN      = "n"
-	KeyShiftN = "N"
-	KeyP      = "p"
-	KeyShiftP = "P"
-	KeyI      = "i"
-	KeyA      = "a"
-	KeyShiftA = "A"
-	KeyO      = "o"
-	KeyShiftO = "O"
-	KeyDot    = "."
-	KeyU      = "u"
-	KeyCtrlR  = "ctrl+r"
+	KeyEsc         = "esc"
+	KeyEnter       = "enter"
+	KeyColon       = ":"
+	KeySlash       = "/"
+	KeyH           = "h"
+	KeyJ           = "j"
+	KeyK           = "k"
+	KeyL           = "l"
+	KeyW           = "w"
+	KeyB           = "b"
+	KeyE           = "e"
+	KeyG           = "g"
+	KeyShiftG      = "G"
+	KeyZero        = "0"
+	KeyDollar      = "$"
+	KeyX           = "x"
+	KeyR           = "r"
+	KeyD           = "d"
+	KeyC           = "c"
+	KeyY           = "y"
+	KeyN           = "n"
+	KeyShiftN      = "N"
+	KeyP           = "p"
+	KeyShiftP      = "P"
+	KeyI           = "i"
+	KeyA           = "a"
+	KeyShiftA      = "A"
+	KeyO           = "o"
+	KeyShiftO      = "O"
+	KeyDot         = "."
+	KeyU           = "u"
+	KeyCtrlR       = "ctrl+r"
+	KeyDoubleQuote = "\""
 )
 
 const (
@@ -554,6 +555,15 @@ func applyPendingKey(state State, key string) Result {
 	if pending == pendingYankInner && key == KeyW {
 		return yankInnerWord(next, key)
 	}
+	if pending == pendingDeleteInner && key == KeyDoubleQuote {
+		return deleteInnerQuote(next, key)
+	}
+	if pending == pendingChangeInner && key == KeyDoubleQuote {
+		return changeInnerQuote(next, key)
+	}
+	if pending == pendingYankInner && key == KeyDoubleQuote {
+		return yankInnerQuote(next, key)
+	}
 	if pending == pendingDeleteInner || pending == pendingChangeInner || pending == pendingYankInner {
 		return unsupportedTextObject(next, key)
 	}
@@ -1000,6 +1010,33 @@ func yankInnerWord(state State, key string) Result {
 	return yankLineRange(state, key, start, end)
 }
 
+func deleteInnerQuote(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	start, end, ok := innerQuoteRange(line, state.Cursor.Col)
+	if !ok {
+		return boundary(state, key)
+	}
+	return deleteLineRange(state, key, start, end)
+}
+
+func changeInnerQuote(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	start, end, ok := innerQuoteRange(line, state.Cursor.Col)
+	if !ok {
+		return boundary(state, key)
+	}
+	return changeLineRange(state, key, start, end)
+}
+
+func yankInnerQuote(state State, key string) Result {
+	line := []rune(state.Lines[state.Cursor.Row])
+	start, end, ok := innerQuoteRange(line, state.Cursor.Col)
+	if !ok {
+		return boundary(state, key)
+	}
+	return yankLineRange(state, key, start, end)
+}
+
 func innerWordRange(line []rune, cursorCol int) (int, int, bool) {
 	if len(line) == 0 {
 		return 0, 0, false
@@ -1023,6 +1060,44 @@ func innerWordRange(line []rune, cursorCol int) (int, int, bool) {
 		end++
 	}
 	return start, end, true
+}
+
+func innerQuoteRange(line []rune, cursorCol int) (int, int, bool) {
+	if len(line) == 0 {
+		return 0, 0, false
+	}
+	if cursorCol < 0 {
+		cursorCol = 0
+	}
+	if cursorCol >= len(line) {
+		cursorCol = len(line) - 1
+	}
+	if line[cursorCol] == '"' {
+		return 0, 0, false
+	}
+
+	left := -1
+	for index := cursorCol - 1; index >= 0; index-- {
+		if line[index] == '"' {
+			left = index
+			break
+		}
+	}
+	if left < 0 {
+		return 0, 0, false
+	}
+
+	right := -1
+	for index := cursorCol + 1; index < len(line); index++ {
+		if line[index] == '"' {
+			right = index
+			break
+		}
+	}
+	if right < 0 || right <= left+1 {
+		return 0, 0, false
+	}
+	return left + 1, right, true
 }
 
 func deleteToLineEnd(state State, key string) Result {

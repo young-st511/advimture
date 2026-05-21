@@ -523,7 +523,7 @@ command_cluster:
   id: text-object-quote-pair
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-operator-grammar
   title: Text object: 따옴표 내부 대상 편집
   commands: ["i\"", "di\"", "ci\"", "yi\""]
@@ -551,7 +551,7 @@ command_cluster:
     - nested pair, escaped quote, single quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 미룬다.
   design_notes:
     - TEXT-PAIR-GAP-001은 double quote 내부 object로 첫 scope를 고정했다.
-    - VIM-026은 engine/runtime support만 닫고 content/E2E는 PLAYPACK-009로 분리한다.
+    - VIM-026은 double quote 내부 object의 engine/runtime support를 구현했고, content/E2E는 PLAYPACK-009로 분리한다.
 ```
 
 ### repeat-last-change

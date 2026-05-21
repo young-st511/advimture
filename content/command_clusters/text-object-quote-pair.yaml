@@ -2,7 +2,7 @@ command_clusters:
   - id: text-object-quote-pair
     status: approved
     compatibility_tier: pedagogical
-    engine_support: planned
+    engine_support: implemented
     curriculum_area: chapter-3-operator-grammar
     title: "Text object: 따옴표 내부 대상 편집"
     commands: ["i\"", "di\"", "ci\"", "yi\""]
