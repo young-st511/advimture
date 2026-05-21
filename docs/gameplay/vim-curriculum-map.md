@@ -221,9 +221,9 @@ Scenario 방향:
 
 다음 playable milestone은 아래 순서를 우선한다.
 
-1. Structure editing: quote/pair text object — 설정값, JSON 값, 인자 내부를 구조 기준으로 편집
-2. Adventure middle: search and replace 응용 — search + substitute + quote/pair 조합
-3. Visual planning: visual mode 후보 검토 — 구현은 별도 중기 플랜으로 분리
+1. Structure editing: quote/pair text object — completed, 설정값, JSON 값, 인자 내부를 구조 기준으로 편집
+2. Adventure middle: search and replace 응용 — completed, search + substitute + quote/pair 조합
+3. Visual planning: completed, visual mode 후보를 draft cluster로 기록하고 구현은 별도 중기 플랜으로 분리
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
@@ -243,46 +243,44 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic` |
-| next | 다음 playpack에서 구현/승격할 후보 | quote/pair text object |
-| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | search + substitute + quote/pair mixed run, visual mode gap planning |
-| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | `visual-char-line`, `macro-basic`, buffer/window/navigation-at-scale 계열 |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair` |
+| next | 다음 gap planning에서 구현/승격할 후보 | `visual-char-line` |
+| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | visual charwise/linewise first slice, quote text object hardening |
+| later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
-### Next Playpack Candidate
+### Next Gap Planning Candidate
 
-ID: `playpack-009-quote-pair-text-object`
+ID: `visual-char-line`
 
-목표: 플레이어가 커서 위치를 세밀하게 맞추지 않고 quote/pair 내부 값을 구조 기준으로 삭제, 변경, 복사한다.
+목표: 플레이어가 명시적 선택 범위를 만들고, 그 범위를 삭제/복사하는 visual mode의 최소 학습 slice를 정한다.
 
 Command cluster 후보:
 
 | Cluster | Commands | Engine support | Oracle | 이유 |
 |---------|----------|----------------|--------|------|
-| `text-object-quote-pair` | `ci"`, `di"`, `yi"` 우선 | planned | optional | JSON/env/config 값과 인자 내부를 수정하는 실무 체감이 크다. |
+| `visual-char-line` | `v`, `V`, `d`, `y` 후보 | planned | optional | text object로 표현하기 어려운 임시 범위를 눈으로 확인하며 다루는 실무 체감이 크다. |
 
 다음 gap planning 후보:
 
-- 첫 slice는 double quote 내부 object를 우선한다.
-- `ci"`는 quote 내부 값을 삭제하고 Insert mode로 진입한다.
-- `di"`는 quote 내부 값을 삭제하고 Normal mode를 유지한다.
-- `yi"`는 quote 내부 값을 unnamed register에 저장한다.
-- single quote, parenthesis, brace는 gap planning에서 포함 여부를 결정하되 첫 engine slice 과부하는 피한다.
-- nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening으로 미룬다.
+- charwise visual과 linewise visual 중 첫 구현 범위를 다시 좁힌다.
+- selection anchor/cursor model과 app_state summary 표현을 정의한다.
+- visual selection rendering의 최소 TUI 계약을 정한다.
+- visual selection에 operator `d`/`y`를 적용하는 방식을 engine contract로 고정한다.
+- visual block, count prefix, register prefix, indentation command는 후속 hardening으로 미룬다.
 
 권장 문항 수:
 
-- `ci"`: 2문항
-- `di"`: 1문항
-- `yi"`: 1문항
-- quote/pair 변형 또는 복습: 1~2문항
+- charwise selection delete: 1~2문항
+- charwise selection yank/put: 1~2문항
+- linewise selection copy/delete: 1~2문항
 - 총 6문항 이하
 
 설계 제약:
 
 - 이동은 필요한 만큼만 복습하고 주목표로 삼지 않는다.
 - 각 문항은 `constraints.required_keys`로 의도 command를 고정한다.
-- 첫 소개 문항은 `i`가 Insert mode가 아니라 text object prefix가 되는 문맥을 다시 알려준다.
-- quote/pair object는 scenario보다 buffer/target_state가 먼저 설계되어야 한다.
+- 첫 소개 문항은 terminal mouse selection과 Vim visual mode를 명확히 구분한다.
+- visual mode는 scenario보다 selection state와 화면 표시 검증이 먼저 설계되어야 한다.
 
 ## Known Coverage Gaps
 
@@ -290,7 +288,8 @@ Command cluster 후보:
 - `repeat-last-change`: PLAYPACK-007에서 `.` 반복 기본 흐름을 다뤘다. delete/yank/put/search/macro/register/count prefix는 후속 hardening이다.
 - `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했고, VIM-025/PLAYPACK-008에서 engine과 tutorial을 연결했다. `?`, regex, highlight, search history는 후속 hardening으로 남는다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
-- `text-object-quote-pair`: 다음 중기 플랜에서 quote 내부 object를 최소 scope로 승격한다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
+- `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
+- `visual-char-line`: VISUAL-GAP-001에서 draft/planned 후보로 기록했다. 구현 전 selection state, rendering, E2E app_state 확장이 필요하다.
 
 ## Long-Run Platform Direction
 

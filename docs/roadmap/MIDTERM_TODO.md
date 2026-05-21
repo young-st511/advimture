@@ -180,7 +180,7 @@
 | 3 | VIM-026 | completed | `ci"`, `di"`, `yi"` 중심 quote text object engine 구현 |
 | 4 | PLAYPACK-009 | completed | quote/pair text object 튜토리얼 content/E2E 구현 |
 | 5 | INCIDENT-RUN-002 | completed | search + substitute + quote/pair를 섞은 두 번째 생존 어드벤처 run |
-| 6 | VISUAL-GAP-001 | pending | visual mode 후보 범위와 engine 영향도를 문서로 분리 |
+| 6 | VISUAL-GAP-001 | completed | visual mode 후보 범위와 engine 영향도를 문서로 분리 |
 
 ## Structure Editing and Applied Survival 출구 조건
 
@@ -191,7 +191,11 @@
 | VIM-026 | TEXT-PAIR-GAP-001 완료 | completed: quote text object engine/runtime tests | completed: `go test ./internal/vimengine/...`, `go test ./internal/runtime/...` | engine과 content/E2E를 섞지 않았다 |
 | PLAYPACK-009 | VIM-026 완료 | completed: quote/pair text object tutorial YAML, scenario, playlist, full E2E | completed: content replay, focused E2E, incident fixture check | 8문항 이하, required key와 우회 금지를 고정했다 |
 | INCIDENT-RUN-002 | PLAYPACK-009 완료 | completed: mixed incident content/scenario/playlist + full E2E | completed: content replay, incident E2E | 새 engine 기능을 incident에서 추가하지 않았다 |
-| VISUAL-GAP-001 | second incident 완료 | visual mode scope/RFC | 문서 리뷰, `git diff --check` | visual engine 구현은 다음 중기 플랜으로 분리한다 |
+| VISUAL-GAP-001 | second incident 완료 | completed: visual mode scope/RFC | completed: `git diff --check` | visual engine 구현은 다음 중기 플랜으로 분리했다 |
+
+## Structure Editing and Applied Survival 완료 판단
+
+2026-05-22 기준 이 중기 플랜은 completed다. quote text object는 gap planning, engine, 4문항 tutorial, full playlist E2E까지 연결됐고, 두 번째 incident run은 search/substitute/quote/dot repeat 조합으로 완주 가능하다. visual mode는 `visual-char-line` draft cluster와 영향도 문서까지만 닫았으며, 실제 visual engine 구현은 다음 중기 플랜에서 별도 gap planning으로 시작한다.
 
 ## 2~3개월 주차 계획
 

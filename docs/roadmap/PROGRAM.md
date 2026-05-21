@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VISUAL-GAP-001. Visual mode gap
+### NEXT. Plan refresh
 - 상태: pending
-- ExecPlan: 다음 루프에서 작성
-- 목표: visual mode 후보 범위와 engine 영향도를 문서로 분리한다.
+- ExecPlan: 미정
+- 목표: Structure Editing and Applied Survival 완료 후 다음 중기 플랜을 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### VISUAL-GAP-001. Visual mode gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/visual-gap-001-visual-mode-scope.md`
+- 완료일: 2026-05-22
 
 ### INCIDENT-RUN-002. Structure recovery incident
 - 상태: completed

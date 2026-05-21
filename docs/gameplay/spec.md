@@ -95,6 +95,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
 - `incident-001-hotfix`는 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이며 replay gate와 full playlist E2E를 통과한다.
 - `incident-002-structure-recovery`는 `/secret`, `ci"`, `yi"` + `P`, `:%s`, `ci"` + `.`를 조합하는 두 번째 mixed run이며 replay gate와 full playlist E2E를 통과한다.
+- `visual-char-line`은 draft/planned command cluster다. VISUAL-GAP-001은 visual mode를 바로 구현하지 않고 `v`, `V`, `d`, `y` 후보와 engine/TUI/E2E 영향을 문서로 분리했다.
+- 첫 visual 구현 전에는 selection anchor/cursor state, visual selection rendering, operator application, E2E app_state assertion 확장이 필요하다.
+- visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 
