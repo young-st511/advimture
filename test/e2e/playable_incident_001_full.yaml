@@ -1,9 +1,9 @@
-id: playable_search_basic_full
+id: playable_incident_001_full
 command: ["go", "run", "."]
 timeout_ms: 30000
 terminal:
-  width: 110
-  height: 34
+  width: 120
+  height: 38
 setup:
   home: temp
   progress_file: |
@@ -59,12 +59,16 @@ setup:
         "repeat-last-change-001": {"completed": true, "best_grade": "S", "attempts": 1},
         "repeat-last-change-002": {"completed": true, "best_grade": "S", "attempts": 1},
         "repeat-last-change-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "repeat-last-change-004": {"completed": true, "best_grade": "S", "attempts": 1}
+        "repeat-last-change-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "search-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "search-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "search-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "search-basic-004": {"completed": true, "best_grade": "S", "attempts": 1}
       },
       "total_keystrokes": 0
     }
 steps:
-  - wait_screen_contains: "부팅 로그 아래쪽에 error"
+  - wait_screen_contains: "복구 콘솔이 error 토큰"
   - send: "/"
   - wait_ms: 50
   - send: "e"
@@ -78,11 +82,10 @@ steps:
   - send: "r"
   - wait_ms: 50
   - send: "enter"
-  - wait_ms: 50
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "timeout이 두 번 보입니다"
+  - wait_screen_contains: "timeout이 한 번 더"
   - send: "/"
   - wait_ms: 50
   - send: "t"
@@ -102,60 +105,105 @@ steps:
   - send: "enter"
   - wait_ms: 50
   - send: "n"
-  - wait_ms: 50
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "첫 retry 안쪽에 커서"
-  - send: "/"
+  - wait_screen_contains: "상태 값 down"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "guard 줄이 필요"
+  - send: "o"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "a"
   - wait_ms: 50
   - send: "r"
   - wait_ms: 50
-  - send: "e"
+  - send: "d"
   - wait_ms: 50
-  - send: "t"
+  - send: "="
   - wait_ms: 50
-  - send: "r"
+  - send: "o"
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "검증된 route 줄"
+  - send: "y"
   - wait_ms: 50
   - send: "y"
   - wait_ms: 50
-  - send: "enter"
-  - wait_ms: 50
-  - send: "N"
-  - wait_ms: 50
+  - send: "p"
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "커서는 파일 끝에 있지만 alarm"
+  - wait_screen_contains: "첫 줄은 원인 기록"
+  - send: ":"
+  - wait_screen_contains: "Keys: type command"
+  - send: "2"
+  - wait_ms: 30
+  - send: ","
+  - wait_ms: 30
+  - send: "3"
+  - wait_ms: 30
+  - send: "s"
+  - wait_ms: 30
   - send: "/"
-  - wait_ms: 50
-  - send: "a"
-  - wait_ms: 50
-  - send: "l"
-  - wait_ms: 50
-  - send: "a"
-  - wait_ms: 50
+  - wait_ms: 30
+  - send: "e"
+  - wait_ms: 30
   - send: "r"
-  - wait_ms: 50
-  - send: "m"
-  - wait_ms: 50
+  - wait_ms: 30
+  - send: "r"
+  - wait_ms: 30
+  - send: "o"
+  - wait_ms: 30
+  - send: "r"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
+  - send: "o"
+  - wait_ms: 30
+  - send: "k"
+  - wait_ms: 30
+  - send: "/"
+  - wait_ms: 30
   - send: "enter"
-  - wait_ms: 50
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "Playlist complete"
   - send: "q"
 assert:
   screen_contains:
-    - "Mid Tutorial: Literal search"
-    - "Exercise: 4/4"
-    - "Next tutorial: enter"
-    - "좋습니다. 검색이 문서 위쪽으로 wrap되어 alarm을 찾았습니다."
+    - "Incident 001: 로그 추적과 핫픽스"
+    - "Exercise: 6/6"
+    - "Playlist complete"
+    - "좋습니다. 전체 파일이 아니라 문제 구간만 정확히 치환했습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
-    - "\"search-basic-001\""
-    - "\"search-basic-002\""
-    - "\"search-basic-003\""
-    - "\"search-basic-004\""
+    - "\"incident-hotfix-001\""
+    - "\"incident-hotfix-002\""
+    - "\"incident-hotfix-003\""
+    - "\"incident-hotfix-004\""
+    - "\"incident-hotfix-005\""
+    - "\"incident-hotfix-006\""
   key_trace:
     - "/"
     - "e"
@@ -176,35 +224,58 @@ assert:
     - "enter"
     - "n"
     - "enter"
-    - "/"
+    - "c"
+    - "i"
+    - "w"
+    - "u"
+    - "p"
+    - "esc"
+    - "enter"
+    - "o"
+    - "g"
+    - "u"
+    - "a"
     - "r"
-    - "e"
-    - "t"
-    - "r"
+    - "d"
+    - "="
+    - "o"
+    - "n"
+    - "esc"
+    - "enter"
     - "y"
+    - "y"
+    - "p"
     - "enter"
-    - "N"
-    - "enter"
+    - ":"
+    - "2"
+    - ","
+    - "3"
+    - "s"
     - "/"
-    - "a"
-    - "l"
-    - "a"
+    - "e"
     - "r"
-    - "m"
+    - "r"
+    - "o"
+    - "r"
+    - "/"
+    - "o"
+    - "k"
+    - "/"
     - "enter"
     - "q"
   app_state:
-    buffer: ["alarm root", "ok", "tail"]
+    buffer: ["error source", "ok relay", "ok cache"]
     cursor:
       row: 0
       col: 0
     mode: "normal"
+    command: ":2,3s/error/ok/"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "search-basic-004"
+      mission_id: "incident-hotfix-006"
       completed: true
 evidence:
   save_raw_ansi: true

@@ -1,0 +1,293 @@
+exercises:
+  - id: incident-hotfix-001
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["enter"]
+    mistake_focus: ["로그를 한 줄씩 훑느라 원인 토큰을 늦게 찾는다."]
+    replay_status: pass
+    title: "장애 error 토큰 위치 찾기"
+    goal_for_player: "/error 검색으로 장애 토큰 위치를 찾으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        info boot
+        error pump
+        warn idle
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        info boot
+        error pump
+        warn idle
+    optimal_keys: ["/", "e", "r", "r", "o", "r", "enter"]
+    allowed_keys: ["/", "e", "r", "o", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 9
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "Incident에서는 한 줄씩 훑기보다 검색으로 원인 토큰을 잡습니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 7
+    e2e_assertions:
+      buffer: ["info boot", "error pump", "warn idle"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-hotfix-002
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["n"]
+    reviewed_commands: ["/", "enter"]
+    mistake_focus: ["같은 검색어를 다시 입력하려고 한다."]
+    replay_status: pass
+    title: "다음 timeout 추적"
+    goal_for_player: "/timeout으로 첫 match를 찾고 n으로 다음 timeout까지 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        boot
+        timeout alpha
+        ok
+        next timeout
+    target_state:
+      mode: normal
+      cursor:
+        row: 3
+        col: 5
+      buffer: |
+        boot
+        timeout alpha
+        ok
+        next timeout
+    optimal_keys: ["/", "t", "i", "m", "e", "o", "u", "t", "enter", "n"]
+    allowed_keys: ["/", "t", "i", "m", "e", "o", "u", "enter", "n", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 12
+      required_keys: ["/", "enter", "n"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 9
+        text: "같은 검색어의 다음 발생은 n으로 따라갑니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["boot", "timeout alpha", "ok", "next timeout"]
+      cursor:
+        row: 3
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: incident-hotfix-003
+    status: approved
+    command_cluster: text-object-inner-word
+    engine_support: implemented
+    trained_commands: ["ciw"]
+    reviewed_commands: ["esc"]
+    mistake_focus: ["값 중간에 있는데 단어 시작으로 이동하려고 한다."]
+    replay_status: pass
+    title: "상태 값을 up으로 교체"
+    goal_for_player: "down 값 중간에서 ciw로 값 전체를 up으로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        status=down
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 8
+      buffer: |
+        status=up
+    optimal_keys: ["c", "i", "w", "u", "p", "esc"]
+    allowed_keys: ["c", "i", "w", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["c", "i", "w", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "d", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "ciw 후에는 Insert mode입니다. 새 값을 입력하고 esc로 돌아오세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["status=up"]
+      cursor:
+        row: 0
+        col: 8
+      mode: normal
+      status: succeeded
+
+  - id: incident-hotfix-004
+    status: approved
+    command_cluster: open-line-edit
+    engine_support: implemented
+    trained_commands: ["o"]
+    reviewed_commands: ["esc"]
+    mistake_focus: ["기존 줄 끝에 guard를 붙이려고 한다."]
+    replay_status: pass
+    title: "핫픽스 guard 줄 추가"
+    goal_for_player: "현재 줄 아래에 o로 새 줄을 열고 guard=on을 입력하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        status=up
+        route=ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 7
+      buffer: |
+        status=up
+        guard=on
+        route=ok
+    optimal_keys: ["o", "g", "u", "a", "r", "d", "=", "o", "n", "esc"]
+    allowed_keys: ["o", "g", "u", "a", "r", "d", "=", "n", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 12
+      required_keys: ["o", "esc"]
+      forbidden_keys: ["O", "i", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "기존 status 줄을 망가뜨리지 말고 아래에 새 guard 줄을 엽니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["status=up", "guard=on", "route=ok"]
+      cursor:
+        row: 1
+        col: 7
+      mode: normal
+      status: succeeded
+
+  - id: incident-hotfix-005
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: ["yy", "p"]
+    reviewed_commands: []
+    mistake_focus: ["정상 route 줄을 다시 타이핑하려고 한다."]
+    replay_status: pass
+    title: "정상 route 줄 복제"
+    goal_for_player: "정상 route 줄을 yy로 복사하고 p로 바로 아래에 붙여넣으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route=stable
+        route=backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        route=stable
+        route=stable
+        route=backup
+    optimal_keys: ["y", "y", "p"]
+    allowed_keys: ["y", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 5
+      required_keys: ["y", "p"]
+      forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "yy로 줄을 담았으면 p로 아래에 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["route=stable", "route=stable", "route=backup"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-hotfix-006
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: [":2,3s"]
+    reviewed_commands: [":s", ":%s"]
+    mistake_focus: ["전체 파일을 바꿔 첫 줄까지 건드리려고 한다."]
+    replay_status: pass
+    title: "문제 구간만 ok로 치환"
+    goal_for_player: "command-line에서 2~3번째 줄의 error만 ok로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        error source
+        error relay
+        error cache
+    target_state:
+      mode: normal
+      buffer: |
+        error source
+        ok relay
+        ok cache
+    optimal_keys: [":", "2", ",", "3", "s", "/", "e", "r", "r", "o", "r", "/", "o", "k", "/", "enter"]
+    allowed_keys: [":", "2", "3", ",", "s", "/", "e", "r", "o", "k", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    constraints:
+      max_inputs: 18
+      required_keys: [":", "enter"]
+      forbidden_keys: ["ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 4
+        text: "2,3은 1-based inclusive line range입니다."
+    grading:
+      pass_condition: "buffer[0] unchanged && buffer[1:3] changed"
+      optimal_key_count: 16
+    e2e_assertions:
+      buffer: ["error source", "ok relay", "ok cache"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded

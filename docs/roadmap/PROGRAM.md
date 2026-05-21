@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-RUN-001. First incident mixed run
-- 상태: active
-- ExecPlan: 다음 루프에서 작성
-- 목표: 기존 command를 섞은 `incident-001` 생존 어드벤처 mixed run을 추가한다.
+### COACHING-001. Proactive coaching
+- 상태: pending
+- ExecPlan: 다음 사용자 결정 후 작성
+- 목표: schema 변경 없이 strict constraint 전 사전 코칭 UX를 개선한다.
 
 ## 방금 완료한 슬라이스
+
+### INCIDENT-RUN-001. First incident mixed run
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-run-001-first-mixed-run.md`
+- 완료일: 2026-05-22
 
 ### PLAYLIST-ORDER-001. Explicit playlist ordering
 - 상태: completed
