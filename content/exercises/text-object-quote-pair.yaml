@@ -1,0 +1,196 @@
+exercises:
+  - id: text-object-quote-pair-001
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci\""]
+    reviewed_commands: ["ciw", "esc"]
+    mistake_focus: ["quote 안 값인데 단어 단위 ciw로 일부만 바꾸려고 한다."]
+    replay_status: pass
+    title: "따옴표 값 교체"
+    goal_for_player: "down 값 중간에서 ci\"로 따옴표 내부 값 전체를 up으로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        status="down"
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        status="up"
+    optimal_keys: ["c", "i", "\"", "u", "p", "esc"]
+    allowed_keys: ["c", "i", "\"", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["c", "i", "\"", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "d", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "c는 operator입니다. 이번 대상은 따옴표 내부 text object입니다."
+      - after_keys: 3
+        text: "ci\"는 quote 문자는 남기고 내부 값만 비운 뒤 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["status=\"up\""]
+      cursor:
+        row: 0
+        col: 10
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-002
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["di\""]
+    reviewed_commands: ["diw", "x"]
+    mistake_focus: ["quote 문자는 유지해야 하는데 값 주변 구조까지 지우려고 한다."]
+    replay_status: pass
+    title: "민감 값 비우기"
+    goal_for_player: "DELETE 값 중간에서 di\"로 따옴표 내부 값만 비우세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        token="DELETE"
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        token=""
+    optimal_keys: ["d", "i", "\""]
+    allowed_keys: ["d", "i", "\"", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "i", "\""]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "c", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "d 다음의 i는 inner text object prefix입니다."
+      - after_keys: 2
+        text: "di\"는 double quote 내부 값만 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["token=\"\""]
+      cursor:
+        row: 0
+        col: 7
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-003
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["yi\""]
+    reviewed_commands: ["p", "P", "j", "$"]
+    mistake_focus: ["값을 다시 입력하거나 quote 위치를 직접 세밀하게 맞추려고 한다."]
+    replay_status: pass
+    title: "따옴표 값 미러링"
+    goal_for_player: "alpha 값 중간에서 yi\"로 내부 값만 복사해 mirror 따옴표 안에 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        secret="alpha"
+        mirror=""
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 12
+      buffer: |
+        secret="alpha"
+        mirror="alpha"
+    optimal_keys: ["y", "i", "\"", "j", "$", "P"]
+    allowed_keys: ["y", "i", "\"", "j", "$", "P", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "\"", "P"]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "y도 operator입니다. quote 내부 값을 register에 담을 수 있습니다."
+      - after_keys: 3
+        text: "yi\"로 값만 담은 뒤 mirror의 닫는 quote 앞에 P로 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["secret=\"alpha\"", "mirror=\"alpha\""]
+      cursor:
+        row: 1
+        col: 12
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-004
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci\"", "."]
+    reviewed_commands: ["j", "h", "repeat-last-change"]
+    mistake_focus: ["같은 quote 값 교체를 다시 타이핑하려고 한다."]
+    replay_status: pass
+    title: "같은 따옴표 값 반복 교체"
+    goal_for_player: "첫 old를 ci\"로 new로 바꾼 뒤, 다음 줄 old 안에서 .으로 같은 변경을 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 3
+      buffer: |
+        a="old"
+        b="old"
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 6
+      buffer: |
+        a="new"
+        b="new"
+    optimal_keys: ["c", "i", "\"", "n", "e", "w", "esc", "j", "h", "."]
+    allowed_keys: ["c", "i", "\"", "n", "e", "w", "esc", "j", "h", "."]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["c", "i", "\"", "esc", "."]
+      forbidden_keys: ["k", "l", "b", "0", "$", "d", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "ci\"로 quote 내부 값을 교체한 뒤 esc로 변경을 확정하세요."
+      - after_keys: 8
+        text: "다음 old 안으로 들어간 뒤 .으로 같은 변경을 반복합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["a=\"new\"", "b=\"new\""]
+      cursor:
+        row: 1
+        col: 6
+      mode: normal
+      status: succeeded

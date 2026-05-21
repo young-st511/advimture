@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-009. Quote/pair text object tutorial
+### INCIDENT-RUN-002. Structure recovery incident
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: `ci"`, `di"`, `yi"`를 짧은 튜토리얼 content와 full E2E로 연결한다.
+- 목표: search + substitute + quote text object를 섞은 두 번째 생존 어드벤처 run을 만든다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-009. Quote/pair text object tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-009-quote-pair-text-object.md`
+- 완료일: 2026-05-22
 
 ### VIM-026. Quote text object engine
 - 상태: completed

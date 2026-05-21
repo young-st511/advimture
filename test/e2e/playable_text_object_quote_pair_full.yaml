@@ -1,4 +1,4 @@
-id: playable_incident_001_full
+id: playable_text_object_quote_pair_full
 command: ["go", "run", "."]
 timeout_ms: 30000
 terminal:
@@ -63,61 +63,17 @@ setup:
         "search-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
         "search-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
         "search-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "search-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
-        "text-object-quote-pair-001": {"completed": true, "best_grade": "S", "attempts": 1},
-        "text-object-quote-pair-002": {"completed": true, "best_grade": "S", "attempts": 1},
-        "text-object-quote-pair-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "text-object-quote-pair-004": {"completed": true, "best_grade": "S", "attempts": 1}
+        "search-basic-004": {"completed": true, "best_grade": "S", "attempts": 1}
       },
       "total_keystrokes": 0
     }
 steps:
-  - wait_screen_contains: "복구 콘솔이 error 토큰"
-  - send: "/"
-  - wait_ms: 50
-  - send: "e"
-  - wait_ms: 50
-  - send: "r"
-  - wait_ms: 50
-  - send: "r"
-  - wait_ms: 50
-  - send: "o"
-  - wait_ms: 50
-  - send: "r"
-  - wait_ms: 50
-  - send: "enter"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-
-  - wait_screen_contains: "timeout이 한 번 더"
-  - send: "/"
-  - wait_ms: 50
-  - send: "t"
-  - wait_ms: 50
-  - send: "i"
-  - wait_ms: 50
-  - send: "m"
-  - wait_ms: 50
-  - send: "e"
-  - wait_ms: 50
-  - send: "o"
-  - wait_ms: 50
-  - send: "u"
-  - wait_ms: 50
-  - send: "t"
-  - wait_ms: 50
-  - send: "enter"
-  - wait_ms: 50
-  - send: "n"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-
-  - wait_screen_contains: "상태 값 down"
+  - wait_screen_contains: "status 문자열 값이 down"
   - send: "c"
   - wait_ms: 50
   - send: "i"
   - wait_ms: 50
-  - send: "w"
+  - send: '"'
   - wait_ms: 50
   - send: "u"
   - wait_ms: 50
@@ -127,159 +83,107 @@ steps:
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "guard 줄이 필요"
-  - send: "o"
-  - wait_ms: 50
-  - send: "g"
-  - wait_ms: 50
-  - send: "u"
-  - wait_ms: 50
-  - send: "a"
-  - wait_ms: 50
-  - send: "r"
-  - wait_ms: 50
+  - wait_screen_contains: "임시 토큰 DELETE"
   - send: "d"
   - wait_ms: 50
-  - send: "="
+  - send: "i"
   - wait_ms: 50
-  - send: "o"
+  - send: '"'
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "secret의 alpha 값을 mirror"
+  - send: "y"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: '"'
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "두 설정 줄의 old 값을 모두 new"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: '"'
   - wait_ms: 50
   - send: "n"
   - wait_ms: 50
-  - send: "esc"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-
-  - wait_screen_contains: "검증된 route 줄"
-  - send: "y"
-  - wait_ms: 50
-  - send: "y"
-  - wait_ms: 50
-  - send: "p"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-
-  - wait_screen_contains: "첫 줄은 원인 기록"
-  - send: ":"
-  - wait_screen_contains: "Keys: type command"
-  - send: "2"
-  - wait_ms: 30
-  - send: ","
-  - wait_ms: 30
-  - send: "3"
-  - wait_ms: 30
-  - send: "s"
-  - wait_ms: 30
-  - send: "/"
-  - wait_ms: 30
   - send: "e"
-  - wait_ms: 30
-  - send: "r"
-  - wait_ms: 30
-  - send: "r"
-  - wait_ms: 30
-  - send: "o"
-  - wait_ms: 30
-  - send: "r"
-  - wait_ms: 30
-  - send: "/"
-  - wait_ms: 30
-  - send: "o"
-  - wait_ms: 30
-  - send: "k"
-  - wait_ms: 30
-  - send: "/"
-  - wait_ms: 30
-  - send: "enter"
-  - wait_screen_contains: "Playlist complete"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "."
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
-    - "Incident 001: 로그 추적과 핫픽스"
-    - "Exercise: 6/6"
-    - "Playlist complete"
-    - "좋습니다. 전체 파일이 아니라 문제 구간만 정확히 치환했습니다."
+    - "Mid Tutorial: Quote text object"
+    - "Exercise: 4/4"
+    - "Next tutorial: enter"
+    - "좋습니다. 구조 대상 편집과 반복 변경을 함께 사용했습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
-    - "\"incident-hotfix-001\""
-    - "\"incident-hotfix-002\""
-    - "\"incident-hotfix-003\""
-    - "\"incident-hotfix-004\""
-    - "\"incident-hotfix-005\""
-    - "\"incident-hotfix-006\""
+    - "\"text-object-quote-pair-001\""
+    - "\"text-object-quote-pair-002\""
+    - "\"text-object-quote-pair-003\""
+    - "\"text-object-quote-pair-004\""
   key_trace:
-    - "/"
-    - "e"
-    - "r"
-    - "r"
-    - "o"
-    - "r"
-    - "enter"
-    - "enter"
-    - "/"
-    - "t"
+    - "c"
     - "i"
-    - "m"
-    - "e"
-    - "o"
+    - '"'
     - "u"
-    - "t"
+    - "p"
+    - "esc"
     - "enter"
-    - "n"
+    - "d"
+    - "i"
+    - '"'
+    - "enter"
+    - "y"
+    - "i"
+    - '"'
+    - "j"
+    - "$"
+    - "P"
     - "enter"
     - "c"
     - "i"
-    - "w"
-    - "u"
-    - "p"
-    - "esc"
-    - "enter"
-    - "o"
-    - "g"
-    - "u"
-    - "a"
-    - "r"
-    - "d"
-    - "="
-    - "o"
+    - '"'
     - "n"
-    - "esc"
-    - "enter"
-    - "y"
-    - "y"
-    - "p"
-    - "enter"
-    - ":"
-    - "2"
-    - ","
-    - "3"
-    - "s"
-    - "/"
     - "e"
-    - "r"
-    - "r"
-    - "o"
-    - "r"
-    - "/"
-    - "o"
-    - "k"
-    - "/"
-    - "enter"
+    - "w"
+    - "esc"
+    - "j"
+    - "h"
+    - "."
     - "q"
   app_state:
-    buffer: ["error source", "ok relay", "ok cache"]
+    buffer: ["a=\"new\"", "b=\"new\""]
     cursor:
-      row: 0
-      col: 0
+      row: 1
+      col: 6
     mode: "normal"
-    command: ":2,3s/error/ok/"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "incident-hotfix-006"
+      mission_id: "text-object-quote-pair-004"
       completed: true
 evidence:
   save_raw_ansi: true

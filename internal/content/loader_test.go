@@ -19,14 +19,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 16 {
 		t.Fatalf("command clusters = %d, want 16", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 60 {
-		t.Fatalf("exercises = %d, want 60", len(lib.Exercises))
+	if len(lib.Exercises) != 64 {
+		t.Fatalf("exercises = %d, want 64", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 60 {
-		t.Fatalf("scenarios = %d, want 60", len(lib.Scenarios))
+	if len(lib.Scenarios) != 64 {
+		t.Fatalf("scenarios = %d, want 64", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 13 {
-		t.Fatalf("playlists = %d, want 13", len(lib.Playlists))
+	if len(lib.Playlists) != 14 {
+		t.Fatalf("playlists = %d, want 14", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 60 {
-		t.Fatalf("playable exercises = %d, want 60: %+v", len(playable), playable)
+	if len(playable) != 64 {
+		t.Fatalf("playable exercises = %d, want 64: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -87,6 +87,10 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"text-object-inner-word-004",
 		"text-object-inner-word-005",
 		"text-object-inner-word-006",
+		"text-object-quote-pair-001",
+		"text-object-quote-pair-002",
+		"text-object-quote-pair-003",
+		"text-object-quote-pair-004",
 		"undo-redo-basic-001",
 		"undo-redo-basic-002",
 		"vim-ex-command-substitute-001",
@@ -138,6 +142,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-8-open-line-edit",
 		"tutorial-9-repeat-last-change",
 		"tutorial-90-search-basic",
+		"tutorial-91-text-object-quote-pair",
 		"incident-001-hotfix",
 	})
 }

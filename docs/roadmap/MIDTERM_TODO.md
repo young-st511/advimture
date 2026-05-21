@@ -178,7 +178,7 @@
 | 1 | PLAN-REFRESH-002 | completed | 완료된 후보를 정리하고 새 중기 플랜을 roadmap/curriculum에 고정 |
 | 2 | TEXT-PAIR-GAP-001 | completed | quote/pair text object 최소 범위와 제외 항목 결정 |
 | 3 | VIM-026 | completed | `ci"`, `di"`, `yi"` 중심 quote text object engine 구현 |
-| 4 | PLAYPACK-009 | pending | quote/pair text object 튜토리얼 content/E2E 구현 |
+| 4 | PLAYPACK-009 | completed | quote/pair text object 튜토리얼 content/E2E 구현 |
 | 5 | INCIDENT-RUN-002 | pending | search + substitute + quote/pair를 섞은 두 번째 생존 어드벤처 run |
 | 6 | VISUAL-GAP-001 | pending | visual mode 후보 범위와 engine 영향도를 문서로 분리 |
 
@@ -189,7 +189,7 @@
 | PLAN-REFRESH-002 | Review Queue and Incident Runs 완료 | completed: 새 중기 플랜과 next candidate 갱신 | completed: `git diff --check` | 코드와 content를 건드리지 않는다 |
 | TEXT-PAIR-GAP-001 | text-object-inner-word playable 완료 | completed: command cluster approval packet, VIM-026/PLAYPACK-009 분리 계획 | completed: content test, `git diff --check` | nested pair, escaped quote, around object, count prefix, visual selection 제외 |
 | VIM-026 | TEXT-PAIR-GAP-001 완료 | completed: quote text object engine/runtime tests | completed: `go test ./internal/vimengine/...`, `go test ./internal/runtime/...` | engine과 content/E2E를 섞지 않았다 |
-| PLAYPACK-009 | VIM-026 완료 | quote/pair text object tutorial YAML, scenario, playlist, full E2E | content replay, focused E2E, `make e2e-playable` | 8문항 이하, required key와 우회 금지를 고정한다 |
+| PLAYPACK-009 | VIM-026 완료 | completed: quote/pair text object tutorial YAML, scenario, playlist, full E2E | completed: content replay, focused E2E, incident fixture check | 8문항 이하, required key와 우회 금지를 고정했다 |
 | INCIDENT-RUN-002 | PLAYPACK-009 완료 | mixed incident content/scenario/playlist + full E2E | content replay, incident E2E, `make e2e-playable` | 새 engine 기능을 incident에서 추가하지 않는다 |
 | VISUAL-GAP-001 | second incident 완료 | visual mode scope/RFC | 문서 리뷰, `git diff --check` | visual engine 구현은 다음 중기 플랜으로 분리한다 |
 

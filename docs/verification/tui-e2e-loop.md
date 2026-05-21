@@ -107,7 +107,7 @@ evidence:
 - `playable_ctrl_c_does_not_quit`: 실제 Ctrl+C가 앱을 즉시 종료하지 않고 key trace에 남는지 검증하는 E2E
 - `playable_coaching_panel`: strict constraint 문항의 required key coaching과 `?` hint 패널 표시를 검증하는 E2E
 - `playable_full_first_five_minute`: movement/survival/navigation/small-edit/Ex command까지의 first-cut tutorial flow E2E
-- `playable_open_line_full`, `playable_repeat_last_change_full`, `playable_search_basic_full`: utility command full playpack E2E
+- `playable_open_line_full`, `playable_repeat_last_change_full`, `playable_search_basic_full`, `playable_text_object_quote_pair_full`: utility/structure command full playpack E2E
 - `playable_incident_001_full`: 기존 command를 섞은 첫 incident run E2E
 
 `wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 기다린다. 반복되는 UI 문구를 사용할 수는 있지만, 같은 키를 빠르게 반복 입력할 때는 Bubble Tea가 입력을 묶어 받을 수 있으므로 사람 입력에 가까운 짧은 `wait_ms`를 둔다.
