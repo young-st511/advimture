@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented tutorial playlist를 ID 순서로 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
@@ -85,6 +85,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `.` repeat 구현에서 delete/yank/put/Ex command/search/macro/register/count prefix와 Vim exact undo block semantics는 후속 hardening으로 미룬다.
 - `tutorial-9-repeat-last-change`는 `A`, `ciw`, `o`, `r<char>` 뒤의 `.` 반복을 각각 다루는 4문항 efficiency tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - `search-basic`은 approved + engine implemented command cluster다. 첫 구현은 `/query enter`, `n`, `N` literal search이며 `?` backward search, regex, highlight, search history는 제외한다.
+- `tutorial-90-search-basic`은 `/`, `n`, `N`, wrap-around literal search를 다루는 4문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

@@ -1,0 +1,31 @@
+playlists:
+  - id: tutorial-90-search-basic
+    status: approved
+    title: "Mid Tutorial: Literal search"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-10-001
+        role: search_literal_token
+        command_cluster: search-basic
+        exercise_id: search-basic-001
+        scenario_id: search-basic-001-scenario
+        engine_support: implemented
+      - id: tutorial-10-002
+        role: search_next_match
+        command_cluster: search-basic
+        exercise_id: search-basic-002
+        scenario_id: search-basic-002-scenario
+        engine_support: implemented
+      - id: tutorial-10-003
+        role: search_previous_match
+        command_cluster: search-basic
+        exercise_id: search-basic-003
+        scenario_id: search-basic-003-scenario
+        engine_support: implemented
+      - id: tutorial-10-004
+        role: search_wrap
+        command_cluster: search-basic
+        exercise_id: search-basic-004
+        scenario_id: search-basic-004-scenario
+        engine_support: implemented

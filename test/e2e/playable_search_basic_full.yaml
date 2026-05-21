@@ -1,0 +1,213 @@
+id: playable_search_basic_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+  progress_file: |
+    {
+      "tutorials": {},
+      "missions": {
+        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "single-char-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "insert-mode-entry-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "undo-redo-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "vim-ex-command-substitute-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "delete-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "change-with-motion-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "yank-put-basic-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "text-object-inner-word-006": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-004": {"completed": true, "best_grade": "S", "attempts": 1},
+        "open-line-edit-005": {"completed": true, "best_grade": "S", "attempts": 1},
+        "repeat-last-change-001": {"completed": true, "best_grade": "S", "attempts": 1},
+        "repeat-last-change-002": {"completed": true, "best_grade": "S", "attempts": 1},
+        "repeat-last-change-003": {"completed": true, "best_grade": "S", "attempts": 1},
+        "repeat-last-change-004": {"completed": true, "best_grade": "S", "attempts": 1}
+      },
+      "total_keystrokes": 0
+    }
+steps:
+  - wait_screen_contains: "부팅 로그 아래쪽에 error"
+  - send: "/"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "timeout이 두 번 보입니다"
+  - send: "/"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "m"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "첫 retry 안쪽에 커서"
+  - send: "/"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "y"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_ms: 50
+  - send: "N"
+  - wait_ms: 50
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "커서는 파일 끝에 있지만 alarm"
+  - send: "/"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "m"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_ms: 50
+  - wait_screen_contains: "Playlist complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Literal search"
+    - "Exercise: 4/4"
+    - "Playlist complete"
+    - "좋습니다. 검색이 문서 위쪽으로 wrap되어 alarm을 찾았습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"search-basic-001\""
+    - "\"search-basic-002\""
+    - "\"search-basic-003\""
+    - "\"search-basic-004\""
+  key_trace:
+    - "/"
+    - "e"
+    - "r"
+    - "r"
+    - "o"
+    - "r"
+    - "enter"
+    - "enter"
+    - "/"
+    - "t"
+    - "i"
+    - "m"
+    - "e"
+    - "o"
+    - "u"
+    - "t"
+    - "enter"
+    - "n"
+    - "enter"
+    - "/"
+    - "r"
+    - "e"
+    - "t"
+    - "r"
+    - "y"
+    - "enter"
+    - "N"
+    - "enter"
+    - "/"
+    - "a"
+    - "l"
+    - "a"
+    - "r"
+    - "m"
+    - "enter"
+    - "q"
+  app_state:
+    buffer: ["alarm root", "ok", "tail"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "search-basic-004"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

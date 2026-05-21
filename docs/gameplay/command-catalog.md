@@ -589,7 +589,7 @@ command_cluster:
     - regex, highlight, search history, ignorecase/smartcase는 후속 hardening으로 미룬다.
   design_notes:
     - SEARCH-GAP-001에서 /, n, N만 첫 scope로 고정했다.
-    - VIM-025는 search state와 cursor movement를 구현했고, PLAYPACK-008에서 content/E2E를 추가한다.
+    - VIM-025는 search state와 cursor movement를 구현했고, PLAYPACK-008에서 content/E2E를 추가했다.
 ```
 
 ## First 5-Minute Discovery Notes
@@ -604,7 +604,7 @@ command_cluster:
 - `text-object-inner-word`는 VIM-021/VIM-022에서 engine support가 구현됐고 PLAYPACK-005에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
 - `open-line-edit`은 OPEN-LINE-001에서 approved로 승격했고, VIM-023에서 engine support를 구현했다. 첫 구현 범위는 `o`, `O`이며 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat은 제외한다.
 - `repeat-last-change`는 REPEAT-GAP-001에서 approved로 승격했고, VIM-024에서 engine support를 구현했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
-- `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
+- `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했으며 PLAYPACK-008에서 4문항 tutorial content와 full E2E를 연결했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

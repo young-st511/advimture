@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-008. Search basic tutorial
+### PLATFORM-RFC-001. Long-run review platform RFC
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: `/`, `n`, `N` literal search tutorial content와 E2E를 구현한다.
+- 목표: mastery, spaced review, daily run, progress schema 후보를 저장 포맷 변경 없이 문서화한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-008. Search basic tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-008-search-basic.md`
+- 완료일: 2026-05-21
 
 ### VIM-025. Literal search engine
 - 상태: completed

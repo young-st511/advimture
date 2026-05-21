@@ -1,0 +1,206 @@
+exercises:
+  - id: search-basic-001
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["enter"]
+    mistake_focus: ["로그를 한 줄씩 이동하며 찾으려고 한다."]
+    replay_status: pass
+    title: "error 토큰 찾기"
+    goal_for_player: "/error 검색으로 error 토큰 위치로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        info boot
+        warn link
+        error disk
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 0
+      buffer: |
+        info boot
+        warn link
+        error disk
+    optimal_keys: ["/", "e", "r", "r", "o", "r", "enter"]
+    allowed_keys: ["/", "e", "r", "o", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 7
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "/는 검색어 입력 모드로 들어갑니다. error를 입력하고 enter를 누르세요."
+      - after_keys: 6
+        text: "검색어를 다 입력했으면 enter로 실행합니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 7
+    e2e_assertions:
+      buffer: ["info boot", "warn link", "error disk"]
+      cursor:
+        row: 2
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: search-basic-002
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["n"]
+    reviewed_commands: ["/", "enter"]
+    mistake_focus: ["같은 검색어를 다시 입력하려고 한다."]
+    replay_status: pass
+    title: "다음 timeout 찾기"
+    goal_for_player: "/timeout으로 첫 match를 찾고 n으로 다음 timeout으로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        start timeout
+        ok
+        next timeout
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 5
+      buffer: |
+        start timeout
+        ok
+        next timeout
+    optimal_keys: ["/", "t", "i", "m", "e", "o", "u", "t", "enter", "n"]
+    allowed_keys: ["/", "t", "i", "m", "e", "o", "u", "enter", "n", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["/", "enter", "n"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "먼저 timeout을 검색합니다."
+      - after_keys: 9
+        text: "같은 검색어의 다음 match는 n으로 이동합니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["start timeout", "ok", "next timeout"]
+      cursor:
+        row: 2
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: search-basic-003
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["N"]
+    reviewed_commands: ["/", "enter"]
+    mistake_focus: ["지나친 match에서 이전 match로 돌아가는 방법을 놓친다."]
+    replay_status: pass
+    title: "이전 retry로 되돌아가기"
+    goal_for_player: "첫 retry 안쪽에서 /retry로 다음 match를 찾은 뒤 N으로 이전 retry에 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        pre retry
+        mid retry
+        tail ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 4
+      buffer: |
+        pre retry
+        mid retry
+        tail ok
+    optimal_keys: ["/", "r", "e", "t", "r", "y", "enter", "N"]
+    allowed_keys: ["/", "r", "e", "t", "y", "enter", "N", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["/", "enter", "N"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 7
+        text: "다음 retry로 이동했습니다. N으로 반대 방향 match로 돌아옵니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["pre retry", "mid retry", "tail ok"]
+      cursor:
+        row: 0
+        col: 4
+      mode: normal
+      status: succeeded
+
+  - id: search-basic-004
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["G", "enter"]
+    mistake_focus: ["파일 끝에서 검색이 wrap-around될 수 있음을 모른다."]
+    replay_status: pass
+    title: "위쪽 alarm으로 wrap 검색"
+    goal_for_player: "파일 끝에서 /alarm 검색으로 문서 위쪽 alarm 위치까지 wrap 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 0
+      buffer: |
+        alarm root
+        ok
+        tail
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        alarm root
+        ok
+        tail
+    optimal_keys: ["/", "a", "l", "a", "r", "m", "enter"]
+    allowed_keys: ["/", "a", "l", "r", "m", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 7
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "검색은 문서 끝에서 위쪽으로 wrap될 수 있습니다."
+      - after_keys: 6
+        text: "alarm 입력 후 enter로 실행하세요."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 7
+    e2e_assertions:
+      buffer: ["alarm root", "ok", "tail"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
