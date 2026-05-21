@@ -284,7 +284,7 @@ Command cluster 후보:
 
 - `open-line-edit`: PLAYPACK-006에서 `o`, `O` 기본 흐름을 다뤘다. indentation, auto-comment, count prefix, dot repeat 연계는 후속 hardening으로 남는다.
 - `repeat-last-change`: PLAYPACK-007에서 `.` 반복 기본 흐름을 다뤘다. delete/yank/put/search/macro/register/count prefix는 후속 hardening이다.
-- `search-basic`: `/`, `n`, `N`은 command-line 입력과 search state를 분리해야 한다. `?`는 현재 hint key와 충돌하므로 첫 search 구현에서는 보류한다.
+- `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했다. `?`는 현재 hint key와 충돌하므로 첫 search 구현에서는 보류한다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
 
 ## Long-Run Platform Direction

@@ -555,6 +555,43 @@ command_cluster:
     - VIM-024는 엔진 transaction recorder를 구현했고, PLAYPACK-007에서 efficiency tutorial과 E2E를 추가했다.
 ```
 
+### search-basic
+
+```yaml
+command_cluster:
+  id: search-basic
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-navigation
+  title: 로그와 설정 literal 검색
+  commands: ["/", "n", "N"]
+  coverage_required: ["/", "n", "N"]
+  oracle: optional
+  purpose: 명시된 token을 직접 찾고 다음/이전 match로 빠르게 이동한다.
+  prerequisite: ["word-motion-basic", "whole-file-navigation"]
+  difficulty: intermediate
+  useful_when:
+    - 긴 로그에서 ERROR나 timeout 같은 token을 찾을 때
+    - 설정 파일에서 같은 key의 다음 발생 위치로 이동할 때
+    - 지나친 match에서 이전 match로 되돌아갈 때
+  combo_paths:
+    - ["/", "enter", "n"]
+    - ["/", "enter", "N"]
+    - ["/", "enter", "ciw"]
+  common_mistakes:
+    - 검색어 입력 후 enter를 누르지 않는다.
+    - n과 N의 방향 차이를 혼동한다.
+    - ?를 backward search로 기대한다.
+  compatibility_notes:
+    - 첫 구현은 case-sensitive literal search만 지원한다.
+    - ? backward search는 TUI hint key와 충돌하므로 첫 구현에서 제외한다.
+    - regex, highlight, search history, ignorecase/smartcase는 후속 hardening으로 미룬다.
+  design_notes:
+    - SEARCH-GAP-001에서 /, n, N만 첫 scope로 고정했다.
+    - VIM-025는 search state와 cursor movement만 구현하고, PLAYPACK-008에서 content/E2E를 추가한다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -567,6 +604,7 @@ command_cluster:
 - `text-object-inner-word`는 VIM-021/VIM-022에서 engine support가 구현됐고 PLAYPACK-005에서 6문항 tutorial content로 연결됐다. 첫 구현 범위는 `iw` 기반 `diw`, `ciw`, `yiw`다.
 - `open-line-edit`은 OPEN-LINE-001에서 approved로 승격했고, VIM-023에서 engine support를 구현했다. 첫 구현 범위는 `o`, `O`이며 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat은 제외한다.
 - `repeat-last-change`는 REPEAT-GAP-001에서 approved로 승격했고, VIM-024에서 engine support를 구현했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
+- `search-basic`은 SEARCH-GAP-001에서 approved + planned로 승격했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

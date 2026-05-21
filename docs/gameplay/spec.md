@@ -84,6 +84,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `repeat-last-change`는 approved + engine implemented command cluster다. 첫 구현의 last-change transaction은 x, r<char>, insert transaction, change transaction, open-line transaction으로 제한한다.
 - `.` repeat 구현에서 delete/yank/put/Ex command/search/macro/register/count prefix와 Vim exact undo block semantics는 후속 hardening으로 미룬다.
 - `tutorial-9-repeat-last-change`는 `A`, `ciw`, `o`, `r<char>` 뒤의 `.` 반복을 각각 다루는 4문항 efficiency tutorial이며 replay gate와 full playlist E2E를 통과한다.
+- `search-basic`은 approved + planned command cluster다. 첫 구현은 `/query enter`, `n`, `N` literal search이며 `?` backward search, regex, highlight, search history는 제외한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### SEARCH-GAP-001. Literal search gap
+### VIM-025. Literal search engine
 - 상태: active
 - ExecPlan: 다음 루프에서 작성
-- 목표: literal `/`, `n`, `N` search 범위와 `?` hint 충돌 처리 방침을 고정한다.
+- 목표: `/`, `n`, `N` literal search state와 cursor movement를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### SEARCH-GAP-001. Literal search gap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/search-gap-001-literal-search.md`
+- 완료일: 2026-05-21
 
 ### PLAYPACK-007. Repeat last change efficiency tutorial
 - 상태: completed
