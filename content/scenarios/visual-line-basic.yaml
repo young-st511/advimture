@@ -1,0 +1,42 @@
+scenarios:
+  - id: visual-line-basic-001-scenario
+    status: approved
+    exercise_id: visual-line-basic-001
+    engine_support: implemented
+    learning_reinforcement: "V는 줄 전체를 selection 단위로 잡고 d로 줄 묶음을 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "drop 블록 줄 단위 제거"
+    briefing: "복구 runbook에 drop 줄 두 개가 붙어 있습니다. V로 줄 단위 범위를 열고 j, d로 블록 전체를 제거하세요."
+    context_role: "줄 단위 drop 블록"
+    mentor_success: "좋습니다. 줄 안 일부가 아니라 drop 줄 묶음 전체를 linewise selection으로 제거했습니다."
+    mentor_failure: "이번 대상은 줄 묶음입니다. lowercase v가 아니라 uppercase V로 줄 전체를 잡으세요."
+    story_constraints:
+      - "v와 V의 단위 차이를 강조한다."
+
+  - id: visual-line-basic-002-scenario
+    status: approved
+    exercise_id: visual-line-basic-002
+    engine_support: implemented
+    learning_reinforcement: "V + y는 linewise register를 만들고 p는 현재 줄 아래에 삽입한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "route 줄 단위 복제"
+    briefing: "검증된 route 줄을 mirror 아래에도 남겨야 합니다. V와 y로 줄 전체를 복사한 뒤 j, p로 아래에 삽입하세요."
+    context_role: "검증된 route 줄 재사용"
+    mentor_success: "좋습니다. 줄 전체를 register에 담아 mirror 아래에 그대로 재사용했습니다."
+    mentor_failure: "route를 다시 입력하지 마세요. V, y로 줄 전체를 담고 p로 아래에 붙입니다."
+    story_constraints:
+      - "linewise register와 p의 줄 삽입 semantics를 강조한다."
+
+  - id: visual-line-basic-003-scenario
+    status: approved
+    exercise_id: visual-line-basic-003
+    engine_support: implemented
+    learning_reinforcement: "V + G + d는 현재 줄부터 파일 끝까지 줄 단위 tail을 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "stale tail 전체 제거"
+    briefing: "파일 끝까지 stale tail이 이어져 있습니다. V로 현재 줄을 잡고 G, d로 tail 전체를 제거하세요."
+    context_role: "파일 끝 stale tail"
+    mentor_success: "좋습니다. 파일 끝까지 이어진 stale tail을 한 줄씩 지우지 않고 한 번에 제거했습니다."
+    mentor_failure: "tail은 파일 끝까지 이어집니다. V로 줄 단위 selection을 열고 G로 끝까지 확장하세요."
+    story_constraints:
+      - "linewise V와 file motion 조합을 강조한다."

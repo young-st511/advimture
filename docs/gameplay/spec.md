@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented playlist를 `category`, `order`, `id` 순서로 실행한다. `tutorial` category는 `incident` category보다 먼저 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
@@ -111,6 +111,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `V` linewise visual, visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.
 - VISUAL-LINE-GAP-001은 다음 visual 후보를 linewise `V` + row motion + `d/y`로 좁혔다. multi-line charwise `v` operator와 visual block은 후속으로 미룬다.
 - VISUAL-LINE-001은 linewise `V`의 첫 구현 범위를 `V` 진입/해제, row motion, linewise `d/y`, linewise register, TUI/app_state `selection.kind: linewise`로 고정한다.
+- `visual-line-basic`은 approved + implemented command cluster다. `tutorial-93-visual-line`은 linewise `V + j + d`, `V + y + j + p`, `V + G + d`를 다루는 3문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

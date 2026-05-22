@@ -246,8 +246,8 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line` |
-| next | 다음 gap planning/구현 후보 | linewise visual `V` scope approval, command choice drill |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic` |
+| next | 다음 gap planning/구현 후보 | linewise visual 적용 incident, command choice drill |
 | soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | quote text object hardening, multi-line charwise visual |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
@@ -292,6 +292,7 @@ Command cluster 후보:
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line visual, linewise `V`, visual block, count/register prefix는 후속 hardening이다.
+- `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 
 ## Long-Run Platform Direction
 
@@ -302,7 +303,7 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 1. `post-visual-selection-hardening`: selection replay와 charwise visual invariant를 강화한다.
 2. `applied-incident-run`: 이미 배운 command를 incident 003에서 조합해 도구 선택 능력을 훈련한다.
 3. `incident-flow-continuity`: incident beat가 하나의 runbook 조치처럼 이어지게 만든다.
-4. `visual-line-basic`: linewise `V` + `d/y`를 구현 전 scope approval로 분리한다.
+4. `linewise-applied-incident`: linewise visual을 실제 config block 복구 run에 적용한다.
 5. `platform-review-loop`: mastery/spaced review/daily run은 progress schema 승인 전까지 RFC와 저장 변경 없는 review만 다룬다.
 
 세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

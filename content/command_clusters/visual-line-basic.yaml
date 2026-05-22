@@ -1,0 +1,32 @@
+command_clusters:
+  - id: visual-line-basic
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-5-structure-selection
+    title: "Visual line mode: 줄 단위 범위 선택"
+    commands: ["V", "d", "y"]
+    coverage_required: ["Vd", "Vy"]
+    oracle: optional
+    purpose: "여러 줄을 눈으로 확인하며 줄 단위로 삭제하거나 복사한다."
+    prerequisite: ["visual-char-line", "yank-put-basic", "whole-file-navigation"]
+    difficulty: intermediate
+    useful_when:
+      - "설정 블록 전체를 제거하거나 복제할 때"
+      - "줄 내부 일부가 아니라 줄 묶음 자체가 복구 대상일 때"
+      - "charwise selection보다 linewise register와 put이 자연스러울 때"
+    combo_paths:
+      - ["V", "j", "d"]
+      - ["V", "y", "j", "p"]
+      - ["V", "G", "d"]
+    common_mistakes:
+      - "v와 V의 selection 단위 차이를 놓친다."
+      - "여러 줄을 charwise selection으로 억지로 잡으려 한다."
+      - "linewise yank 후 p/P가 줄 단위로 동작한다는 점을 잊는다."
+    compatibility_notes:
+      - "첫 구현은 linewise V + d/y만 다룬다."
+      - "multi-line charwise v operator, visual block, c/indent/count/register prefix는 제외한다."
+      - "selection app_state는 kind: linewise와 normalized full-line start/end를 사용한다."
+    design_notes:
+      - "VIM-029에서 linewise V + d/y engine/runtime/TUI를 구현했다."
+      - "PLAYPACK-011은 3문항으로 Vd, Vy+p, VGd를 다룬다."

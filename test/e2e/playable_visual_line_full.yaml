@@ -1,0 +1,82 @@
+id: playable_visual_line_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: visual-line-basic-001
+steps:
+  - wait_screen_contains: "drop 줄 두 개"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 1,8"
+  - send: "j"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 2,9"
+  - send: "d"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "검증된 route 줄"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 0,0 -> 0,12"
+  - send: "y"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "p"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "파일 끝까지 stale tail"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 1,8"
+  - send: "G"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 2,8"
+  - send: "d"
+  - wait_screen_contains: "Next tutorial: enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Visual line mode"
+    - "Exercise: 3/3"
+    - "Next tutorial: enter"
+    - "좋습니다. 파일 끝까지 이어진 stale tail을 한 줄씩 지우지 않고 한 번에 제거했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"visual-line-basic-001\""
+    - "\"visual-line-basic-002\""
+    - "\"visual-line-basic-003\""
+  key_trace:
+    - "V"
+    - "j"
+    - "d"
+    - "enter"
+    - "V"
+    - "y"
+    - "j"
+    - "p"
+    - "enter"
+    - "V"
+    - "G"
+    - "d"
+    - "q"
+  app_state:
+    buffer: ["keep core"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "visual-line-basic-003"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

@@ -1,0 +1,27 @@
+playlists:
+  - id: tutorial-93-visual-line
+    status: approved
+    category: tutorial
+    order: 13
+    title: "Mid Tutorial: Visual line mode"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-93-001
+        role: visual_line_delete_block
+        command_cluster: visual-line-basic
+        exercise_id: visual-line-basic-001
+        scenario_id: visual-line-basic-001-scenario
+        engine_support: implemented
+      - id: tutorial-93-002
+        role: visual_line_yank_put
+        command_cluster: visual-line-basic
+        exercise_id: visual-line-basic-002
+        scenario_id: visual-line-basic-002-scenario
+        engine_support: implemented
+      - id: tutorial-93-003
+        role: visual_line_delete_tail
+        command_cluster: visual-line-basic
+        exercise_id: visual-line-basic-003
+        scenario_id: visual-line-basic-003-scenario
+        engine_support: implemented

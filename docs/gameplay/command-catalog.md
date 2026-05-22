@@ -671,9 +671,9 @@ command_cluster:
 ```yaml
 command_cluster:
   id: visual-line-basic
-  status: planned
+  status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-5-structure-selection
   title: Visual line mode: 줄 단위 범위 선택
   commands: ["V", "d", "y"]
@@ -699,8 +699,8 @@ command_cluster:
     - multi-line charwise v operator, visual block, c/indent/count/register prefix는 제외한다.
     - selection app_state는 kind: linewise와 normalized full-line start/end를 사용한다.
   design_notes:
-    - 다음 실행 후보는 VISUAL-LINE-001, VIM-029, PLAYPACK-011 순서다.
-    - 첫 playpack은 3문항 이하로 두고 charwise v와 linewise V의 차이를 먼저 보여준다.
+    - VISUAL-LINE-001과 VIM-029에서 linewise V + d/y 범위를 고정하고 구현했다.
+    - PLAYPACK-011은 3문항으로 Vd, Vy+p, VGd를 다룬다.
 ```
 
 ## First 5-Minute Discovery Notes
@@ -717,7 +717,7 @@ command_cluster:
 - `repeat-last-change`는 REPEAT-GAP-001에서 approved로 승격했고, VIM-024에서 engine support를 구현했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
 - `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했으며 PLAYPACK-008에서 4문항 tutorial content와 full E2E를 연결했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
 - `visual-char-line`은 같은 줄 charwise visual selection의 삭제/복사 tutorial까지 구현했다. visual block, count/register prefix, indentation command는 후속 hardening으로 둔다.
-- `visual-line-basic`은 planned 후보이며 첫 구현 범위는 linewise `V` + `d/y`로 제한한다. multi-line charwise operator보다 linewise selection을 먼저 검토한다.
+- `visual-line-basic`은 linewise `V` + `d/y` tutorial까지 구현했다. multi-line charwise operator와 visual block은 후속 hardening으로 둔다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — PLAYPACK-011 완료
+
+이전 가정: linewise `V`는 engine/runtime/TUI에서 구현됐지만 playable tutorial에는 아직 연결되지 않았다.
+
+새 가정: `tutorial-93-visual-line`은 `Vd`, `Vy` + `p`, `VGd`를 다루는 3문항 linewise visual tutorial이며 full E2E를 통과한다.
+
+이유: linewise visual을 incident에 적용하기 전에 v와 V의 단위 차이, linewise register, 파일 끝 tail 삭제를 짧게 학습해야 한다.
+
+영향: 다음 활성 slice는 linewise visual을 적용하는 `INCIDENT-RUN-004`다.
+
 ## 2026-05-23 — VIM-029 완료
 
 이전 가정: visual mode는 같은 줄 charwise `v` + `d/y`만 구현했고, linewise `V`는 문서 후보였다.

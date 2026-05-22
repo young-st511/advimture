@@ -1,0 +1,155 @@
+exercises:
+  - id: visual-line-basic-001
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vd"]
+    reviewed_commands: ["j", "d"]
+    mistake_focus: ["여러 줄을 dd 반복이나 charwise v로 처리하려고 한다."]
+    replay_status: pass
+    title: "줄 묶음 선택 삭제"
+    goal_for_player: "drop 블록 첫 줄에서 V로 linewise selection을 열고 j로 두 줄을 잡은 뒤 d로 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        keep=boot
+        drop=temp
+        drop=cache
+        keep=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        keep=boot
+        keep=live
+    optimal_keys: ["V", "j", "d"]
+    allowed_keys: ["V", "j", "d", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["V", "d"]
+      forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "V는 현재 줄 전체를 선택 단위로 잡습니다. v와 달리 줄 안의 일부가 아닙니다."
+      - after_keys: 2
+        text: "두 drop 줄이 linewise range로 잡혔다면 d로 줄 묶음 전체를 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["keep=boot", "keep=live"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: visual-line-basic-002
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vy"]
+    reviewed_commands: ["j", "p"]
+    mistake_focus: ["줄 전체를 복사해야 하는데 charwise yank나 직접 입력으로 우회한다."]
+    replay_status: pass
+    title: "줄 단위 복사 후 삽입"
+    goal_for_player: "route 줄에서 V와 y로 줄 전체를 복사한 뒤 mirror 아래에 p로 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route=primary
+        mirror=
+        guard=on
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 0
+      buffer: |
+        route=primary
+        mirror=
+        route=primary
+        guard=on
+    optimal_keys: ["V", "y", "j", "p"]
+    allowed_keys: ["V", "y", "j", "p", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["V", "y", "p"]
+      forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "d", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "V로 잡은 selection은 줄 단위 register로 저장됩니다."
+      - after_keys: 3
+        text: "linewise register의 p는 현재 줄 아래에 복사한 줄을 삽입합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["route=primary", "mirror=", "route=primary", "guard=on"]
+      cursor:
+        row: 2
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: visual-line-basic-003
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vd"]
+    reviewed_commands: ["G", "d"]
+    mistake_focus: ["파일 끝까지 이어지는 줄 묶음을 한 줄씩 삭제한다."]
+    replay_status: pass
+    title: "파일 끝까지 줄 묶음 제거"
+    goal_for_player: "stale 첫 줄에서 V를 열고 G로 끝 줄까지 잡은 뒤 d로 tail 전체를 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        keep core
+        stale one
+        stale two
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        keep core
+    optimal_keys: ["V", "G", "d"]
+    allowed_keys: ["V", "G", "d", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["V", "G", "d"]
+      forbidden_keys: ["v", "h", "j", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "V는 현재 줄을 기준으로 줄 전체 selection을 엽니다."
+      - after_keys: 2
+        text: "G로 파일 끝 줄까지 range를 확장한 뒤 d로 tail 전체를 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["keep core"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded

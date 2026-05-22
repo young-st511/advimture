@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-011. Linewise visual tutorial
+### INCIDENT-RUN-004. Linewise visual applied incident
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: 3문항 이하 linewise visual tutorial content와 full E2E를 구현한다.
+- 목표: linewise visual을 적용하는 config block 복구 incident를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-011. Linewise visual tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-011-linewise-visual-tutorial.md`
+- 완료일: 2026-05-23
 
 ### VIM-029. Linewise visual engine
 - 상태: completed
