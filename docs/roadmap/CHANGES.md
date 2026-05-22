@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — visual selection 계약을 charwise `v`로 축소
+
+이전 가정: visual mode 후보는 `v`, `V`, `d`, `y`를 함께 검토하되 첫 구현 범위가 아직 열려 있었다.
+
+새 가정: 첫 구현은 charwise `v`만 다룬다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현하고, E2E는 app_state `selection` object를 검증한다.
+
+이유: visual mode는 화면 표시와 selection state가 학습 이해에 직접 영향을 주므로, operator 적용보다 state/render/assertion 계약을 먼저 고정하는 편이 안정적이다.
+
+영향: 다음 루프는 `E2E-007`로 `e2estate`, runner assertion, content assertion schema에 selection을 추가한다.
+
 ## 2026-05-22 — E2E progress fixture builder 도입
 
 이전 가정: 후반 playlist/incident E2E는 `setup.progress_file`에 긴 JSON을 직접 넣어 현재 exercise 직전까지의 progress를 만들었다.

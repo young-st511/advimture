@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VISUAL-GAP-002. Visual selection contract
+### E2E-007. Selection app_state assertion
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: visual selection state, TUI 표시, app_state assertion 계약을 확정한다.
+- 목표: `selection` app_state/content assertion을 runner와 E2E state summary에 추가한다.
 
 ## 방금 완료한 슬라이스
+
+### VISUAL-GAP-002. Visual selection contract
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/visual-gap-002-selection-contract.md`
+- 완료일: 2026-05-22
 
 ### E2E-FIXTURE-001. E2E fixture maintainability
 - 상태: completed

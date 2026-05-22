@@ -27,6 +27,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - runner는 `setup.complete_before: <exercise-id>`로 현재 content의 playable 순서를 읽고 지정 exercise 직전까지 completed progress를 생성할 수 있다. `setup.progress_file`과 `setup.complete_before`는 동시에 사용할 수 없다.
 - runner는 pseudo terminal로 앱을 실행하기 위해 `github.com/creack/pty`를 사용한다.
 - runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence/content, key trace exact match, app state summary를 검증한다.
+- visual mode selection assertion은 `docs/verification/selection-app-state-contract.md`의 `selection` object를 기준으로 한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
 - runner는 `summary.json`, raw ANSI log, cleaned final screen, key trace를 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.
