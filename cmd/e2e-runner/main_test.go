@@ -511,6 +511,43 @@ func TestWriteEvidenceCopiesAppStateAndProgressSnapshots(t *testing.T) {
 	}
 }
 
+func TestWriteEvidenceWritesScreenTimeline(t *testing.T) {
+	root := t.TempDir()
+	result := runResult{
+		clean:    "frame one\nframe two",
+		exitCode: 0,
+		homeDir:  t.TempDir(),
+	}
+	sc := scenario{
+		ID: "timeline",
+		Evidence: evidenceConfig{
+			SaveScreenTimeline: true,
+		},
+	}
+
+	if err := writeEvidence(root, sc, result, nil); err != nil {
+		t.Fatalf("writeEvidence returned error: %v", err)
+	}
+	raw, err := os.ReadFile(filepath.Join(root, "timeline", "screen_timeline.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(raw) != result.clean {
+		t.Fatalf("screen_timeline.txt = %q, want clean screen timeline", raw)
+	}
+	summaryRaw, err := os.ReadFile(filepath.Join(root, "timeline", "summary.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var summary summaryEvidence
+	if err := json.Unmarshal(summaryRaw, &summary); err != nil {
+		t.Fatal(err)
+	}
+	if !summary.ScreenTimeline {
+		t.Fatal("summary.ScreenTimeline = false, want true")
+	}
+}
+
 func TestBuildSummaryRecordsAppStateLoaded(t *testing.T) {
 	home := t.TempDir()
 	stateDir := filepath.Join(home, ".advimture")

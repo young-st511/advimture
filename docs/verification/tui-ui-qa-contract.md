@@ -31,6 +31,7 @@ E2E runner는 기존 `summary.json`, `raw.log`, `screen.txt`, `key_trace.txt`에
 
 - `app_state.json`: test HOME의 `.advimture/e2e_state.json` 복사본
 - `progress.json`: test HOME의 `.advimture/progress.json` 복사본
+- `screen_timeline.txt`: cleaned terminal text의 누적 흐름 evidence. UI 위계 변경 후 Agent가 최종 문구뿐 아니라 지나온 화면 흐름을 확인할 때 사용한다.
 
 이 snapshot은 temp HOME이 삭제된 뒤에도 실패 원인을 확인하기 위한 evidence다.
 
@@ -38,5 +39,4 @@ E2E runner는 기존 `summary.json`, `raw.log`, `screen.txt`, `key_trace.txt`에
 
 - `residual_risk` typed state: 성공 후 다음 재점검 대상의 exercise id/reason 검증
 - `screen_final.txt`: 누적 ANSI stream이 아니라 마지막 viewport 중심 evidence
-- `frames/*.txt`: wait/send 단위 frame timeline
-
+- `frames/*.txt`: wait/send 단위 세분화 frame timeline

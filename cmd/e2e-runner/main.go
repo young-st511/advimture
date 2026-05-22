@@ -151,12 +151,13 @@ type appStateSelection struct {
 }
 
 type evidenceConfig struct {
-	SaveRawANSI     bool `yaml:"save_raw_ansi"`
-	SaveCleanScreen bool `yaml:"save_clean_screen"`
-	SaveKeyTrace    bool `yaml:"save_key_trace"`
-	SaveSummary     bool `yaml:"save_summary"`
-	SaveAppState    bool `yaml:"save_app_state"`
-	SaveProgress    bool `yaml:"save_progress"`
+	SaveRawANSI        bool `yaml:"save_raw_ansi"`
+	SaveCleanScreen    bool `yaml:"save_clean_screen"`
+	SaveScreenTimeline bool `yaml:"save_screen_timeline"`
+	SaveKeyTrace       bool `yaml:"save_key_trace"`
+	SaveSummary        bool `yaml:"save_summary"`
+	SaveAppState       bool `yaml:"save_app_state"`
+	SaveProgress       bool `yaml:"save_progress"`
 }
 
 type runResult struct {
@@ -179,6 +180,7 @@ type summaryEvidence struct {
 	HomeDir            string   `json:"home_dir"`
 	KeyTrace           []string `json:"key_trace"`
 	ScreenBytes        int      `json:"screen_bytes"`
+	ScreenTimeline     bool     `json:"screen_timeline_evidence"`
 	ProgressFileExists bool     `json:"progress_file_exists"`
 	ProgressEvidence   bool     `json:"progress_evidence"`
 	AppStatePath       string   `json:"app_state_path,omitempty"`
@@ -598,6 +600,11 @@ func writeEvidence(root string, sc scenario, result runResult, runErr error) err
 			return err
 		}
 	}
+	if sc.Evidence.SaveScreenTimeline {
+		if err := os.WriteFile(filepath.Join(dir, "screen_timeline.txt"), []byte(result.clean), 0o644); err != nil {
+			return err
+		}
+	}
 	if sc.Evidence.SaveKeyTrace {
 		if err := os.WriteFile(filepath.Join(dir, "key_trace.txt"), []byte(strings.Join(result.trace, "\n")), 0o644); err != nil {
 			return err
@@ -638,6 +645,7 @@ func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
 		HomeDir:            result.homeDir,
 		KeyTrace:           append([]string(nil), result.trace...),
 		ScreenBytes:        len(result.clean),
+		ScreenTimeline:     sc.Evidence.SaveScreenTimeline,
 		ProgressFileExists: result.progressFileExists || progressFileExists(result.homeDir),
 		ProgressEvidence:   len(result.progressRaw) > 0,
 		AppStatePath:       appStatePath(result.homeDir, sc.Assert.AppState.Path),

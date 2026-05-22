@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — UI-EVIDENCE-001 완료
+
+이전 가정: E2E evidence의 `screen.txt`는 cleaned terminal text였지만, UI QA에서 이것이 최종 화면인지 누적 흐름인지 이름만으로 분명하지 않았다.
+
+새 가정: UI QA용 누적 화면 흐름은 `screen_timeline.txt`로 명시 저장할 수 있다. `summary.json`도 `screen_timeline_evidence` 저장 여부를 기록한다.
+
+이유: TUI 리디자인 반복 중 Agent가 화면 변화의 흐름을 재검토할 수 있어야 하고, 당장 불안정한 viewport parser를 도입하지 않아도 evidence 이름을 명확히 분리할 수 있다.
+
+영향: `TUI Experience Foundation` 중기 플랜은 완료됐다. 다음 UI 루프에서 필요하면 `screen_final.txt` 또는 `frames/*.txt`를 별도 구현한다.
+
 ## 2026-05-23 — UI-MODE-001 완료
 
 이전 가정: tutorial과 incident 모두 action panel에서 `Coach: 훈련 키 ...`를 보여줬고, incident도 첫 화면에서 정답 key sequence를 과하게 드러낼 수 있었다.

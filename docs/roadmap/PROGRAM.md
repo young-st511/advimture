@@ -11,11 +11,16 @@ Phase: Vim Learning Foundation
 ## 활성 슬라이스
 
 ### UI-EVIDENCE-001. Screen evidence timeline
-- 상태: pending
-- ExecPlan: 다음 루프에서 작성
-- 목표: TUI E2E가 final frame 또는 frame timeline evidence를 남기도록 보강한다.
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-evidence-001-screen-timeline.md`
+- 목표: TUI E2E가 screen timeline evidence를 남기도록 보강했다.
 
 ## 방금 완료한 슬라이스
+
+### UI-EVIDENCE-001. Screen evidence timeline
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-evidence-001-screen-timeline.md`
+- 완료일: 2026-05-23
 
 ### UI-MODE-001. Tutorial and incident action language
 - 상태: completed
