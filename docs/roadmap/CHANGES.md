@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — Structure editing 완료 후 visual readiness와 incident UX 우선
+
+이전 가정: `text-object-quote-pair`와 두 번째 incident run을 닫은 뒤 다음 후보인 `visual-char-line` 구현으로 바로 넘어갈 수 있다.
+
+새 가정: visual mode는 다음 큰 Vim capability 후보가 맞지만, 구현 전에 selection state contract, TUI rendering, content/E2E app_state assertion을 먼저 닫는다. 또한 incident run은 기능적으로 통과했지만 아직 종합시험 감각이 남아 있으므로, 새 command 추가 전에 incident game-feel과 2단계 힌트 보강을 검토한다.
+
+이유: Architecture Review와 Learning/Game UX Review 모두 visual mode의 표시/검증 계약 선행 필요성과 incident 적용 런의 게임성 보강 필요를 지적했다.
+
+영향: 다음 중기 플랜 후보는 `INCIDENT-UX-003`, `E2E-FIXTURE-001`, `VISUAL-GAP-002`, `E2E-007`, `VIM-027/TUI-003` 순서로 검토한다.
+
 ## 2026-05-21 — Utility command tutorial 완료와 장기 반복 학습 RFC 분리
 
 이전 가정: `o/O`, `.`, `/ n N`를 단기 utility command 확장으로 다루되, 이후 장기 반복 학습 플랫폼의 저장 구조는 아직 정리되지 않았다.
