@@ -10,12 +10,27 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### NEXT-PLAN. 다음 중기 플랜 수립
+### PLAYPACK-011. Linewise visual tutorial
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: completed 중기 플랜을 바탕으로 linewise visual 구현, command choice drill, platform review loop 중 다음 우선순위를 결정한다.
+- 목표: 3문항 이하 linewise visual tutorial content와 full E2E를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-029. Linewise visual engine
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-029-linewise-visual-engine.md`
+- 완료일: 2026-05-23
+
+### VISUAL-LINE-001. Linewise visual scope approval
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/visual-line-001-linewise-scope.md`
+- 완료일: 2026-05-23
+
+### PLAN-REFRESH-005. Linewise visual roadmap
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/plan-refresh-005-linewise-visual-roadmap.md`
+- 완료일: 2026-05-23
 
 ### VISUAL-LINE-GAP-001. Linewise visual planning
 - 상태: completed

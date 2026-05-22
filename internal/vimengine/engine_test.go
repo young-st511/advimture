@@ -37,6 +37,150 @@ func TestVisualModeStartsCharwiseSelection(t *testing.T) {
 	}
 }
 
+func TestLinewiseVisualModeStartsFullLineSelection(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "beta"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 2,
+		},
+	}
+
+	result := Apply(state, KeyShiftV)
+
+	if result.State.Mode != ModeVisual {
+		t.Fatalf("mode = %q, want visual", result.State.Mode)
+	}
+	selection := result.State.Selection
+	if selection == nil || !selection.Active || selection.Kind != SelectionLinewise {
+		t.Fatalf("selection = %+v, want active linewise", selection)
+	}
+	if selection.Anchor.Row != 0 || selection.Head.Row != 0 || selection.Start.Row != 0 || selection.Start.Col != 0 || selection.End.Row != 0 || selection.End.Col != 4 {
+		t.Fatalf("selection = %+v, want full first line range", selection)
+	}
+}
+
+func TestLinewiseVisualMotionNormalizesFullLineRange(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "", "gamma"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 2,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyShiftV, KeyJ, KeyJ})
+
+	selection := result.State.Selection
+	if result.State.Mode != ModeVisual || selection == nil {
+		t.Fatalf("mode/selection = %s/%+v, want visual linewise selection", result.State.Mode, selection)
+	}
+	if selection.Kind != SelectionLinewise || selection.Start.Row != 0 || selection.Start.Col != 0 || selection.End.Row != 2 || selection.End.Col != 4 {
+		t.Fatalf("selection = %+v, want linewise rows 0..2", selection)
+	}
+}
+
+func TestLinewiseVisualMotionNormalizesBackwardRange(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"alpha", "beta", "gamma"},
+		Cursor: Cursor{
+			Row: 2,
+			Col: 2,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyShiftV, KeyK})
+
+	selection := result.State.Selection
+	if selection == nil || selection.Kind != SelectionLinewise || selection.Start.Row != 1 || selection.Start.Col != 0 || selection.End.Row != 2 || selection.End.Col != 4 {
+		t.Fatalf("selection = %+v, want linewise rows 1..2", selection)
+	}
+}
+
+func TestLinewiseVisualYankStoresLinewiseRegisterWithoutChangingBuffer(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two", "three"},
+	}
+
+	result := ApplyKeys(state, []string{KeyShiftV, KeyJ, KeyY})
+
+	assertStrings(t, result.State.Lines, []string{"one", "two", "three"})
+	if result.State.Mode != ModeNormal || result.State.Selection != nil {
+		t.Fatalf("mode/selection = %s/%+v, want normal nil", result.State.Mode, result.State.Selection)
+	}
+	assertStrings(t, result.State.Register.Lines, []string{"one", "two"})
+	if !result.State.Register.Linewise || result.State.Register.Text != "" {
+		t.Fatalf("register = %+v, want linewise [one two]", result.State.Register)
+	}
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+}
+
+func TestLinewiseVisualDeleteDeletesRowsStoresRegisterAndUndoRestores(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two", "three"},
+	}
+
+	deleted := ApplyKeys(state, []string{KeyShiftV, KeyJ, KeyD})
+
+	assertStrings(t, deleted.State.Lines, []string{"three"})
+	assertStrings(t, deleted.State.Register.Lines, []string{"one", "two"})
+	if !deleted.State.Register.Linewise || deleted.State.Register.Text != "" {
+		t.Fatalf("register = %+v, want linewise deleted rows", deleted.State.Register)
+	}
+	if deleted.State.Mode != ModeNormal || deleted.State.Selection != nil {
+		t.Fatalf("mode/selection = %s/%+v, want normal nil", deleted.State.Mode, deleted.State.Selection)
+	}
+	if deleted.State.Cursor.Row != 0 || deleted.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want (0,0)", deleted.State.Cursor.Row, deleted.State.Cursor.Col)
+	}
+
+	restored := Apply(deleted.State, KeyU)
+	assertStrings(t, restored.State.Lines, []string{"one", "two", "three"})
+}
+
+func TestLinewiseVisualDeleteAllRowsLeavesEmptyFallback(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two"},
+	}
+
+	result := ApplyKeys(state, []string{KeyShiftV, KeyShiftG, KeyD})
+
+	assertStrings(t, result.State.Lines, []string{""})
+	assertStrings(t, result.State.Register.Lines, []string{"one", "two"})
+	if result.State.Cursor.Row != 0 || result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor = (%d,%d), want (0,0)", result.State.Cursor.Row, result.State.Cursor.Col)
+	}
+}
+
+func TestLinewiseVisualSupportsDocumentStartAndEndMotions(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"one", "two", "three"},
+		Cursor: Cursor{
+			Row: 1,
+			Col: 1,
+		},
+	}
+
+	toEnd := ApplyKeys(state, []string{KeyShiftV, KeyShiftG})
+	if toEnd.State.Selection == nil || toEnd.State.Selection.Start.Row != 1 || toEnd.State.Selection.End.Row != 2 {
+		t.Fatalf("selection after G = %+v, want rows 1..2", toEnd.State.Selection)
+	}
+
+	toStart := ApplyKeys(state, []string{KeyShiftV, KeyG, KeyG})
+	if toStart.State.Selection == nil || toStart.State.Selection.Start.Row != 0 || toStart.State.Selection.End.Row != 1 {
+		t.Fatalf("selection after gg = %+v, want rows 0..1", toStart.State.Selection)
+	}
+}
+
 func TestVisualModeMotionUpdatesHeadAndRange(t *testing.T) {
 	state := State{
 		Mode:  ModeNormal,

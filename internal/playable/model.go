@@ -501,7 +501,13 @@ func renderLineCells(line string, row int, cursorCol int, selection *tuiadapter.
 }
 
 func cellSelected(row int, col int, selection *tuiadapter.SelectionView) bool {
-	if selection == nil || !selection.Active || selection.Kind != string(vimengine.SelectionCharwise) {
+	if selection == nil || !selection.Active {
+		return false
+	}
+	if selection.Kind == string(vimengine.SelectionLinewise) {
+		return row >= selection.Start.Row && row <= selection.End.Row
+	}
+	if selection.Kind != string(vimengine.SelectionCharwise) {
 		return false
 	}
 	if row < selection.Start.Row || row > selection.End.Row {

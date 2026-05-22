@@ -53,6 +53,7 @@ selection:
 type SelectionKind string
 
 const SelectionCharwise SelectionKind = "charwise"
+const SelectionLinewise SelectionKind = "linewise" // planned in VISUAL-LINE-001
 
 type Selection struct {
     Active bool
@@ -70,6 +71,8 @@ type Selection struct {
 - `esc` in visual mode: `ModeNormal`로 돌아가며 selection을 clear한다.
 - `v` in visual mode: `ModeNormal`로 돌아가며 selection을 clear한다.
 - visual mode 중 unsupported key는 state를 변경하지 않는다.
+- 후속 linewise visual mode는 `V`로 진입하고, `j/k/gg/G`로 head row를 이동한다.
+- linewise `d/y` 성공 후 mode는 `normal`, selection은 nil이어야 한다.
 
 ## TUI Contract
 

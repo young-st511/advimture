@@ -50,6 +50,19 @@ func TestRenderLineShowsVisualSelection(t *testing.T) {
 	}
 }
 
+func TestRenderLineShowsLinewiseVisualSelection(t *testing.T) {
+	line := renderLine("abcd", 0, 0, 2, &tuiadapter.SelectionView{
+		Active: true,
+		Kind:   "linewise",
+		Start:  tuiadapter.CursorView{Row: 0, Col: 0},
+		End:    tuiadapter.CursorView{Row: 0, Col: 3},
+	})
+
+	if line != "> {a}{b}[c]{d}" {
+		t.Fatalf("renderLine = %q, want linewise visual selection", line)
+	}
+}
+
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	saveCalls := 0
 	model := New(Options{

@@ -110,6 +110,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - VISUAL-HARDEN-001은 새 visual 기능을 추가하지 않고, boundary motion, empty line, visual yank undo behavior, visual delete undo/register behavior, multi-line unsupported preservation, out-of-range selection clamp를 테스트로 고정했다.
 - `V` linewise visual, visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.
 - VISUAL-LINE-GAP-001은 다음 visual 후보를 linewise `V` + row motion + `d/y`로 좁혔다. multi-line charwise `v` operator와 visual block은 후속으로 미룬다.
+- VISUAL-LINE-001은 linewise `V`의 첫 구현 범위를 `V` 진입/해제, row motion, linewise `d/y`, linewise register, TUI/app_state `selection.kind: linewise`로 고정한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

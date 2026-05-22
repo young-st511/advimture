@@ -123,6 +123,34 @@ func TestSessionSucceedsWithVisualDeleteTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyL, vimengine.KeyV, vimengine.KeyL, vimengine.KeyL, vimengine.KeyD})
 }
 
+func TestSessionSucceedsWithLinewiseVisualDeleteTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "visual-line-delete",
+		Initial: vimengine.NewState([]string{"drop", "drop", "keep"}),
+		Goal: Goal{
+			Lines:  []string{"keep"},
+			Cursor: CursorGoal(0, 0),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyShiftV, vimengine.KeyD},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyShiftV, vimengine.KeyJ} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyD)
+
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after d = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyShiftV, vimengine.KeyJ, vimengine.KeyD})
+}
+
 func TestSessionKeepsRunningWhenVisualOperatorUnsupported(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "visual-multiline-unsupported",

@@ -1,15 +1,19 @@
 package vimengine
 
 func enterVisualMode(state State, key string) Result {
+	kind := SelectionCharwise
+	if key == KeyShiftV {
+		kind = SelectionLinewise
+	}
 	next := copyState(state)
 	next.Mode = ModeVisual
 	next.PendingKey = ""
-	next.Selection = normalizedSelection(Selection{
+	next.Selection = normalizedSelectionForLines(Selection{
 		Active: true,
-		Kind:   SelectionCharwise,
+		Kind:   kind,
 		Anchor: next.Cursor,
 		Head:   next.Cursor,
-	})
+	}, next.Lines)
 	return Result{
 		State: copyState(next),
 		Events: []Event{{
@@ -20,10 +24,30 @@ func enterVisualMode(state State, key string) Result {
 }
 
 func applyVisualKey(state State, key string) Result {
+	if state.PendingKey == KeyG {
+		if key == KeyG {
+			next := copyState(state)
+			next.PendingKey = ""
+			return applyVisualMotion(next, key, func(next State) Result {
+				return moveDocumentStart(next, key)
+			})
+		}
+		next := copyState(state)
+		next.PendingKey = ""
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "key is not supported after g in visual mode",
+			}},
+		}
+	}
 	switch key {
-	case KeyV:
+	case KeyV, KeyShiftV:
 		next := copyState(state)
 		next.Mode = ModeNormal
+		next.PendingKey = ""
 		next.Selection = nil
 		return Result{
 			State: copyState(next),
@@ -36,6 +60,16 @@ func applyVisualKey(state State, key string) Result {
 		return deleteVisualSelection(state, key)
 	case KeyY:
 		return yankVisualSelection(state, key)
+	case KeyG:
+		next := copyState(state)
+		next.PendingKey = key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventPendingKey,
+				Key:  key,
+			}},
+		}
 	case KeyH:
 		return applyVisualMotion(state, key, func(next State) Result {
 			return moveHorizontal(next, key, -1)
@@ -89,6 +123,9 @@ func applyVisualKey(state State, key string) Result {
 }
 
 func deleteVisualSelection(state State, key string) Result {
+	if state.Selection != nil && state.Selection.Kind == SelectionLinewise {
+		return deleteLinewiseVisualSelection(state, key)
+	}
 	row, start, end, ok := visualLineRange(state)
 	if !ok {
 		return unsupportedVisualOperator(state, key)
@@ -118,6 +155,9 @@ func deleteVisualSelection(state State, key string) Result {
 }
 
 func yankVisualSelection(state State, key string) Result {
+	if state.Selection != nil && state.Selection.Kind == SelectionLinewise {
+		return yankLinewiseVisualSelection(state, key)
+	}
 	row, start, end, ok := visualLineRange(state)
 	if !ok {
 		return unsupportedVisualOperator(state, key)
@@ -142,6 +182,85 @@ func yankVisualSelection(state State, key string) Result {
 			Key:  key,
 		}},
 	}
+}
+
+func deleteLinewiseVisualSelection(state State, key string) Result {
+	start, end, ok := visualRowRange(state)
+	if !ok {
+		return unsupportedVisualOperator(state, key)
+	}
+	next := pushUndo(state)
+	next.Register = Register{
+		Lines:    copyLines(next.Lines[start : end+1]),
+		Linewise: true,
+	}
+	next.Lines = append(next.Lines[:start], next.Lines[end+1:]...)
+	if len(next.Lines) == 0 {
+		next.Lines = []string{""}
+	}
+	row := start
+	if row >= len(next.Lines) {
+		row = len(next.Lines) - 1
+	}
+	next.Mode = ModeNormal
+	next.PendingKey = ""
+	next.Selection = nil
+	next.Cursor.Row = row
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func yankLinewiseVisualSelection(state State, key string) Result {
+	start, end, ok := visualRowRange(state)
+	if !ok {
+		return unsupportedVisualOperator(state, key)
+	}
+	next := copyState(state)
+	next.Register = Register{
+		Lines:    copyLines(next.Lines[start : end+1]),
+		Linewise: true,
+	}
+	next.Mode = ModeNormal
+	next.PendingKey = ""
+	next.Selection = nil
+	next.Cursor.Row = start
+	next.Cursor.Col = 0
+	next.Cursor.DesiredCol = 0
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventYanked,
+			Key:  key,
+		}},
+	}
+}
+
+func visualRowRange(state State) (int, int, bool) {
+	if state.Selection == nil || !state.Selection.Active || state.Selection.Kind != SelectionLinewise {
+		return 0, 0, false
+	}
+	start := state.Selection.Start.Row
+	end := state.Selection.End.Row
+	if start < 0 {
+		start = 0
+	}
+	if end < 0 {
+		end = 0
+	}
+	if start >= len(state.Lines) {
+		start = len(state.Lines) - 1
+	}
+	if end >= len(state.Lines) {
+		end = len(state.Lines) - 1
+	}
+	return start, end, start <= end
 }
 
 func visualLineRange(state State) (int, int, int, bool) {
@@ -181,21 +300,23 @@ func unsupportedVisualOperator(state State, key string) Result {
 func applyVisualMotion(state State, key string, move func(State) Result) Result {
 	next := copyState(state)
 	if next.Selection == nil || !next.Selection.Active {
-		next.Selection = normalizedSelection(Selection{
+		next.Selection = normalizedSelectionForLines(Selection{
 			Active: true,
 			Kind:   SelectionCharwise,
 			Anchor: next.Cursor,
 			Head:   next.Cursor,
-		})
+		}, next.Lines)
 	}
 	anchor := next.Selection.Anchor
+	kind := next.Selection.Kind
 	result := move(next)
 	result.State.Mode = ModeVisual
-	result.State.Selection = normalizedSelection(Selection{
+	result.State.PendingKey = ""
+	result.State.Selection = normalizedSelectionForLines(Selection{
 		Active: true,
-		Kind:   SelectionCharwise,
+		Kind:   kind,
 		Anchor: anchor,
 		Head:   result.State.Cursor,
-	})
+	}, result.State.Lines)
 	return result
 }

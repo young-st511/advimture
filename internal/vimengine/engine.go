@@ -39,6 +39,7 @@ const (
 	KeyC           = "c"
 	KeyY           = "y"
 	KeyV           = "v"
+	KeyShiftV      = "V"
 	KeyN           = "n"
 	KeyShiftN      = "N"
 	KeyP           = "p"
@@ -232,7 +233,6 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 	}
 
 	if next.Mode == ModeVisual {
-		next.PendingKey = ""
 		return applyVisualKey(next, key)
 	}
 
@@ -257,6 +257,8 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 	}
 
 	switch key {
+	case KeyShiftV:
+		return enterVisualMode(next, key)
 	case KeyV:
 		return enterVisualMode(next, key)
 	case KeyColon:
@@ -1840,7 +1842,7 @@ func normalizeState(state State) State {
 	if next.Mode != ModeCommand && next.Mode != ModeSearch {
 		next.CommandLine = ""
 	}
-	if next.Mode != ModeNormal {
+	if next.Mode != ModeNormal && next.Mode != ModeVisual {
 		next.PendingKey = ""
 	}
 	if next.Cursor.Row < 0 {
@@ -1862,17 +1864,17 @@ func normalizeState(state State) State {
 	}
 	if next.Mode == ModeVisual {
 		if next.Selection == nil || !next.Selection.Active {
-			next.Selection = normalizedSelection(Selection{
+			next.Selection = normalizedSelectionForLines(Selection{
 				Active: true,
 				Kind:   SelectionCharwise,
 				Anchor: next.Cursor,
 				Head:   next.Cursor,
-			})
+			}, next.Lines)
 		} else {
 			selection := *next.Selection
 			selection.Anchor = clampSelectionCursor(selection.Anchor, next.Lines)
 			selection.Head = clampSelectionCursor(selection.Head, next.Lines)
-			next.Selection = normalizedSelection(selection)
+			next.Selection = normalizedSelectionForLines(selection, next.Lines)
 		}
 	} else {
 		next.Selection = nil

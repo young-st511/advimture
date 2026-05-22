@@ -84,6 +84,7 @@ func TestMapInputMapsOperatorKeys(t *testing.T) {
 		"c": vimengine.KeyC,
 		"y": vimengine.KeyY,
 		"v": vimengine.KeyV,
+		"V": vimengine.KeyShiftV,
 		"p": vimengine.KeyP,
 		"P": vimengine.KeyShiftP,
 	}
@@ -100,6 +101,7 @@ func TestMapInputInVisualModePassesVimKeys(t *testing.T) {
 	cases := map[string]string{
 		"l":   vimengine.KeyL,
 		"v":   vimengine.KeyV,
+		"V":   vimengine.KeyShiftV,
 		"esc": vimengine.KeyEsc,
 		"q":   "q",
 	}

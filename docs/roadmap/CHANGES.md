@@ -2,6 +2,36 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — VIM-029 완료
+
+이전 가정: visual mode는 같은 줄 charwise `v` + `d/y`만 구현했고, linewise `V`는 문서 후보였다.
+
+새 가정: linewise `V`는 engine/runtime/TUI에서 구현됐다. 첫 범위는 `V` 진입/해제, `j/k/G/gg` row motion, linewise `d/y`, unnamed linewise register, app_state/TUI `selection.kind: linewise`다.
+
+이유: 설정 블록 단위 삭제/복사는 실무 학습 체감이 크고, 기존 linewise register/put 모델과 안정적으로 연결된다.
+
+영향: 다음 활성 slice는 3문항 이하 tutorial과 full E2E를 추가하는 `PLAYPACK-011`이다.
+
+## 2026-05-23 — VISUAL-LINE-001 완료
+
+이전 가정: linewise `V`를 먼저 구현하기로 했지만, row motion, normalized range, register kind, cursor landing 기준이 구현 전 문서로 충분히 고정되지 않았다.
+
+새 가정: 첫 linewise visual 구현 범위는 `V` 진입/해제, `j/k/gg/G` row motion, linewise `d/y`, unnamed linewise register, TUI/app_state `selection.kind: linewise`다.
+
+이유: 엔진 구현이 selection 정규화, register, undo, TUI/E2E 표면을 동시에 건드리므로 Red 테스트 기준을 먼저 좁혀야 한다.
+
+영향: 다음 활성 slice는 `VIM-029`다.
+
+## 2026-05-23 — PLAN-REFRESH-005 완료
+
+이전 가정: `Post-Visual Applied Mastery and Hardening` 완료 후 다음 우선순위가 linewise visual, command choice drill, platform review loop 사이에 열려 있었다.
+
+새 가정: 다음 중기 플랜은 `Linewise Visual and Choice Training`이다. 우선 linewise `V`를 테스트 우선으로 구현하고, tutorial과 incident 적용 run으로 승격한 뒤 command choice와 review 동기를 보강한다.
+
+이유: linewise `V`는 설정 블록 삭제/복사 학습 가치가 크고, 이미 있는 linewise register/put 모델과 잘 맞는다. 엔진 복잡도가 높으므로 scope approval과 Red 테스트를 먼저 둔다.
+
+영향: 다음 활성 slice는 `VISUAL-LINE-001`이다.
+
 ## 2026-05-22 — VISUAL-LINE-GAP-001 완료
 
 이전 가정: charwise visual 이후 linewise `V`와 multi-line charwise visual 중 무엇을 먼저 열지 결정되지 않았다.

@@ -83,7 +83,7 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		if normalized == "esc" {
 			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
 		}
-		if trimmed == vimengine.KeyShiftG || trimmed == vimengine.KeyShiftN {
+		if trimmed == vimengine.KeyShiftG || trimmed == vimengine.KeyShiftN || trimmed == vimengine.KeyShiftV {
 			return Action{Type: ActionKey, Key: trimmed}
 		}
 		switch normalized {
@@ -128,6 +128,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 	}
 	if trimmed == vimengine.KeyShiftG {
 		return Action{Type: ActionKey, Key: vimengine.KeyShiftG}
+	}
+	if trimmed == vimengine.KeyShiftV {
+		return Action{Type: ActionKey, Key: vimengine.KeyShiftV}
 	}
 	if trimmed == vimengine.KeyShiftA {
 		return Action{Type: ActionKey, Key: vimengine.KeyShiftA}
