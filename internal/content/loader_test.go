@@ -470,6 +470,58 @@ func TestLoadLibraryPreservesE2EAssertions(t *testing.T) {
 	}
 }
 
+func TestLoadLibraryPreservesE2ESelectionAssertion(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: normal
+      status: succeeded
+      selection:
+        active: true
+        kind: charwise
+        anchor: {row: 0, col: 0}
+        head: {row: 0, col: 1}
+        start: {row: 0, col: 0}
+        end: {row: 0, col: 1}
+`)
+
+	lib, err := LoadLibrary(root)
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+
+	selection := lib.Exercises["normal-motion-basic-001"].E2EAssertions.Selection
+	if selection == nil {
+		t.Fatal("selection assertion is nil")
+	}
+	if !selection.Active || selection.Kind != "charwise" {
+		t.Fatalf("selection = %+v, want active charwise", selection)
+	}
+	if selection.End == nil || selection.End.Col != 1 {
+		t.Fatalf("selection end = %+v, want col 1", selection.End)
+	}
+}
+
 func TestLoadLibraryPreservesHintThresholds(t *testing.T) {
 	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
 	if err != nil {

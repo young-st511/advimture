@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — selection app_state assertion 추가
+
+이전 가정: app_state summary는 buffer, cursor, mode, status, score, progress만 검증했다.
+
+새 가정: app_state summary와 runner assertion은 optional `selection` object를 지원한다. content `e2e_assertions.selection`도 같은 shape를 보존한다.
+
+이유: visual mode는 화면 텍스트만으로 검증하면 selection anchor/head/range가 빠질 수 있으므로, 구현 전에 관찰 가능한 상태 계약이 필요하다.
+
+영향: 다음 루프는 `VIM-027-TUI-003`으로 `v` charwise selection, motion update, `esc` reset, 최소 TUI 표시를 구현한다.
+
 ## 2026-05-22 — visual selection 계약을 charwise `v`로 축소
 
 이전 가정: visual mode 후보는 `v`, `V`, `d`, `y`를 함께 검토하되 첫 구현 범위가 아직 열려 있었다.

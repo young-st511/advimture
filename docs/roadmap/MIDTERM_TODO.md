@@ -208,7 +208,7 @@
 | 3 | PROGRESS-LANGUAGE-001 | completed | 저장 포맷 변경 없이 review/best record 문구를 복구국 프레임으로 정렬 |
 | 4 | E2E-FIXTURE-001 | completed | 긴 progress fixture 유지보수 완화 전략 수립 |
 | 5 | VISUAL-GAP-002 | completed | visual selection state, TUI 표시, app_state assertion 계약 확정 |
-| 6 | E2E-007 | pending | selection app_state/content assertion 확장 |
+| 6 | E2E-007 | completed | selection app_state/content assertion 확장 |
 | 7 | VIM-027-TUI-003 | pending | `v` charwise selection foundation과 최소 표시 구현 |
 
 ## Applied Learning and World Frame 출구 조건

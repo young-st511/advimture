@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### E2E-007. Selection app_state assertion
+### VIM-027-TUI-003. Charwise visual foundation
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: `selection` app_state/content assertion을 runner와 E2E state summary에 추가한다.
+- 목표: `v` charwise selection foundation과 최소 TUI 표시를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### E2E-007. Selection app_state assertion
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-007-selection-app-state-assertion.md`
+- 완료일: 2026-05-22
 
 ### VISUAL-GAP-002. Visual selection contract
 - 상태: completed

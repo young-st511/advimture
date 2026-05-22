@@ -165,6 +165,95 @@ func TestAssertScenarioChecksAppStateSummary(t *testing.T) {
 	}
 }
 
+func TestAssertScenarioChecksAppStateSelection(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	statePath := filepath.Join(stateDir, "e2e_state.json")
+	raw := []byte(`{
+		"mode": "visual",
+		"selection": {
+			"active": true,
+			"kind": "charwise",
+			"anchor": {"row": 0, "col": 1},
+			"head": {"row": 0, "col": 3},
+			"start": {"row": 0, "col": 1},
+			"end": {"row": 0, "col": 3}
+		}
+	}`)
+	if err := os.WriteFile(statePath, raw, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	active := true
+	anchorRow := 0
+	anchorCol := 1
+	headCol := 3
+	sc := scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Selection: &selectionAssertion{
+					Active: &active,
+					Kind:   "charwise",
+					Anchor: &cursorAssertion{
+						Row: &anchorRow,
+						Col: &anchorCol,
+					},
+					Head: &cursorAssertion{
+						Col: &headCol,
+					},
+					End: &cursorAssertion{
+						Col: &headCol,
+					},
+				},
+			},
+		},
+	}
+
+	if err := assertScenario(sc, runResult{homeDir: home}); err != nil {
+		t.Fatalf("assertScenario returned error: %v", err)
+	}
+}
+
+func TestAssertScenarioReportsAppStateSelectionMismatch(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	statePath := filepath.Join(stateDir, "e2e_state.json")
+	raw := []byte(`{
+		"mode": "visual",
+		"selection": {
+			"active": true,
+			"kind": "charwise",
+			"anchor": {"row": 0, "col": 1},
+			"head": {"row": 0, "col": 3},
+			"start": {"row": 0, "col": 1},
+			"end": {"row": 0, "col": 3}
+		}
+	}`)
+	if err := os.WriteFile(statePath, raw, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	wantCol := 2
+	err := assertScenario(scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Selection: &selectionAssertion{
+					End: &cursorAssertion{Col: &wantCol},
+				},
+			},
+		},
+	}, runResult{homeDir: home})
+	if err == nil || !strings.Contains(err.Error(), "selection end col") {
+		t.Fatalf("assertScenario error = %v, want selection end col mismatch", err)
+	}
+}
+
 func TestAssertScenarioFailsWhenAppStateMissing(t *testing.T) {
 	sc := scenario{
 		Assert: assertionConfig{

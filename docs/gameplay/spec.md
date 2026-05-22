@@ -100,7 +100,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `visual-char-line`은 draft/planned command cluster다. VISUAL-GAP-001은 visual mode를 바로 구현하지 않고 `v`, `V`, `d`, `y` 후보와 engine/TUI/E2E 영향을 문서로 분리했다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.
 - 첫 visual 구현은 `v` 진입, 기존 normal motion으로 head 이동, `esc`/visual mode 중 `v`로 selection 해제를 다룬다. visual selection에 `d`/`y` operator를 적용하는 것은 후속 slice로 분리한다.
-- visual mode E2E는 screen text만으로 통과하지 않고 app_state `selection` object를 검증한다.
+- visual mode E2E는 screen text만으로 통과하지 않고 app_state `selection` object를 검증한다. E2E-007은 `internal/e2estate`, runner `assert.app_state`, content `e2e_assertions`에 selection shape를 추가했다.
 - `V` linewise visual, visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.

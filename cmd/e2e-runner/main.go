@@ -62,15 +62,16 @@ type assertionConfig struct {
 }
 
 type appStateAssertion struct {
-	Path     string             `yaml:"path"`
-	Buffer   []string           `yaml:"buffer"`
-	Cursor   *cursorAssertion   `yaml:"cursor"`
-	Mode     string             `yaml:"mode"`
-	Command  string             `yaml:"command"`
-	Status   string             `yaml:"status"`
-	Score    *scoreAssertion    `yaml:"score"`
-	Progress *progressAssertion `yaml:"progress"`
-	Contains map[string]string  `yaml:"contains"`
+	Path      string              `yaml:"path"`
+	Buffer    []string            `yaml:"buffer"`
+	Cursor    *cursorAssertion    `yaml:"cursor"`
+	Mode      string              `yaml:"mode"`
+	Command   string              `yaml:"command"`
+	Status    string              `yaml:"status"`
+	Score     *scoreAssertion     `yaml:"score"`
+	Progress  *progressAssertion  `yaml:"progress"`
+	Selection *selectionAssertion `yaml:"selection"`
+	Contains  map[string]string   `yaml:"contains"`
 }
 
 type cursorAssertion struct {
@@ -88,15 +89,25 @@ type progressAssertion struct {
 	Completed *bool  `yaml:"completed"`
 }
 
+type selectionAssertion struct {
+	Active *bool            `yaml:"active"`
+	Kind   string           `yaml:"kind"`
+	Anchor *cursorAssertion `yaml:"anchor"`
+	Head   *cursorAssertion `yaml:"head"`
+	Start  *cursorAssertion `yaml:"start"`
+	End    *cursorAssertion `yaml:"end"`
+}
+
 type appStateSummary struct {
-	Buffer   []string         `json:"buffer"`
-	Cursor   appStateCursor   `json:"cursor"`
-	Mode     string           `json:"mode"`
-	Command  string           `json:"command"`
-	Status   string           `json:"status"`
-	Score    appStateScore    `json:"score"`
-	Progress appStateProgress `json:"progress"`
-	Extra    map[string]any   `json:"-"`
+	Buffer    []string           `json:"buffer"`
+	Cursor    appStateCursor     `json:"cursor"`
+	Mode      string             `json:"mode"`
+	Command   string             `json:"command"`
+	Status    string             `json:"status"`
+	Score     appStateScore      `json:"score"`
+	Progress  appStateProgress   `json:"progress"`
+	Selection *appStateSelection `json:"selection"`
+	Extra     map[string]any     `json:"-"`
 }
 
 type appStateCursor struct {
@@ -112,6 +123,15 @@ type appStateScore struct {
 type appStateProgress struct {
 	MissionID string `json:"mission_id"`
 	Completed bool   `json:"completed"`
+}
+
+type appStateSelection struct {
+	Active bool           `json:"active"`
+	Kind   string         `json:"kind"`
+	Anchor appStateCursor `json:"anchor"`
+	Head   appStateCursor `json:"head"`
+	Start  appStateCursor `json:"start"`
+	End    appStateCursor `json:"end"`
 }
 
 type evidenceConfig struct {
@@ -607,6 +627,7 @@ func wantsAppStateAssertion(assertion appStateAssertion) bool {
 		assertion.Status != "" ||
 		assertion.Score != nil ||
 		assertion.Progress != nil ||
+		assertion.Selection != nil ||
 		len(assertion.Contains) > 0
 }
 
@@ -682,11 +703,59 @@ func assertAppState(assertion appStateAssertion, state appStateSummary, raw []by
 			return fmt.Errorf("app state progress completed: got %v, want %v", state.Progress.Completed, *assertion.Progress.Completed)
 		}
 	}
+	if assertion.Selection != nil {
+		if state.Selection == nil {
+			return fmt.Errorf("app state selection: got nil, want assertion")
+		}
+		if err := assertSelection(*assertion.Selection, *state.Selection); err != nil {
+			return err
+		}
+	}
 	text := string(raw)
 	for key, want := range assertion.Contains {
 		if !strings.Contains(text, want) {
 			return fmt.Errorf("app state contains %q: missing %q", key, want)
 		}
+	}
+	return nil
+}
+
+func assertSelection(assertion selectionAssertion, state appStateSelection) error {
+	if assertion.Active != nil && state.Active != *assertion.Active {
+		return fmt.Errorf("app state selection active: got %v, want %v", state.Active, *assertion.Active)
+	}
+	if assertion.Kind != "" && state.Kind != assertion.Kind {
+		return fmt.Errorf("app state selection kind: got %q, want %q", state.Kind, assertion.Kind)
+	}
+	if assertion.Anchor != nil {
+		if err := assertSelectionCursor("anchor", *assertion.Anchor, state.Anchor); err != nil {
+			return err
+		}
+	}
+	if assertion.Head != nil {
+		if err := assertSelectionCursor("head", *assertion.Head, state.Head); err != nil {
+			return err
+		}
+	}
+	if assertion.Start != nil {
+		if err := assertSelectionCursor("start", *assertion.Start, state.Start); err != nil {
+			return err
+		}
+	}
+	if assertion.End != nil {
+		if err := assertSelectionCursor("end", *assertion.End, state.End); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func assertSelectionCursor(name string, assertion cursorAssertion, state appStateCursor) error {
+	if assertion.Row != nil && state.Row != *assertion.Row {
+		return fmt.Errorf("app state selection %s row: got %d, want %d", name, state.Row, *assertion.Row)
+	}
+	if assertion.Col != nil && state.Col != *assertion.Col {
+		return fmt.Errorf("app state selection %s col: got %d, want %d", name, state.Col, *assertion.Col)
 	}
 	return nil
 }

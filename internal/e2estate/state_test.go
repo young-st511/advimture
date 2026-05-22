@@ -25,6 +25,14 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 			MissionID: "mission-1",
 			Completed: true,
 		},
+		Selection: &Selection{
+			Active: true,
+			Kind:   "charwise",
+			Anchor: Cursor{Row: 0, Col: 1},
+			Head:   Cursor{Row: 0, Col: 2},
+			Start:  Cursor{Row: 0, Col: 1},
+			End:    Cursor{Row: 0, Col: 2},
+		},
 	}
 
 	if err := Write(path, state); err != nil {
@@ -44,5 +52,8 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 	}
 	if got.Score.Grade != "S" {
 		t.Fatalf("grade = %q, want S", got.Score.Grade)
+	}
+	if got.Selection == nil || got.Selection.Kind != "charwise" || got.Selection.End.Col != 2 {
+		t.Fatalf("selection = %+v, want charwise end col 2", got.Selection)
 	}
 }

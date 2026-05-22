@@ -99,11 +99,21 @@ type GradingSpec struct {
 }
 
 type E2EAssertionSpec struct {
-	Buffer  []string    `yaml:"buffer"`
-	Cursor  *CursorSpec `yaml:"cursor"`
-	Mode    string      `yaml:"mode"`
-	Status  string      `yaml:"status"`
-	Command string      `yaml:"command"`
+	Buffer    []string       `yaml:"buffer"`
+	Cursor    *CursorSpec    `yaml:"cursor"`
+	Mode      string         `yaml:"mode"`
+	Status    string         `yaml:"status"`
+	Command   string         `yaml:"command"`
+	Selection *SelectionSpec `yaml:"selection"`
+}
+
+type SelectionSpec struct {
+	Active bool        `yaml:"active"`
+	Kind   string      `yaml:"kind"`
+	Anchor *CursorSpec `yaml:"anchor"`
+	Head   *CursorSpec `yaml:"head"`
+	Start  *CursorSpec `yaml:"start"`
+	End    *CursorSpec `yaml:"end"`
 }
 
 type ScenarioDocument struct {

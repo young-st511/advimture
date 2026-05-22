@@ -7,18 +7,28 @@ import (
 )
 
 type State struct {
-	Buffer   []string `json:"buffer"`
-	Cursor   Cursor   `json:"cursor"`
-	Mode     string   `json:"mode"`
-	Command  string   `json:"command,omitempty"`
-	Status   string   `json:"status"`
-	Score    Score    `json:"score"`
-	Progress Progress `json:"progress"`
+	Buffer    []string   `json:"buffer"`
+	Cursor    Cursor     `json:"cursor"`
+	Mode      string     `json:"mode"`
+	Command   string     `json:"command,omitempty"`
+	Status    string     `json:"status"`
+	Score     Score      `json:"score"`
+	Progress  Progress   `json:"progress"`
+	Selection *Selection `json:"selection,omitempty"`
 }
 
 type Cursor struct {
 	Row int `json:"row"`
 	Col int `json:"col"`
+}
+
+type Selection struct {
+	Active bool   `json:"active"`
+	Kind   string `json:"kind"`
+	Anchor Cursor `json:"anchor"`
+	Head   Cursor `json:"head"`
+	Start  Cursor `json:"start"`
+	End    Cursor `json:"end"`
 }
 
 type Score struct {
