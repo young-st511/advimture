@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### QA-SEL-001. Selection replay hardening
+### ENGINE-SPLIT-001. Vimengine selection/range split
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: content replay 단계에서 visual selection assertion mismatch를 잡도록 검증을 보강한다.
+- 목표: `internal/vimengine`의 selection/range/operator helper를 behavior 변화 없이 분리한다.
 
 ## 방금 완료한 슬라이스
+
+### QA-SEL-001. Selection replay hardening
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/qa-sel-001-selection-replay-hardening.md`
+- 완료일: 2026-05-22
 
 ### PLAN-REFRESH-004. Post Visual Applied Mastery
 - 상태: completed

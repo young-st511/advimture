@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — content replay에서 selection assertion 검증
+
+이전 가정: visual selection은 app_state/E2E assertion으로 검증할 수 있었지만, content replay gate는 `e2e_assertions.selection` mismatch를 직접 비교하지 않았다.
+
+새 가정: `replay_status: pass` exercise가 selection assertion을 선언하면 content loader가 optimal key replay 결과의 selection active/kind/anchor/head/start/end를 비교한다.
+
+이유: visual 관련 content가 화면 문구나 최종 buffer만으로 통과하면 selection anchor/head/range 회귀를 놓칠 수 있다.
+
+영향: `QA-SEL-001`은 완료됐고, 다음 활성 slice는 behavior 변화 없는 `ENGINE-SPLIT-001`이다.
+
 ## 2026-05-22 — post-visual 중기 플랜을 적용력 강화로 전환
 
 이전 가정: visual selection tutorial 완료 후 다음 후보는 linewise visual이나 또 다른 Vim command 확장일 수 있었다.

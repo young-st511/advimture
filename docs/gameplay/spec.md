@@ -101,6 +101,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.
 - 첫 visual foundation은 `v` 진입, 기존 normal motion으로 head 이동, `esc`/visual mode 중 `v`로 selection 해제를 다룬다.
 - visual mode E2E는 screen text만으로 통과하지 않고 app_state `selection` object를 검증한다. E2E-007은 `internal/e2estate`, runner `assert.app_state`, content `e2e_assertions`에 selection shape를 추가했다.
+- QA-SEL-001 이후 `replay_status: pass` exercise가 `e2e_assertions.selection`을 선언하면 content replay gate가 optimal key replay 결과의 selection active/kind/anchor/head/start/end를 검증한다.
 - VIM-027-TUI-003은 charwise `v` visual mode foundation을 구현했다. TUI는 `Selection: charwise <start> -> <end>`와 selected non-cursor cell `{x}`를 표시하며, cursor cell은 기존 `[x]`를 유지한다.
 - VISUAL-OP-001은 첫 visual operator 범위를 같은 줄 charwise selection에 `d`/`y`를 적용하는 것으로 고정했다. `d`는 inclusive range를 삭제하고, `y`는 inclusive range를 unnamed register에 저장하며, 둘 다 normal mode로 돌아가고 selection을 clear한다.
 - VIM-028은 같은 줄 charwise visual selection의 `d`/`y` engine을 구현했다. `d`는 삭제 텍스트를 unnamed charwise register에도 저장하며 undo 가능하다. multi-line charwise operator, linewise visual, visual block은 제외한다.

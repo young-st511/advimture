@@ -101,6 +101,7 @@ evidence:
 - `key_trace`: runner가 실제 전송한 key trace와 기대 trace의 exact match
 - `progress_file_contains`: progress JSON 텍스트에 포함되어야 하는 문자열
 - `app_state`: test HOME 내부 app state summary JSON 검증
+- `app_state.selection`: visual mode의 selection active/kind/anchor/head/start/end 검증
 - `setup.progress_file`: test HOME의 `.advimture/progress.json`에 미리 쓸 JSON fixture
 - `playable_small_edits_full`: 7개 small edits exercise와 `ctrl+r` 입력을 검증하는 집중 E2E
 - `playable_arrow_forbidden`: 실제 방향키 escape sequence가 `h/j/k/l`로 우회되지 않고 forbidden input으로 실패하는지 검증하는 E2E
@@ -108,6 +109,7 @@ evidence:
 - `playable_coaching_panel`: strict constraint 문항의 required key coaching과 `?` hint 패널 표시를 검증하는 E2E
 - `playable_full_first_five_minute`: movement/survival/navigation/small-edit/Ex command까지의 first-cut tutorial flow E2E
 - `playable_open_line_full`, `playable_repeat_last_change_full`, `playable_search_basic_full`, `playable_text_object_quote_pair_full`: utility/structure command full playpack E2E
+- `playable_visual_selection_full`: charwise visual delete/yank-put/backward selection tutorial E2E
 - `playable_incident_001_full`, `playable_incident_002_full`: 기존 command를 섞은 incident run E2E
 
 `wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 기다린다. 반복되는 UI 문구를 사용할 수는 있지만, 같은 키를 빠르게 반복 입력할 때는 Bubble Tea가 입력을 묶어 받을 수 있으므로 사람 입력에 가까운 짧은 `wait_ms`를 둔다.
@@ -131,7 +133,16 @@ assert:
     progress:
       mission_id: "normal-motion-basic-001"
       completed: true
+    selection:
+      active: true
+      kind: "charwise"
+      anchor: {row: 0, col: 0}
+      head: {row: 0, col: 2}
+      start: {row: 0, col: 0}
+      end: {row: 0, col: 2}
 ```
+
+Content replay gate도 `e2e_assertions.selection`이 선언된 exercise에 한해 optimal key replay 결과의 selection을 비교한다. 따라서 visual 관련 content는 화면 문구만으로 통과하지 않고, content load 단계와 TUI E2E 단계에서 같은 selection shape를 검증할 수 있다.
 
 ## 현재 Evidence
 

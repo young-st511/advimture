@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	exerciseruntime "github.com/young-st511/advimture/internal/runtime"
+	"github.com/young-st511/advimture/internal/vimengine"
 	"gopkg.in/yaml.v3"
 )
 
@@ -604,6 +605,50 @@ func validateReplay(exercise ExerciseDocument, compiled exerciseruntime.Exercise
 	}
 	if assertions.Command != "" && state.Vim.LastCommand != assertions.Command {
 		return fmt.Errorf("exercise %q replay failed: command = %q, want %q", exercise.ID, state.Vim.LastCommand, assertions.Command)
+	}
+	if err := validateReplaySelection(exercise.ID, assertions.Selection, state.Vim.Selection); err != nil {
+		return err
+	}
+	return nil
+}
+
+func validateReplaySelection(exerciseID string, assertion *SelectionSpec, actual *vimengine.Selection) error {
+	if assertion == nil {
+		return nil
+	}
+	if !assertion.Active {
+		if actual != nil && actual.Active {
+			return fmt.Errorf("exercise %q replay failed: selection active = true, want false", exerciseID)
+		}
+		return nil
+	}
+	if actual == nil || !actual.Active {
+		return fmt.Errorf("exercise %q replay failed: selection = nil, want active selection", exerciseID)
+	}
+	if assertion.Kind != "" && string(actual.Kind) != assertion.Kind {
+		return fmt.Errorf("exercise %q replay failed: selection kind = %q, want %q", exerciseID, actual.Kind, assertion.Kind)
+	}
+	if err := validateReplaySelectionCursor(exerciseID, "anchor", assertion.Anchor, actual.Anchor); err != nil {
+		return err
+	}
+	if err := validateReplaySelectionCursor(exerciseID, "head", assertion.Head, actual.Head); err != nil {
+		return err
+	}
+	if err := validateReplaySelectionCursor(exerciseID, "start", assertion.Start, actual.Start); err != nil {
+		return err
+	}
+	if err := validateReplaySelectionCursor(exerciseID, "end", assertion.End, actual.End); err != nil {
+		return err
+	}
+	return nil
+}
+
+func validateReplaySelectionCursor(exerciseID string, name string, assertion *CursorSpec, actual vimengine.Cursor) error {
+	if assertion == nil {
+		return nil
+	}
+	if actual.Row != assertion.Row || actual.Col != assertion.Col {
+		return fmt.Errorf("exercise %q replay failed: selection %s = %d,%d, want %d,%d", exerciseID, name, actual.Row, actual.Col, assertion.Row, assertion.Col)
 	}
 	return nil
 }

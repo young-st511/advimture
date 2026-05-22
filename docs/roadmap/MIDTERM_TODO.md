@@ -252,7 +252,7 @@
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
 | 1 | PLAN-REFRESH-004 | completed | post-visual 리뷰/토론 결과를 종합해 다음 중기 플랜 고정 |
-| 2 | QA-SEL-001 | pending | content replay 단계에서 selection assertion mismatch 검증 보강 |
+| 2 | QA-SEL-001 | completed | content replay 단계에서 selection assertion mismatch 검증 보강 |
 | 3 | ENGINE-SPLIT-001 | pending | `internal/vimengine`의 selection/range/operator helper를 behavior 변화 없이 분리 |
 | 4 | VISUAL-HARDEN-001 | pending | charwise visual invariant, undo/register, unsupported edge case 테스트 보강 |
 | 5 | INCIDENT-RUN-003 | pending | visual selection을 적용하는 세 번째 Runbook Dispatch incident 구현 |
@@ -264,7 +264,7 @@
 | ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |----|----------|-------------|------|---------------|
 | PLAN-REFRESH-004 | PLAYPACK-010 완료 | completed: 리뷰 종합 문서와 새 중기 플랜 | completed: `git diff --check` | 코드와 content 동작을 변경하지 않는다 |
-| QA-SEL-001 | selection app_state assertion 존재 | content replay selection mismatch 테스트, runner/content 문서 동기화 | `go test ./internal/content/...`, `go test ./cmd/e2e-runner/...` | E2E 화면 문구만으로 selection을 검증하지 않는다 |
+| QA-SEL-001 | selection app_state assertion 존재 | completed: content replay selection mismatch 테스트, runner/content 문서 동기화 | completed: `go test ./internal/content/...`, `go test ./cmd/e2e-runner/...`, `go test ./...` | E2E 화면 문구만으로 selection을 검증하지 않는다 |
 | ENGINE-SPLIT-001 | QA-SEL-001 완료 | selection/range/operator helper 파일 분리 | `go test ./internal/vimengine/...`, `go test ./...` | behavior change와 새 visual 기능 추가 금지 |
 | VISUAL-HARDEN-001 | ENGINE-SPLIT-001 완료 | same-line 경계, empty line, toggle/reset, undo/register, unsupported multi-line 테스트 | `go test ./internal/vimengine/...`, `go test ./internal/runtime/...` | `V`, visual block, count/register prefix는 넣지 않는다 |
 | INCIDENT-RUN-003 | visual tutorial과 hardening 완료 | `릴레이 기지 003: 오염 구간 격리` content/scenario/playlist + full E2E | content replay, focused E2E, `make e2e-playable` | 새 command를 소개하지 않고 기존 command 조합만 사용 |

@@ -488,17 +488,16 @@ exercises:
       mode: normal
       buffer: "abc\n"
     target_state:
-      mode: normal
       cursor: {row: 0, col: 1}
-    optimal_keys: ["l"]
-    allowed_keys: ["l"]
+    optimal_keys: ["v", "l"]
+    allowed_keys: ["v", "l"]
     grading:
       pass_condition: "cursor.row == 0 && cursor.col == 1"
-      optimal_key_count: 1
+      optimal_key_count: 2
     e2e_assertions:
       buffer: ["abc"]
       cursor: {row: 0, col: 1}
-      mode: normal
+      mode: visual
       status: succeeded
       selection:
         active: true
@@ -523,6 +522,87 @@ exercises:
 	}
 	if selection.End == nil || selection.End.Col != 1 {
 		t.Fatalf("selection end = %+v, want col 1", selection.End)
+	}
+}
+
+func TestLoadLibraryRejectsReplayPassWhenSelectionAssertionMissesActualState(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["v", "l"]
+    allowed_keys: ["v", "l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: visual
+      status: succeeded
+      selection:
+        active: true
+        kind: charwise
+        anchor: {row: 0, col: 0}
+        head: {row: 0, col: 1}
+        start: {row: 0, col: 0}
+        end: {row: 0, col: 2}
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "selection") {
+		t.Fatalf("LoadLibrary error = %v, want selection mismatch", err)
+	}
+}
+
+func TestLoadLibraryRejectsReplayPassWhenSelectionAssertionRequiresActiveSelection(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: approved
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: normal
+      status: succeeded
+      selection:
+        active: true
+        kind: charwise
+        anchor: {row: 0, col: 0}
+        head: {row: 0, col: 1}
+        start: {row: 0, col: 0}
+        end: {row: 0, col: 1}
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "selection") {
+		t.Fatalf("LoadLibrary error = %v, want selection missing", err)
 	}
 }
 
