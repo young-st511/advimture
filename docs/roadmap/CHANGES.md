@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — INCIDENT-RUN-003 완료
+
+이전 가정: visual selection은 tutorial에서만 검증됐고, incident 적용 런에서는 아직 실제 복구 도구로 쓰이지 않았다.
+
+새 가정: `incident-003-visual-recovery`는 `/contam`, visual delete/yank, backward visual delete, `:%s`를 하나의 Runbook Dispatch 적용 런으로 검증한다.
+
+이유: visual selection을 튜토리얼 전용 기능이 아니라 실제 복구 상황에서 쓰는 도구로 승격하기 위해서다.
+
+영향: 다음 활성 slice는 incident 001~003의 연결 문구와 continuity를 다듬는 `INCIDENT-FLOW-001`이다.
+
 ## 2026-05-22 — charwise visual invariant 테스트 보강
 
 이전 가정: charwise visual foundation과 `d/y` engine은 동작했지만, 빈 줄, 줄 경계, undo/register, unsupported multi-line 같은 edge/invariant 검증이 넓지 않았다.

@@ -1,0 +1,70 @@
+scenarios:
+  - id: incident-visual-001-scenario
+    status: approved
+    exercise_id: incident-visual-001
+    engine_support: implemented
+    learning_reinforcement: "적용 run에서는 먼저 / 검색으로 오염 표식을 찾는다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "contam 표식 위치 찾기"
+    briefing: "릴레이 기지 003 runbook에 contam 표식이 남았습니다. /contam 검색으로 오염 줄을 먼저 찾으세요."
+    context_role: "오염 구간 격리 runbook"
+    mentor_success: "좋습니다. 오염 구간을 처리하기 전에 / 검색으로 현장 위치를 고정했습니다."
+    mentor_failure: "한 줄씩 훑지 말고 /contam으로 표식 위치를 바로 찾으세요."
+    story_constraints:
+      - "검색이 visual 격리 조치의 진입점임을 강조한다."
+
+  - id: incident-visual-002-scenario
+    status: approved
+    exercise_id: incident-visual-002
+    engine_support: implemented
+    learning_reinforcement: "v + motion + d로 보이는 오염 구간만 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "route 오염 구간 격리"
+    briefing: "route 줄에 bad 오염 구간이 끼어 live 경로를 막고 있습니다. visual selection으로 bad만 잡아 제거하세요."
+    context_role: "짧은 route 오염 구간"
+    mentor_success: "좋습니다. 보이는 오염 구간만 지정해 route를 다시 열었습니다."
+    mentor_failure: "x 반복이나 단어 삭제로 우회하지 마세요. v로 범위를 보이게 잡고 d로 제거합니다."
+    story_constraints:
+      - "visual selection이 보이는 범위 지정 도구임을 강조한다."
+
+  - id: incident-visual-003-scenario
+    status: approved
+    exercise_id: incident-visual-003
+    engine_support: implemented
+    learning_reinforcement: "v + motion + y로 짧은 정상 신호를 register에 담아 재사용한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "정상 신호 mirror 전송"
+    briefing: "node의 ok 신호를 mirror에도 남겨야 합니다. ok를 visual selection으로 복사해 mirror 뒤에 붙이세요."
+    context_role: "정상 신호 mirror 전송"
+    mentor_success: "좋습니다. 정상 신호를 다시 입력하지 않고 선택 범위로 재사용했습니다."
+    mentor_failure: "ok를 직접 입력하지 마세요. v로 보이는 범위를 잡고 y, $, p 순서로 전송합니다."
+    story_constraints:
+      - "재입력보다 register 재사용을 강조한다."
+
+  - id: incident-visual-004-scenario
+    status: approved
+    exercise_id: incident-visual-004
+    engine_support: implemented
+    learning_reinforcement: "visual selection은 오른쪽에서 왼쪽으로 잡아도 정규화된다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "stale tail 역방향 제거"
+    briefing: "cache 줄의 stale tail이 오른쪽 끝에서 확인됐습니다. 끝에서 거꾸로 범위를 잡아 stale만 제거하세요."
+    context_role: "뒤쪽에서 확인된 stale tail"
+    mentor_success: "좋습니다. 오른쪽 anchor에서도 선택 범위를 정규화해 tail만 제거했습니다."
+    mentor_failure: "오른쪽에서 시작해도 괜찮습니다. h로 stale 전체를 잡은 뒤 d를 누르세요."
+    story_constraints:
+      - "backward selection normalization을 적용 상황으로 강화한다."
+
+  - id: incident-visual-005-scenario
+    status: approved
+    exercise_id: incident-visual-005
+    engine_support: implemented
+    learning_reinforcement: ":%s는 남은 상태 토큰을 전체 파일 범위로 승격한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "잔류 off 상태 전체 승격"
+    briefing: "격리 후에도 off 상태가 두 줄에 남아 있습니다. 전체 파일 치환으로 모두 on으로 승격하세요."
+    context_role: "복구 마감 상태 승격"
+    mentor_success: "좋습니다. 남은 off 상태를 전체 범위에서 on으로 승격해 오염 격리를 마감했습니다."
+    mentor_failure: "현재 줄만 바꾸면 잔류 리스크가 남습니다. % range로 전체 파일을 대상으로 잡으세요."
+    story_constraints:
+      - "incident 마감 조치로 전체 범위 치환을 사용한다."

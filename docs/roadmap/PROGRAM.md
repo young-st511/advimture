@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-RUN-003. Visual recovery incident
+### INCIDENT-FLOW-001. Incident continuity pass
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: visual selection을 적용하는 세 번째 Runbook Dispatch incident를 구현한다.
+- 목표: incident 001~003 beat 연결 문구와 runbook continuity를 저장 변경 없이 보강한다.
 
 ## 방금 완료한 슬라이스
+
+### INCIDENT-RUN-003. Visual recovery incident
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-run-003-visual-recovery.md`
+- 완료일: 2026-05-22
 
 ### VISUAL-HARDEN-001. Charwise visual invariant pass
 - 상태: completed

@@ -1,0 +1,243 @@
+exercises:
+  - id: incident-visual-001
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["enter"]
+    mistake_focus: ["오염 표식을 한 줄씩 찾으려 한다."]
+    replay_status: pass
+    title: "contam 표식 위치 찾기"
+    goal_for_player: "/contam 검색으로 오염 구간이 표시된 runbook 줄을 찾으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        boot=ok
+        contam route=bad/live
+        status=off
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+    optimal_keys: ["/", "c", "o", "n", "t", "a", "m", "enter"]
+    allowed_keys: ["/", "c", "o", "n", "t", "a", "m", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "먼저 / 검색으로 runbook 안의 contam 표식을 잡습니다."
+      - after_keys: 5
+        text: "/contam을 끝까지 입력하고 enter로 검색을 확정하세요."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["boot=ok", "contam route=bad/live", "status=off"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-visual-002
+    status: approved
+    command_cluster: visual-char-line
+    engine_support: implemented
+    trained_commands: ["v", "vd"]
+    reviewed_commands: ["l", "d"]
+    mistake_focus: ["짧은 오염 구간을 x 반복이나 단어 삭제로 처리하려 한다."]
+    replay_status: pass
+    title: "route 오염 구간 격리"
+    goal_for_player: "bad 시작점에서 visual selection으로 bad만 잡고 d로 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        route=bad/live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        route=/live
+    optimal_keys: ["v", "l", "l", "d"]
+    allowed_keys: ["v", "l", "d", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["v", "d"]
+      forbidden_keys: ["h", "j", "k", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "visual selection은 보이는 오염 구간을 먼저 지정하게 해줍니다."
+      - after_keys: 3
+        text: "bad 전체가 선택됐으면 d로 선택 범위만 격리 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["route=/live"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: incident-visual-003
+    status: approved
+    command_cluster: visual-char-line
+    engine_support: implemented
+    trained_commands: ["v", "vy"]
+    reviewed_commands: ["l", "$", "p"]
+    mistake_focus: ["정상 신호를 직접 다시 입력하려 한다."]
+    replay_status: pass
+    title: "정상 신호 mirror 전송"
+    goal_for_player: "ok를 visual selection으로 복사한 뒤 mirror 값 뒤에 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        node=ok mirror=
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 16
+      buffer: |
+        node=ok mirror=ok
+    optimal_keys: ["v", "l", "y", "$", "p"]
+    allowed_keys: ["v", "l", "y", "$", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 5
+      required_keys: ["v", "y", "p"]
+      forbidden_keys: ["h", "j", "k", "w", "b", "e", "0", "d", "x", "r", "c", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "ok 두 글자를 visual range로 보이게 잡습니다."
+      - after_keys: 3
+        text: "y로 담은 뒤 $와 p로 mirror 뒤에 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 5
+    e2e_assertions:
+      buffer: ["node=ok mirror=ok"]
+      cursor:
+        row: 0
+        col: 16
+      mode: normal
+      status: succeeded
+
+  - id: incident-visual-004
+    status: approved
+    command_cluster: visual-char-line
+    engine_support: implemented
+    trained_commands: ["v", "vd"]
+    reviewed_commands: ["h", "d"]
+    mistake_focus: ["오른쪽에서 시작한 선택이 유효하다는 점을 놓친다."]
+    replay_status: pass
+    title: "stale tail 역방향 제거"
+    goal_for_player: "stale 끝에서 v를 열고 h로 왼쪽까지 범위를 잡은 뒤 d로 stale만 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        cache=stale/live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        cache=/live
+    optimal_keys: ["v", "h", "h", "h", "h", "d"]
+    allowed_keys: ["v", "h", "d", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["v", "d"]
+      forbidden_keys: ["j", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "오른쪽에서 왼쪽으로 잡아도 selection 범위는 정규화됩니다."
+      - after_keys: 5
+        text: "stale 전체가 보이는 범위로 잡혔다면 d로 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["cache=/live"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: incident-visual-005
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: [":%s"]
+    reviewed_commands: [":s"]
+    mistake_focus: ["남은 off 상태를 현재 줄만 바꾸려 한다."]
+    replay_status: pass
+    title: "잔류 off 상태 전체 승격"
+    goal_for_player: "command-line에서 모든 off 토큰을 on으로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        off pump
+        off relay
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        on pump
+        on relay
+    optimal_keys: [":", "%", "s", "/", "o", "f", "f", "/", "o", "n", "/", "g", "enter"]
+    allowed_keys: [":", "%", "s", "/", "o", "f", "n", "g", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    constraints:
+      max_inputs: 15
+      required_keys: [":", "enter"]
+      forbidden_keys: ["ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "잔류 off 상태가 두 줄에 남아 있으므로 전체 파일 범위를 사용합니다."
+      - after_keys: 3
+        text: ":%s/off/on/g는 모든 줄의 off 토큰을 on으로 승격합니다."
+    grading:
+      pass_condition: "buffer has no off"
+      optimal_key_count: 13
+    e2e_assertions:
+      buffer: ["on pump", "on relay"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+      command: ":%s/off/on/g"

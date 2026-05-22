@@ -118,13 +118,13 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "."
-  - wait_screen_contains: "Playlist complete"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 002: 구조 설정 재동기화"
     - "Exercise: 5/5"
-    - "Playlist complete"
+    - "Next tutorial: enter"
     - "좋습니다. 같은 구조 수정은 다시 타이핑하지 않고 반복 패치로 마감했습니다."
   exit_code: 0
   progress_file_exists: true
