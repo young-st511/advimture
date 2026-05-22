@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — charwise visual foundation 구현
+
+이전 가정: visual mode는 selection 계약과 app_state assertion까지만 준비되어 있었다.
+
+새 가정: engine은 `ModeVisual`과 charwise selection state를 가지며, `v` 진입, motion으로 head 이동, `esc`/`v` reset을 지원한다. TUI는 selection range와 selected cell 표시를 제공한다.
+
+이유: visual mode는 operator 적용 전에도 “범위를 눈으로 지정한다”는 학습 감각이 필요하며, 후속 `d/y` 적용과 playpack을 위한 최소 platform state가 필요하다.
+
+영향: 다음 계획은 visual selection에 `d/y`를 적용할지, 먼저 visual tutorial playpack draft를 만들지 결정해야 한다.
+
 ## 2026-05-22 — selection app_state assertion 추가
 
 이전 가정: app_state summary는 buffer, cursor, mode, status, score, progress만 검증했다.

@@ -209,7 +209,7 @@
 | 4 | E2E-FIXTURE-001 | completed | 긴 progress fixture 유지보수 완화 전략 수립 |
 | 5 | VISUAL-GAP-002 | completed | visual selection state, TUI 표시, app_state assertion 계약 확정 |
 | 6 | E2E-007 | completed | selection app_state/content assertion 확장 |
-| 7 | VIM-027-TUI-003 | pending | `v` charwise selection foundation과 최소 표시 구현 |
+| 7 | VIM-027-TUI-003 | completed | `v` charwise selection foundation과 최소 표시 구현 |
 
 ## Applied Learning and World Frame 출구 조건
 
@@ -221,7 +221,7 @@
 | E2E-FIXTURE-001 | full E2E fixture 부담 확인 | fixture builder 또는 최소 fixture 전략 | e2e-runner tests, representative E2E | 실제 HOME 사용 금지 |
 | VISUAL-GAP-002 | UX 보강 완료 | visual selection contract | docs review, `git diff --check` | visual block, count/register prefix, indentation 제외 |
 | E2E-007 | VISUAL-GAP-002 완료 | selection app_state assertion | e2estate/e2e-runner/content tests | 화면 텍스트만으로 selection을 검증하지 않는다 |
-| VIM-027-TUI-003 | E2E-007 완료 | charwise `v`, motion selection, `esc` reset, 최소 표시 | vimengine/tui/playable focused tests | `d/y` operator application과 playpack은 분리 |
+| VIM-027-TUI-003 | E2E-007 완료 | completed: charwise `v`, motion selection, `esc` reset, 최소 표시 | completed: vimengine/tui/playable tests, full regression | `d/y` operator application과 playpack은 분리 |
 
 ## 2~3개월 주차 계획
 

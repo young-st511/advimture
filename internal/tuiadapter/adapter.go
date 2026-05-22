@@ -33,10 +33,25 @@ type ViewModel struct {
 	BufferLines []string
 	CursorRow   int
 	CursorCol   int
+	Selection   *SelectionView
 	KeyTrace    []string
 	Attempts    int
 	HintsUsed   int
 	Grade       string
+}
+
+type SelectionView struct {
+	Active bool
+	Kind   string
+	Anchor CursorView
+	Head   CursorView
+	Start  CursorView
+	End    CursorView
+}
+
+type CursorView struct {
+	Row int
+	Col int
 }
 
 func MapInput(input string) Action {
@@ -63,6 +78,23 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 			return Action{Type: ActionKey, Key: input}
 		}
 		return Action{Type: ActionIgnored}
+	}
+	if mode == vimengine.ModeVisual {
+		if normalized == "esc" {
+			return Action{Type: ActionKey, Key: vimengine.KeyEsc}
+		}
+		if trimmed == vimengine.KeyShiftG || trimmed == vimengine.KeyShiftN {
+			return Action{Type: ActionKey, Key: trimmed}
+		}
+		switch normalized {
+		case "h", "j", "k", "l", "w", "b", "e", "0", "$", "v", "d", "y", "q":
+			return Action{Type: ActionKey, Key: normalized}
+		default:
+			if len([]rune(trimmed)) == 1 {
+				return Action{Type: ActionKey, Key: trimmed}
+			}
+			return Action{Type: ActionIgnored}
+		}
 	}
 	if mode == vimengine.ModeSearch {
 		switch normalized {
@@ -153,6 +185,8 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyC}
 	case "y":
 		return Action{Type: ActionKey, Key: vimengine.KeyY}
+	case "v":
+		return Action{Type: ActionKey, Key: vimengine.KeyV}
 	case "n":
 		return Action{Type: ActionKey, Key: vimengine.KeyN}
 	case "p":
@@ -189,6 +223,7 @@ func RenderState(state scenario.State) ViewModel {
 		BufferLines: copyStrings(state.Runtime.Vim.Lines),
 		CursorRow:   state.Runtime.Vim.Cursor.Row,
 		CursorCol:   state.Runtime.Vim.Cursor.Col,
+		Selection:   selectionView(state.Runtime.Vim.Selection),
 		KeyTrace:    copyStrings(state.Runtime.KeyTrace),
 		Attempts:    state.Runtime.Attempts,
 		HintsUsed:   state.HintsUsed,
@@ -197,6 +232,27 @@ func RenderState(state scenario.State) ViewModel {
 		view.Grade = string(state.Score.Grade)
 	}
 	return view
+}
+
+func selectionView(selection *vimengine.Selection) *SelectionView {
+	if selection == nil {
+		return nil
+	}
+	return &SelectionView{
+		Active: selection.Active,
+		Kind:   string(selection.Kind),
+		Anchor: cursorView(selection.Anchor),
+		Head:   cursorView(selection.Head),
+		Start:  cursorView(selection.Start),
+		End:    cursorView(selection.End),
+	}
+}
+
+func cursorView(cursor vimengine.Cursor) CursorView {
+	return CursorView{
+		Row: cursor.Row,
+		Col: cursor.Col,
+	}
 }
 
 func copyStrings(values []string) []string {

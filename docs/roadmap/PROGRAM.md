@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VIM-027-TUI-003. Charwise visual foundation
-- 상태: pending
+### 다음 슬라이스
+- 상태: planning-needed
 - ExecPlan: 다음 루프에서 작성
-- 목표: `v` charwise selection foundation과 최소 TUI 표시를 구현한다.
+- 목표: visual selection operator 적용 또는 visual playpack 중 다음 범위를 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### VIM-027-TUI-003. Charwise visual foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/vim-027-tui-003-charwise-visual-foundation.md`
+- 완료일: 2026-05-22
 
 ### E2E-007. Selection app_state assertion
 - 상태: completed

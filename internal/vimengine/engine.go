@@ -14,6 +14,7 @@ const (
 	ModeInsert  Mode = "insert"
 	ModeCommand Mode = "command"
 	ModeSearch  Mode = "search"
+	ModeVisual  Mode = "visual"
 )
 
 const (
@@ -37,6 +38,7 @@ const (
 	KeyD           = "d"
 	KeyC           = "c"
 	KeyY           = "y"
+	KeyV           = "v"
 	KeyN           = "n"
 	KeyShiftN      = "N"
 	KeyP           = "p"
@@ -64,6 +66,21 @@ type Cursor struct {
 	DesiredCol int
 }
 
+type SelectionKind string
+
+const (
+	SelectionCharwise SelectionKind = "charwise"
+)
+
+type Selection struct {
+	Active bool
+	Kind   SelectionKind
+	Anchor Cursor
+	Head   Cursor
+	Start  Cursor
+	End    Cursor
+}
+
 type State struct {
 	Mode              Mode
 	Lines             []string
@@ -73,6 +90,7 @@ type State struct {
 	LastSearch        string
 	LastSearchForward bool
 	PendingKey        string
+	Selection         *Selection
 	Register          Register
 	UndoStack         []Snapshot
 	RedoStack         []Snapshot
@@ -194,6 +212,7 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 		next.Mode = ModeNormal
 		next.CommandLine = ""
 		next.PendingKey = ""
+		next.Selection = nil
 		next.Cursor.Col = clampCol(next.Cursor.Col, next.Lines[next.Cursor.Row])
 		next.Cursor.DesiredCol = next.Cursor.Col
 		if wasInsert && !options.replaying {
@@ -227,6 +246,11 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 		return result
 	}
 
+	if next.Mode == ModeVisual {
+		next.PendingKey = ""
+		return applyVisualKey(next, key)
+	}
+
 	if next.Mode != ModeNormal {
 		next.PendingKey = ""
 		return Result{
@@ -248,6 +272,8 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 	}
 
 	switch key {
+	case KeyV:
+		return enterVisualMode(next, key)
 	case KeyColon:
 		next.Mode = ModeCommand
 		next.CommandLine = ""
@@ -375,6 +401,112 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 			}},
 		}
 	}
+}
+
+func enterVisualMode(state State, key string) Result {
+	next := copyState(state)
+	next.Mode = ModeVisual
+	next.PendingKey = ""
+	next.Selection = normalizedSelection(Selection{
+		Active: true,
+		Kind:   SelectionCharwise,
+		Anchor: next.Cursor,
+		Head:   next.Cursor,
+	})
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func applyVisualKey(state State, key string) Result {
+	switch key {
+	case KeyV:
+		next := copyState(state)
+		next.Mode = ModeNormal
+		next.Selection = nil
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventModeReset,
+				Key:  key,
+			}},
+		}
+	case KeyH:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveHorizontal(next, key, -1)
+		})
+	case KeyL:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveHorizontal(next, key, 1)
+		})
+	case KeyJ:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveVertical(next, key, 1)
+		})
+	case KeyK:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveVertical(next, key, -1)
+		})
+	case KeyW:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveWordForward(next, key)
+		})
+	case KeyB:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveWordBackward(next, key)
+		})
+	case KeyE:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveWordEnd(next, key)
+		})
+	case KeyShiftG:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveDocumentEnd(next, key)
+		})
+	case KeyZero:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveLineStart(next, key)
+		})
+	case KeyDollar:
+		return applyVisualMotion(state, key, func(next State) Result {
+			return moveLineEnd(next, key)
+		})
+	default:
+		return Result{
+			State: copyState(state),
+			Events: []Event{{
+				Type:    EventUnsupportedKey,
+				Key:     key,
+				Message: "key is not supported in visual mode",
+			}},
+		}
+	}
+}
+
+func applyVisualMotion(state State, key string, move func(State) Result) Result {
+	next := copyState(state)
+	if next.Selection == nil || !next.Selection.Active {
+		next.Selection = normalizedSelection(Selection{
+			Active: true,
+			Kind:   SelectionCharwise,
+			Anchor: next.Cursor,
+			Head:   next.Cursor,
+		})
+	}
+	anchor := next.Selection.Anchor
+	result := move(next)
+	result.State.Mode = ModeVisual
+	result.State.Selection = normalizedSelection(Selection{
+		Active: true,
+		Kind:   SelectionCharwise,
+		Anchor: anchor,
+		Head:   result.State.Cursor,
+	})
+	return result
 }
 
 func repeatLastChange(state State, key string) Result {
@@ -1849,7 +1981,52 @@ func normalizeState(state State) State {
 	if next.Cursor.DesiredCol < next.Cursor.Col {
 		next.Cursor.DesiredCol = next.Cursor.Col
 	}
+	if next.Mode == ModeVisual {
+		if next.Selection == nil || !next.Selection.Active {
+			next.Selection = normalizedSelection(Selection{
+				Active: true,
+				Kind:   SelectionCharwise,
+				Anchor: next.Cursor,
+				Head:   next.Cursor,
+			})
+		} else {
+			selection := *next.Selection
+			selection.Anchor = clampSelectionCursor(selection.Anchor, next.Lines)
+			selection.Head = clampSelectionCursor(selection.Head, next.Lines)
+			next.Selection = normalizedSelection(selection)
+		}
+	} else {
+		next.Selection = nil
+	}
 	return next
+}
+
+func normalizedSelection(selection Selection) *Selection {
+	if selection.Kind == "" {
+		selection.Kind = SelectionCharwise
+	}
+	selection.Active = true
+	selection.Start, selection.End = orderedCursors(selection.Anchor, selection.Head)
+	return &selection
+}
+
+func orderedCursors(left Cursor, right Cursor) (Cursor, Cursor) {
+	if left.Row < right.Row || (left.Row == right.Row && left.Col <= right.Col) {
+		return left, right
+	}
+	return right, left
+}
+
+func clampSelectionCursor(cursor Cursor, lines []string) Cursor {
+	if cursor.Row < 0 {
+		cursor.Row = 0
+	}
+	if cursor.Row >= len(lines) {
+		cursor.Row = len(lines) - 1
+	}
+	cursor.Col = clampCol(cursor.Col, lines[cursor.Row])
+	cursor.DesiredCol = cursor.Col
+	return cursor
 }
 
 func clampCol(col int, line string) int {
@@ -1893,6 +2070,10 @@ func copyState(state State) State {
 	next.UndoStack = copySnapshots(state.UndoStack)
 	next.RedoStack = copySnapshots(state.RedoStack)
 	next.LastChange = copyLines(state.LastChange)
+	if state.Selection != nil {
+		selection := *state.Selection
+		next.Selection = &selection
+	}
 	next.Recording = ChangeRecording{
 		Keys:    copyLines(state.Recording.Keys),
 		Mutated: state.Recording.Mutated,

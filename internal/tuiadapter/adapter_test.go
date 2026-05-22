@@ -83,6 +83,7 @@ func TestMapInputMapsOperatorKeys(t *testing.T) {
 		"d": vimengine.KeyD,
 		"c": vimengine.KeyC,
 		"y": vimengine.KeyY,
+		"v": vimengine.KeyV,
 		"p": vimengine.KeyP,
 		"P": vimengine.KeyShiftP,
 	}
@@ -91,6 +92,22 @@ func TestMapInputMapsOperatorKeys(t *testing.T) {
 		action := MapInput(input)
 		if action.Type != ActionKey || action.Key != wantKey {
 			t.Fatalf("MapInput(%q) = %+v, want key %q", input, action, wantKey)
+		}
+	}
+}
+
+func TestMapInputInVisualModePassesVimKeys(t *testing.T) {
+	cases := map[string]string{
+		"l":   vimengine.KeyL,
+		"v":   vimengine.KeyV,
+		"esc": vimengine.KeyEsc,
+		"q":   "q",
+	}
+
+	for input, wantKey := range cases {
+		action := MapInputForMode(input, vimengine.ModeVisual)
+		if action.Type != ActionKey || action.Key != wantKey {
+			t.Fatalf("MapInputForMode(%q, visual) = %+v, want key %q", input, action, wantKey)
 		}
 	}
 }
@@ -266,6 +283,35 @@ func TestRenderStateIncludesCommandFields(t *testing.T) {
 
 	if view.CommandLine != "q" || view.LastCommand != ":q!" {
 		t.Fatalf("command fields = %q/%q, want q/:q!", view.CommandLine, view.LastCommand)
+	}
+}
+
+func TestRenderStateIncludesSelection(t *testing.T) {
+	state := scenario.State{
+		Runtime: exerciseruntime.State{
+			Vim: vimengine.State{
+				Mode:  vimengine.ModeVisual,
+				Lines: []string{"abcd"},
+				Cursor: vimengine.Cursor{
+					Row: 0,
+					Col: 3,
+				},
+				Selection: &vimengine.Selection{
+					Active: true,
+					Kind:   vimengine.SelectionCharwise,
+					Anchor: vimengine.Cursor{Row: 0, Col: 1},
+					Head:   vimengine.Cursor{Row: 0, Col: 3},
+					Start:  vimengine.Cursor{Row: 0, Col: 1},
+					End:    vimengine.Cursor{Row: 0, Col: 3},
+				},
+			},
+		},
+	}
+
+	view := RenderState(state)
+
+	if view.Selection == nil || view.Selection.Kind != "charwise" || view.Selection.End.Col != 3 {
+		t.Fatalf("selection = %+v, want charwise end col 3", view.Selection)
 	}
 }
 

@@ -13,6 +13,89 @@ func TestNewStateStartsInNormalMode(t *testing.T) {
 	}
 }
 
+func TestVisualModeStartsCharwiseSelection(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcd"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	result := Apply(state, KeyV)
+
+	if result.State.Mode != ModeVisual {
+		t.Fatalf("mode = %q, want visual", result.State.Mode)
+	}
+	selection := result.State.Selection
+	if selection == nil || !selection.Active || selection.Kind != SelectionCharwise {
+		t.Fatalf("selection = %+v, want active charwise", selection)
+	}
+	if selection.Anchor.Col != 1 || selection.Head.Col != 1 || selection.Start.Col != 1 || selection.End.Col != 1 {
+		t.Fatalf("selection = %+v, want all cols 1", selection)
+	}
+}
+
+func TestVisualModeMotionUpdatesHeadAndRange(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcd"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyV, KeyL, KeyL})
+
+	selection := result.State.Selection
+	if result.State.Mode != ModeVisual {
+		t.Fatalf("mode = %q, want visual", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 3 {
+		t.Fatalf("cursor col = %d, want 3", result.State.Cursor.Col)
+	}
+	if selection == nil || selection.Anchor.Col != 1 || selection.Head.Col != 3 || selection.Start.Col != 1 || selection.End.Col != 3 {
+		t.Fatalf("selection = %+v, want 1..3", selection)
+	}
+}
+
+func TestVisualModeNormalizesBackwardSelection(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcd"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 2,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyV, KeyH, KeyH})
+
+	selection := result.State.Selection
+	if selection == nil || selection.Anchor.Col != 2 || selection.Head.Col != 0 || selection.Start.Col != 0 || selection.End.Col != 2 {
+		t.Fatalf("selection = %+v, want normalized 0..2 with anchor 2", selection)
+	}
+}
+
+func TestVisualModeEscAndVResetSelection(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcd"},
+	}
+
+	escaped := ApplyKeys(state, []string{KeyV, KeyL, KeyEsc})
+	if escaped.State.Mode != ModeNormal || escaped.State.Selection != nil {
+		t.Fatalf("escaped state = %s/%+v, want normal nil selection", escaped.State.Mode, escaped.State.Selection)
+	}
+
+	toggled := ApplyKeys(state, []string{KeyV, KeyL, KeyV})
+	if toggled.State.Mode != ModeNormal || toggled.State.Selection != nil {
+		t.Fatalf("toggled state = %s/%+v, want normal nil selection", toggled.State.Mode, toggled.State.Selection)
+	}
+}
+
 func TestStateCopiesLines(t *testing.T) {
 	lines := []string{"alpha"}
 	engine := New(lines)

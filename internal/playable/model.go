@@ -152,11 +152,14 @@ func (m Model) View() string {
 	b.WriteString(view.Title + "\n")
 	b.WriteString(view.Message + "\n\n")
 	for row, line := range view.BufferLines {
-		b.WriteString(renderLine(line, row, view.CursorRow, view.CursorCol))
+		b.WriteString(renderLine(line, row, view.CursorRow, view.CursorCol, view.Selection))
 		b.WriteString("\n")
 	}
 	b.WriteString("\n")
 	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", view.Mode, view.Status, view.CursorRow, view.CursorCol))
+	if view.Selection != nil && view.Selection.Active {
+		b.WriteString(fmt.Sprintf("Selection: %s %d,%d -> %d,%d\n", view.Selection.Kind, view.Selection.Start.Row, view.Selection.Start.Col, view.Selection.End.Row, view.Selection.End.Col))
+	}
 	if entry, ok := m.currentEntry(); ok {
 		b.WriteString(fmt.Sprintf("Exercise: %d/%d\n", entry.IndexInPlaylist+1, entry.TotalInPlaylist))
 	}
@@ -202,11 +205,12 @@ func (m Model) State() e2estate.State {
 			Row: state.Runtime.Vim.Cursor.Row,
 			Col: state.Runtime.Vim.Cursor.Col,
 		},
-		Mode:     string(state.Runtime.Vim.Mode),
-		Command:  state.Runtime.Vim.LastCommand,
-		Status:   string(state.Status),
-		Score:    score,
-		Progress: progressState,
+		Mode:      string(state.Runtime.Vim.Mode),
+		Command:   state.Runtime.Vim.LastCommand,
+		Status:    string(state.Status),
+		Score:     score,
+		Progress:  progressState,
+		Selection: e2eSelection(state.Runtime.Vim.Selection),
 	}
 }
 
@@ -454,9 +458,10 @@ func contentRoot(root string) string {
 	return "content"
 }
 
-func renderLine(line string, row int, cursorRow int, cursorCol int) string {
+func renderLine(line string, row int, cursorRow int, cursorCol int, selection *tuiadapter.SelectionView) string {
+	prefix := "  "
 	if row != cursorRow {
-		return "  " + line
+		return prefix + renderLineCells(line, row, -1, selection)
 	}
 	runes := []rune(line)
 	if len(runes) == 0 {
@@ -468,12 +473,56 @@ func renderLine(line string, row int, cursorRow int, cursorCol int) string {
 	if cursorCol >= len(runes) {
 		cursorCol = len(runes) - 1
 	}
-	return fmt.Sprintf("> %s[%s]%s", string(runes[:cursorCol]), string(runes[cursorCol]), string(runes[cursorCol+1:]))
+	return "> " + renderLineCells(line, row, cursorCol, selection)
+}
+
+func renderLineCells(line string, row int, cursorCol int, selection *tuiadapter.SelectionView) string {
+	runes := []rune(line)
+	if len(runes) == 0 {
+		return line
+	}
+	var b strings.Builder
+	for col, r := range runes {
+		if col == cursorCol {
+			b.WriteString("[")
+			b.WriteRune(r)
+			b.WriteString("]")
+			continue
+		}
+		if cellSelected(row, col, selection) {
+			b.WriteString("{")
+			b.WriteRune(r)
+			b.WriteString("}")
+			continue
+		}
+		b.WriteRune(r)
+	}
+	return b.String()
+}
+
+func cellSelected(row int, col int, selection *tuiadapter.SelectionView) bool {
+	if selection == nil || !selection.Active || selection.Kind != string(vimengine.SelectionCharwise) {
+		return false
+	}
+	if row < selection.Start.Row || row > selection.End.Row {
+		return false
+	}
+	startCol := 0
+	if row == selection.Start.Row {
+		startCol = selection.Start.Col
+	}
+	endCol := int(^uint(0) >> 1)
+	if row == selection.End.Row {
+		endCol = selection.End.Col
+	}
+	return col >= startCol && col <= endCol
 }
 
 func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel) string {
 	lines := []string{"ACTION"}
 	switch {
+	case view.Mode == string(vimengine.ModeVisual):
+		lines = append(lines, "Keys: motion expands selection  esc/v: normal")
 	case view.Mode == string(vimengine.ModeCommand):
 		lines = append(lines, "Keys: type command  enter: run  esc: normal")
 	case view.Mode == string(vimengine.ModeSearch):
@@ -516,6 +565,27 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 		lines = append(lines, "?: hint  q: quit")
 	}
 	return actionPanelStyle.Render(strings.Join(lines, "\n"))
+}
+
+func e2eSelection(selection *vimengine.Selection) *e2estate.Selection {
+	if selection == nil {
+		return nil
+	}
+	return &e2estate.Selection{
+		Active: selection.Active,
+		Kind:   string(selection.Kind),
+		Anchor: e2eCursor(selection.Anchor),
+		Head:   e2eCursor(selection.Head),
+		Start:  e2eCursor(selection.Start),
+		End:    e2eCursor(selection.End),
+	}
+}
+
+func e2eCursor(cursor vimengine.Cursor) e2estate.Cursor {
+	return e2estate.Cursor{
+		Row: cursor.Row,
+		Col: cursor.Col,
+	}
 }
 
 func coachingLine(state scenario.State) string {
