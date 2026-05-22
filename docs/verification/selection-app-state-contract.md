@@ -36,10 +36,11 @@ selection:
 ```
 
 - `active`: visual selection이 켜져 있으면 true다.
-- `kind`: 첫 구현은 `charwise`만 허용한다.
+- `kind`: 현재 구현은 `charwise`만 허용한다. 후속 linewise visual은 `linewise`를 사용한다.
 - `anchor`: `v`를 누른 순간의 cursor다.
 - `head`: 현재 cursor다.
 - `start`/`end`: `anchor`와 `head`를 문서 순서로 정규화한 inclusive range다.
+- 후속 linewise visual에서 `anchor`와 `head`는 row motion의 현재 cursor 위치를 보존하고, normalized `start`는 첫 선택 줄의 col 0, `end`는 마지막 선택 줄의 마지막 col을 사용한다. empty line의 `end.col`은 0이다.
 - charwise selection은 cursor cell을 포함한다.
 - `esc`는 mode를 `normal`로 되돌리고 selection을 제거한다.
 - 첫 slice에서 `v`를 visual mode 중 다시 누르면 selection을 제거하고 normal mode로 돌아간다.
@@ -76,6 +77,7 @@ type Selection struct {
 
 - 상태 줄은 기존 `Mode: visual`을 표시한다.
 - selection이 active이면 별도 줄에 `Selection: charwise <start.row>,<start.col> -> <end.row>,<end.col>`를 표시한다.
+- 후속 linewise visual은 같은 형식으로 `Selection: linewise <start.row>,0 -> <end.row>,<end.col>`를 표시한다.
 - buffer rendering은 selected non-cursor cell을 `{x}`로 표시한다.
 - cursor cell은 기존 `[x]` 표시를 유지한다.
 - empty line selection은 첫 slice에서 만들지 않는다.

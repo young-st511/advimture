@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — VISUAL-LINE-GAP-001 완료
+
+이전 가정: charwise visual 이후 linewise `V`와 multi-line charwise visual 중 무엇을 먼저 열지 결정되지 않았다.
+
+새 가정: 다음 visual 후보는 linewise `V` + row motion + `d/y`다. multi-line charwise `v` operator와 visual block은 linewise 구현 이후로 미룬다.
+
+이유: linewise `V`는 설정 블록 삭제/복사 학습 가치가 크고, 기존 linewise register/put 모델과 연결되어 검증 표면이 더 안정적이다.
+
+영향: `Post-Visual Applied Mastery and Hardening` 중기 플랜은 완료됐다. 다음 루프는 새 중기 플랜 수립으로 시작한다.
+
 ## 2026-05-22 — INCIDENT-FLOW-001 완료
 
 이전 가정: incident 001~003은 기능적으로 완주 가능했지만, 일부 beat 문구가 독립 문제처럼 읽힐 수 있었다.

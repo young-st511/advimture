@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VISUAL-LINE-GAP-001. Linewise visual planning
+### NEXT-PLAN. 다음 중기 플랜 수립
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: linewise `V`와 multi-line visual 범위를 구현 전 gap planning으로 결정한다.
+- 목표: completed 중기 플랜을 바탕으로 linewise visual 구현, command choice drill, platform review loop 중 다음 우선순위를 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### VISUAL-LINE-GAP-001. Linewise visual planning
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/visual-line-gap-001-linewise-scope.md`
+- 완료일: 2026-05-22
 
 ### INCIDENT-FLOW-001. Incident continuity pass
 - 상태: completed

@@ -666,6 +666,43 @@ command_cluster:
     - PLAYPACK-010은 3문항으로 deletion, yank-put, backward selection을 다룬다.
 ```
 
+### visual-line-basic
+
+```yaml
+command_cluster:
+  id: visual-line-basic
+  status: planned
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-5-structure-selection
+  title: Visual line mode: 줄 단위 범위 선택
+  commands: ["V", "d", "y"]
+  coverage_required: ["Vd", "Vy"]
+  oracle: optional
+  purpose: 여러 줄을 눈으로 확인하며 줄 단위로 삭제하거나 복사한다.
+  prerequisite: ["visual-char-line", "yank-put-basic", "whole-file-navigation"]
+  difficulty: intermediate
+  useful_when:
+    - 설정 블록 전체를 제거하거나 복제할 때
+    - 줄 내부 일부가 아니라 줄 묶음 자체가 복구 대상일 때
+    - charwise selection보다 linewise register와 put이 자연스러울 때
+  combo_paths:
+    - ["V", "j", "d"]
+    - ["V", "j", "y", "p"]
+    - ["V", "G", "d"]
+  common_mistakes:
+    - v와 V의 selection 단위 차이를 놓친다.
+    - 여러 줄을 charwise selection으로 억지로 잡으려 한다.
+    - linewise yank 후 p/P가 줄 단위로 동작한다는 점을 잊는다.
+  compatibility_notes:
+    - VISUAL-LINE-GAP-001의 결정에 따라 첫 구현은 linewise V + d/y로 제한한다.
+    - multi-line charwise v operator, visual block, c/indent/count/register prefix는 제외한다.
+    - selection app_state는 kind: linewise와 normalized full-line start/end를 사용한다.
+  design_notes:
+    - 다음 실행 후보는 VISUAL-LINE-001, VIM-029, PLAYPACK-011 순서다.
+    - 첫 playpack은 3문항 이하로 두고 charwise v와 linewise V의 차이를 먼저 보여준다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -680,6 +717,7 @@ command_cluster:
 - `repeat-last-change`는 REPEAT-GAP-001에서 approved로 승격했고, VIM-024에서 engine support를 구현했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
 - `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했으며 PLAYPACK-008에서 4문항 tutorial content와 full E2E를 연결했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
 - `visual-char-line`은 같은 줄 charwise visual selection의 삭제/복사 tutorial까지 구현했다. visual block, count/register prefix, indentation command는 후속 hardening으로 둔다.
+- `visual-line-basic`은 planned 후보이며 첫 구현 범위는 linewise `V` + `d/y`로 제한한다. multi-line charwise operator보다 linewise selection을 먼저 검토한다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001
