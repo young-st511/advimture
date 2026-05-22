@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### E2E-FIXTURE-001. E2E fixture maintainability
+### VISUAL-GAP-002. Visual selection contract
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: 긴 progress fixture 유지보수 부담을 줄이는 fixture builder 또는 최소 fixture 전략을 수립한다.
+- 목표: visual selection state, TUI 표시, app_state assertion 계약을 확정한다.
 
 ## 방금 완료한 슬라이스
+
+### E2E-FIXTURE-001. E2E fixture maintainability
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-fixture-001-progress-builder.md`
+- 완료일: 2026-05-22
 
 ### PROGRESS-LANGUAGE-001. Recovery language pass
 - 상태: completed

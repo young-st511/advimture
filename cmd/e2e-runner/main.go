@@ -17,6 +17,8 @@ import (
 	"time"
 
 	"github.com/creack/pty"
+	"github.com/young-st511/advimture/internal/content"
+	"github.com/young-st511/advimture/internal/progress"
 	"gopkg.in/yaml.v3"
 )
 
@@ -40,6 +42,8 @@ type setupConfig struct {
 	Home            string `yaml:"home"`
 	AllowUnsafeHome bool   `yaml:"allow_unsafe_home"`
 	ProgressFile    string `yaml:"progress_file"`
+	CompleteBefore  string `yaml:"complete_before"`
+	ContentRoot     string `yaml:"content_root"`
 }
 
 type step struct {
@@ -290,7 +294,7 @@ func setupHome(sc scenario) (string, func(), error) {
 		if err != nil {
 			return "", func() {}, err
 		}
-		if err := writeProgressFixture(dir, sc.Setup.ProgressFile); err != nil {
+		if err := writeProgressFixture(dir, sc.Setup); err != nil {
 			_ = os.RemoveAll(dir)
 			return "", func() {}, err
 		}
@@ -303,13 +307,17 @@ func setupHome(sc scenario) (string, func(), error) {
 	if err := guardHome(abs, sc.Setup.AllowUnsafeHome); err != nil {
 		return "", func() {}, err
 	}
-	if err := writeProgressFixture(abs, sc.Setup.ProgressFile); err != nil {
+	if err := writeProgressFixture(abs, sc.Setup); err != nil {
 		return "", func() {}, err
 	}
 	return abs, func() {}, nil
 }
 
-func writeProgressFixture(homeDir string, raw string) error {
+func writeProgressFixture(homeDir string, setup setupConfig) error {
+	raw, err := progressFixtureJSON(setup)
+	if err != nil {
+		return err
+	}
 	if strings.TrimSpace(raw) == "" {
 		return nil
 	}
@@ -325,6 +333,94 @@ func writeProgressFixture(homeDir string, raw string) error {
 		return fmt.Errorf("progress fixture write: %w", err)
 	}
 	return nil
+}
+
+func progressFixtureJSON(setup setupConfig) (string, error) {
+	hasInline := strings.TrimSpace(setup.ProgressFile) != ""
+	hasBuilder := strings.TrimSpace(setup.CompleteBefore) != ""
+	if hasInline && hasBuilder {
+		return "", fmt.Errorf("setup.progress_file and setup.complete_before cannot be used together")
+	}
+	if hasInline {
+		return setup.ProgressFile, nil
+	}
+	if !hasBuilder {
+		return "", nil
+	}
+	progressState, err := buildCompletedBeforeProgress(setup.ContentRoot, setup.CompleteBefore)
+	if err != nil {
+		return "", err
+	}
+	raw, err := json.MarshalIndent(progressState, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("progress fixture marshal: %w", err)
+	}
+	return string(raw), nil
+}
+
+func buildCompletedBeforeProgress(root string, exerciseID string) (*progress.Progress, error) {
+	if strings.TrimSpace(exerciseID) == "" {
+		return nil, fmt.Errorf("complete_before exercise id is required")
+	}
+	if root == "" {
+		root = "content"
+	}
+	ids, err := playableExerciseIDs(root)
+	if err != nil {
+		return nil, err
+	}
+
+	progressState := progress.NewProgress()
+	found := false
+	for _, id := range ids {
+		if id == exerciseID {
+			found = true
+			break
+		}
+		progressState.Missions[id] = progress.MissionProgress{
+			Completed: true,
+			BestGrade: "S",
+			Attempts:  1,
+		}
+	}
+	if !found {
+		return nil, fmt.Errorf("complete_before exercise %q was not found in playable sequence", exerciseID)
+	}
+	return progressState, nil
+}
+
+func playableExerciseIDs(root string) ([]string, error) {
+	library, err := content.LoadLibrary(root)
+	if err != nil {
+		return nil, fmt.Errorf("load content for progress fixture: %w", err)
+	}
+
+	var ids []string
+	for _, playlist := range library.PlayablePlaylists() {
+		for _, beat := range playlist.Beats {
+			exercise, ok := library.Exercises[beat.ExerciseID]
+			if !ok || !isE2EPlayableExercise(exercise) {
+				continue
+			}
+			scenarioDoc, ok := library.Scenarios[beat.ScenarioID]
+			if !ok || !isE2EPlayableScenario(scenarioDoc) {
+				continue
+			}
+			ids = append(ids, beat.ExerciseID)
+		}
+	}
+	return ids, nil
+}
+
+func isE2EPlayableExercise(exercise content.ExerciseDocument) bool {
+	return (exercise.Status == content.StatusApproved || exercise.Status == content.StatusImplemented) &&
+		exercise.EngineSupport == content.EngineSupportImplemented &&
+		exercise.ReplayStatus == content.ReplayStatusPass
+}
+
+func isE2EPlayableScenario(scenarioDoc content.ScenarioDocument) bool {
+	return (scenarioDoc.Status == content.StatusApproved || scenarioDoc.Status == content.StatusImplemented) &&
+		scenarioDoc.EngineSupport == content.EngineSupportImplemented
 }
 
 func guardHome(path string, allowUnsafe bool) error {

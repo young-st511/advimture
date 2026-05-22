@@ -243,6 +243,64 @@ func TestSetupHomeWritesProgressFixture(t *testing.T) {
 	}
 }
 
+func TestSetupHomeBuildsProgressBeforeExercise(t *testing.T) {
+	home, cleanup, err := setupHome(scenario{
+		Setup: setupConfig{
+			Home:           "temp",
+			CompleteBefore: "survival-save-quit-001",
+			ContentRoot:    filepath.Join("..", "..", "content"),
+		},
+	})
+	defer cleanup()
+	if err != nil {
+		t.Fatalf("setupHome returned error: %v", err)
+	}
+
+	raw, err := os.ReadFile(filepath.Join(home, ".advimture", "progress.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var decoded struct {
+		Missions map[string]struct {
+			Completed bool   `json:"completed"`
+			BestGrade string `json:"best_grade"`
+			Attempts  int    `json:"attempts"`
+		} `json:"missions"`
+	}
+	if err := json.Unmarshal(raw, &decoded); err != nil {
+		t.Fatal(err)
+	}
+	if len(decoded.Missions) != 4 {
+		t.Fatalf("missions = %d, want 4 before survival-save-quit-001: %s", len(decoded.Missions), raw)
+	}
+	if !decoded.Missions["normal-motion-basic-004"].Completed {
+		t.Fatalf("normal-motion-basic-004 fixture = %+v, want completed", decoded.Missions["normal-motion-basic-004"])
+	}
+	if _, ok := decoded.Missions["survival-save-quit-001"]; ok {
+		t.Fatalf("survival-save-quit-001 should not be completed before itself: %s", raw)
+	}
+}
+
+func TestProgressFixtureRejectsInlineAndBuilderTogether(t *testing.T) {
+	_, err := progressFixtureJSON(setupConfig{
+		ProgressFile:   `{"missions":{}}`,
+		CompleteBefore: "normal-motion-basic-001",
+	})
+	if err == nil || !strings.Contains(err.Error(), "cannot be used together") {
+		t.Fatalf("progressFixtureJSON error = %v, want mutual exclusion", err)
+	}
+}
+
+func TestProgressFixtureRejectsMissingCompleteBeforeExercise(t *testing.T) {
+	_, err := progressFixtureJSON(setupConfig{
+		CompleteBefore: "missing-exercise",
+		ContentRoot:    filepath.Join("..", "..", "content"),
+	})
+	if err == nil || !strings.Contains(err.Error(), "not found") {
+		t.Fatalf("progressFixtureJSON error = %v, want not found", err)
+	}
+}
+
 func TestWriteEvidenceWritesSummary(t *testing.T) {
 	root := t.TempDir()
 	runErr := assertError("screen mismatch")

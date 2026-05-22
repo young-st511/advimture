@@ -6,27 +6,7 @@ terminal:
   height: 32
 setup:
   home: temp
-  progress_file: |
-    {
-      "tutorials": {},
-      "missions": {
-        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
-        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
-        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
-        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1},
-        "survival-save-quit-002": {"completed": true, "best_grade": "S", "attempts": 1},
-        "survival-save-quit-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "word-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
-        "word-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
-        "word-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "whole-file-navigation-001": {"completed": true, "best_grade": "S", "attempts": 1},
-        "whole-file-navigation-002": {"completed": true, "best_grade": "S", "attempts": 1},
-        "whole-file-navigation-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "whole-file-navigation-004": {"completed": true, "best_grade": "S", "attempts": 1}
-      },
-      "total_keystrokes": 0
-    }
+  complete_before: single-char-edit-001
 steps:
   - wait_screen_contains: "라우트 이름에 i가 하나 더 들어갔습니다"
   - send: "x"

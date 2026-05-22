@@ -24,6 +24,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - Makefile은 runner 실행 시 `artifacts/go-build-cache`를 `GOCACHE`로 사용해 사용자 Go build cache에 쓰지 않는다.
 - runner는 scenario YAML의 `setup.home: temp`일 때 테스트 전용 HOME을 만들고 앱을 실행한다.
 - runner는 `setup.progress_file` JSON fixture로 테스트 전용 HOME에 `.advimture/progress.json`을 미리 생성할 수 있다.
+- runner는 `setup.complete_before: <exercise-id>`로 현재 content의 playable 순서를 읽고 지정 exercise 직전까지 completed progress를 생성할 수 있다. `setup.progress_file`과 `setup.complete_before`는 동시에 사용할 수 없다.
 - runner는 pseudo terminal로 앱을 실행하기 위해 `github.com/creack/pty`를 사용한다.
 - runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence/content, key trace exact match, app state summary를 검증한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.

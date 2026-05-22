@@ -6,18 +6,7 @@ terminal:
   height: 30
 setup:
   home: temp
-  progress_file: |
-    {
-      "tutorials": {},
-      "missions": {
-        "normal-motion-basic-001": {"completed": true, "best_grade": "S", "attempts": 1},
-        "normal-motion-basic-002": {"completed": true, "best_grade": "S", "attempts": 1},
-        "normal-motion-basic-003": {"completed": true, "best_grade": "S", "attempts": 1},
-        "normal-motion-basic-004": {"completed": true, "best_grade": "S", "attempts": 1},
-        "survival-save-quit-001": {"completed": true, "best_grade": "S", "attempts": 1}
-      },
-      "total_keystrokes": 0
-    }
+  complete_before: survival-save-quit-002
 steps:
   - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
   - send: ":"

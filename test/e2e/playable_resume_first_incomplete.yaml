@@ -6,20 +6,7 @@ terminal:
   height: 30
 setup:
   home: temp
-  progress_file: |
-    {
-      "tutorials": {},
-      "missions": {
-        "normal-motion-basic-001": {
-          "completed": true,
-          "best_grade": "S",
-          "best_keystrokes": 2,
-          "best_time_ms": 1000,
-          "attempts": 1
-        }
-      },
-      "total_keystrokes": 0
-    }
+  complete_before: normal-motion-basic-002
 steps:
   - wait_screen_contains: "부팅 로그에서 WARN 줄을 놓쳤습니다"
   - send: "j"

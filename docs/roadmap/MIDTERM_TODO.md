@@ -206,7 +206,7 @@
 | 1 | PLAN-REFRESH-003 | completed | 세계관 프레임과 다음 보강 순서 고정 |
 | 2 | INCIDENT-UX-003 | completed | incident 001/002 제목, briefing, feedback, 2단계 hint를 복구 작전으로 정렬 |
 | 3 | PROGRESS-LANGUAGE-001 | completed | 저장 포맷 변경 없이 review/best record 문구를 복구국 프레임으로 정렬 |
-| 4 | E2E-FIXTURE-001 | pending | 긴 progress fixture 유지보수 완화 전략 수립 |
+| 4 | E2E-FIXTURE-001 | completed | 긴 progress fixture 유지보수 완화 전략 수립 |
 | 5 | VISUAL-GAP-002 | pending | visual selection state, TUI 표시, app_state assertion 계약 확정 |
 | 6 | E2E-007 | pending | selection app_state/content assertion 확장 |
 | 7 | VIM-027-TUI-003 | pending | `v` charwise selection foundation과 최소 표시 구현 |

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — E2E progress fixture builder 도입
+
+이전 가정: 후반 playlist/incident E2E는 `setup.progress_file`에 긴 JSON을 직접 넣어 현재 exercise 직전까지의 progress를 만들었다.
+
+새 가정: runner는 `setup.complete_before: <exercise-id>`를 지원하며, 현재 playable content 순서를 읽어 지정 exercise 직전까지 completed progress를 생성한다. 긴 inline JSON은 예외적 raw fixture가 필요할 때만 사용한다.
+
+이유: content 순서가 늘어날수록 progress JSON 복붙이 낡기 쉽고, 후속 visual mode E2E 작성 시 fixture 비용이 커지기 때문이다.
+
+영향: 다음 visual mode 검증 루프는 짧은 `complete_before` fixture를 사용해 app_state assertion에 집중한다.
+
 ## 2026-05-22 — 복구국 언어를 progress/debrief UI에 적용
 
 이전 가정: review queue와 성공 debrief는 기능적으로 동작했지만 `Debrief`, `Best`, `Playlist`, `재진단 큐`처럼 플랫폼 내부 용어가 섞여 있었다.
