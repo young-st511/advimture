@@ -72,6 +72,20 @@
 
 핵심 감각은 “구조 설정을 순서대로 재동기화하는 복구 작전”이다.
 
+### Incident 003
+
+권장 제목: **릴레이 기지 003: 오염 구간 격리**
+
+흐름:
+
+1. `/contam`으로 오염 표식 위치를 잡는다.
+2. visual `d`로 route 안의 bad 구간만 제거한다.
+3. visual `y`와 `p`로 정상 ok 신호를 mirror에 전송한다.
+4. backward visual `d`로 뒤쪽 stale tail만 제거한다.
+5. `:%s`로 잔류 off 상태를 on으로 승격한다.
+
+핵심 감각은 “보이는 오염 구간을 지정하고, 정상 신호를 재사용한 뒤, 전체 상태를 마감하는 격리 runbook”이다.
+
 ## 금지
 
 - 장대한 릴레이 기지 역사, 세력, 인물 관계 설명
@@ -80,4 +94,3 @@
 - command를 숨기는 미스터리
 - 정답을 알아도 실패하는 숨은 조건
 - scenario가 target state, optimal keys, constraints를 바꾸는 것
-

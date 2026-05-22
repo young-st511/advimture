@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-FLOW-001. Incident continuity pass
+### VISUAL-LINE-GAP-001. Linewise visual planning
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: incident 001~003 beat 연결 문구와 runbook continuity를 저장 변경 없이 보강한다.
+- 목표: linewise `V`와 multi-line visual 범위를 구현 전 gap planning으로 결정한다.
 
 ## 방금 완료한 슬라이스
+
+### INCIDENT-FLOW-001. Incident continuity pass
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-flow-001-runbook-continuity.md`
+- 완료일: 2026-05-22
 
 ### INCIDENT-RUN-003. Visual recovery incident
 - 상태: completed

@@ -256,7 +256,7 @@
 | 3 | ENGINE-SPLIT-001 | completed | `internal/vimengine`의 selection/range/operator helper를 behavior 변화 없이 분리 |
 | 4 | VISUAL-HARDEN-001 | completed | charwise visual invariant, undo/register, unsupported edge case 테스트 보강 |
 | 5 | INCIDENT-RUN-003 | completed | visual selection을 적용하는 세 번째 Runbook Dispatch incident 구현 |
-| 6 | INCIDENT-FLOW-001 | pending | incident beat 연결 문구와 runbook continuity를 저장 변경 없이 보강 |
+| 6 | INCIDENT-FLOW-001 | completed | incident beat 연결 문구와 runbook continuity를 저장 변경 없이 보강 |
 | 7 | VISUAL-LINE-GAP-001 | pending | linewise `V`와 multi-line visual 범위를 구현 전 gap planning으로 결정 |
 
 ## Post-Visual Applied Mastery and Hardening 출구 조건
@@ -268,7 +268,7 @@
 | ENGINE-SPLIT-001 | QA-SEL-001 완료 | completed: selection/range/operator helper 파일 분리 | completed: `go test ./internal/vimengine/...`, `go test ./...` | behavior change와 새 visual 기능 추가 금지 |
 | VISUAL-HARDEN-001 | ENGINE-SPLIT-001 완료 | completed: same-line 경계, empty line, toggle/reset, undo/register, unsupported multi-line 테스트 | completed: `go test ./internal/vimengine/...`, `go test ./internal/runtime/...`, `go test ./...` | `V`, visual block, count/register prefix는 넣지 않는다 |
 | INCIDENT-RUN-003 | visual tutorial과 hardening 완료 | completed: `릴레이 기지 003: 오염 구간 격리` content/scenario/playlist + full E2E | completed: content replay, focused E2E, `make e2e-playable` | 새 command를 소개하지 않고 기존 command 조합만 사용 |
-| INCIDENT-FLOW-001 | incident 003 완료 | incident 001~003 beat 연결 문구, briefing/debrief continuity pass | content tests, incident E2E | target_state, optimal_keys, constraints 변경 금지 |
+| INCIDENT-FLOW-001 | incident 003 완료 | completed: incident 001~003 beat 연결 문구, briefing/debrief continuity pass | completed: content tests, incident E2E, `make e2e-playable` | target_state, optimal_keys, constraints 변경 금지 |
 | VISUAL-LINE-GAP-001 | charwise visual 적용 런 완료 | `V`, multi-line visual, selection contract 영향도와 제외 항목 문서화 | docs review, `git diff --check` | 구현은 다음 중기 플랜으로 분리 |
 
 ## Post-Visual 리뷰 판단

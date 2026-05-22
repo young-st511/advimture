@@ -134,7 +134,7 @@ assert:
     - "릴레이 기지 001: 야간 핫픽스 복구"
     - "Exercise: 6/6"
     - "Next tutorial: enter"
-    - "좋습니다. 전체 파일이 아니라 문제 relay 구간만 정확히 정리했습니다."
+    - "좋습니다. 원인 기록을 남기고 문제 relay 구간만 정리해 야간 핫픽스 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

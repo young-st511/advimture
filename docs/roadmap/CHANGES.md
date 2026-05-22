@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — INCIDENT-FLOW-001 완료
+
+이전 가정: incident 001~003은 기능적으로 완주 가능했지만, 일부 beat 문구가 독립 문제처럼 읽힐 수 있었다.
+
+새 가정: incident briefing/success/failure는 `진입 조치 -> 후속 조치 -> 마감 조치` 흐름을 화면 문구에서 직접 드러낸다. target state, optimal keys, constraints는 변경하지 않는다.
+
+이유: Runbook Dispatch 프레임을 얹되 Vim 학습 목표를 가리지 않으려면 별도 narrative screen보다 각 beat 문구의 연결감을 높이는 편이 안전하다.
+
+영향: 다음 활성 slice는 linewise `V`와 multi-line visual 범위를 구현 전 결정하는 `VISUAL-LINE-GAP-001`이다.
+
 ## 2026-05-22 — INCIDENT-RUN-003 완료
 
 이전 가정: visual selection은 tutorial에서만 검증됐고, incident 적용 런에서는 아직 실제 복구 도구로 쓰이지 않았다.
