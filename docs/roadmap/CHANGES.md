@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — COMMAND-CHOICE-001 완료
+
+이전 가정: incident 004까지 완료되어 배운 command는 늘었지만, 플레이어가 어느 상황에서 어떤 command를 고를지 훈련하는 별도 기준은 아직 없었다.
+
+새 가정: command choice drill은 새 command cluster가 아니라 기존 implemented cluster를 섞어 범위, 재사용, 검색 후 편집, range command 선택을 훈련하는 적용 레이어다.
+
+이유: Vim 학습이 key sequence 암기에서 멈추지 않으려면 같은 목표를 여러 방식으로 풀 수 있는 상황에서 가장 적합한 도구를 고르는 판단을 훈련해야 한다.
+
+영향: 다음 활성 slice는 저장 포맷 변경 없이 review/daily 동기를 강화하는 `PLATFORM-REVIEW-002`다.
+
 ## 2026-05-23 — INCIDENT-RUN-004 완료
 
 이전 가정: linewise visual은 tutorial까지 연결됐지만, incident 적용 run에서는 아직 실제 config block 복구 도구로 쓰이지 않았다.

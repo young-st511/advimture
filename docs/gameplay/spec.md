@@ -98,6 +98,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-002-structure-recovery`는 “릴레이 기지 002: 구조 설정 재동기화”로 표시하며 `/secret`, `ci"`, `yi"` + `P`, `:%s`, `ci"` + `.`를 조합하는 두 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - `incident-003-visual-recovery`는 “릴레이 기지 003: 오염 구간 격리”로 표시하며 `/contam`, visual `d`, visual `y` + `p`, backward visual `d`, `:%s`를 조합하는 세 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - `incident-004-linewise-block-recovery`는 “릴레이 기지 004: config block 복구”로 표시하며 `/block`, linewise `Vd`, linewise `Vy` + `p`, linewise `VGd`, `:%s`를 조합하는 네 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
+- command choice drill은 새 command cluster가 아니라 이미 배운 command 중 적절한 도구를 고르는 적용 레이어다. 첫 설계 기준은 `docs/gameplay/command-choice-drills.md`를 따른다.
+- command choice playable은 새 schema 승인 전까지 기존 `constraints.required_keys`와 `constraints.forbidden_keys`로 의도한 선택을 고정한다.
+- command choice scenario는 정답 key sequence보다 선택 이유를 성공/실패 피드백에서 강화한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.

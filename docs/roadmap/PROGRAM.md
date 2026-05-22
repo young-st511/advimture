@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### COMMAND-CHOICE-001. Command choice drill
+### PLATFORM-REVIEW-002. Review and daily motivation pass
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: 배운 command 중 적절한 도구를 고르는 mixed drill을 설계한다.
+- 목표: 저장 포맷 변경 없이 review/daily 동기를 강화한다.
 
 ## 방금 완료한 슬라이스
+
+### COMMAND-CHOICE-001. Command choice drill
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/command-choice-001-mixed-drill-design.md`
+- 완료일: 2026-05-23
 
 ### INCIDENT-RUN-004. Linewise visual applied incident
 - 상태: completed

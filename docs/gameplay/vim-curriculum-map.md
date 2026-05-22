@@ -247,42 +247,40 @@ Scenario 방향:
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic` |
-| next | 다음 gap planning/구현 후보 | linewise visual 적용 incident, command choice drill |
+| next | 다음 gap planning/구현 후보 | platform review loop, command choice playable 승격 |
 | soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | quote text object hardening, multi-line charwise visual |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
-### Next Gap Planning Candidate
+### Current Design Candidate
 
-ID: `visual-line-basic`
+ID: `command-choice-drill`
 
-목표: charwise visual tutorial과 적용 런 이후, linewise `V`의 최소 학습 slice를 정한다.
+목표: 이미 배운 command 중 상황에 맞는 도구를 고르는 mixed drill을 설계한다.
 
-Command cluster 후보:
+적용 레이어 후보:
 
-| Cluster | Commands | Engine support | Oracle | 이유 |
-|---------|----------|----------------|--------|------|
-| `visual-line-basic` | `V`, `d`, `y` 후보 | planned | optional | 여러 줄을 눈으로 확인하며 삭제/복사하는 실무 체감이 크다. VISUAL-LINE-GAP-001은 multi-line charwise보다 linewise `V`를 먼저 검토하기로 결정했다. |
+| Layer | Commands | Engine support | Oracle | 이유 |
+|-------|----------|----------------|--------|------|
+| `command-choice-drill` | 기존 implemented cluster 조합 | implemented only | not needed | Vim 학습의 다음 병목은 새 key를 외우는 것이 아니라 범위/반복/검색/치환 상황에서 적절한 도구를 고르는 판단이다. |
 
-다음 gap planning 후보:
+다음 후보:
 
-- 첫 구현 범위는 linewise `V` + row motion + `d/y`로 좁힌다.
-- selection anchor/head model이 linewise 범위에서 어떻게 정규화되는지 정의한다.
-- TUI 표시와 app_state summary가 multi-line selection을 어떻게 표현할지 정한다.
-- visual selection에 operator `d`/`y`를 적용할 때 register kind와 cursor landing을 engine contract로 고정한다.
-- visual block, count prefix, register prefix, indentation command는 후속 hardening으로 미룬다.
+- `scope-choice`: `ciw`, `ci"`, `v...d`, `V...d` 중 편집 범위에 맞는 도구를 고른다.
+- `reuse-choice`: retype 대신 yank/put 또는 `.` 반복을 고른다.
+- `search-then-act`: `/`, `n`, `N`으로 위치를 찾은 뒤 적절한 편집 command를 고른다.
+- `range-choice`: visual/operator 조작과 substitute/range command 중 더 적합한 방법을 고른다.
 
 권장 문항 수:
 
-- linewise selection copy/delete: 2문항 이하
-- linewise yank + put 재사용: 1문항 이하
-- 총 3문항 이하
+- 첫 playable 승격은 4문항 이하
+- 새 command 소개 없이 기존 tutorial과 incident에서 배운 command만 사용
 
 설계 제약:
 
-- 이동은 필요한 만큼만 복습하고 주목표로 삼지 않는다.
-- 각 문항은 `constraints.required_keys`로 의도 command를 고정한다.
-- 첫 소개 문항은 charwise visual과 linewise visual의 차이를 명확히 구분한다.
-- visual linewise 구현은 scenario보다 linewise selection state와 화면 표시 검증이 먼저 설계되어야 한다.
+- command choice는 command cluster가 아니라 적용 레이어로 유지한다.
+- 새 schema 승인 전까지 authoring rubric은 문서에 두고, playable enforcement는 기존 constraints로 처리한다.
+- scenario는 정답 key sequence보다 선택 이유를 강화한다.
+- 자세한 기준은 `docs/gameplay/command-choice-drills.md`를 따른다.
 
 ## Known Coverage Gaps
 
@@ -293,6 +291,7 @@ Command cluster 후보:
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line visual, linewise `V`, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
+- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했다. playable content 승격과 E2E는 후속 ExecPlan에서 다룬다.
 
 ## Long-Run Platform Direction
 
@@ -304,6 +303,7 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 2. `applied-incident-run`: 이미 배운 command를 incident 003에서 조합해 도구 선택 능력을 훈련한다.
 3. `incident-flow-continuity`: incident beat가 하나의 runbook 조치처럼 이어지게 만든다.
 4. `linewise-applied-incident`: linewise visual을 실제 config block 복구 run에 적용한다.
-5. `platform-review-loop`: mastery/spaced review/daily run은 progress schema 승인 전까지 RFC와 저장 변경 없는 review만 다룬다.
+5. `command-choice-drill`: 이미 배운 command를 섞어 범위/반복/검색/치환 중 적합한 도구를 고르는 판단을 훈련한다.
+6. `platform-review-loop`: mastery/spaced review/daily run은 progress schema 승인 전까지 RFC와 저장 변경 없는 review만 다룬다.
 
 세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.
