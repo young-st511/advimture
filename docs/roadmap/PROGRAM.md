@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### 다음 슬라이스
-- 상태: planning-needed
+### VIM-028. Charwise visual delete/yank
+- 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: visual selection operator 적용 또는 visual playpack 중 다음 범위를 결정한다.
+- 목표: 같은 줄 charwise visual selection에 `d`/`y`를 적용한다.
 
 ## 방금 완료한 슬라이스
+
+### VISUAL-OP-001. Charwise visual operator scope
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/visual-op-001-charwise-operator-scope.md`
+- 완료일: 2026-05-22
 
 ### VIM-027-TUI-003. Charwise visual foundation
 - 상태: completed

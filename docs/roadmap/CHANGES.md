@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — visual operator 범위를 같은 줄 `d/y`로 고정
+
+이전 가정: visual foundation 이후 operator 적용과 tutorial 중 무엇을 먼저 할지 열려 있었다.
+
+새 가정: 다음 구현은 같은 줄 charwise visual selection에 `d`와 `y`를 적용하는 `VIM-028`이다. content/tutorial은 engine 통과 이후 `PLAYPACK-010`으로 분리한다.
+
+이유: visual mode가 학습 단위로 완성되려면 “선택 후 삭제/복사”가 필요하지만, multi-line/linewise/block까지 한 번에 넣으면 검증 표면이 커진다.
+
+영향: `V`, visual block, count/register prefix, multi-line charwise operator, dot repeat 연계는 후속 hardening으로 둔다.
+
 ## 2026-05-22 — charwise visual foundation 구현
 
 이전 가정: visual mode는 selection 계약과 app_state assertion까지만 준비되어 있었다.
