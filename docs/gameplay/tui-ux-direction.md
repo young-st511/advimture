@@ -47,6 +47,48 @@ Action or Debrief Panel
 
 넓은 터미널에서는 `Console + Side Rail`을 고려할 수 있다. 좁은 터미널에서는 위 구조를 세로로 쌓는다.
 
+## 상세 기획 루프 2차 결론
+
+이번 UI는 “게임처럼 꾸미는 것”보다 “조작 판단이 즉시 보이는 복구 콘솔”을 목표로 한다. 화면의 첫 시선은 항상 현재 exercise의 제목과 Vim 목표로 가야 한다.
+
+### Tutorial Screen
+
+초반 tutorial은 “첫 투어”다. 플레이어가 아직 Vim 단어를 모를 수 있으므로 훈련 키를 직접 알려준다.
+
+- Header: `ADVIMTURE / Tutorial / 1 of 4 / running`
+- Briefing: 현재 상황과 익힐 조작을 짧게 표시한다.
+- Console: 수정할 텍스트를 가장 넓게 보여준다.
+- Status Line: mode, cursor, inputs left를 한 줄에 보여준다.
+- Action Panel: `훈련 키`, `힌트`, `재시도`, `다음`을 명시한다.
+
+Tutorial에서는 `재점검 대상`, `오늘의 복구 루트`가 현재 목표보다 앞에 오지 않는다. 필요하면 action panel 또는 side rail의 보조 정보로 낮춘다.
+
+### Incident Screen
+
+Incident는 “배운 도구를 조합하는 Runbook Dispatch”다. 여기서는 정답 key sequence를 첫 화면부터 전부 말하지 않는다.
+
+- Header: `ADVIMTURE / Runbook Dispatch / relay-004 / 1 of 5`
+- Briefing: 상황 1문장 + 판단 목표 1문장
+- Console: 복구 대상 buffer
+- Status Line: mode, cursor, command/search line
+- Action Panel: `판단`, `힌트`, `재시도`, `다음 조치`
+
+Incident action panel의 첫 줄은 `훈련 키`보다 `판단:`을 우선한다. 정답 key는 hint 요청 또는 실패 후 회복 메시지에서 점진 공개한다.
+
+### Success/Debrief Screen
+
+성공 화면은 점수판이 아니라 복구 기록이다.
+
+- `복구 기록`: 이번 grade/key count
+- `최단 복구 기록`: progress 기반 best record
+- `잔류 리스크`: 다음 review candidate
+- `오늘의 복구 루트`: 남은 review count
+- `Next` 또는 `Next tutorial`: 다음 입력
+
+### Visual/Selection Screen
+
+Visual mode는 텍스트 자체가 더 길어지지 않는 표현이 이상적이다. 단, 색상 없는 환경과 E2E 안정성을 위해 첫 단계에서는 기존 `[]`, `{}` fallback을 유지할 수 있다. 추후 renderer 분리 뒤 lipgloss style 기반 표현으로 이동한다.
+
 ## 개발 순서
 
 1. **UX-QA-001**: review/daily route를 typed app_state assertion과 evidence로 검증한다.
@@ -59,4 +101,3 @@ Action or Debrief Panel
 ## 첫 구현 범위
 
 첫 개발은 화면 리디자인이 아니라 QA 기반부터 시작한다. `UX-QA-001`은 기존 화면을 크게 바꾸지 않고, review/daily route를 문자열 `contains` 대신 typed `app_state.review` assertion으로 검증하며, E2E evidence에 app_state/progress snapshot을 남긴다.
-

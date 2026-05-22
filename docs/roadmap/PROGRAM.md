@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### UI-CONTRACT-001. TUI screen area contract
+### UI-RENDER-001. Extract playable renderer
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: header, briefing, console, status line, action/debrief panel의 정보 위계를 고정한다.
+- 목표: `internal/playable`에서 순수 TUI renderer 패키지를 분리한다.
 
 ## 방금 완료한 슬라이스
+
+### UI-CONTRACT-001. TUI screen area contract
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-contract-001-tui-screen-area.md`
+- 완료일: 2026-05-23
 
 ### UX-QA-001. Review route evidence contract
 - 상태: completed

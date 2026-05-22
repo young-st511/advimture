@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — UI-CONTRACT-001 완료
+
+이전 가정: TUI 개선 방향은 `header + briefing + console + status + action/debrief` 수준의 권장 구조였지만, tutorial과 incident의 화면 책임 차이는 아직 상세하지 않았다.
+
+새 가정: TUI 화면은 Header, Briefing, Console, Status Line, Action/Debrief Panel 5개 영역으로 나눈다. Tutorial은 훈련 키 노출을 허용하고, Incident는 판단 cue와 점진 힌트를 우선한다.
+
+이유: 이후 renderer 분리와 정보 위계 개편이 흔들리지 않도록, 코드 변경 전에 화면 영역의 책임과 우선순위를 고정해야 한다.
+
+영향: 다음 활성 slice는 동작 변경 없는 `UI-RENDER-001` renderer 분리다.
+
 ## 2026-05-23 — TUI Experience Foundation 시작
 
 이전 가정: TUI는 기능과 E2E 검증을 중심으로 성장했고, 제품 UI/UX는 action panel 같은 개별 문제 해결 수준에서만 다뤄졌다.
