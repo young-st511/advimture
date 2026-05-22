@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — INCIDENT-RUN-004 완료
+
+이전 가정: linewise visual은 tutorial까지 연결됐지만, incident 적용 run에서는 아직 실제 config block 복구 도구로 쓰이지 않았다.
+
+새 가정: `incident-004-linewise-block-recovery`는 `/block`, linewise `Vd`, linewise `Vy+p`, linewise `VGd`, `:%s`를 하나의 Runbook Dispatch 적용 런으로 검증한다.
+
+이유: linewise visual은 줄 묶음 삭제/복사에 실무 체감이 크므로, tutorial 직후 config block 복구 run으로 적용력을 강화한다.
+
+영향: 다음 활성 slice는 배운 command 중 적절한 도구를 고르는 `COMMAND-CHOICE-001`이다.
+
 ## 2026-05-23 — PLAYPACK-011 완료
 
 이전 가정: linewise `V`는 engine/runtime/TUI에서 구현됐지만 playable tutorial에는 아직 연결되지 않았다.

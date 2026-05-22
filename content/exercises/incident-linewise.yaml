@@ -1,0 +1,254 @@
+exercises:
+  - id: incident-linewise-001
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["enter"]
+    mistake_focus: ["블록 표식을 한 줄씩 훑으려 한다."]
+    replay_status: pass
+    title: "block 표식 위치 찾기"
+    goal_for_player: "/block 검색으로 손상된 config block 시작 줄을 찾으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        boot=ok
+        block unsafe
+        mode=hold
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+    optimal_keys: ["/", "b", "l", "o", "c", "k", "enter"]
+    allowed_keys: ["/", "b", "l", "o", "c", "k", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 9
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["V", "v", "G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "먼저 / 검색으로 config block 표식을 잡습니다."
+      - after_keys: 4
+        text: "/block을 끝까지 입력하고 enter로 검색을 확정하세요."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 7
+    e2e_assertions:
+      buffer: ["boot=ok", "block unsafe", "mode=hold"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-linewise-002
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vd"]
+    reviewed_commands: ["j", "d"]
+    mistake_focus: ["손상 줄 묶음을 dd 반복이나 charwise v로 제거하려 한다."]
+    replay_status: pass
+    title: "unsafe 블록 줄 묶음 제거"
+    goal_for_player: "unsafe 블록 첫 줄에서 V를 열고 j로 두 줄을 잡은 뒤 d로 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        keep=boot
+        unsafe=temp
+        unsafe=cache
+        keep=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        keep=boot
+        keep=live
+    optimal_keys: ["V", "j", "d"]
+    allowed_keys: ["V", "j", "d", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["V", "d"]
+      forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "V는 줄 전체를 선택하므로 block 단위 제거에 맞습니다."
+      - after_keys: 2
+        text: "두 unsafe 줄이 선택됐으면 d로 줄 묶음을 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["keep=boot", "keep=live"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-linewise-003
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vy"]
+    reviewed_commands: ["j", "p"]
+    mistake_focus: ["검증된 route 줄을 직접 다시 입력한다."]
+    replay_status: pass
+    title: "검증 route 줄 복제"
+    goal_for_player: "route 줄에서 V와 y로 줄 전체를 복사한 뒤 fallback 아래에 p로 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route=primary
+        fallback=
+        guard=on
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 0
+      buffer: |
+        route=primary
+        fallback=
+        route=primary
+        guard=on
+    optimal_keys: ["V", "y", "j", "p"]
+    allowed_keys: ["V", "y", "j", "p", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["V", "y", "p"]
+      forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "d", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "검증된 route는 줄 전체를 복사해야 합니다. V로 linewise selection을 여세요."
+      - after_keys: 3
+        text: "linewise register의 p는 현재 줄 아래에 복사한 줄을 삽입합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["route=primary", "fallback=", "route=primary", "guard=on"]
+      cursor:
+        row: 2
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-linewise-004
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vd"]
+    reviewed_commands: ["G", "d"]
+    mistake_focus: ["파일 끝까지 이어진 stale tail을 한 줄씩 삭제한다."]
+    replay_status: pass
+    title: "stale tail 줄 묶음 제거"
+    goal_for_player: "stale 첫 줄에서 V를 열고 G로 끝까지 잡은 뒤 d로 tail 전체를 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        keep core
+        stale aux
+        stale shadow
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        keep core
+    optimal_keys: ["V", "G", "d"]
+    allowed_keys: ["V", "G", "d", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["V", "G", "d"]
+      forbidden_keys: ["v", "h", "j", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "tail은 줄 묶음이므로 V로 linewise range를 엽니다."
+      - after_keys: 2
+        text: "G로 파일 끝까지 확장한 뒤 d로 tail 전체를 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["keep core"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-linewise-005
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: [":%s"]
+    reviewed_commands: [":s"]
+    mistake_focus: ["남은 hold 상태를 현재 줄만 바꾸려 한다."]
+    replay_status: pass
+    title: "잔류 hold 상태 전체 승격"
+    goal_for_player: "command-line에서 모든 hold 토큰을 live로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        hold pump
+        hold relay
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        live pump
+        live relay
+    optimal_keys: [":", "%", "s", "/", "h", "o", "l", "d", "/", "l", "i", "v", "e", "/", "g", "enter"]
+    allowed_keys: [":", "%", "s", "/", "h", "o", "l", "d", "i", "v", "e", "g", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    constraints:
+      max_inputs: 18
+      required_keys: [":", "enter"]
+      forbidden_keys: ["ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "잔류 hold 상태가 두 줄에 남아 있으므로 전체 파일 범위를 사용합니다."
+      - after_keys: 4
+        text: ":%s/hold/live/g는 모든 줄의 hold 토큰을 live로 승격합니다."
+    grading:
+      pass_condition: "buffer has no hold"
+      optimal_key_count: 16
+    e2e_assertions:
+      buffer: ["live pump", "live relay"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+      command: ":%s/hold/live/g"

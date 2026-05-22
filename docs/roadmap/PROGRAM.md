@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-RUN-004. Linewise visual applied incident
+### COMMAND-CHOICE-001. Command choice drill
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: linewise visual을 적용하는 config block 복구 incident를 구현한다.
+- 목표: 배운 command 중 적절한 도구를 고르는 mixed drill을 설계한다.
 
 ## 방금 완료한 슬라이스
+
+### INCIDENT-RUN-004. Linewise visual applied incident
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-run-004-linewise-block-recovery.md`
+- 완료일: 2026-05-23
 
 ### PLAYPACK-011. Linewise visual tutorial
 - 상태: completed

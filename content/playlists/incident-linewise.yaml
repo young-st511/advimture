@@ -1,0 +1,39 @@
+playlists:
+  - id: incident-004-linewise-block-recovery
+    status: approved
+    category: incident
+    order: 4
+    title: "릴레이 기지 004: config block 복구"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-004-001
+        role: locate_block_marker
+        command_cluster: search-basic
+        exercise_id: incident-linewise-001
+        scenario_id: incident-linewise-001-scenario
+        engine_support: implemented
+      - id: incident-004-002
+        role: remove_unsafe_block
+        command_cluster: visual-line-basic
+        exercise_id: incident-linewise-002
+        scenario_id: incident-linewise-002-scenario
+        engine_support: implemented
+      - id: incident-004-003
+        role: clone_verified_route
+        command_cluster: visual-line-basic
+        exercise_id: incident-linewise-003
+        scenario_id: incident-linewise-003-scenario
+        engine_support: implemented
+      - id: incident-004-004
+        role: remove_stale_tail
+        command_cluster: visual-line-basic
+        exercise_id: incident-linewise-004
+        scenario_id: incident-linewise-004-scenario
+        engine_support: implemented
+      - id: incident-004-005
+        role: promote_hold_states
+        command_cluster: vim-ex-command-substitute
+        exercise_id: incident-linewise-005
+        scenario_id: incident-linewise-005-scenario
+        engine_support: implemented

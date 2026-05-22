@@ -1,0 +1,70 @@
+scenarios:
+  - id: incident-linewise-001-scenario
+    status: approved
+    exercise_id: incident-linewise-001
+    engine_support: implemented
+    learning_reinforcement: "적용 run에서는 먼저 / 검색으로 config block 표식을 찾는다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "block 표식 위치 찾기"
+    briefing: "릴레이 기지 004의 config runbook에 block 표식이 남았습니다. /block 검색으로 손상된 블록 시작 줄을 찾으세요."
+    context_role: "손상된 config block 진입점"
+    mentor_success: "좋습니다. config block 위치를 고정했습니다. 다음 단계에서 줄 묶음 전체를 제거합니다."
+    mentor_failure: "한 줄씩 훑지 말고 /block으로 블록 표식을 바로 찾으세요."
+    story_constraints:
+      - "검색이 linewise block 복구의 진입점임을 강조한다."
+
+  - id: incident-linewise-002-scenario
+    status: approved
+    exercise_id: incident-linewise-002
+    engine_support: implemented
+    learning_reinforcement: "V + motion + d로 손상된 줄 묶음을 제거한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "unsafe 블록 줄 묶음 제거"
+    briefing: "unsafe 줄 두 개가 config block을 막고 있습니다. V로 줄 단위 범위를 열고 j, d로 블록 전체를 제거하세요."
+    context_role: "unsafe 줄 묶음"
+    mentor_success: "좋습니다. 손상된 줄 묶음 전체를 linewise selection으로 제거했습니다. 이제 검증 route를 재사용합니다."
+    mentor_failure: "이번 대상은 줄 내부 일부가 아닙니다. uppercase V로 줄 전체를 잡으세요."
+    story_constraints:
+      - "linewise V가 block 단위 복구에 적합함을 강조한다."
+
+  - id: incident-linewise-003-scenario
+    status: approved
+    exercise_id: incident-linewise-003
+    engine_support: implemented
+    learning_reinforcement: "V + y는 검증된 줄 전체를 linewise register에 담는다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "검증 route 줄 복제"
+    briefing: "검증된 route 줄을 fallback 아래에도 남겨야 합니다. V와 y로 줄 전체를 복사한 뒤 j, p로 삽입하세요."
+    context_role: "검증 route 재사용"
+    mentor_success: "좋습니다. 검증 route를 다시 입력하지 않고 줄 단위로 재사용했습니다. 다음은 stale tail 제거입니다."
+    mentor_failure: "route를 직접 입력하지 마세요. V, y로 줄 전체를 담고 p로 아래에 붙입니다."
+    story_constraints:
+      - "linewise register 재사용을 강조한다."
+
+  - id: incident-linewise-004-scenario
+    status: approved
+    exercise_id: incident-linewise-004
+    engine_support: implemented
+    learning_reinforcement: "V + G + d는 파일 끝까지 이어진 줄 묶음을 제거한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "stale tail 줄 묶음 제거"
+    briefing: "파일 끝까지 stale tail이 이어져 있습니다. V로 현재 줄을 잡고 G, d로 tail 전체를 제거하세요."
+    context_role: "파일 끝 stale tail"
+    mentor_success: "좋습니다. stale tail을 한 줄씩 지우지 않고 파일 끝까지 한 번에 제거했습니다."
+    mentor_failure: "tail은 파일 끝까지 이어집니다. V로 줄 단위 selection을 열고 G로 끝까지 확장하세요."
+    story_constraints:
+      - "linewise V와 file motion 조합을 강조한다."
+
+  - id: incident-linewise-005-scenario
+    status: approved
+    exercise_id: incident-linewise-005
+    engine_support: implemented
+    learning_reinforcement: ":%s는 남은 상태 토큰을 전체 파일 범위로 승격한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "잔류 hold 상태 전체 승격"
+    briefing: "블록 정리 후에도 hold 상태가 두 줄에 남아 있습니다. 마감 조치로 전체 파일 치환으로 모두 live로 승격하세요."
+    context_role: "config block 복구 마감"
+    mentor_success: "좋습니다. 남은 hold 상태를 전체 범위에서 live로 승격해 config block 복구 runbook을 닫았습니다."
+    mentor_failure: "현재 줄만 바꾸면 잔류 리스크가 남습니다. % range로 전체 파일을 대상으로 잡으세요."
+    story_constraints:
+      - "incident 마감 조치로 전체 범위 치환을 사용한다."
