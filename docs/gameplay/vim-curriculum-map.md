@@ -218,12 +218,15 @@ Scenario 방향:
 7. Mid tutorial: Yank / put 재사용 — `yy`, `yw`, `y$`, `p`, `P`
 8. Mid tutorial: Text object inner word — `diw`, `ciw`, `yiw`
 9. Mid tutorial: Literal search — `/`, `n`, `N`
+10. Mid tutorial: Quote text object — `ci"`, `di"`, `yi"`
+11. Mid tutorial: Visual selection — `v`, charwise `d/y`
 
 다음 playable milestone은 아래 순서를 우선한다.
 
 1. Structure editing: quote/pair text object — completed, 설정값, JSON 값, 인자 내부를 구조 기준으로 편집
 2. Adventure middle: search and replace 응용 — completed, search + substitute + quote/pair 조합
-3. Visual planning: completed, visual mode 후보를 draft cluster로 기록하고 구현은 별도 중기 플랜으로 분리
+3. Visual selection: completed, 같은 줄 charwise `v` + `d/y` tutorial과 full E2E까지 연결
+4. Post-visual applied mastery: next, visual을 실제 incident 적용 런으로 승격하기 전에 selection 검증과 engine 분리를 보강
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
@@ -243,44 +246,43 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair` |
-| next | 다음 gap planning에서 구현/승격할 후보 | `visual-char-line` |
-| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | visual charwise/linewise first slice, quote text object hardening |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line` |
+| next | 다음 gap planning/구현 후보 | post-visual selection hardening, applied incident, command choice drill |
+| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | linewise visual `V`, quote text object hardening |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
 ### Next Gap Planning Candidate
 
-ID: `visual-char-line`
+ID: `visual-line-basic`
 
-목표: 플레이어가 명시적 선택 범위를 만들고, 그 범위를 삭제/복사하는 visual mode의 최소 학습 slice를 정한다.
+목표: charwise visual tutorial과 적용 런 이후, linewise `V`와 multi-line visual의 최소 학습 slice를 정한다.
 
 Command cluster 후보:
 
 | Cluster | Commands | Engine support | Oracle | 이유 |
 |---------|----------|----------------|--------|------|
-| `visual-char-line` | `v`, `V`, `d`, `y` 후보 | planned | optional | text object로 표현하기 어려운 임시 범위를 눈으로 확인하며 다루는 실무 체감이 크다. |
+| `visual-line-basic` | `V`, `d`, `y` 후보 | planned | optional | 여러 줄을 눈으로 확인하며 삭제/복사하는 실무 체감이 크지만, selection contract와 E2E 표면이 커진다. |
 
 다음 gap planning 후보:
 
-- charwise visual과 linewise visual 중 첫 구현 범위를 다시 좁힌다.
-- selection anchor/cursor model과 app_state summary 표현을 정의한다.
-- visual selection rendering의 최소 TUI 계약을 정한다.
-- visual selection에 operator `d`/`y`를 적용하는 방식을 engine contract로 고정한다.
+- linewise visual과 multi-line charwise 중 첫 구현 범위를 다시 좁힌다.
+- selection anchor/head model이 linewise 범위에서 어떻게 정규화되는지 정의한다.
+- TUI 표시와 app_state summary가 multi-line selection을 어떻게 표현할지 정한다.
+- visual selection에 operator `d`/`y`를 적용할 때 register kind와 cursor landing을 engine contract로 고정한다.
 - visual block, count prefix, register prefix, indentation command는 후속 hardening으로 미룬다.
 
 권장 문항 수:
 
-- charwise selection delete: 1~2문항
-- charwise selection yank/put: 1~2문항
 - linewise selection copy/delete: 1~2문항
-- 총 6문항 이하
+- multi-line selection delete/yank: 1~2문항
+- 총 4문항 이하
 
 설계 제약:
 
 - 이동은 필요한 만큼만 복습하고 주목표로 삼지 않는다.
 - 각 문항은 `constraints.required_keys`로 의도 command를 고정한다.
-- 첫 소개 문항은 terminal mouse selection과 Vim visual mode를 명확히 구분한다.
-- visual mode는 scenario보다 selection state와 화면 표시 검증이 먼저 설계되어야 한다.
+- 첫 소개 문항은 charwise visual과 linewise visual의 차이를 명확히 구분한다.
+- visual linewise 구현은 scenario보다 multi-line selection state와 화면 표시 검증이 먼저 설계되어야 한다.
 
 ## Known Coverage Gaps
 
@@ -289,7 +291,7 @@ Command cluster 후보:
 - `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했고, VIM-025/PLAYPACK-008에서 engine과 tutorial을 연결했다. `?`, regex, highlight, search history는 후속 hardening으로 남는다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
-- `visual-char-line`: VISUAL-GAP-001에서 draft/planned 후보로 기록했다. 구현 전 selection state, rendering, E2E app_state 확장이 필요하다.
+- `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line visual, linewise `V`, visual block, count/register prefix는 후속 hardening이다.
 
 ## Long-Run Platform Direction
 
@@ -297,9 +299,9 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 
 우선순위:
 
-1. `open-line-edit`: 설정 줄 위/아래에 새 라인을 추가하는 실무 편집 감각
-2. `repeat-last-change`: 같은 수정을 반복해 Vim 효율을 체감하는 efficiency run
-3. `search-basic`: 로그/설정에서 literal token을 찾는 navigation run
-4. `platform-review-loop`: mastery/spaced review/daily run RFC
+1. `post-visual-selection-hardening`: selection replay와 charwise visual invariant를 강화한다.
+2. `applied-incident-run`: 이미 배운 command를 incident 003에서 조합해 도구 선택 능력을 훈련한다.
+3. `incident-flow-continuity`: incident beat가 하나의 runbook 조치처럼 이어지게 만든다.
+4. `platform-review-loop`: mastery/spaced review/daily run은 progress schema 승인 전까지 RFC와 저장 변경 없는 review만 다룬다.
 
-세계관은 현재 터미널 문제 해결 생존 어드벤처를 유지하되, 필요하면 “낡은 원격 시설의 콘솔을 Vim으로 복구하는 오퍼레이터” 정도의 얇은 프레임으로 강화한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.
+세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

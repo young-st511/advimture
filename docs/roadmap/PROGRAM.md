@@ -10,11 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### NEXT. Plan refresh after visual tutorial
-- 상태: planning-needed
-- 목표: visual tutorial 이후 다음 학습/게임성 후보를 재점검한다.
+### QA-SEL-001. Selection replay hardening
+- 상태: pending
+- ExecPlan: 다음 루프에서 작성
+- 목표: content replay 단계에서 visual selection assertion mismatch를 잡도록 검증을 보강한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAN-REFRESH-004. Post Visual Applied Mastery
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/plan-refresh-004-post-visual-applied-mastery.md`
+- 완료일: 2026-05-22
 
 ### PLAYPACK-010. Visual selection tutorial
 - 상태: completed

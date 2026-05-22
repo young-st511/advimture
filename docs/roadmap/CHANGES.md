@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — post-visual 중기 플랜을 적용력 강화로 전환
+
+이전 가정: visual selection tutorial 완료 후 다음 후보는 linewise visual이나 또 다른 Vim command 확장일 수 있었다.
+
+새 가정: 다음 중기 플랜은 `Post-Visual Applied Mastery and Hardening`이다. 우선순위는 selection replay hardening, vimengine 내부 분리, charwise visual invariant 보강, visual 적용 incident, incident continuity, linewise visual gap planning 순서다.
+
+이유: Architecture, Learning/Game UX, Scenario/World 리뷰 모두 visual 이후 바로 기능을 넓히기보다 검증/분리/적용력을 먼저 강화해야 한다고 판단했다.
+
+영향: `QA-SEL-001`이 다음 활성 slice다. progress schema v2, daily run, spaced review, linewise visual 구현은 별도 승인 또는 후속 플랜으로 둔다.
+
 ## 2026-05-22 — visual selection tutorial 완성
 
 이전 가정: visual `d/y` engine은 구현됐지만 플레이 가능한 tutorial과 E2E가 아직 없었다.
