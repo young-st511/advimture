@@ -11,7 +11,6 @@ import (
 	"github.com/young-st511/advimture/internal/content"
 	"github.com/young-st511/advimture/internal/progress"
 	"github.com/young-st511/advimture/internal/scoring"
-	"github.com/young-st511/advimture/internal/tuiadapter"
 )
 
 func TestPlayableStartsWithBriefing(t *testing.T) {
@@ -40,32 +39,6 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	}
 	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
 		t.Fatalf("view = %q, want proactive coaching", model.View())
-	}
-}
-
-func TestRenderLineShowsVisualSelection(t *testing.T) {
-	line := renderLine("abcd", 0, 0, 3, &tuiadapter.SelectionView{
-		Active: true,
-		Kind:   "charwise",
-		Start:  tuiadapter.CursorView{Row: 0, Col: 1},
-		End:    tuiadapter.CursorView{Row: 0, Col: 3},
-	})
-
-	if line != "> a{b}{c}[d]" {
-		t.Fatalf("renderLine = %q, want visual selection", line)
-	}
-}
-
-func TestRenderLineShowsLinewiseVisualSelection(t *testing.T) {
-	line := renderLine("abcd", 0, 0, 2, &tuiadapter.SelectionView{
-		Active: true,
-		Kind:   "linewise",
-		Start:  tuiadapter.CursorView{Row: 0, Col: 0},
-		End:    tuiadapter.CursorView{Row: 0, Col: 3},
-	})
-
-	if line != "> {a}{b}[c]{d}" {
-		t.Fatalf("renderLine = %q, want linewise visual selection", line)
 	}
 }
 

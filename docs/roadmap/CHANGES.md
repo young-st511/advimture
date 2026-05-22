@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — UI-RENDER-001 완료
+
+이전 가정: playable 화면 출력은 `internal/playable.Model.View()` 안에서 game state, progress 표시, action panel 문자열과 함께 구성됐다.
+
+새 가정: `internal/playableview`가 순수 renderer 책임을 가진다. `internal/playable`은 상태와 action line을 구성하고, 화면 문자열 조립과 selection/cursor 표시는 renderer에 위임한다.
+
+이유: 실제 UI 정보 위계와 모드별 문구를 개선하기 전에 game loop와 rendering 책임을 분리해야 한다.
+
+영향: 다음 활성 slice는 현재 exercise 목표를 상위로 올리는 `UI-HIERARCHY-001`이다.
+
 ## 2026-05-23 — UI-CONTRACT-001 완료
 
 이전 가정: TUI 개선 방향은 `header + briefing + console + status + action/debrief` 수준의 권장 구조였지만, tutorial과 incident의 화면 책임 차이는 아직 상세하지 않았다.

@@ -6,9 +6,9 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/young-st511/advimture/internal/content"
 	"github.com/young-st511/advimture/internal/e2estate"
+	"github.com/young-st511/advimture/internal/playableview"
 	"github.com/young-st511/advimture/internal/progress"
 	"github.com/young-st511/advimture/internal/progressadapter"
 	"github.com/young-st511/advimture/internal/review"
@@ -50,12 +50,6 @@ type gameEntry struct {
 	IndexInPlaylist int
 	TotalInPlaylist int
 }
-
-var actionPanelStyle = lipgloss.NewStyle().
-	Border(lipgloss.NormalBorder()).
-	BorderForeground(lipgloss.Color("63")).
-	Padding(0, 1).
-	Width(58)
 
 func New(options Options) Model {
 	now := options.Now
@@ -141,49 +135,38 @@ func (m Model) View() string {
 
 	state := m.run.State()
 	view := tuiadapter.RenderState(state)
-	var b strings.Builder
-	b.WriteString("A D V I M T U R E - Playable Slice\n\n")
-	if entry, ok := m.currentEntry(); ok {
-		b.WriteString(entry.PlaylistTitle + "\n")
-	}
-	if summary := m.reviewQueueSummary(); summary != "" {
-		b.WriteString(summary + "\n")
-	}
-	if summary := m.dailyRouteSummary(); summary != "" {
-		b.WriteString(summary + "\n")
-	}
-	b.WriteString(view.Title + "\n")
-	b.WriteString(view.Message + "\n\n")
-	for row, line := range view.BufferLines {
-		b.WriteString(renderLine(line, row, view.CursorRow, view.CursorCol, view.Selection))
-		b.WriteString("\n")
-	}
-	b.WriteString("\n")
-	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", view.Mode, view.Status, view.CursorRow, view.CursorCol))
-	if view.Selection != nil && view.Selection.Active {
-		b.WriteString(fmt.Sprintf("Selection: %s %d,%d -> %d,%d\n", view.Selection.Kind, view.Selection.Start.Row, view.Selection.Start.Col, view.Selection.End.Row, view.Selection.End.Col))
+	screen := playableview.Screen{
+		Title:           view.Title,
+		Message:         view.Message,
+		BufferLines:     view.BufferLines,
+		Mode:            view.Mode,
+		Status:          view.Status,
+		CursorRow:       view.CursorRow,
+		CursorCol:       view.CursorCol,
+		Selection:       view.Selection,
+		Grade:           view.Grade,
+		CommandLine:     view.CommandLine,
+		LastCommand:     view.LastCommand,
+		ActionLines:     m.actionPanelLines(state, view),
+		ShowLastCommand: true,
 	}
 	if entry, ok := m.currentEntry(); ok {
-		b.WriteString(fmt.Sprintf("Exercise: %d/%d\n", entry.IndexInPlaylist+1, entry.TotalInPlaylist))
+		screen.PlaylistTitle = entry.PlaylistTitle
+		screen.ExerciseIndex = entry.IndexInPlaylist
+		screen.ExerciseTotal = entry.TotalInPlaylist
 	}
-	if view.Grade != "" {
-		b.WriteString(fmt.Sprintf("Grade: %s\n", view.Grade))
-	}
-	b.WriteString("\n")
+	screen.ReviewSummary = m.reviewQueueSummary()
+	screen.DailyRoute = m.dailyRouteSummary()
 	if view.Mode == string(vimengine.ModeCommand) || view.Mode == string(vimengine.ModeSearch) {
 		prompt := ":"
 		if view.Mode == string(vimengine.ModeSearch) {
 			prompt = "/"
 		}
-		b.WriteString(prompt + view.CommandLine + "\n\n")
-		b.WriteString(m.renderActionPanel(state, view))
-		return b.String()
+		screen.CommandPrompt = prompt
+		screen.ShowCommandLine = true
+		screen.ShowLastCommand = false
 	}
-	if view.LastCommand != "" {
-		b.WriteString(fmt.Sprintf("Command: %s\n", view.LastCommand))
-	}
-	b.WriteString(m.renderActionPanel(state, view))
-	return b.String()
+	return playableview.Render(screen)
 }
 
 func (m Model) State() e2estate.State {
@@ -469,73 +452,7 @@ func contentRoot(root string) string {
 	return "content"
 }
 
-func renderLine(line string, row int, cursorRow int, cursorCol int, selection *tuiadapter.SelectionView) string {
-	prefix := "  "
-	if row != cursorRow {
-		return prefix + renderLineCells(line, row, -1, selection)
-	}
-	runes := []rune(line)
-	if len(runes) == 0 {
-		return "> []"
-	}
-	if cursorCol < 0 {
-		cursorCol = 0
-	}
-	if cursorCol >= len(runes) {
-		cursorCol = len(runes) - 1
-	}
-	return "> " + renderLineCells(line, row, cursorCol, selection)
-}
-
-func renderLineCells(line string, row int, cursorCol int, selection *tuiadapter.SelectionView) string {
-	runes := []rune(line)
-	if len(runes) == 0 {
-		return line
-	}
-	var b strings.Builder
-	for col, r := range runes {
-		if col == cursorCol {
-			b.WriteString("[")
-			b.WriteRune(r)
-			b.WriteString("]")
-			continue
-		}
-		if cellSelected(row, col, selection) {
-			b.WriteString("{")
-			b.WriteRune(r)
-			b.WriteString("}")
-			continue
-		}
-		b.WriteRune(r)
-	}
-	return b.String()
-}
-
-func cellSelected(row int, col int, selection *tuiadapter.SelectionView) bool {
-	if selection == nil || !selection.Active {
-		return false
-	}
-	if selection.Kind == string(vimengine.SelectionLinewise) {
-		return row >= selection.Start.Row && row <= selection.End.Row
-	}
-	if selection.Kind != string(vimengine.SelectionCharwise) {
-		return false
-	}
-	if row < selection.Start.Row || row > selection.End.Row {
-		return false
-	}
-	startCol := 0
-	if row == selection.Start.Row {
-		startCol = selection.Start.Col
-	}
-	endCol := int(^uint(0) >> 1)
-	if row == selection.End.Row {
-		endCol = selection.End.Col
-	}
-	return col >= startCol && col <= endCol
-}
-
-func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel) string {
+func (m Model) actionPanelLines(state scenario.State, view tuiadapter.ViewModel) []string {
 	lines := []string{"ACTION"}
 	switch {
 	case view.Mode == string(vimengine.ModeVisual):
@@ -581,7 +498,7 @@ func (m Model) renderActionPanel(state scenario.State, view tuiadapter.ViewModel
 		}
 		lines = append(lines, "?: hint  q: quit")
 	}
-	return actionPanelStyle.Render(strings.Join(lines, "\n"))
+	return lines
 }
 
 func e2eSelection(selection *vimengine.Selection) *e2estate.Selection {

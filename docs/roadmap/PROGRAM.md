@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### UI-RENDER-001. Extract playable renderer
+### UI-HIERARCHY-001. Current exercise first hierarchy
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: `internal/playable`에서 순수 TUI renderer 패키지를 분리한다.
+- 목표: 현재 exercise 목표를 상위로 올리고 review/daily route를 보조 정보로 낮춘다.
 
 ## 방금 완료한 슬라이스
+
+### UI-RENDER-001. Extract playable renderer
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-render-001-playable-renderer.md`
+- 완료일: 2026-05-23
 
 ### UI-CONTRACT-001. TUI screen area contract
 - 상태: completed
