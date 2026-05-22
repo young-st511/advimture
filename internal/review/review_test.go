@@ -57,7 +57,7 @@ func TestCandidateSummaryExplainsReason(t *testing.T) {
 		BestKeystrokes: 12,
 		OptimalKeys:    10,
 	}.Summary()
-	want := "다음 timeout 찾기: 12/10 keys"
+	want := "다음 timeout 찾기: 복구 입력 12/10 keys"
 	if got != want {
 		t.Fatalf("Summary() = %q, want %q", got, want)
 	}

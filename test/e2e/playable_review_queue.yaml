@@ -7,19 +7,19 @@ terminal:
 setup:
   home: temp
 steps:
-  - wait_screen_contains: "재진단 큐: 목표 문자까지 이동하기: 미완료"
+  - wait_screen_contains: "재점검 대상: 목표 문자까지 이동하기: 미복구"
   - send: "l"
   - wait_ms: 50
   - send: "l"
   - wait_ms: 50
-  - wait_screen_contains: "잔류 리스크: 경고 지점으로 이동하기: 미완료"
+  - wait_screen_contains: "잔류 리스크: 경고 지점으로 이동하기: 미복구"
   - send: "q"
 assert:
   screen_contains:
     - "Tutorial 0: 커서 감각 회상"
-    - "재진단 큐: 경고 지점으로 이동하기: 미완료"
-    - "잔류 리스크: 경고 지점으로 이동하기: 미완료"
-    - "Debrief: grade S, 2 keys"
+    - "재점검 대상: 경고 지점으로 이동하기: 미복구"
+    - "잔류 리스크: 경고 지점으로 이동하기: 미복구"
+    - "복구 기록: grade S, 2 keys"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

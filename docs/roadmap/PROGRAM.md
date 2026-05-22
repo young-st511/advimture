@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PROGRESS-LANGUAGE-001. Recovery language pass
+### E2E-FIXTURE-001. E2E fixture maintainability
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: 저장 포맷 변경 없이 review/debrief/best record 문구를 원격 시설 복구국 프레임에 맞춘다.
+- 목표: 긴 progress fixture 유지보수 부담을 줄이는 fixture builder 또는 최소 fixture 전략을 수립한다.
 
 ## 방금 완료한 슬라이스
+
+### PROGRESS-LANGUAGE-001. Recovery language pass
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/progress-language-001-recovery-language-pass.md`
+- 완료일: 2026-05-22
 
 ### INCIDENT-UX-003. Incident game-feel pass
 - 상태: completed

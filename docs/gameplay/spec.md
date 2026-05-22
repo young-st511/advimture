@@ -54,7 +54,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `?` hint 요청 결과는 `ACTION` 패널에 `Hint: ...`로 표시하며, command/search mode 패널에는 일반 hint/quit 안내를 섞지 않는다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
-- 성공 action panel은 현재 grade/key count debrief, 기존 progress의 best grade/best key count, 현재 playlist 완료 수를 표시한다.
+- 성공 action panel은 현재 복구 기록, 기존 progress 기반 최단 복구 기록, 현재 Runbook 복구 완료 수를 표시한다.
 - playlist 마지막 exercise 성공 화면도 별도 저장 포맷 변경 없이 같은 debrief와 `Playlist complete` 안내를 표시한다.
 - 향후 exercise constraint는 최대 입력 수 초과와 금지 입력/금지 우회 전략 사용을 즉시 실패로 처리해야 한다.
 - 실패 횟수는 기본 무제한이며, 후반 콘텐츠를 위해 `attempt_limit` 설정 여지는 남긴다.
@@ -91,7 +91,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `search-basic`은 approved + engine implemented command cluster다. 첫 구현은 `/query enter`, `n`, `N` literal search이며 `?` backward search, regex, highlight, search history는 제외한다.
 - `tutorial-90-search-basic`은 `/`, `n`, `N`, wrap-around literal search를 다루는 4문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`를 기준으로 검토한다. mastery, spaced review, daily run은 후보이며, progress 저장 포맷 변경은 별도 승인 전까지 구현하지 않는다.
-- review queue의 첫 구현은 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재진단 큐`, 성공 debrief에서는 `잔류 리스크`로 표현한다.
+- review queue는 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재점검 대상`, 성공 debrief에서는 `잔류 리스크`로 표현한다. candidate reason은 `미복구`, `복구 등급 <grade>`, `복구 입력 <best>/<optimal> keys`로 표시한다.
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
 - 중반 이후 incident는 `docs/gameplay/world-frame.md`의 원격 시설 복구국 / Runbook Dispatch 프레임을 따른다.
 - `incident-001-hotfix`는 “릴레이 기지 001: 야간 핫픽스 복구”로 표시하며 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이다. replay gate와 full playlist E2E를 통과한다.

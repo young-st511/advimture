@@ -12,14 +12,14 @@ steps:
   - wait_ms: 50
   - send: "l"
   - wait_ms: 50
-  - wait_screen_contains: "Playlist: 1/4 complete"
+  - wait_screen_contains: "Runbook: 1/4 복구 완료"
   - send: "q"
 assert:
   screen_contains:
     - "Grade: S"
-    - "Debrief: grade S, 2 keys"
-    - "Best: grade S, 2 keys"
-    - "Playlist: 1/4 complete"
+    - "복구 기록: grade S, 2 keys"
+    - "최단 복구 기록: grade S, 2 keys"
+    - "Runbook: 1/4 복구 완료"
     - "Next: enter"
   exit_code: 0
   progress_file_exists: true

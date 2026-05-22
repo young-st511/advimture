@@ -28,7 +28,7 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "Exercise: 1/4") {
 		t.Fatalf("view = %q, want episode-local count", model.View())
 	}
-	if !strings.Contains(model.View(), "재진단 큐: 목표 문자까지 이동하기: 미완료") {
+	if !strings.Contains(model.View(), "재점검 대상: 목표 문자까지 이동하기: 미복구") {
 		t.Fatalf("view = %q, want review queue", model.View())
 	}
 	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
@@ -84,16 +84,16 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 	model, _ = updateWithKey(t, model, "l")
 
 	view := model.View()
-	if !strings.Contains(view, "Debrief: grade S, 2 keys") {
+	if !strings.Contains(view, "복구 기록: grade S, 2 keys") {
 		t.Fatalf("view = %q, want success debrief", view)
 	}
-	if !strings.Contains(view, "Best: grade S, 2 keys") {
+	if !strings.Contains(view, "최단 복구 기록: grade S, 2 keys") {
 		t.Fatalf("view = %q, want best record", view)
 	}
-	if !strings.Contains(view, "Playlist: 1/4 complete") {
+	if !strings.Contains(view, "Runbook: 1/4 복구 완료") {
 		t.Fatalf("view = %q, want playlist completion count", view)
 	}
-	if !strings.Contains(view, "잔류 리스크: 경고 지점으로 이동하기: 미완료") {
+	if !strings.Contains(view, "잔류 리스크: 경고 지점으로 이동하기: 미복구") {
 		t.Fatalf("view = %q, want residual risk recommendation", view)
 	}
 }
@@ -107,7 +107,7 @@ func TestPlayableShowsReviewQueueForLowGrade(t *testing.T) {
 		Progress:    p,
 	})
 
-	if !strings.Contains(model.View(), "재진단 큐: 목표 문자까지 이동하기: grade B") {
+	if !strings.Contains(model.View(), "재점검 대상: 목표 문자까지 이동하기: 복구 등급 B") {
 		t.Fatalf("view = %q, want low grade review queue", model.View())
 	}
 }
@@ -173,7 +173,7 @@ func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
 	if !strings.Contains(model.View(), "Next tutorial: enter") {
 		t.Fatalf("view = %q, want next tutorial transition", model.View())
 	}
-	if !strings.Contains(model.View(), "Playlist: 4/4 complete") {
+	if !strings.Contains(model.View(), "Runbook: 4/4 복구 완료") {
 		t.Fatalf("view = %q, want completed playlist debrief", model.View())
 	}
 	if !strings.Contains(model.View(), "ACTION") {

@@ -308,7 +308,7 @@ func (m Model) reviewQueueSummary() string {
 	if len(m.reviewQueue) == 0 {
 		return ""
 	}
-	return "재진단 큐: " + m.reviewQueue[0].Summary()
+	return "재점검 대상: " + m.reviewQueue[0].Summary()
 }
 
 func (m Model) residualRiskSummary() string {
@@ -532,7 +532,7 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 	}
 
 	lines := []string{
-		fmt.Sprintf("Debrief: grade %s, %d keys", state.Score.Grade, len(state.Runtime.KeyTrace)),
+		fmt.Sprintf("복구 기록: grade %s, %d keys", state.Score.Grade, len(state.Runtime.KeyTrace)),
 	}
 	if best, ok := m.progress.Missions[m.currentExerciseID()]; ok && best.Completed {
 		bestGrade := best.BestGrade
@@ -543,11 +543,11 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 		if best.BestKeystrokes > 0 {
 			bestKeys = fmt.Sprintf("%d keys", best.BestKeystrokes)
 		}
-		lines = append(lines, fmt.Sprintf("Best: grade %s, %s", bestGrade, bestKeys))
+		lines = append(lines, fmt.Sprintf("최단 복구 기록: grade %s, %s", bestGrade, bestKeys))
 	}
 	if entry, ok := m.currentEntry(); ok {
 		completed, total := m.playlistCompletion(entry.PlaylistID)
-		lines = append(lines, fmt.Sprintf("Playlist: %d/%d complete", completed, total))
+		lines = append(lines, fmt.Sprintf("Runbook: %d/%d 복구 완료", completed, total))
 	}
 	if residual := m.residualRiskSummary(); residual != "" {
 		lines = append(lines, residual)

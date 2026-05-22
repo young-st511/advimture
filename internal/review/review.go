@@ -65,15 +65,15 @@ func Candidates(library content.Library, progressState progress.Progress, option
 func (c Candidate) Summary() string {
 	switch c.Reason {
 	case ReasonIncomplete:
-		return fmt.Sprintf("%s: 미완료", c.Title)
+		return fmt.Sprintf("%s: 미복구", c.Title)
 	case ReasonLowGrade:
 		grade := c.BestGrade
 		if grade == "" {
 			grade = "-"
 		}
-		return fmt.Sprintf("%s: grade %s", c.Title, grade)
+		return fmt.Sprintf("%s: 복구 등급 %s", c.Title, grade)
 	case ReasonKeyCount:
-		return fmt.Sprintf("%s: %d/%d keys", c.Title, c.BestKeystrokes, c.OptimalKeys)
+		return fmt.Sprintf("%s: 복구 입력 %d/%d keys", c.Title, c.BestKeystrokes, c.OptimalKeys)
 	default:
 		return c.Title
 	}
