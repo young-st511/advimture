@@ -16,17 +16,17 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibrary returned error: %v", err)
 	}
 
-	if len(lib.CommandClusters) != 16 {
-		t.Fatalf("command clusters = %d, want 16", len(lib.CommandClusters))
+	if len(lib.CommandClusters) != 17 {
+		t.Fatalf("command clusters = %d, want 17", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 69 {
-		t.Fatalf("exercises = %d, want 69", len(lib.Exercises))
+	if len(lib.Exercises) != 72 {
+		t.Fatalf("exercises = %d, want 72", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 69 {
-		t.Fatalf("scenarios = %d, want 69", len(lib.Scenarios))
+	if len(lib.Scenarios) != 72 {
+		t.Fatalf("scenarios = %d, want 72", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 15 {
-		t.Fatalf("playlists = %d, want 15", len(lib.Playlists))
+	if len(lib.Playlists) != 16 {
+		t.Fatalf("playlists = %d, want 16", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 69 {
-		t.Fatalf("playable exercises = %d, want 69: %+v", len(playable), playable)
+	if len(playable) != 72 {
+		t.Fatalf("playable exercises = %d, want 72: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -101,6 +101,9 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"vim-ex-command-substitute-001",
 		"vim-ex-command-substitute-002",
 		"vim-ex-command-substitute-003",
+		"visual-char-line-001",
+		"visual-char-line-002",
+		"visual-char-line-003",
 		"whole-file-navigation-001",
 		"whole-file-navigation-002",
 		"whole-file-navigation-003",
@@ -148,6 +151,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-9-repeat-last-change",
 		"tutorial-90-search-basic",
 		"tutorial-91-text-object-quote-pair",
+		"tutorial-92-visual-selection",
 		"incident-001-hotfix",
 		"incident-002-structure-recovery",
 	})

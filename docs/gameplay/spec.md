@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented playlist를 `category`, `order`, `id` 순서로 실행한다. `tutorial` category는 `incident` category보다 먼저 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `ACTION` 박스 패널 안에 표시한다.
@@ -97,13 +97,14 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-001-hotfix`는 “릴레이 기지 001: 야간 핫픽스 복구”로 표시하며 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - `incident-002-structure-recovery`는 “릴레이 기지 002: 구조 설정 재동기화”로 표시하며 `/secret`, `ci"`, `yi"` + `P`, `:%s`, `ci"` + `.`를 조합하는 두 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - incident 001/002의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
-- `visual-char-line`은 draft/planned command cluster다. VISUAL-GAP-001은 visual mode를 바로 구현하지 않고 `v`, `V`, `d`, `y` 후보와 engine/TUI/E2E 영향을 문서로 분리했다.
+- `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.
-- 첫 visual 구현은 `v` 진입, 기존 normal motion으로 head 이동, `esc`/visual mode 중 `v`로 selection 해제를 다룬다. visual selection에 `d`/`y` operator를 적용하는 것은 후속 slice로 분리한다.
+- 첫 visual foundation은 `v` 진입, 기존 normal motion으로 head 이동, `esc`/visual mode 중 `v`로 selection 해제를 다룬다.
 - visual mode E2E는 screen text만으로 통과하지 않고 app_state `selection` object를 검증한다. E2E-007은 `internal/e2estate`, runner `assert.app_state`, content `e2e_assertions`에 selection shape를 추가했다.
 - VIM-027-TUI-003은 charwise `v` visual mode foundation을 구현했다. TUI는 `Selection: charwise <start> -> <end>`와 selected non-cursor cell `{x}`를 표시하며, cursor cell은 기존 `[x]`를 유지한다.
 - VISUAL-OP-001은 첫 visual operator 범위를 같은 줄 charwise selection에 `d`/`y`를 적용하는 것으로 고정했다. `d`는 inclusive range를 삭제하고, `y`는 inclusive range를 unnamed register에 저장하며, 둘 다 normal mode로 돌아가고 selection을 clear한다.
 - VIM-028은 같은 줄 charwise visual selection의 `d`/`y` engine을 구현했다. `d`는 삭제 텍스트를 unnamed charwise register에도 저장하며 undo 가능하다. multi-line charwise operator, linewise visual, visual block은 제외한다.
+- `tutorial-92-visual-selection`은 `v + motion + d`, `v + motion + y + p`, backward selection normalization을 다루는 3문항 visual selection tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - `V` linewise visual, visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.

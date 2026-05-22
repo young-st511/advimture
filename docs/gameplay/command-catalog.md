@@ -635,36 +635,35 @@ command_cluster:
 ```yaml
 command_cluster:
   id: visual-char-line
-  status: draft
+  status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-5-structure-selection
-  title: Visual mode: 문자/줄 선택
-  commands: ["v", "V", "d", "y"]
-  coverage_required: ["v", "V"]
+  title: Visual mode: 보이는 범위 선택
+  commands: ["v", "d", "y"]
+  coverage_required: ["v", "vd", "vy"]
   oracle: optional
-  purpose: 명시적 선택 범위를 만든 뒤 삭제하거나 복사한다.
+  purpose: 눈으로 확인한 charwise 범위를 선택해 삭제하거나 복사한다.
   prerequisite: ["delete-with-motion", "yank-put-basic", "text-object-quote-pair"]
   difficulty: intermediate
   useful_when:
-    - 범위를 눈으로 확인하고 삭제/복사할 때
-    - 여러 단어나 줄을 구조적으로 선택할 때
-    - text object로 표현하기 어려운 임시 범위를 다룰 때
+    - text object로 딱 떨어지지 않는 짧은 범위를 직접 지정할 때
+    - 삭제/복사할 범위를 실행 전에 눈으로 확인해야 할 때
+    - 설정 줄 안의 임시 오염 구간만 제거하거나 재사용할 때
   combo_paths:
     - ["v", "motion", "d"]
     - ["v", "motion", "y", "p"]
-    - ["V", "j", "y", "p"]
   common_mistakes:
-    - visual selection과 terminal mouse selection을 혼동한다.
-    - 선택 anchor와 cursor 위치를 구분하지 못한다.
-    - visual block까지 한 번에 배우려고 한다.
+    - terminal mouse selection과 Vim visual mode를 혼동한다.
+    - 선택 anchor와 cursor head가 다를 수 있다는 점을 놓친다.
+    - 선택 후 operator를 누르지 않고 이동만 반복한다.
   compatibility_notes:
-    - VISUAL-GAP-001은 구현 전 범위만 정리한다.
-    - 첫 slice는 visual block, count prefix, register prefix, indentation command를 제외한다.
-    - selection rendering과 E2E app_state 확장이 필요하다.
+    - 첫 구현은 같은 줄 charwise selection만 다룬다.
+    - linewise V, visual block, count/register prefix, multi-line operator는 후속 hardening으로 미룬다.
+    - visual d/y 이후 dot repeat 연계는 아직 지원하지 않는다.
   design_notes:
-    - 첫 구현 전에 charwise와 linewise 중 어느 쪽을 먼저 할지 별도 gap planning에서 결정한다.
-    - visual mode는 TUI 표시가 학습 이해에 직접 영향을 주므로 focused E2E가 필요하다.
+    - VISUAL-OP-001과 VIM-028에서 charwise v + d/y 범위를 고정했다.
+    - PLAYPACK-010은 3문항으로 deletion, yank-put, backward selection을 다룬다.
 ```
 
 ## First 5-Minute Discovery Notes
@@ -680,7 +679,7 @@ command_cluster:
 - `open-line-edit`은 OPEN-LINE-001에서 approved로 승격했고, VIM-023에서 engine support를 구현했다. 첫 구현 범위는 `o`, `O`이며 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat은 제외한다.
 - `repeat-last-change`는 REPEAT-GAP-001에서 approved로 승격했고, VIM-024에서 engine support를 구현했다. 첫 구현은 x, r<char>, insert/change/open-line transaction을 대상으로 하며 delete/yank/put/search/macro/register/count prefix는 제외한다.
 - `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했으며 PLAYPACK-008에서 4문항 tutorial content와 full E2E를 연결했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
-- `visual-char-line`은 VISUAL-GAP-001에서 draft 후보로 기록했다. visual block, count/register prefix, indentation command는 제외하고 selection rendering과 E2E app_state 확장이 먼저 필요하다.
+- `visual-char-line`은 같은 줄 charwise visual selection의 삭제/복사 tutorial까지 구현했다. visual block, count/register prefix, indentation command는 후속 hardening으로 둔다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

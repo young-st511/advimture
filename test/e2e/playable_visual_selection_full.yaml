@@ -1,0 +1,97 @@
+id: playable_visual_selection_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: visual-char-line-001
+steps:
+  - wait_screen_contains: "릴레이 상태 줄에 bad 오염 구간"
+  - send: "v"
+  - wait_screen_contains: "Selection: charwise 0,6 -> 0,6"
+  - send: "l"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "d"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "node의 ok 신호를 mirror"
+  - send: "v"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "y"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "p"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "cache 줄의 stale 흔적"
+  - send: "v"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "d"
+  - wait_screen_contains: "Next tutorial: enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Visual selection"
+    - "Exercise: 3/3"
+    - "Next tutorial: enter"
+    - "좋습니다. anchor가 오른쪽이어도 선택 범위를 정규화해 정확히 제거했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"visual-char-line-001\""
+    - "\"visual-char-line-002\""
+    - "\"visual-char-line-003\""
+  key_trace:
+    - "v"
+    - "l"
+    - "l"
+    - "d"
+    - "enter"
+    - "v"
+    - "l"
+    - "y"
+    - "$"
+    - "p"
+    - "enter"
+    - "v"
+    - "h"
+    - "h"
+    - "h"
+    - "h"
+    - "d"
+    - "q"
+  app_state:
+    buffer: ["cache=/live"]
+    cursor:
+      row: 0
+      col: 6
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "visual-char-line-003"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

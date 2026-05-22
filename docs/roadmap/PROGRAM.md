@@ -10,12 +10,16 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-010. Visual selection tutorial
-- 상태: pending
-- ExecPlan: 다음 루프에서 작성
-- 목표: 3~4문항 visual selection tutorial content/E2E를 구현한다.
+### NEXT. Plan refresh after visual tutorial
+- 상태: planning-needed
+- 목표: visual tutorial 이후 다음 학습/게임성 후보를 재점검한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYPACK-010. Visual selection tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-010-visual-selection-tutorial.md`
+- 완료일: 2026-05-22
 
 ### VIM-028. Charwise visual delete/yank
 - 상태: completed

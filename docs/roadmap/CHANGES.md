@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — visual selection tutorial 완성
+
+이전 가정: visual `d/y` engine은 구현됐지만 플레이 가능한 tutorial과 E2E가 아직 없었다.
+
+새 가정: `visual-char-line`은 approved + implemented command cluster이며, `tutorial-92-visual-selection`은 3문항으로 forward deletion, visual yank-put, backward selection normalization을 훈련한다.
+
+이유: visual mode는 선택 상태만 이해하는 것보다 “보이는 범위를 잡고 삭제/복사한다”는 반복 문항이 있어야 실제 학습 단위로 완성된다.
+
+영향: 다음 루프는 visual hardening으로 바로 확장하기보다, 현재 튜토리얼/incident 흐름을 기준으로 다음 command 또는 게임성 보강 후보를 재점검한다.
+
 ## 2026-05-22 — charwise visual `d/y` engine 구현
 
 이전 가정: visual mode는 selection을 만들고 표시할 수 있었지만, 선택 범위에 실제 Vim operator를 적용하지 못했다.

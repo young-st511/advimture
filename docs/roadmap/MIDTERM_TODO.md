@@ -231,7 +231,7 @@
 |------|----|------|------|
 | 1 | VISUAL-OP-001 | completed | charwise visual selection의 `d/y` 적용 범위와 제외 항목 결정 |
 | 2 | VIM-028 | completed | 같은 줄 charwise visual selection delete/yank engine 구현 |
-| 3 | PLAYPACK-010 | pending | 3~4문항 visual selection tutorial content/E2E 구현 |
+| 3 | PLAYPACK-010 | completed | 3문항 visual selection tutorial content/E2E 구현 |
 
 ## Visual Operator and Tutorial 출구 조건
 
@@ -239,7 +239,11 @@
 |----|----------|-------------|------|---------------|
 | VISUAL-OP-001 | VIM-027-TUI-003 완료 | completed: `d/y` 범위와 제외 항목 | completed: `git diff --check` | visual operator와 playpack을 섞지 않는다 |
 | VIM-028 | VISUAL-OP-001 완료 | completed: charwise same-line visual `d/y` engine | completed: vimengine/runtime tests, full regression | multi-line, `V`, block, count/register prefix 제외 |
-| PLAYPACK-010 | VIM-028 완료 | visual tutorial content + focused E2E | content replay, selection app_state E2E, `make e2e-playable` | 4문항 이하, command 학습을 scenario보다 우선 |
+| PLAYPACK-010 | VIM-028 완료 | completed: visual tutorial content + focused E2E | completed: content replay, focused E2E, `make e2e-playable` | 4문항 이하, command 학습을 scenario보다 우선 |
+
+## Visual Operator and Tutorial 완료 판단
+
+2026-05-22 기준 이 중기 플랜은 completed다. visual mode는 selection state/render/assertion, 같은 줄 charwise `d/y` engine, 3문항 tutorial, full playlist E2E까지 연결됐다. `V`, visual block, multi-line visual operator, count/register prefix는 후속 hardening 후보로 남긴다.
 
 ## 장기 참고 계획
 

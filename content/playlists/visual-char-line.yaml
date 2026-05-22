@@ -1,0 +1,27 @@
+playlists:
+  - id: tutorial-92-visual-selection
+    status: approved
+    category: tutorial
+    order: 12
+    title: "Mid Tutorial: Visual selection"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-92-001
+        role: visual_delete_forward_range
+        command_cluster: visual-char-line
+        exercise_id: visual-char-line-001
+        scenario_id: visual-char-line-001-scenario
+        engine_support: implemented
+      - id: tutorial-92-002
+        role: visual_yank_put_range
+        command_cluster: visual-char-line
+        exercise_id: visual-char-line-002
+        scenario_id: visual-char-line-002-scenario
+        engine_support: implemented
+      - id: tutorial-92-003
+        role: visual_delete_backward_range
+        command_cluster: visual-char-line
+        exercise_id: visual-char-line-003
+        scenario_id: visual-char-line-003-scenario
+        engine_support: implemented

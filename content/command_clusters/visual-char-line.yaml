@@ -1,0 +1,31 @@
+command_clusters:
+  - id: visual-char-line
+    status: approved
+    compatibility_tier: pedagogical
+    engine_support: implemented
+    curriculum_area: chapter-5-structure-selection
+    title: "Visual mode: 보이는 범위 선택"
+    commands: ["v", "d", "y"]
+    coverage_required: ["v", "vd", "vy"]
+    oracle: optional
+    purpose: "눈으로 확인한 charwise 범위를 선택해 삭제하거나 복사한다."
+    prerequisite: ["delete-with-motion", "yank-put-basic", "text-object-quote-pair"]
+    difficulty: intermediate
+    useful_when:
+      - "text object로 딱 떨어지지 않는 짧은 범위를 직접 지정할 때"
+      - "삭제/복사할 범위를 실행 전에 눈으로 확인해야 할 때"
+      - "설정 줄 안의 임시 오염 구간만 제거하거나 재사용할 때"
+    combo_paths:
+      - ["v", "motion", "d"]
+      - ["v", "motion", "y", "p"]
+    common_mistakes:
+      - "terminal mouse selection과 Vim visual mode를 혼동한다."
+      - "선택 anchor와 cursor head가 다를 수 있다는 점을 놓친다."
+      - "선택 후 operator를 누르지 않고 이동만 반복한다."
+    compatibility_notes:
+      - "첫 구현은 같은 줄 charwise selection만 다룬다."
+      - "linewise V, visual block, count/register prefix, multi-line operator는 후속 hardening으로 미룬다."
+      - "visual d/y 이후 dot repeat 연계는 아직 지원하지 않는다."
+    design_notes:
+      - "VISUAL-OP-001과 VIM-028에서 charwise v + d/y 범위를 고정했다."
+      - "PLAYPACK-010은 3문항으로 deletion, yank-put, backward selection을 다룬다."

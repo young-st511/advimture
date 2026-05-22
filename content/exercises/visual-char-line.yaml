@@ -1,0 +1,144 @@
+exercises:
+  - id: visual-char-line-001
+    status: approved
+    command_cluster: visual-char-line
+    engine_support: implemented
+    trained_commands: ["v", "vd"]
+    reviewed_commands: ["l", "d"]
+    mistake_focus: ["x를 반복해서 지우거나 dw처럼 단어 단위 삭제로 우회하려고 한다."]
+    replay_status: pass
+    title: "오염 구간 선택 삭제"
+    goal_for_player: "bad 시작점에서 v로 visual mode를 열고 bad 전체를 선택한 뒤 d로 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        relay=bad/live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        relay=/live
+    optimal_keys: ["v", "l", "l", "d"]
+    allowed_keys: ["v", "l", "d", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["v", "d"]
+      forbidden_keys: ["h", "j", "k", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "v는 현재 cursor를 anchor로 잡고 보이는 선택 범위를 만들기 시작합니다."
+      - after_keys: 3
+        text: "bad가 보이는 범위로 잡혔다면 d로 선택 범위를 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["relay=/live"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: visual-char-line-002
+    status: approved
+    command_cluster: visual-char-line
+    engine_support: implemented
+    trained_commands: ["v", "vy"]
+    reviewed_commands: ["l", "$", "p"]
+    mistake_focus: ["ok를 직접 다시 입력하거나 yank 후 붙일 위치를 놓친다."]
+    replay_status: pass
+    title: "선택 범위 복사 후 붙이기"
+    goal_for_player: "ok를 visual selection으로 복사한 뒤 mirror 값 뒤에 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        node=ok mirror=
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 16
+      buffer: |
+        node=ok mirror=ok
+    optimal_keys: ["v", "l", "y", "$", "p"]
+    allowed_keys: ["v", "l", "y", "$", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 5
+      required_keys: ["v", "y", "p"]
+      forbidden_keys: ["h", "j", "k", "w", "b", "e", "0", "d", "x", "r", "c", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "복사할 ok 두 글자를 visual range로 눈에 보이게 잡습니다."
+      - after_keys: 3
+        text: "y로 선택 범위를 register에 담은 뒤 $와 p로 mirror 뒤에 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 5
+    e2e_assertions:
+      buffer: ["node=ok mirror=ok"]
+      cursor:
+        row: 0
+        col: 16
+      mode: normal
+      status: succeeded
+
+  - id: visual-char-line-003
+    status: approved
+    command_cluster: visual-char-line
+    engine_support: implemented
+    trained_commands: ["v", "vd"]
+    reviewed_commands: ["h", "d"]
+    mistake_focus: ["오른쪽 끝에서 시작하면 선택이 거꾸로 된다고 착각한다."]
+    replay_status: pass
+    title: "거꾸로 선택해 삭제"
+    goal_for_player: "stale 끝에서 v를 열고 h로 왼쪽까지 범위를 잡은 뒤 d로 stale만 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        cache=stale/live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        cache=/live
+    optimal_keys: ["v", "h", "h", "h", "h", "d"]
+    allowed_keys: ["v", "h", "d", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["v", "d"]
+      forbidden_keys: ["j", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "visual selection은 오른쪽에서 왼쪽으로 잡아도 start/end를 정규화합니다."
+      - after_keys: 5
+        text: "stale 전체가 선택됐으면 d로 보이는 범위만 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["cache=/live"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded

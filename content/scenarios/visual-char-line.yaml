@@ -1,0 +1,45 @@
+scenarios:
+  - id: visual-char-line-001-scenario
+    status: approved
+    exercise_id: visual-char-line-001
+    engine_support: implemented
+    learning_reinforcement: "v로 눈에 보이는 charwise 범위를 만든 뒤 d로 선택 범위를 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "relay 오염 구간 제거"
+    briefing: "릴레이 상태 줄에 bad 오염 구간이 남았습니다. bad 시작점에서 visual selection으로 범위를 잡고 d로 제거하세요."
+    context_role: "오염 구간이 끼어든 relay 설정"
+    mentor_success: "좋습니다. 보이는 범위만 지정해 relay 신호를 정리했습니다."
+    mentor_failure: "반복 x가 아니라 v로 범위를 먼저 보이게 잡고 d를 누르세요."
+    story_constraints:
+      - "visual selection이 보이는 범위 지정이라는 점을 강조한다."
+      - "단어/text object 삭제로 우회하지 않게 한다."
+
+  - id: visual-char-line-002-scenario
+    status: approved
+    exercise_id: visual-char-line-002
+    engine_support: implemented
+    learning_reinforcement: "v로 선택한 범위는 y로 register에 담아 p로 재사용할 수 있다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "node 신호 미러링"
+    briefing: "node의 ok 신호를 mirror에도 복제해야 합니다. ok를 visual selection으로 복사해 mirror 뒤에 붙이세요."
+    context_role: "동기화가 필요한 짧은 신호 값"
+    mentor_success: "좋습니다. 값을 다시 입력하지 않고 보이는 선택 범위를 재사용했습니다."
+    mentor_failure: "수동 입력하지 마세요. v로 ok를 선택하고 y, $, p 순서로 재사용합니다."
+    story_constraints:
+      - "복사 대상이 짧은 charwise 범위임을 강조한다."
+      - "붙여넣기 위치는 mirror= 뒤다."
+
+  - id: visual-char-line-003-scenario
+    status: approved
+    exercise_id: visual-char-line-003
+    engine_support: implemented
+    learning_reinforcement: "visual selection은 오른쪽에서 왼쪽으로 잡아도 같은 범위를 표현한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "cache stale 제거"
+    briefing: "cache 줄의 stale 흔적을 오른쪽 끝에서 거꾸로 잡아 제거해야 합니다. e 위에서 v, h...로 범위를 잡고 d로 삭제하세요."
+    context_role: "끝에서부터 확인된 stale 구간"
+    mentor_success: "좋습니다. anchor가 오른쪽이어도 선택 범위를 정규화해 정확히 제거했습니다."
+    mentor_failure: "오른쪽에서 시작해도 괜찮습니다. h로 stale 전체를 보이게 잡은 뒤 d를 누르세요."
+    story_constraints:
+      - "backward selection normalization을 학습 목표로 둔다."
+      - "시나리오는 target state와 key trace를 바꾸지 않는다."
