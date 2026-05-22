@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — vimengine visual/selection helper 분리
+
+이전 가정: visual selection type, visual key handling, visual `d/y` helper가 `internal/vimengine/engine.go`에 함께 있었다.
+
+새 가정: selection type/normalization은 `selection.go`, visual mode key handling과 charwise visual operator helper는 `visual.go`로 분리한다. behavior는 바꾸지 않는다.
+
+이유: visual 이후 linewise/multi-line 확장을 검토하기 전에 engine 파일의 책임을 낮춰야 한다.
+
+영향: `ENGINE-SPLIT-001`은 완료됐고, 다음 활성 slice는 charwise visual invariant 테스트를 보강하는 `VISUAL-HARDEN-001`이다.
+
 ## 2026-05-22 — content replay에서 selection assertion 검증
 
 이전 가정: visual selection은 app_state/E2E assertion으로 검증할 수 있었지만, content replay gate는 `e2e_assertions.selection` mismatch를 직접 비교하지 않았다.

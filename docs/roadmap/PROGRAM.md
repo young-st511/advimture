@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### ENGINE-SPLIT-001. Vimengine selection/range split
+### VISUAL-HARDEN-001. Charwise visual invariant pass
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: `internal/vimengine`의 selection/range/operator helper를 behavior 변화 없이 분리한다.
+- 목표: charwise visual invariant와 undo/register/unsupported edge case 테스트를 보강한다.
 
 ## 방금 완료한 슬라이스
+
+### ENGINE-SPLIT-001. Vimengine selection/range split
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/engine-split-001-vimengine-selection-range.md`
+- 완료일: 2026-05-22
 
 ### QA-SEL-001. Selection replay hardening
 - 상태: completed
