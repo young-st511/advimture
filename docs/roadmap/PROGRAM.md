@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### UI-HIERARCHY-001. Current exercise first hierarchy
+### UI-MODE-001. Tutorial and incident action language
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: 현재 exercise 목표를 상위로 올리고 review/daily route를 보조 정보로 낮춘다.
+- 목표: tutorial action panel과 incident action panel 언어를 분리한다.
 
 ## 방금 완료한 슬라이스
+
+### UI-HIERARCHY-001. Current exercise first hierarchy
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-hierarchy-001-current-task-first.md`
+- 완료일: 2026-05-23
 
 ### UI-RENDER-001. Extract playable renderer
 - 상태: completed

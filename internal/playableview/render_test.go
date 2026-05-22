@@ -52,3 +52,35 @@ func TestRenderScreenIncludesActionPanel(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
+	view := Render(Screen{
+		PlaylistTitle: "Tutorial 0",
+		ReviewSummary: "재점검 대상: 목표 문자까지 이동하기: 미복구",
+		DailyRoute:    "오늘의 복구 루트: 3건 대기",
+		Title:         "커서 위치 맞추기",
+		Message:       "목표까지 이동하세요.",
+		BufferLines:   []string{"abc"},
+		Mode:          "normal",
+		Status:        "running",
+		ExerciseTotal: 4,
+		ActionLines:   []string{"ACTION"},
+	})
+
+	titleIndex := strings.Index(view, "커서 위치 맞추기")
+	reviewIndex := strings.Index(view, "재점검 대상:")
+	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
+	bufferIndex := strings.Index(view, "> [a]bc")
+	if titleIndex == -1 || reviewIndex == -1 || consoleIndex == -1 || bufferIndex == -1 {
+		t.Fatalf("Render output = %q, want current task, ops, and console sections", view)
+	}
+	if titleIndex > reviewIndex {
+		t.Fatalf("Render output = %q, want current task before ops summary", view)
+	}
+	if consoleIndex > bufferIndex {
+		t.Fatalf("Render output = %q, want console label before buffer", view)
+	}
+	if !strings.Contains(view, "ADVIMTURE | Tutorial 0 | Exercise: 1/4 | Status: running") {
+		t.Fatalf("Render output = %q, want compact header", view)
+	}
+}

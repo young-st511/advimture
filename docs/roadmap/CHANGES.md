@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — UI-HIERARCHY-001 완료
+
+이전 가정: 화면 상단은 playlist, review queue, daily route, 현재 문항을 순서대로 보여줬고, 현재 목표보다 메타 정보가 먼저 읽힐 수 있었다.
+
+새 가정: 화면은 current task first다. Header는 위치와 진행 상태를 압축하고, title/briefing을 바로 보여준 뒤 review/daily route는 `OPS` 보조 영역으로 낮춘다.
+
+이유: Vim 학습 게임에서 플레이어가 가장 먼저 알아야 하는 정보는 "지금 무엇을 조작해야 하는가"이며, 반복 학습 동기는 그 다음이어야 한다.
+
+영향: 다음 활성 slice는 tutorial과 incident action panel 언어를 분리하는 `UI-MODE-001`이다.
+
 ## 2026-05-23 — UI-RENDER-001 완료
 
 이전 가정: playable 화면 출력은 `internal/playable.Model.View()` 안에서 game state, progress 표시, action panel 문자열과 함께 구성됐다.

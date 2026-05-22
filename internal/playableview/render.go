@@ -41,18 +41,21 @@ var actionPanelStyle = lipgloss.NewStyle().
 
 func Render(screen Screen) string {
 	var b strings.Builder
-	b.WriteString("A D V I M T U R E - Playable Slice\n\n")
-	if screen.PlaylistTitle != "" {
-		b.WriteString(screen.PlaylistTitle + "\n")
-	}
-	if screen.ReviewSummary != "" {
-		b.WriteString(screen.ReviewSummary + "\n")
-	}
-	if screen.DailyRoute != "" {
-		b.WriteString(screen.DailyRoute + "\n")
-	}
+	b.WriteString(renderHeader(screen))
+	b.WriteString("\n\n")
 	b.WriteString(screen.Title + "\n")
 	b.WriteString(screen.Message + "\n\n")
+	if screen.ReviewSummary != "" || screen.DailyRoute != "" {
+		b.WriteString("OPS\n")
+		if screen.ReviewSummary != "" {
+			b.WriteString(screen.ReviewSummary + "\n")
+		}
+		if screen.DailyRoute != "" {
+			b.WriteString(screen.DailyRoute + "\n")
+		}
+		b.WriteString("\n")
+	}
+	b.WriteString("RUNBOOK CONSOLE\n")
 	for row, line := range screen.BufferLines {
 		b.WriteString(RenderLine(line, row, screen.CursorRow, screen.CursorCol, screen.Selection))
 		b.WriteString("\n")
@@ -77,6 +80,20 @@ func Render(screen Screen) string {
 	}
 	b.WriteString(RenderActionPanel(screen.ActionLines))
 	return b.String()
+}
+
+func renderHeader(screen Screen) string {
+	parts := []string{"ADVIMTURE"}
+	if screen.PlaylistTitle != "" {
+		parts = append(parts, screen.PlaylistTitle)
+	}
+	if screen.ExerciseTotal > 0 {
+		parts = append(parts, fmt.Sprintf("Exercise: %d/%d", screen.ExerciseIndex+1, screen.ExerciseTotal))
+	}
+	if screen.Status != "" {
+		parts = append(parts, fmt.Sprintf("Status: %s", screen.Status))
+	}
+	return strings.Join(parts, " | ")
 }
 
 func RenderActionPanel(lines []string) string {
