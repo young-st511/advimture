@@ -72,7 +72,7 @@ setup:
       "total_keystrokes": 0
     }
 steps:
-  - wait_screen_contains: "복구 콘솔이 error 토큰"
+  - wait_screen_contains: "야간 runbook이 error 신호"
   - send: "/"
   - wait_ms: 50
   - send: "e"
@@ -89,7 +89,7 @@ steps:
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "timeout이 한 번 더"
+  - wait_screen_contains: "timeout 신호가 한 번 더"
   - send: "/"
   - wait_ms: 50
   - send: "t"
@@ -112,7 +112,7 @@ steps:
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "상태 값 down"
+  - wait_screen_contains: "route 상태값 down"
   - send: "c"
   - wait_ms: 50
   - send: "i"
@@ -195,10 +195,10 @@ steps:
   - send: "q"
 assert:
   screen_contains:
-    - "Incident 001: 로그 추적과 핫픽스"
+    - "릴레이 기지 001: 야간 핫픽스 복구"
     - "Exercise: 6/6"
     - "Next tutorial: enter"
-    - "좋습니다. 전체 파일이 아니라 문제 구간만 정확히 치환했습니다."
+    - "좋습니다. 전체 파일이 아니라 문제 relay 구간만 정확히 정리했습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

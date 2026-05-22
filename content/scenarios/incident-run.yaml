@@ -5,11 +5,11 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "검색으로 원인 토큰을 즉시 찾는다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "원인 error 위치 추적"
-    briefing: "복구 콘솔이 error 토큰을 감지했습니다. /error로 원인 위치를 바로 잡으세요."
-    context_role: "remote-operator"
-    mentor_success: "좋습니다. 한 줄씩 훑지 않고 error 위치를 바로 잡았습니다."
-    mentor_failure: "검색을 사용해야 원인 토큰을 빠르게 고정할 수 있습니다."
+    mission_title: "릴레이 원인 신호 추적"
+    briefing: "릴레이 기지 001의 야간 runbook이 error 신호에서 멈췄습니다. /error로 원인 위치를 바로 잡으세요."
+    context_role: "원격 복구 오퍼레이터"
+    mentor_success: "좋습니다. 한 줄씩 훑지 않고 / 검색으로 원인 신호를 고정했습니다."
+    mentor_failure: "복구 작전의 첫 단계는 신호 위치 고정입니다. /error로 원인 토큰을 찾으세요."
 
   - id: incident-hotfix-002-scenario
     status: approved
@@ -17,11 +17,11 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "n으로 같은 검색어의 다음 match를 따라간다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "다음 timeout 추적"
-    briefing: "timeout이 한 번 더 튀었습니다. 같은 검색어를 다시 치지 말고 n으로 다음 위치를 추적하세요."
-    context_role: "remote-operator"
-    mentor_success: "좋습니다. n으로 같은 신호의 다음 발생을 따라갔습니다."
-    mentor_failure: "같은 검색어의 다음 match는 n으로 이동합니다."
+    mission_title: "다음 timeout 신호 추적"
+    briefing: "같은 relay 경로에서 timeout 신호가 한 번 더 남았습니다. 같은 검색어를 다시 치지 말고 n으로 다음 위치를 추적하세요."
+    context_role: "원격 복구 오퍼레이터"
+    mentor_success: "좋습니다. n으로 같은 신호의 다음 발생을 이어서 추적했습니다."
+    mentor_failure: "같은 검색어를 다시 입력하면 복구 시간이 늘어납니다. 다음 match는 n으로 이동하세요."
 
   - id: incident-hotfix-003-scenario
     status: approved
@@ -29,11 +29,11 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "ciw로 값 전체를 구조적으로 교체한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "상태 값 핫픽스"
-    briefing: "상태 값 down이 설비를 막고 있습니다. ciw로 값 전체를 up으로 교체하세요."
-    context_role: "remote-operator"
-    mentor_success: "좋습니다. 값 중간에서도 ciw로 전체 상태값을 안전하게 교체했습니다."
-    mentor_failure: "값의 시작으로 이동하지 말고 현재 단어 전체를 대상으로 잡으세요."
+    mission_title: "relay 상태값 핫픽스"
+    briefing: "릴레이 route 상태값 down이 복구 runbook을 막고 있습니다. ciw로 값 전체를 up으로 교체하세요."
+    context_role: "원격 복구 오퍼레이터"
+    mentor_success: "좋습니다. 값 중간에서도 ciw로 전체 상태값을 안전하게 복구했습니다."
+    mentor_failure: "값 시작으로 이동하지 않아도 됩니다. ciw로 현재 단어 전체를 대상으로 잡으세요."
 
   - id: incident-hotfix-004-scenario
     status: approved
@@ -41,11 +41,11 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "o로 현재 줄 아래에 보정 줄을 추가한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "guard 줄 추가"
-    briefing: "핫픽스가 풀리지 않도록 guard 줄이 필요합니다. 현재 줄 아래에 guard=on을 추가하세요."
-    context_role: "remote-operator"
-    mentor_success: "좋습니다. 기존 줄을 건드리지 않고 아래에 guard를 열었습니다."
-    mentor_failure: "기존 줄 끝에 붙이지 말고 o로 새 줄을 여세요."
+    mission_title: "guard runbook 줄 추가"
+    briefing: "복구한 route가 다시 내려가지 않도록 guard 줄이 필요합니다. 현재 줄 아래에 guard=on을 추가하세요."
+    context_role: "원격 복구 오퍼레이터"
+    mentor_success: "좋습니다. 기존 route 줄을 건드리지 않고 아래에 guard를 열었습니다."
+    mentor_failure: "기존 줄 끝에 guard를 붙이면 runbook 구조가 흐트러집니다. o로 새 줄을 여세요."
 
   - id: incident-hotfix-005-scenario
     status: approved
@@ -53,10 +53,10 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "yy/p로 안전한 설정 줄을 재사용한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "안정 route 복제"
-    briefing: "검증된 route 줄을 하나 더 만들어야 합니다. 다시 치지 말고 yy와 p로 복제하세요."
-    context_role: "remote-operator"
-    mentor_success: "좋습니다. 정상 route를 재입력하지 않고 안전하게 복제했습니다."
+    mission_title: "안정 route 재사용"
+    briefing: "검증된 route 줄을 예비 경로로 하나 더 남겨야 합니다. 다시 치지 말고 yy와 p로 복제하세요."
+    context_role: "원격 복구 오퍼레이터"
+    mentor_success: "좋습니다. 정상 route를 재입력하지 않고 안전하게 재사용했습니다."
     mentor_failure: "정상 줄은 다시 타이핑하지 말고 register에 담아 붙여넣으세요."
 
   - id: incident-hotfix-006-scenario
@@ -65,8 +65,8 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "range substitute로 문제 구간만 바꾼다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "문제 구간 치환"
+    mission_title: "문제 relay 구간 정리"
     briefing: "첫 줄은 원인 기록이라 남겨야 합니다. 2~3번째 줄의 error만 ok로 바꾸세요."
-    context_role: "remote-operator"
-    mentor_success: "좋습니다. 전체 파일이 아니라 문제 구간만 정확히 치환했습니다."
-    mentor_failure: "첫 줄까지 바꾸면 원인 기록이 사라집니다. range를 붙이세요."
+    context_role: "원격 복구 오퍼레이터"
+    mentor_success: "좋습니다. 전체 파일이 아니라 문제 relay 구간만 정확히 정리했습니다."
+    mentor_failure: "첫 줄까지 바꾸면 원인 기록이 사라집니다. range를 붙여 문제 구간만 정리하세요."

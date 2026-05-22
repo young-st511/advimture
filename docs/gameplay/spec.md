@@ -93,8 +93,10 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`를 기준으로 검토한다. mastery, spaced review, daily run은 후보이며, progress 저장 포맷 변경은 별도 승인 전까지 구현하지 않는다.
 - review queue의 첫 구현은 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재진단 큐`, 성공 debrief에서는 `잔류 리스크`로 표현한다.
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
-- `incident-001-hotfix`는 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이며 replay gate와 full playlist E2E를 통과한다.
-- `incident-002-structure-recovery`는 `/secret`, `ci"`, `yi"` + `P`, `:%s`, `ci"` + `.`를 조합하는 두 번째 mixed run이며 replay gate와 full playlist E2E를 통과한다.
+- 중반 이후 incident는 `docs/gameplay/world-frame.md`의 원격 시설 복구국 / Runbook Dispatch 프레임을 따른다.
+- `incident-001-hotfix`는 “릴레이 기지 001: 야간 핫픽스 복구”로 표시하며 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이다. replay gate와 full playlist E2E를 통과한다.
+- `incident-002-structure-recovery`는 “릴레이 기지 002: 구조 설정 재동기화”로 표시하며 `/secret`, `ci"`, `yi"` + `P`, `:%s`, `ci"` + `.`를 조합하는 두 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
+- incident 001/002의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `visual-char-line`은 draft/planned command cluster다. VISUAL-GAP-001은 visual mode를 바로 구현하지 않고 `v`, `V`, `d`, `y` 후보와 engine/TUI/E2E 영향을 문서로 분리했다.
 - 첫 visual 구현 전에는 selection anchor/cursor state, visual selection rendering, operator application, E2E app_state assertion 확장이 필요하다.
 - visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.

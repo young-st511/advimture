@@ -5,10 +5,10 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "장애 적용 run에서는 먼저 / 검색으로 복구 대상 key를 찾는다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "복구 대상 위치 추적"
-    briefing: "구조 복구 콘솔에 secret 설정이 숨어 있습니다. /secret 검색으로 대상 줄을 먼저 잡으세요."
-    context_role: "원격 시설 구조 복구 설정"
-    mentor_success: "좋습니다. 구조를 고치기 전에 검색으로 대상 위치를 확정했습니다."
+    mission_title: "secret 설정 신호 추적"
+    briefing: "릴레이 기지 002의 구조 설정에서 secret 신호가 stale 상태로 남았습니다. /secret 검색으로 대상 줄을 먼저 잡으세요."
+    context_role: "원격 시설 구조 재동기화"
+    mentor_success: "좋습니다. 구조 값을 고치기 전에 / 검색으로 대상 위치를 확정했습니다."
     mentor_failure: "한 줄씩 훑지 말고 /secret으로 key 이름을 바로 찾으세요."
     story_constraints:
       - "검색이 후속 quote 편집의 진입점임을 강조한다."
@@ -19,10 +19,10 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "ci\"는 quoted value 전체를 교체한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "secret 값 복구"
-    briefing: "secret 값이 stale 상태입니다. quote 내부 값 전체를 ci\"로 fresh로 교체하세요."
+    mission_title: "secret 구조 값 복구"
+    briefing: "secret 값이 stale 상태라 relay 동기화가 멈췄습니다. quote 내부 값 전체를 ci\"로 fresh로 교체하세요."
     context_role: "오래된 secret 설정 값"
-    mentor_success: "좋습니다. quote 구조는 남기고 내부 값만 fresh로 교체했습니다."
+    mentor_success: "좋습니다. quote 구조는 남기고 내부 값만 fresh로 복구했습니다."
     mentor_failure: "quote 구조를 건드리지 마세요. ci\"로 내부 값만 바꿉니다."
     story_constraints:
       - "quoted value만 수정한다."
@@ -33,10 +33,10 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "yi\"와 P로 quoted value를 안전하게 재사용한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "mirror 동기화"
-    briefing: "복구된 fresh 값을 mirror에도 넣어야 합니다. yi\"로 값만 복사해 빈 quote 안에 붙이세요."
+    mission_title: "mirror 신호 동기화"
+    briefing: "복구된 fresh 값을 mirror에도 동기화해야 합니다. yi\"로 값만 복사해 빈 quote 안에 붙이세요."
     context_role: "동기화가 필요한 mirror 설정"
-    mentor_success: "좋습니다. 값을 다시 타이핑하지 않고 quote 내부 값만 재사용했습니다."
+    mentor_success: "좋습니다. 값을 다시 타이핑하지 않고 quote 내부 값만 안전하게 재사용했습니다."
     mentor_failure: "fresh를 직접 입력하지 마세요. yi\"로 담아 닫는 quote 앞에 P로 넣습니다."
     story_constraints:
       - "수동 입력보다 register 재사용을 강조한다."
@@ -48,9 +48,9 @@ scenarios:
     learning_reinforcement: ":%s는 전체 파일 범위 치환이다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
     mission_title: "temp 상태 전체 승격"
-    briefing: "남은 temp 상태를 모두 live로 승격해야 합니다. 전체 파일 범위 치환을 사용하세요."
+    briefing: "남은 temp 상태가 relay 재가동을 막고 있습니다. 전체 파일 범위 치환으로 모두 live로 승격하세요."
     context_role: "복구 단계 상태 목록"
-    mentor_success: "좋습니다. 현재 줄만이 아니라 전체 상태 토큰을 live로 바꿨습니다."
+    mentor_success: "좋습니다. 현재 줄만이 아니라 전체 상태 토큰을 live로 승격했습니다."
     mentor_failure: "한 줄만 바꾸면 복구가 반쪽입니다. % range로 전체 파일을 대상으로 잡으세요."
     story_constraints:
       - "전체 범위 치환의 필요를 강조한다."
@@ -61,10 +61,10 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "ci\" 변경은 .으로 같은 quoted value 교체를 반복할 수 있다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "반복 quote 값 승격"
-    briefing: "두 줄의 old 값이 같은 방식으로 낡았습니다. 첫 줄은 ci\"로 new, 다음 줄은 .으로 반복하세요."
+    mission_title: "반복 quote 패치 마감"
+    briefing: "두 줄의 old 값이 같은 방식으로 relay 설정을 막고 있습니다. 첫 줄은 ci\"로 new, 다음 줄은 .으로 반복하세요."
     context_role: "반복 패치가 필요한 quoted 설정"
-    mentor_success: "좋습니다. 같은 구조 수정은 다시 타이핑하지 않고 반복했습니다."
+    mentor_success: "좋습니다. 같은 구조 수정은 다시 타이핑하지 않고 반복 패치로 마감했습니다."
     mentor_failure: "두 번째 줄에서 다시 입력하지 마세요. 값 안으로 이동한 뒤 .으로 반복합니다."
     story_constraints:
       - "quote text object와 repeat-last-change의 조합을 강화한다."

@@ -204,7 +204,7 @@
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
 | 1 | PLAN-REFRESH-003 | completed | 세계관 프레임과 다음 보강 순서 고정 |
-| 2 | INCIDENT-UX-003 | pending | incident 001/002 제목, briefing, feedback, 2단계 hint를 복구 작전으로 정렬 |
+| 2 | INCIDENT-UX-003 | completed | incident 001/002 제목, briefing, feedback, 2단계 hint를 복구 작전으로 정렬 |
 | 3 | PROGRESS-LANGUAGE-001 | pending | 저장 포맷 변경 없이 review/best record 문구를 복구국 프레임으로 정렬 |
 | 4 | E2E-FIXTURE-001 | pending | 긴 progress fixture 유지보수 완화 전략 수립 |
 | 5 | VISUAL-GAP-002 | pending | visual selection state, TUI 표시, app_state assertion 계약 확정 |
@@ -216,7 +216,7 @@
 | ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |----|----------|-------------|------|---------------|
 | PLAN-REFRESH-003 | health check와 세계관 후보 선택 완료 | completed: world frame decision, 다음 중기 플랜 | completed: `git diff --check` | command 학습보다 lore를 앞세우지 않는다 |
-| INCIDENT-UX-003 | world frame decision 완료 | incident scenario/hint wording 개선, focused E2E 갱신 | content tests, incident E2E | target_state, optimal_keys, constraints는 변경하지 않는다 |
+| INCIDENT-UX-003 | world frame decision 완료 | completed: incident scenario/hint wording 개선, focused E2E 갱신 | completed: content tests, incident E2E, `make e2e-playable` | target_state, optimal_keys, constraints는 변경하지 않았다 |
 | PROGRESS-LANGUAGE-001 | incident UX 완료 | review/debrief 문구 정렬 | playable tests, focused E2E | progress 저장 JSON 구조를 변경하지 않는다 |
 | E2E-FIXTURE-001 | full E2E fixture 부담 확인 | fixture builder 또는 최소 fixture 전략 | e2e-runner tests, representative E2E | 실제 HOME 사용 금지 |
 | VISUAL-GAP-002 | UX 보강 완료 | visual selection contract | docs review, `git diff --check` | visual block, count/register prefix, indentation 제외 |

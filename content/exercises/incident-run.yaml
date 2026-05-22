@@ -7,8 +7,8 @@ exercises:
     reviewed_commands: ["enter"]
     mistake_focus: ["로그를 한 줄씩 훑느라 원인 토큰을 늦게 찾는다."]
     replay_status: pass
-    title: "장애 error 토큰 위치 찾기"
-    goal_for_player: "/error 검색으로 장애 토큰 위치를 찾으세요."
+    title: "relay error 신호 위치 찾기"
+    goal_for_player: "/error 검색으로 relay 장애 신호 위치를 찾으세요."
     initial_state:
       mode: normal
       cursor:
@@ -37,7 +37,9 @@ exercises:
       attempt_limit: 0
     hints:
       - after_keys: 1
-        text: "Incident에서는 한 줄씩 훑기보다 검색으로 원인 토큰을 잡습니다."
+        text: "복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다."
+      - after_keys: 4
+        text: "/error를 끝까지 입력하고 enter로 검색을 확정하세요."
     grading:
       pass_condition: "cursor == target && mode == normal"
       optimal_key_count: 7
@@ -57,7 +59,7 @@ exercises:
     reviewed_commands: ["/", "enter"]
     mistake_focus: ["같은 검색어를 다시 입력하려고 한다."]
     replay_status: pass
-    title: "다음 timeout 추적"
+    title: "다음 timeout 신호 추적"
     goal_for_player: "/timeout으로 첫 match를 찾고 n으로 다음 timeout까지 이동하세요."
     initial_state:
       mode: normal
@@ -88,6 +90,8 @@ exercises:
       forbidden_keys: ["G", "g", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
       attempt_limit: 0
     hints:
+      - after_keys: 1
+        text: "먼저 /timeout으로 첫 timeout 신호를 잡습니다."
       - after_keys: 9
         text: "같은 검색어의 다음 발생은 n으로 따라갑니다."
     grading:
@@ -109,7 +113,7 @@ exercises:
     reviewed_commands: ["esc"]
     mistake_focus: ["값 중간에 있는데 단어 시작으로 이동하려고 한다."]
     replay_status: pass
-    title: "상태 값을 up으로 교체"
+    title: "relay 상태 값을 up으로 교체"
     goal_for_player: "down 값 중간에서 ciw로 값 전체를 up으로 바꾸세요."
     initial_state:
       mode: normal
@@ -134,6 +138,8 @@ exercises:
       forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "d", "y", "x", "r", "a", "A", ":", "ctrl+c", "left", "right", "up", "down"]
       attempt_limit: 0
     hints:
+      - after_keys: 1
+        text: "c는 변경 operator입니다. 이번 대상은 현재 단어 전체입니다."
       - after_keys: 3
         text: "ciw 후에는 Insert mode입니다. 새 값을 입력하고 esc로 돌아오세요."
     grading:
@@ -155,7 +161,7 @@ exercises:
     reviewed_commands: ["esc"]
     mistake_focus: ["기존 줄 끝에 guard를 붙이려고 한다."]
     replay_status: pass
-    title: "핫픽스 guard 줄 추가"
+    title: "복구 guard 줄 추가"
     goal_for_player: "현재 줄 아래에 o로 새 줄을 열고 guard=on을 입력하세요."
     initial_state:
       mode: normal
@@ -185,6 +191,8 @@ exercises:
     hints:
       - after_keys: 1
         text: "기존 status 줄을 망가뜨리지 말고 아래에 새 guard 줄을 엽니다."
+      - after_keys: 8
+        text: "guard=on을 입력한 뒤 esc로 Normal mode에 돌아오세요."
     grading:
       pass_condition: "buffer == target && mode == normal"
       optimal_key_count: 10
@@ -204,7 +212,7 @@ exercises:
     reviewed_commands: []
     mistake_focus: ["정상 route 줄을 다시 타이핑하려고 한다."]
     replay_status: pass
-    title: "정상 route 줄 복제"
+    title: "정상 route 줄 재사용"
     goal_for_player: "정상 route 줄을 yy로 복사하고 p로 바로 아래에 붙여넣으세요."
     initial_state:
       mode: normal
@@ -232,6 +240,8 @@ exercises:
       forbidden_keys: ["i", "a", "A", "d", "c", "x", "r", ":", "ctrl+c", "left", "right", "up", "down"]
       attempt_limit: 0
     hints:
+      - after_keys: 1
+        text: "줄 전체를 재사용하려면 yy로 현재 줄을 register에 담습니다."
       - after_keys: 2
         text: "yy로 줄을 담았으면 p로 아래에 붙입니다."
     grading:
@@ -253,7 +263,7 @@ exercises:
     reviewed_commands: [":s", ":%s"]
     mistake_focus: ["전체 파일을 바꿔 첫 줄까지 건드리려고 한다."]
     replay_status: pass
-    title: "문제 구간만 ok로 치환"
+    title: "문제 relay 구간만 ok로 치환"
     goal_for_player: "command-line에서 2~3번째 줄의 error만 ok로 바꾸세요."
     initial_state:
       mode: normal
@@ -279,6 +289,8 @@ exercises:
       forbidden_keys: ["ctrl+c"]
       attempt_limit: 0
     hints:
+      - after_keys: 1
+        text: "첫 줄은 원인 기록이라 남겨야 합니다. 전체 치환이 아니라 range 치환입니다."
       - after_keys: 4
         text: "2,3은 1-based inclusive line range입니다."
     grading:

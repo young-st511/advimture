@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-UX-003. Incident game-feel pass
+### PROGRESS-LANGUAGE-001. Recovery language pass
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: incident 001/002를 원격 시설 복구국 프레임의 하나의 복구 작전처럼 느끼도록 보강한다.
+- 목표: 저장 포맷 변경 없이 review/debrief/best record 문구를 원격 시설 복구국 프레임에 맞춘다.
 
 ## 방금 완료한 슬라이스
+
+### INCIDENT-UX-003. Incident game-feel pass
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-ux-003-game-feel-pass.md`
+- 완료일: 2026-05-22
 
 ### PLAN-REFRESH-003. Applied learning and world frame
 - 상태: completed

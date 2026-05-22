@@ -3,7 +3,7 @@ playlists:
     status: approved
     category: incident
     order: 2
-    title: "Incident 002: 구조 값 복구"
+    title: "릴레이 기지 002: 구조 설정 재동기화"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
     beats:

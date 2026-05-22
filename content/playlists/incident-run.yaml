@@ -3,7 +3,7 @@ playlists:
     status: approved
     category: incident
     order: 1
-    title: "Incident 001: 로그 추적과 핫픽스"
+    title: "릴레이 기지 001: 야간 핫픽스 복구"
     unlock_policy: sequential
     completion_policy: all_implemented_beats
     beats:
