@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### NEXT. Plan refresh
+### INCIDENT-UX-003. Incident game-feel pass
 - 상태: pending
-- ExecPlan: 미정
-- 목표: Structure Editing and Applied Survival 완료 후 다음 중기 플랜을 결정한다.
+- ExecPlan: 다음 루프에서 작성
+- 목표: incident 001/002를 원격 시설 복구국 프레임의 하나의 복구 작전처럼 느끼도록 보강한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAN-REFRESH-003. Applied learning and world frame
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/plan-refresh-003-applied-world-frame.md`
+- 완료일: 2026-05-22
 
 ### VISUAL-GAP-001. Visual mode gap
 - 상태: completed

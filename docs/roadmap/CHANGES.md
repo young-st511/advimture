@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — 원격 시설 복구국 세계관 프레임 채택
+
+이전 가정: 중반 이후 시나리오 톤은 터미널 문제 해결 생존 어드벤처였지만, canonical 세계관 명칭과 반복 플레이 언어는 아직 고정되지 않았다.
+
+새 가정: 중반 이후 세계관 기본 프레임은 `원격 시설 복구국 / Runbook Dispatch`로 한다. 플레이어는 낡은 원격 시설의 장애 runbook을 Vim으로 복구하는 원격 복구 오퍼레이터다. 개별 incident에는 `침묵한 릴레이 기지` 감각을 얇게 섞되, 장대한 lore는 금지한다.
+
+이유: 세 명의 시나리오 작가 SubAgent와 메타 리뷰 결과, 이 혼합안이 Vim command 학습을 가장 덜 가리면서 incident 001/002, review queue, visual mode 확장을 자연스럽게 묶는다고 판단했다.
+
+영향: 다음 루프는 `INCIDENT-UX-003`으로 incident 제목, briefing, feedback, 2단계 hint를 복구 작전 프레임에 맞춘다.
+
 ## 2026-05-22 — Structure editing 완료 후 visual readiness와 incident UX 우선
 
 이전 가정: `text-object-quote-pair`와 두 번째 incident run을 닫은 뒤 다음 후보인 `visual-char-line` 구현으로 바로 넘어갈 수 있다.

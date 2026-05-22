@@ -10,6 +10,7 @@
 - 주된 목적은 Vim 학습이다. 어드벤처와 시나리오는 학습 반복을 재미있게 만드는 장치다.
 - 초반은 짧은 튜토리얼 에피소드 묶음으로 Vim command를 처음 훑는 “첫 투어”에 가깝게 운영한다.
 - 중후반부터는 생존 어드벤처, 탐험, 위기 해결 비중을 높인다.
+- 중반 이후 세계관 기본 프레임은 `원격 시설 복구국 / Runbook Dispatch`다. 플레이어는 낡은 원격 시설의 장애 runbook을 Vim으로 복구하는 원격 복구 오퍼레이터다.
 
 ## 목표
 
@@ -39,6 +40,7 @@ Advimture는 플레이어가 Vim을 실제로 유용하게 쓰는 데 필요한 
 - Exercise bank: 각 command cluster를 반복 훈련시키는 명확한 문항과 정답
 - Exercise constraints: 의도 command를 훈련하도록 최대 입력 수, 필수 command, 금지 입력, 우회 방지 조건을 둔다
 - Scenario layer: 문항의 의도를 방해하지 않는 어드벤처 포장
+- World frame: 원격 시설 복구국, 릴레이 기지, 잔류 리스크 같은 짧은 명사로 incident를 하나의 복구 작전처럼 묶는다
 - 반복 플레이/성장 구조: 같은 명령을 더 적은 키, 더 정확한 입력, 더 자연스러운 조합으로 풀게 하는 진행
 - 검증 가능한 TUI QA Loop: `make e2e-smoke`와 `test/e2e/` scenario를 시작점으로 실행 검증을 축적
 

@@ -25,6 +25,7 @@ docs/
 │   ├── exercise-bank.md
 │   ├── scenario-bank.md
 │   ├── scenario-tone.md
+│   ├── world-frame.md
 │   └── content-requirements.md
 ├── verification/
 │   ├── domain-contract.md
@@ -66,6 +67,7 @@ docs/
 | `gameplay/exercise-bank.md` | 사람 + AI | command 기반 문항 축적 | 새 exercise 제안/승인 시 |
 | `gameplay/scenario-bank.md` | 사람 + AI | exercise 기반 시나리오 축적 | 새 scenario 제안/승인 시 |
 | `gameplay/scenario-tone.md` | 사람 + AI | 중반 이후 시나리오 톤과 금지 패턴 | 시나리오 톤, 세계 프레임, 제작 가드레일 변경 시 |
+| `gameplay/world-frame.md` | 사람 + AI | 중반 이후 canonical 세계관 프레임 | 세계관 명칭, 역할, incident framing 변경 시 |
 | `gameplay/content-requirements.md` | 사람 + AI | loader가 받아야 할 콘텐츠 구조 요구사항 | scenario workflow로 새 콘텐츠 요구가 발견될 때 |
 | `workflows/scenario-production-harness.md` | AI | command→exercise→scenario 제작/검증 하네스 | 콘텐츠 생성 워크플로우 품질 기준 변경 시 |
 | `guardrails.md` | 사람 | 자동 검증과 안전장치 현황 | CI, hooks, 테스트 루프 변경 시 |
