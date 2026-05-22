@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — PLATFORM-REVIEW-002 완료
+
+이전 가정: review queue는 메인 화면과 성공 debrief에 표시됐지만, 매일 짧게 다시 들어올 이유를 주는 daily framing은 아직 progress schema v2 후보에 머물러 있었다.
+
+새 가정: 저장 포맷 변경 전에도 앱 실행 시 review queue를 읽어 `오늘의 복구 루트: N건 대기`로 표시할 수 있다. E2E state summary도 review count와 primary candidate를 노출한다.
+
+이유: daily streak/calendar를 저장하지 않아도 플레이어에게 "오늘 처리할 잔류 리스크" 감각을 줄 수 있고, progress schema v2 승인 전까지 안전하게 반복 플레이 동기를 강화할 수 있다.
+
+영향: `Linewise Visual and Choice Training` 중기 플랜은 완료됐다. 다음 루프는 새 중기 플랜 수립으로 시작한다.
+
 ## 2026-05-23 — COMMAND-CHOICE-001 완료
 
 이전 가정: incident 004까지 완료되어 배운 command는 늘었지만, 플레이어가 어느 상황에서 어떤 command를 고를지 훈련하는 별도 기준은 아직 없었다.

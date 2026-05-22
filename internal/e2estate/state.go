@@ -14,6 +14,7 @@ type State struct {
 	Status    string     `json:"status"`
 	Score     Score      `json:"score"`
 	Progress  Progress   `json:"progress"`
+	Review    Review     `json:"review"`
 	Selection *Selection `json:"selection,omitempty"`
 }
 
@@ -39,6 +40,13 @@ type Score struct {
 type Progress struct {
 	MissionID string `json:"mission_id"`
 	Completed bool   `json:"completed"`
+}
+
+type Review struct {
+	QueueCount        int    `json:"queue_count"`
+	PrimaryExerciseID string `json:"primary_exercise_id,omitempty"`
+	PrimaryReason     string `json:"primary_reason,omitempty"`
+	DailyRoute        string `json:"daily_route,omitempty"`
 }
 
 func DefaultPath(home string) string {

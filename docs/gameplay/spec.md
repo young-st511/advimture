@@ -92,6 +92,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-90-search-basic`은 `/`, `n`, `N`, wrap-around literal search를 다루는 4문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`를 기준으로 검토한다. mastery, spaced review, daily run은 후보이며, progress 저장 포맷 변경은 별도 승인 전까지 구현하지 않는다.
 - review queue는 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재점검 대상`, 성공 debrief에서는 `잔류 리스크`로 표현한다. candidate reason은 `미복구`, `복구 등급 <grade>`, `복구 입력 <best>/<optimal> keys`로 표시한다.
+- 오늘의 복구 루트는 저장하지 않는 daily motivation layer다. 현재 review queue 개수만 읽어 `오늘의 복구 루트: N건 대기`로 표시한다.
+- E2E state summary는 저장 포맷과 별개로 review queue count, primary exercise, primary reason, daily route 문구를 노출한다.
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
 - 중반 이후 incident는 `docs/gameplay/world-frame.md`의 원격 시설 복구국 / Runbook Dispatch 프레임을 따른다.
 - `incident-001-hotfix`는 “릴레이 기지 001: 야간 핫픽스 복구”로 표시하며 `/error`, `/timeout` + `n`, `ciw`, `o`, `yy/p`, `:2,3s`를 조합하는 첫 mixed run이다. replay gate와 full playlist E2E를 통과한다.

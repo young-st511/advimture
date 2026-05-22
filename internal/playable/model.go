@@ -149,6 +149,9 @@ func (m Model) View() string {
 	if summary := m.reviewQueueSummary(); summary != "" {
 		b.WriteString(summary + "\n")
 	}
+	if summary := m.dailyRouteSummary(); summary != "" {
+		b.WriteString(summary + "\n")
+	}
 	b.WriteString(view.Title + "\n")
 	b.WriteString(view.Message + "\n\n")
 	for row, line := range view.BufferLines {
@@ -210,6 +213,7 @@ func (m Model) State() e2estate.State {
 		Status:    string(state.Status),
 		Score:     score,
 		Progress:  progressState,
+		Review:    m.e2eReview(),
 		Selection: e2eSelection(state.Runtime.Vim.Selection),
 	}
 }
@@ -313,6 +317,13 @@ func (m Model) reviewQueueSummary() string {
 		return ""
 	}
 	return "재점검 대상: " + m.reviewQueue[0].Summary()
+}
+
+func (m Model) dailyRouteSummary() string {
+	if len(m.reviewQueue) == 0 {
+		return ""
+	}
+	return fmt.Sprintf("오늘의 복구 루트: %d건 대기", len(m.reviewQueue))
 }
 
 func (m Model) residualRiskSummary() string {
@@ -587,6 +598,19 @@ func e2eSelection(selection *vimengine.Selection) *e2estate.Selection {
 	}
 }
 
+func (m Model) e2eReview() e2estate.Review {
+	state := e2estate.Review{
+		QueueCount: len(m.reviewQueue),
+		DailyRoute: m.dailyRouteSummary(),
+	}
+	if len(m.reviewQueue) == 0 {
+		return state
+	}
+	state.PrimaryExerciseID = m.reviewQueue[0].ExerciseID
+	state.PrimaryReason = string(m.reviewQueue[0].Reason)
+	return state
+}
+
 func e2eCursor(cursor vimengine.Cursor) e2estate.Cursor {
 	return e2estate.Cursor{
 		Row: cursor.Row,
@@ -627,6 +651,9 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 	}
 	if residual := m.residualRiskSummary(); residual != "" {
 		lines = append(lines, residual)
+	}
+	if daily := m.dailyRouteSummary(); daily != "" {
+		lines = append(lines, daily)
 	}
 	return lines
 }

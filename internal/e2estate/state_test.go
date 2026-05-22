@@ -25,6 +25,12 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 			MissionID: "mission-1",
 			Completed: true,
 		},
+		Review: Review{
+			QueueCount:        2,
+			PrimaryExerciseID: "mission-2",
+			PrimaryReason:     "incomplete",
+			DailyRoute:        "오늘의 복구 루트: 2건 대기",
+		},
 		Selection: &Selection{
 			Active: true,
 			Kind:   "charwise",
@@ -55,5 +61,8 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 	}
 	if got.Selection == nil || got.Selection.Kind != "charwise" || got.Selection.End.Col != 2 {
 		t.Fatalf("selection = %+v, want charwise end col 2", got.Selection)
+	}
+	if got.Review.QueueCount != 2 || got.Review.PrimaryExerciseID != "mission-2" {
+		t.Fatalf("review = %+v, want queue count 2 and primary mission-2", got.Review)
 	}
 }
