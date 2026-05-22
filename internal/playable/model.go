@@ -43,12 +43,13 @@ type Model struct {
 }
 
 type gameEntry struct {
-	PlaylistID      string
-	PlaylistTitle   string
-	ExerciseID      string
-	ScenarioID      string
-	IndexInPlaylist int
-	TotalInPlaylist int
+	PlaylistID       string
+	PlaylistTitle    string
+	PlaylistCategory string
+	ExerciseID       string
+	ScenarioID       string
+	IndexInPlaylist  int
+	TotalInPlaylist  int
 }
 
 func New(options Options) Model {
@@ -384,10 +385,11 @@ func playlistEntries(library content.Library) ([]gameEntry, error) {
 				continue
 			}
 			playlistEntries = append(playlistEntries, gameEntry{
-				PlaylistID:    playlist.ID,
-				PlaylistTitle: playlist.Title,
-				ExerciseID:    beat.ExerciseID,
-				ScenarioID:    beat.ScenarioID,
+				PlaylistID:       playlist.ID,
+				PlaylistTitle:    playlist.Title,
+				PlaylistCategory: playlist.Category,
+				ExerciseID:       beat.ExerciseID,
+				ScenarioID:       beat.ScenarioID,
 			})
 		}
 		total := len(playlistEntries)
@@ -478,7 +480,7 @@ func (m Model) actionPanelLines(state scenario.State, view tuiadapter.ViewModel)
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
 		lines = append(lines, fmt.Sprintf("Attempts: %d/%s", state.Runtime.Attempts, attemptLimitLabel(state.Runtime.AttemptLimit)))
-		if coach := coachingLine(state); coach != "" {
+		if coach := m.coachingLineForCurrentEntry(state); coach != "" {
 			lines = append(lines, coach)
 		}
 		if m.hintMessage != "" {
@@ -490,7 +492,7 @@ func (m Model) actionPanelLines(state scenario.State, view tuiadapter.ViewModel)
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
-		if coach := coachingLine(state); coach != "" {
+		if coach := m.runningCoachingLine(state); coach != "" {
 			lines = append(lines, coach)
 		}
 		if m.hintMessage != "" {
@@ -499,6 +501,29 @@ func (m Model) actionPanelLines(state scenario.State, view tuiadapter.ViewModel)
 		lines = append(lines, "?: hint  q: quit")
 	}
 	return lines
+}
+
+func (m Model) runningCoachingLine(state scenario.State) string {
+	if m.currentEntryIsIncident() {
+		return "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
+	}
+	return coachingLine(state)
+}
+
+func (m Model) coachingLineForCurrentEntry(state scenario.State) string {
+	coach := coachingLine(state)
+	if coach == "" || !m.currentEntryIsIncident() {
+		return coach
+	}
+	return strings.Replace(coach, "Coach: 훈련 키", "복구 힌트: 필요한 키", 1)
+}
+
+func (m Model) currentEntryIsIncident() bool {
+	entry, ok := m.currentEntry()
+	if !ok {
+		return false
+	}
+	return entry.PlaylistCategory == "incident"
 }
 
 func e2eSelection(selection *vimengine.Selection) *e2estate.Selection {

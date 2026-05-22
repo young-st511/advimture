@@ -133,6 +133,7 @@ assert:
   screen_contains:
     - "릴레이 기지 001: 야간 핫픽스 복구"
     - "Exercise: 6/6"
+    - "판단:"
     - "Next tutorial: enter"
     - "좋습니다. 원인 기록을 남기고 문제 relay 구간만 정리해 야간 핫픽스 runbook을 닫았습니다."
   exit_code: 0

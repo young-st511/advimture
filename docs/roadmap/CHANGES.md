@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — UI-MODE-001 완료
+
+이전 가정: tutorial과 incident 모두 action panel에서 `Coach: 훈련 키 ...`를 보여줬고, incident도 첫 화면에서 정답 key sequence를 과하게 드러낼 수 있었다.
+
+새 가정: tutorial은 훈련 키를 직접 노출하고, incident는 running 상태에서 판단 cue를 우선한다. incident 실패 후에는 retry를 돕기 위해 필요한 키 힌트를 `복구 힌트`로 표시할 수 있다.
+
+이유: tutorial은 command 습득이 목적이지만 incident는 이미 배운 command를 고르는 적용 run이므로, UI 언어도 학습 단계와 적용 단계를 구분해야 한다.
+
+영향: 다음 활성 slice는 화면 변경 evidence를 보강하는 `UI-EVIDENCE-001`이다.
+
 ## 2026-05-23 — UI-HIERARCHY-001 완료
 
 이전 가정: 화면 상단은 playlist, review queue, daily route, 현재 문항을 순서대로 보여줬고, 현재 목표보다 메타 정보가 먼저 읽힐 수 있었다.

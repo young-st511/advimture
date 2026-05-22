@@ -121,6 +121,40 @@ func TestPlayableShowsReviewQueueForLowGrade(t *testing.T) {
 	}
 }
 
+func TestIncidentActionPanelUsesJudgementCueWithoutTrainingKeySpoiler(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "incident-hotfix-001"),
+	})
+
+	view := model.View()
+	if !strings.Contains(view, "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.") {
+		t.Fatalf("view = %q, want incident judgement cue", view)
+	}
+	if strings.Contains(view, "Coach: 훈련 키") {
+		t.Fatalf("view = %q, should not reveal training keys on running incident", view)
+	}
+}
+
+func TestIncidentFailureCanRevealRecoveryKeyHint(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "incident-hotfix-001"),
+	})
+
+	for i := 0; i < 10; i++ {
+		model, _ = updateWithKey(t, model, "x")
+	}
+
+	view := model.View()
+	if !strings.Contains(view, "복구 힌트: 필요한 키") {
+		t.Fatalf("view = %q, want recovery key hint after incident failure", view)
+	}
+	if strings.Contains(view, "Coach: 훈련 키") {
+		t.Fatalf("view = %q, should not use tutorial coaching language in incident failure", view)
+	}
+}
+
 func TestPlayableAdvancesToNextExerciseAfterSuccess(t *testing.T) {
 	model := New(Options{
 		ContentRoot: contentRootForTest(),
@@ -504,5 +538,32 @@ func progressWithAllPlayableCompleted(t *testing.T) *progress.Progress {
 			Attempts:       1,
 		}
 	}
+	return p
+}
+
+func progressCompleteBefore(t *testing.T, exerciseID string) *progress.Progress {
+	t.Helper()
+	p := progress.NewProgress()
+	library, err := content.LoadLibrary(contentRootForTest())
+	if err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+	entries, err := playlistEntries(library)
+	if err != nil {
+		t.Fatalf("playlistEntries returned error: %v", err)
+	}
+	for _, entry := range entries {
+		if entry.ExerciseID == exerciseID {
+			return p
+		}
+		exercise := library.Exercises[entry.ExerciseID]
+		p.Missions[entry.ExerciseID] = progress.MissionProgress{
+			Completed:      true,
+			BestGrade:      "S",
+			BestKeystrokes: exercise.Grading.OptimalKeyCount,
+			Attempts:       1,
+		}
+	}
+	t.Fatalf("exercise %q not found", exerciseID)
 	return p
 }
