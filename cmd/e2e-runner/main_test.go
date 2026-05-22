@@ -217,6 +217,67 @@ func TestAssertScenarioChecksAppStateSelection(t *testing.T) {
 	}
 }
 
+func TestAssertScenarioChecksAppStateReview(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	statePath := filepath.Join(stateDir, "e2e_state.json")
+	raw := []byte(`{
+		"review": {
+			"queue_count": 3,
+			"primary_exercise_id": "normal-motion-basic-002",
+			"primary_reason": "incomplete",
+			"daily_route": "오늘의 복구 루트: 3건 대기"
+		}
+	}`)
+	if err := os.WriteFile(statePath, raw, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	queueCount := 3
+	sc := scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Review: &reviewAssertion{
+					QueueCount:        &queueCount,
+					PrimaryExerciseID: "normal-motion-basic-002",
+					PrimaryReason:     "incomplete",
+					DailyRoute:        "오늘의 복구 루트: 3건 대기",
+				},
+			},
+		},
+	}
+
+	if err := assertScenario(sc, runResult{homeDir: home}); err != nil {
+		t.Fatalf("assertScenario returned error: %v", err)
+	}
+}
+
+func TestAssertScenarioReportsAppStateReviewMismatch(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(stateDir, "e2e_state.json"), []byte(`{"review":{"queue_count":2}}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	queueCount := 3
+	err := assertScenario(scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				Review: &reviewAssertion{QueueCount: &queueCount},
+			},
+		},
+	}, runResult{homeDir: home})
+	if err == nil || !strings.Contains(err.Error(), "review queue_count") {
+		t.Fatalf("assertScenario error = %v, want review queue_count mismatch", err)
+	}
+}
+
 func TestAssertScenarioReportsAppStateSelectionMismatch(t *testing.T) {
 	home := t.TempDir()
 	stateDir := filepath.Join(home, ".advimture")
@@ -420,6 +481,33 @@ func TestWriteEvidenceWritesSummary(t *testing.T) {
 	}
 	if summary.ExitCode != 1 {
 		t.Fatalf("summary.ExitCode = %d, want 1", summary.ExitCode)
+	}
+}
+
+func TestWriteEvidenceCopiesAppStateAndProgressSnapshots(t *testing.T) {
+	root := t.TempDir()
+	result := runResult{
+		clean:       "screen",
+		exitCode:    0,
+		homeDir:     t.TempDir(),
+		appStateRaw: []byte(`{"mode":"normal"}`),
+		progressRaw: []byte(`{"missions":{}}`),
+	}
+	sc := scenario{
+		ID: "snapshots",
+		Evidence: evidenceConfig{
+			SaveAppState: true,
+			SaveProgress: true,
+		},
+	}
+
+	if err := writeEvidence(root, sc, result, nil); err != nil {
+		t.Fatalf("writeEvidence returned error: %v", err)
+	}
+	for _, name := range []string{"app_state.json", "progress.json"} {
+		if _, err := os.Stat(filepath.Join(root, "snapshots", name)); err != nil {
+			t.Fatalf("%s was not written: %v", name, err)
+		}
 	}
 }
 

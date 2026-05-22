@@ -42,13 +42,15 @@ assert:
     progress:
       mission_id: "normal-motion-basic-001"
       completed: true
-    contains:
-      review_count: "\"queue_count\": 3"
-      review_primary: "\"primary_exercise_id\": \"normal-motion-basic-002\""
-      review_reason: "\"primary_reason\": \"incomplete\""
-      daily_route: "\"daily_route\": \"오늘의 복구 루트: 3건 대기\""
+    review:
+      queue_count: 3
+      primary_exercise_id: "normal-motion-basic-002"
+      primary_reason: "incomplete"
+      daily_route: "오늘의 복구 루트: 3건 대기"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
   save_key_trace: true
   save_summary: true
+  save_app_state: true
+  save_progress: true

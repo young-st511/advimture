@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — TUI Experience Foundation 시작
+
+이전 가정: TUI는 기능과 E2E 검증을 중심으로 성장했고, 제품 UI/UX는 action panel 같은 개별 문제 해결 수준에서만 다뤄졌다.
+
+새 가정: 다음 중기 플랜은 `TUI Experience Foundation`이다. 화면을 크게 바꾸기 전에 typed app_state assertion, evidence snapshot, 화면 영역 contract, renderer 분리를 먼저 진행한다.
+
+이유: SubAgent 리뷰 결과, 현재 화면은 Vim 훈련에는 충분하지만 tutorial/incident 정보 위계와 Runbook Dispatch 콘솔 감각이 아직 약하다. UI를 안정적으로 개선하려면 LLM이 의미 상태를 문자열이 아니라 typed state와 evidence로 확인할 수 있어야 한다.
+
+영향: 첫 slice `UX-QA-001`은 review/daily route를 typed `app_state.review`와 `app_state.json`/`progress.json` evidence로 검증한다. 다음 활성 slice는 `UI-CONTRACT-001`이다.
+
 ## 2026-05-23 — PLATFORM-REVIEW-002 완료
 
 이전 가정: review queue는 메인 화면과 성공 debrief에 표시됐지만, 매일 짧게 다시 들어올 이유를 주는 daily framing은 아직 progress schema v2 후보에 머물러 있었다.

@@ -70,6 +70,7 @@ type appStateAssertion struct {
 	Status    string              `yaml:"status"`
 	Score     *scoreAssertion     `yaml:"score"`
 	Progress  *progressAssertion  `yaml:"progress"`
+	Review    *reviewAssertion    `yaml:"review"`
 	Selection *selectionAssertion `yaml:"selection"`
 	Contains  map[string]string   `yaml:"contains"`
 }
@@ -89,6 +90,13 @@ type progressAssertion struct {
 	Completed *bool  `yaml:"completed"`
 }
 
+type reviewAssertion struct {
+	QueueCount        *int   `yaml:"queue_count"`
+	PrimaryExerciseID string `yaml:"primary_exercise_id"`
+	PrimaryReason     string `yaml:"primary_reason"`
+	DailyRoute        string `yaml:"daily_route"`
+}
+
 type selectionAssertion struct {
 	Active *bool            `yaml:"active"`
 	Kind   string           `yaml:"kind"`
@@ -106,6 +114,7 @@ type appStateSummary struct {
 	Status    string             `json:"status"`
 	Score     appStateScore      `json:"score"`
 	Progress  appStateProgress   `json:"progress"`
+	Review    appStateReview     `json:"review"`
 	Selection *appStateSelection `json:"selection"`
 	Extra     map[string]any     `json:"-"`
 }
@@ -125,6 +134,13 @@ type appStateProgress struct {
 	Completed bool   `json:"completed"`
 }
 
+type appStateReview struct {
+	QueueCount        int    `json:"queue_count"`
+	PrimaryExerciseID string `json:"primary_exercise_id"`
+	PrimaryReason     string `json:"primary_reason"`
+	DailyRoute        string `json:"daily_route"`
+}
+
 type appStateSelection struct {
 	Active bool           `json:"active"`
 	Kind   string         `json:"kind"`
@@ -139,6 +155,8 @@ type evidenceConfig struct {
 	SaveCleanScreen bool `yaml:"save_clean_screen"`
 	SaveKeyTrace    bool `yaml:"save_key_trace"`
 	SaveSummary     bool `yaml:"save_summary"`
+	SaveAppState    bool `yaml:"save_app_state"`
+	SaveProgress    bool `yaml:"save_progress"`
 }
 
 type runResult struct {
@@ -148,7 +166,9 @@ type runResult struct {
 	homeDir            string
 	trace              []string
 	progressFileExists bool
+	progressRaw        []byte
 	appStateExists     bool
+	appStateRaw        []byte
 }
 
 type summaryEvidence struct {
@@ -160,8 +180,10 @@ type summaryEvidence struct {
 	KeyTrace           []string `json:"key_trace"`
 	ScreenBytes        int      `json:"screen_bytes"`
 	ProgressFileExists bool     `json:"progress_file_exists"`
+	ProgressEvidence   bool     `json:"progress_evidence"`
 	AppStatePath       string   `json:"app_state_path,omitempty"`
 	AppStateExists     bool     `json:"app_state_exists"`
+	AppStateEvidence   bool     `json:"app_state_evidence"`
 }
 
 func main() {
@@ -220,7 +242,7 @@ func loadScenario(path string) (scenario, error) {
 	if sc.Terminal.Height == 0 {
 		sc.Terminal.Height = 30
 	}
-	if !sc.Evidence.SaveRawANSI && !sc.Evidence.SaveCleanScreen && !sc.Evidence.SaveKeyTrace && !sc.Evidence.SaveSummary {
+	if !sc.Evidence.SaveRawANSI && !sc.Evidence.SaveCleanScreen && !sc.Evidence.SaveKeyTrace && !sc.Evidence.SaveSummary && !sc.Evidence.SaveAppState && !sc.Evidence.SaveProgress {
 		sc.Evidence.SaveSummary = true
 	}
 	return sc, nil
@@ -508,16 +530,14 @@ func assertScenario(sc scenario, result runResult) error {
 		return fmt.Errorf("exit code: got %d, want %d", result.exitCode, *sc.Assert.ExitCode)
 	}
 	if sc.Assert.ProgressFileExists != nil {
-		progressPath := filepath.Join(result.homeDir, ".advimture", "progress.json")
-		_, err := os.Stat(progressPath)
+		_, err := os.Stat(progressPath(result.homeDir))
 		exists := err == nil
 		if exists != *sc.Assert.ProgressFileExists {
 			return fmt.Errorf("progress file exists: got %v, want %v", exists, *sc.Assert.ProgressFileExists)
 		}
 	}
 	if len(sc.Assert.ProgressFileContains) > 0 {
-		progressPath := filepath.Join(result.homeDir, ".advimture", "progress.json")
-		raw, err := os.ReadFile(progressPath)
+		raw, err := os.ReadFile(progressPath(result.homeDir))
 		if err != nil {
 			return fmt.Errorf("progress file read failed: %w", err)
 		}
@@ -554,7 +574,9 @@ func collectResult(sc scenario, mu *sync.Mutex, raw *bytes.Buffer, homeDir strin
 		homeDir:            homeDir,
 		trace:              trace,
 		progressFileExists: progressFileExists(homeDir),
+		progressRaw:        readOptionalFile(progressPath(homeDir)),
 		appStateExists:     appStateExists(homeDir, sc.Assert.AppState.Path),
+		appStateRaw:        readOptionalFile(appStatePath(homeDir, sc.Assert.AppState.Path)),
 	}
 }
 
@@ -581,6 +603,22 @@ func writeEvidence(root string, sc scenario, result runResult, runErr error) err
 			return err
 		}
 	}
+	if sc.Evidence.SaveAppState {
+		if len(result.appStateRaw) == 0 {
+			return fmt.Errorf("app state evidence requested but app state was not captured")
+		}
+		if err := os.WriteFile(filepath.Join(dir, "app_state.json"), result.appStateRaw, 0o644); err != nil {
+			return err
+		}
+	}
+	if sc.Evidence.SaveProgress {
+		if len(result.progressRaw) == 0 {
+			return fmt.Errorf("progress evidence requested but progress was not captured")
+		}
+		if err := os.WriteFile(filepath.Join(dir, "progress.json"), result.progressRaw, 0o644); err != nil {
+			return err
+		}
+	}
 	summary := buildSummary(sc, result, runErr)
 	raw, err := json.MarshalIndent(summary, "", "  ")
 	if err != nil {
@@ -601,8 +639,10 @@ func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
 		KeyTrace:           append([]string(nil), result.trace...),
 		ScreenBytes:        len(result.clean),
 		ProgressFileExists: result.progressFileExists || progressFileExists(result.homeDir),
+		ProgressEvidence:   len(result.progressRaw) > 0,
 		AppStatePath:       appStatePath(result.homeDir, sc.Assert.AppState.Path),
 		AppStateExists:     result.appStateExists || appStateExists(result.homeDir, sc.Assert.AppState.Path),
+		AppStateEvidence:   len(result.appStateRaw) > 0,
 	}
 	if runErr != nil {
 		summary.Error = runErr.Error()
@@ -614,8 +654,26 @@ func progressFileExists(homeDir string) bool {
 	if homeDir == "" {
 		return false
 	}
-	_, err := os.Stat(filepath.Join(homeDir, ".advimture", "progress.json"))
+	_, err := os.Stat(progressPath(homeDir))
 	return err == nil
+}
+
+func progressPath(homeDir string) string {
+	if homeDir == "" {
+		return ""
+	}
+	return filepath.Join(homeDir, ".advimture", "progress.json")
+}
+
+func readOptionalFile(path string) []byte {
+	if path == "" {
+		return nil
+	}
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+	return raw
 }
 
 func wantsAppStateAssertion(assertion appStateAssertion) bool {
@@ -627,6 +685,7 @@ func wantsAppStateAssertion(assertion appStateAssertion) bool {
 		assertion.Status != "" ||
 		assertion.Score != nil ||
 		assertion.Progress != nil ||
+		assertion.Review != nil ||
 		assertion.Selection != nil ||
 		len(assertion.Contains) > 0
 }
@@ -703,6 +762,11 @@ func assertAppState(assertion appStateAssertion, state appStateSummary, raw []by
 			return fmt.Errorf("app state progress completed: got %v, want %v", state.Progress.Completed, *assertion.Progress.Completed)
 		}
 	}
+	if assertion.Review != nil {
+		if err := assertReview(*assertion.Review, state.Review); err != nil {
+			return err
+		}
+	}
 	if assertion.Selection != nil {
 		if state.Selection == nil {
 			return fmt.Errorf("app state selection: got nil, want assertion")
@@ -716,6 +780,22 @@ func assertAppState(assertion appStateAssertion, state appStateSummary, raw []by
 		if !strings.Contains(text, want) {
 			return fmt.Errorf("app state contains %q: missing %q", key, want)
 		}
+	}
+	return nil
+}
+
+func assertReview(assertion reviewAssertion, state appStateReview) error {
+	if assertion.QueueCount != nil && state.QueueCount != *assertion.QueueCount {
+		return fmt.Errorf("app state review queue_count: got %d, want %d", state.QueueCount, *assertion.QueueCount)
+	}
+	if assertion.PrimaryExerciseID != "" && state.PrimaryExerciseID != assertion.PrimaryExerciseID {
+		return fmt.Errorf("app state review primary_exercise_id: got %q, want %q", state.PrimaryExerciseID, assertion.PrimaryExerciseID)
+	}
+	if assertion.PrimaryReason != "" && state.PrimaryReason != assertion.PrimaryReason {
+		return fmt.Errorf("app state review primary_reason: got %q, want %q", state.PrimaryReason, assertion.PrimaryReason)
+	}
+	if assertion.DailyRoute != "" && state.DailyRoute != assertion.DailyRoute {
+		return fmt.Errorf("app state review daily_route: got %q, want %q", state.DailyRoute, assertion.DailyRoute)
 	}
 	return nil
 }

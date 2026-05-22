@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### 대기. 다음 중기 플랜 수립
+### UI-CONTRACT-001. TUI screen area contract
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: Linewise Visual and Choice Training 완료 후 다음 제품/엔진 우선순위를 결정한다.
+- 목표: header, briefing, console, status line, action/debrief panel의 정보 위계를 고정한다.
 
 ## 방금 완료한 슬라이스
+
+### UX-QA-001. Review route evidence contract
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ux-qa-001-review-route-evidence.md`
+- 완료일: 2026-05-23
 
 ### PLATFORM-REVIEW-002. Review and daily motivation pass
 - 상태: completed

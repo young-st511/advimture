@@ -28,8 +28,9 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - runner는 pseudo terminal로 앱을 실행하기 위해 `github.com/creack/pty`를 사용한다.
 - runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence/content, key trace exact match, app state summary를 검증한다.
 - visual mode selection assertion은 `docs/verification/selection-app-state-contract.md`의 `selection` object를 기준으로 한다. `internal/e2estate.State`, runner `assert.app_state.selection`, content `e2e_assertions.selection`은 같은 shape를 사용한다.
+- review/daily route assertion은 `assert.app_state.review`로 검증한다. `queue_count`, `primary_exercise_id`, `primary_reason`, `daily_route`는 화면 문구 이동과 별개로 stable state로 본다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
-- runner는 `summary.json`, raw ANSI log, cleaned final screen, key trace를 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
+- runner는 `summary.json`, raw ANSI log, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.
 - `make e2e-playable`은 첫 문제 smoke, constraint/coaching UX, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute, first-cut tutorial flow, operator/yank/text-object/open-line/repeat/search/quote text object full playpack, incident 001/002 run 경로를 모두 검증한다.
 - E2E runner의 `wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 대상으로 삼아, 반복되는 `Next: enter` 같은 문자열이 과거 화면 로그 때문에 오탐하지 않게 한다.
