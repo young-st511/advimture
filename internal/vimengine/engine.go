@@ -435,6 +435,10 @@ func applyVisualKey(state State, key string) Result {
 				Key:  key,
 			}},
 		}
+	case KeyD:
+		return deleteVisualSelection(state, key)
+	case KeyY:
+		return yankVisualSelection(state, key)
 	case KeyH:
 		return applyVisualMotion(state, key, func(next State) Result {
 			return moveHorizontal(next, key, -1)
@@ -484,6 +488,96 @@ func applyVisualKey(state State, key string) Result {
 				Message: "key is not supported in visual mode",
 			}},
 		}
+	}
+}
+
+func deleteVisualSelection(state State, key string) Result {
+	row, start, end, ok := visualLineRange(state)
+	if !ok {
+		return unsupportedVisualOperator(state, key)
+	}
+	next := pushUndo(state)
+	line := []rune(next.Lines[row])
+	if start >= end {
+		return boundary(state, key)
+	}
+	next.Register = Register{
+		Text: string(line[start:end]),
+	}
+	line = append(line[:start], line[end:]...)
+	next.Lines[row] = string(line)
+	next.Mode = ModeNormal
+	next.Selection = nil
+	next.Cursor.Row = row
+	next.Cursor.Col = clampCol(start, next.Lines[row])
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventChanged,
+			Key:  key,
+		}},
+	}
+}
+
+func yankVisualSelection(state State, key string) Result {
+	row, start, end, ok := visualLineRange(state)
+	if !ok {
+		return unsupportedVisualOperator(state, key)
+	}
+	next := copyState(state)
+	line := []rune(next.Lines[row])
+	if start >= end {
+		return boundary(state, key)
+	}
+	next.Register = Register{
+		Text: string(line[start:end]),
+	}
+	next.Mode = ModeNormal
+	next.Selection = nil
+	next.Cursor.Row = row
+	next.Cursor.Col = clampCol(start, next.Lines[row])
+	next.Cursor.DesiredCol = next.Cursor.Col
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventYanked,
+			Key:  key,
+		}},
+	}
+}
+
+func visualLineRange(state State) (int, int, int, bool) {
+	if state.Selection == nil || !state.Selection.Active || state.Selection.Kind != SelectionCharwise {
+		return 0, 0, 0, false
+	}
+	if state.Selection.Start.Row != state.Selection.End.Row {
+		return 0, 0, 0, false
+	}
+	row := state.Selection.Start.Row
+	if row < 0 || row >= len(state.Lines) {
+		return 0, 0, 0, false
+	}
+	line := []rune(state.Lines[row])
+	start := state.Selection.Start.Col
+	end := state.Selection.End.Col + 1
+	if start < 0 {
+		start = 0
+	}
+	if end > len(line) {
+		end = len(line)
+	}
+	return row, start, end, start < end
+}
+
+func unsupportedVisualOperator(state State, key string) Result {
+	return Result{
+		State: copyState(state),
+		Events: []Event{{
+			Type:    EventUnsupportedKey,
+			Key:     key,
+			Message: "visual operator is not supported for this selection",
+		}},
 	}
 }
 

@@ -95,6 +95,34 @@ func TestSessionReplaysLiteralSearchTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeySlash, "t", "i", "m", "e", "o", "u", "t", vimengine.KeyEnter})
 }
 
+func TestSessionSucceedsWithVisualDeleteTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "visual-delete",
+		Initial: vimengine.NewState([]string{"abcdef"}),
+		Goal: Goal{
+			Lines:  []string{"aef"},
+			Cursor: CursorGoal(0, 1),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyV, vimengine.KeyD},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyL, vimengine.KeyV, vimengine.KeyL, vimengine.KeyL} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyD)
+
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after d = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyL, vimengine.KeyV, vimengine.KeyL, vimengine.KeyL, vimengine.KeyD})
+}
+
 func TestUnsupportedKeyIsRecorded(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "unsupported",

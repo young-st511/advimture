@@ -103,6 +103,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - visual mode E2E는 screen text만으로 통과하지 않고 app_state `selection` object를 검증한다. E2E-007은 `internal/e2estate`, runner `assert.app_state`, content `e2e_assertions`에 selection shape를 추가했다.
 - VIM-027-TUI-003은 charwise `v` visual mode foundation을 구현했다. TUI는 `Selection: charwise <start> -> <end>`와 selected non-cursor cell `{x}`를 표시하며, cursor cell은 기존 `[x]`를 유지한다.
 - VISUAL-OP-001은 첫 visual operator 범위를 같은 줄 charwise selection에 `d`/`y`를 적용하는 것으로 고정했다. `d`는 inclusive range를 삭제하고, `y`는 inclusive range를 unnamed register에 저장하며, 둘 다 normal mode로 돌아가고 selection을 clear한다.
+- VIM-028은 같은 줄 charwise visual selection의 `d`/`y` engine을 구현했다. `d`는 삭제 텍스트를 unnamed charwise register에도 저장하며 undo 가능하다. multi-line charwise operator, linewise visual, visual block은 제외한다.
 - `V` linewise visual, visual block(`<C-v>`), count prefix, register prefix, indentation command, mouse/terminal selection 연동은 첫 visual slice에서 제외한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.

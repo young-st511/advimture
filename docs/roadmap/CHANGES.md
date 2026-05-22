@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — charwise visual `d/y` engine 구현
+
+이전 가정: visual mode는 selection을 만들고 표시할 수 있었지만, 선택 범위에 실제 Vim operator를 적용하지 못했다.
+
+새 가정: 같은 줄 charwise visual selection에는 `d`와 `y`를 적용할 수 있다. `d`는 선택 범위를 삭제하고 register에 저장하며 undo 가능하다. `y`는 선택 범위를 unnamed charwise register에 저장한다.
+
+이유: visual mode 학습은 “눈으로 범위를 잡고 삭제/복사한다”는 행동까지 이어져야 실제 Vim command로서 의미가 있다.
+
+영향: 다음 루프는 `PLAYPACK-010`으로 3~4문항 visual tutorial을 만든다. multi-line, linewise `V`, visual block은 후속 hardening이다.
+
 ## 2026-05-22 — visual operator 범위를 같은 줄 `d/y`로 고정
 
 이전 가정: visual foundation 이후 operator 적용과 tutorial 중 무엇을 먼저 할지 열려 있었다.

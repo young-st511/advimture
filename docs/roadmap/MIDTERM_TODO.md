@@ -230,7 +230,7 @@
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
 | 1 | VISUAL-OP-001 | completed | charwise visual selection의 `d/y` 적용 범위와 제외 항목 결정 |
-| 2 | VIM-028 | pending | 같은 줄 charwise visual selection delete/yank engine 구현 |
+| 2 | VIM-028 | completed | 같은 줄 charwise visual selection delete/yank engine 구현 |
 | 3 | PLAYPACK-010 | pending | 3~4문항 visual selection tutorial content/E2E 구현 |
 
 ## Visual Operator and Tutorial 출구 조건
@@ -238,7 +238,7 @@
 | ID | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |----|----------|-------------|------|---------------|
 | VISUAL-OP-001 | VIM-027-TUI-003 완료 | completed: `d/y` 범위와 제외 항목 | completed: `git diff --check` | visual operator와 playpack을 섞지 않는다 |
-| VIM-028 | VISUAL-OP-001 완료 | charwise same-line visual `d/y` engine | vimengine/runtime/playable focused tests | multi-line, `V`, block, count/register prefix 제외 |
+| VIM-028 | VISUAL-OP-001 완료 | completed: charwise same-line visual `d/y` engine | completed: vimengine/runtime tests, full regression | multi-line, `V`, block, count/register prefix 제외 |
 | PLAYPACK-010 | VIM-028 완료 | visual tutorial content + focused E2E | content replay, selection app_state E2E, `make e2e-playable` | 4문항 이하, command 학습을 scenario보다 우선 |
 
 ## 장기 참고 계획

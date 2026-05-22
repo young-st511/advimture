@@ -96,6 +96,104 @@ func TestVisualModeEscAndVResetSelection(t *testing.T) {
 	}
 }
 
+func TestVisualDeleteDeletesInclusiveSelectionAndStoresRegister(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcdef"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyV, KeyL, KeyL, KeyD})
+
+	assertStrings(t, result.State.Lines, []string{"aef"})
+	if result.State.Mode != ModeNormal || result.State.Selection != nil {
+		t.Fatalf("mode/selection = %s/%+v, want normal nil", result.State.Mode, result.State.Selection)
+	}
+	if result.State.Cursor.Col != 1 {
+		t.Fatalf("cursor col = %d, want 1", result.State.Cursor.Col)
+	}
+	if result.State.Register.Text != "bcd" || result.State.Register.Linewise {
+		t.Fatalf("register = %+v, want charwise bcd", result.State.Register)
+	}
+	if !hasEvent(result, EventChanged) {
+		t.Fatalf("events = %+v, want changed", result.Events)
+	}
+}
+
+func TestVisualYankStoresInclusiveSelectionWithoutChangingBuffer(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcdef"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 3,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyV, KeyH, KeyH, KeyY})
+
+	assertStrings(t, result.State.Lines, []string{"abcdef"})
+	if result.State.Mode != ModeNormal || result.State.Selection != nil {
+		t.Fatalf("mode/selection = %s/%+v, want normal nil", result.State.Mode, result.State.Selection)
+	}
+	if result.State.Cursor.Col != 1 {
+		t.Fatalf("cursor col = %d, want normalized start 1", result.State.Cursor.Col)
+	}
+	if result.State.Register.Text != "bcd" || result.State.Register.Linewise {
+		t.Fatalf("register = %+v, want charwise bcd", result.State.Register)
+	}
+	if !hasEvent(result, EventYanked) {
+		t.Fatalf("events = %+v, want yanked", result.Events)
+	}
+}
+
+func TestVisualDeleteCanBeUndone(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcdef"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	deleted := ApplyKeys(state, []string{KeyV, KeyL, KeyD})
+	result := Apply(deleted.State, KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"abcdef"})
+	assertEvent(t, result, EventChanged)
+}
+
+func TestVisualOperatorRejectsMultiLineSelection(t *testing.T) {
+	state := State{
+		Mode:  ModeVisual,
+		Lines: []string{"abc", "def"},
+		Cursor: Cursor{
+			Row: 1,
+			Col: 1,
+		},
+		Selection: &Selection{
+			Active: true,
+			Kind:   SelectionCharwise,
+			Anchor: Cursor{Row: 0, Col: 1},
+			Head:   Cursor{Row: 1, Col: 1},
+			Start:  Cursor{Row: 0, Col: 1},
+			End:    Cursor{Row: 1, Col: 1},
+		},
+	}
+
+	result := Apply(state, KeyD)
+
+	assertStrings(t, result.State.Lines, []string{"abc", "def"})
+	if result.State.Mode != ModeVisual || result.State.Selection == nil {
+		t.Fatalf("mode/selection = %s/%+v, want visual selection preserved", result.State.Mode, result.State.Selection)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
 func TestStateCopiesLines(t *testing.T) {
 	lines := []string{"alpha"}
 	engine := New(lines)
