@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-22 — charwise visual invariant 테스트 보강
+
+이전 가정: charwise visual foundation과 `d/y` engine은 동작했지만, 빈 줄, 줄 경계, undo/register, unsupported multi-line 같은 edge/invariant 검증이 넓지 않았다.
+
+새 가정: 같은 줄 charwise visual의 현재 behavior는 engine/runtime 테스트로 더 촘촘히 고정한다. 새 visual 기능은 추가하지 않았다.
+
+이유: visual을 incident에 적용하기 전에 selection/range/undo/register 회귀를 빠르게 잡을 안전망이 필요하다.
+
+영향: `VISUAL-HARDEN-001`은 완료됐고, 다음 활성 slice는 visual을 실제 적용 런으로 승격하는 `INCIDENT-RUN-003`이다.
+
 ## 2026-05-22 — vimengine visual/selection helper 분리
 
 이전 가정: visual selection type, visual key handling, visual `d/y` helper가 `internal/vimengine/engine.go`에 함께 있었다.

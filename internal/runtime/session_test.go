@@ -123,6 +123,34 @@ func TestSessionSucceedsWithVisualDeleteTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyL, vimengine.KeyV, vimengine.KeyL, vimengine.KeyL, vimengine.KeyD})
 }
 
+func TestSessionKeepsRunningWhenVisualOperatorUnsupported(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "visual-multiline-unsupported",
+		Initial: vimengine.NewState([]string{"abc", "def"}),
+		Goal: Goal{
+			Lines: []string{"unsupported target"},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyV, vimengine.KeyJ} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyD)
+
+	if result.State.Status != StatusRunning {
+		t.Fatalf("status after d = %q, want running", result.State.Status)
+	}
+	if len(result.State.Vim.Lines) != 2 || result.State.Vim.Lines[0] != "abc" || result.State.Vim.Lines[1] != "def" {
+		t.Fatalf("lines = %+v, want [abc def]", result.State.Vim.Lines)
+	}
+	if result.State.Vim.Mode != vimengine.ModeVisual || result.State.Vim.Selection == nil {
+		t.Fatalf("mode/selection = %s/%+v, want visual selection preserved", result.State.Vim.Mode, result.State.Vim.Selection)
+	}
+}
+
 func TestUnsupportedKeyIsRecorded(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "unsupported",

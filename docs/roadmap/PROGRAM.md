@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### VISUAL-HARDEN-001. Charwise visual invariant pass
+### INCIDENT-RUN-003. Visual recovery incident
 - 상태: pending
 - ExecPlan: 다음 루프에서 작성
-- 목표: charwise visual invariant와 undo/register/unsupported edge case 테스트를 보강한다.
+- 목표: visual selection을 적용하는 세 번째 Runbook Dispatch incident를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### VISUAL-HARDEN-001. Charwise visual invariant pass
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/visual-harden-001-charwise-invariants.md`
+- 완료일: 2026-05-22
 
 ### ENGINE-SPLIT-001. Vimengine selection/range split
 - 상태: completed

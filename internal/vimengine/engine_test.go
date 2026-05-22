@@ -194,6 +194,140 @@ func TestVisualOperatorRejectsMultiLineSelection(t *testing.T) {
 	assertEvent(t, result, EventUnsupportedKey)
 }
 
+func TestVisualBoundaryMotionKeepsSelectionAtCursor(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abc"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 2,
+		},
+	}
+
+	result := ApplyKeys(state, []string{KeyV, KeyL})
+	selection := result.State.Selection
+
+	if result.State.Mode != ModeVisual || selection == nil {
+		t.Fatalf("mode/selection = %s/%+v, want visual selection", result.State.Mode, selection)
+	}
+	if result.State.Cursor.Col != 2 || selection.Anchor.Col != 2 || selection.Head.Col != 2 || selection.Start.Col != 2 || selection.End.Col != 2 {
+		t.Fatalf("state = cursor %+v selection %+v, want clamped single-cell selection at col 2", result.State.Cursor, selection)
+	}
+	if !hasEvent(result, EventBoundary) {
+		t.Fatalf("events = %+v, want boundary", result.Events)
+	}
+}
+
+func TestVisualOperatorOnEmptyLinePreservesVisualState(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{""},
+	}
+
+	result := ApplyKeys(state, []string{KeyV, KeyD})
+
+	assertStrings(t, result.State.Lines, []string{""})
+	if result.State.Mode != ModeVisual || result.State.Selection == nil {
+		t.Fatalf("mode/selection = %s/%+v, want visual selection preserved", result.State.Mode, result.State.Selection)
+	}
+	if !hasEvent(result, EventUnsupportedKey) {
+		t.Fatalf("events = %+v, want unsupported key", result.Events)
+	}
+}
+
+func TestVisualYankDoesNotCreateUndoSnapshot(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcdef"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	yanked := ApplyKeys(state, []string{KeyV, KeyL, KeyY})
+	result := Apply(yanked.State, KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"abcdef"})
+	if result.State.Register.Text != "bc" {
+		t.Fatalf("register text = %q, want bc", result.State.Register.Text)
+	}
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestVisualDeleteUndoRestoresBufferAndKeepsRegister(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abcdef"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	deleted := ApplyKeys(state, []string{KeyV, KeyL, KeyL, KeyD})
+	result := Apply(deleted.State, KeyU)
+
+	assertStrings(t, result.State.Lines, []string{"abcdef"})
+	if result.State.Cursor.Col != 3 {
+		t.Fatalf("cursor col = %d, want restored visual head col 3", result.State.Cursor.Col)
+	}
+	if result.State.Register.Text != "bcd" {
+		t.Fatalf("register text = %q, want deleted text bcd", result.State.Register.Text)
+	}
+}
+
+func TestVisualMotionAcrossLinesRejectsOperatorAndPreservesRange(t *testing.T) {
+	state := State{
+		Mode:  ModeNormal,
+		Lines: []string{"abc", "def"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 1,
+		},
+	}
+
+	selected := ApplyKeys(state, []string{KeyV, KeyJ})
+	result := Apply(selected.State, KeyD)
+
+	assertStrings(t, result.State.Lines, []string{"abc", "def"})
+	if result.State.Mode != ModeVisual || result.State.Selection == nil {
+		t.Fatalf("mode/selection = %s/%+v, want visual selection preserved", result.State.Mode, result.State.Selection)
+	}
+	selection := result.State.Selection
+	if selection.Start.Row != 0 || selection.End.Row != 1 {
+		t.Fatalf("selection = %+v, want multi-line range preserved", selection)
+	}
+	assertEvent(t, result, EventUnsupportedKey)
+}
+
+func TestNewWithStateClampsVisualSelection(t *testing.T) {
+	state := State{
+		Mode:  ModeVisual,
+		Lines: []string{"ab"},
+		Cursor: Cursor{
+			Row: 0,
+			Col: 99,
+		},
+		Selection: &Selection{
+			Active: true,
+			Kind:   SelectionCharwise,
+			Anchor: Cursor{Row: -1, Col: 99},
+			Head:   Cursor{Row: 99, Col: 99},
+		},
+	}
+
+	normalized := NewWithState(state).State()
+	selection := normalized.Selection
+
+	if normalized.Cursor.Col != 1 {
+		t.Fatalf("cursor col = %d, want 1", normalized.Cursor.Col)
+	}
+	if selection == nil || selection.Anchor.Row != 0 || selection.Anchor.Col != 1 || selection.Head.Row != 0 || selection.Head.Col != 1 {
+		t.Fatalf("selection = %+v, want clamped to row 0 col 1", selection)
+	}
+}
+
 func TestStateCopiesLines(t *testing.T) {
 	lines := []string{"alpha"}
 	engine := New(lines)
