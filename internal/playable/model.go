@@ -40,6 +40,8 @@ type Model struct {
 	err          error
 	reviewQueue  []review.Candidate
 	hintMessage  string
+	width        int
+	height       int
 }
 
 type gameEntry struct {
@@ -87,6 +89,9 @@ func (m Model) Init() tea.Cmd {
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		m.height = msg.Height
 	case tea.KeyMsg:
 		action := tuiadapter.MapInputForMode(msg.String(), m.inputMode())
 		if m.err != nil {
@@ -137,6 +142,8 @@ func (m Model) View() string {
 	state := m.run.State()
 	view := tuiadapter.RenderState(state)
 	screen := playableview.Screen{
+		Width:           m.width,
+		Height:          m.height,
 		Title:           view.Title,
 		Message:         view.Message,
 		BufferLines:     view.BufferLines,

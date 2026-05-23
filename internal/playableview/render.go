@@ -11,6 +11,8 @@ import (
 const SelectionLinewise = "linewise"
 
 type Screen struct {
+	Width           int
+	Height          int
 	PlaylistTitle   string
 	ReviewSummary   string
 	DailyRoute      string
@@ -63,7 +65,7 @@ func Render(screen Screen) string {
 		b.WriteString("\n")
 	}
 	if screen.FocusPanel != nil {
-		b.WriteString(RenderFocusPanel(*screen.FocusPanel))
+		b.WriteString(RenderFocusPanel(*screen.FocusPanel, screen.Width))
 		b.WriteString("\n\n")
 	}
 	b.WriteString("RUNBOOK CONSOLE\n")
@@ -116,9 +118,34 @@ func RenderActionPanel(lines []string) string {
 	return actionPanelStyle.Render(strings.Join(lines, "\n"))
 }
 
-func RenderFocusPanel(panel FocusPanel) string {
+func RenderFocusPanel(panel FocusPanel, screenWidth int) string {
 	lines := append([]string{panel.Title}, panel.Lines...)
-	return actionPanelStyle.Render(strings.Join(lines, "\n"))
+	panelWidth := focusPanelWidth(screenWidth)
+	rendered := actionPanelStyle.Width(panelWidth).Render(strings.Join(lines, "\n"))
+	if screenWidth <= 0 || screenWidth <= panelWidth {
+		return rendered
+	}
+	return lipgloss.PlaceHorizontal(screenWidth, lipgloss.Center, rendered)
+}
+
+func focusPanelWidth(screenWidth int) int {
+	const fallback = 58
+	const minWidth = 32
+	const maxWidth = 72
+	if screenWidth <= 0 {
+		return fallback
+	}
+	width := screenWidth - 4
+	if width < minWidth {
+		width = screenWidth
+	}
+	if width > maxWidth {
+		width = maxWidth
+	}
+	if width <= 0 {
+		return fallback
+	}
+	return width
 }
 
 func RenderLine(line string, row int, cursorRow int, cursorCol int, selection *tuiadapter.SelectionView) string {

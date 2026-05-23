@@ -51,6 +51,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `RUNBOOK CONSOLE` 위의 structured `FocusPanel`로 표시한다.
 - `FocusPanel`은 `kind`, `title`, `lines`를 가진다. tutorial running은 `training`/`TRAINING BRIEF`, incident running은 `incident`/`OPERATOR JUDGMENT`, failed는 `failure`/`RECOVERY REQUIRED`, succeeded는 `success`/`STEP SEALED`, mode-specific 안내는 `mode` kind를 사용한다.
+- `FocusPanel`은 `tea.WindowSizeMsg`로 전달된 terminal width가 있으면 화면 중앙에 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시한다.
 - `?` hint 요청 결과는 `FocusPanel`에 `Hint: ...`로 표시하며, command/search/insert mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.

@@ -51,6 +51,22 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	}
 }
 
+func TestPlayablePassesWindowSizeToRenderer(t *testing.T) {
+	model := New(Options{ContentRoot: contentRootForTest()})
+
+	model, _ = updateWithWindowSize(t, model, 100, 30)
+
+	view := model.View()
+	borderIndex := strings.Index(view, "┌")
+	if borderIndex == -1 {
+		t.Fatalf("view = %q, want focus panel border", view)
+	}
+	lineStart := strings.LastIndex(view[:borderIndex], "\n") + 1
+	if borderIndex-lineStart == 0 {
+		t.Fatalf("view = %q, want centered focus panel after window size", view)
+	}
+}
+
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	saveCalls := 0
 	model := New(Options{
@@ -537,6 +553,17 @@ func updateWithSpecialKey(t *testing.T, model Model, key tea.KeyType) (Model, te
 	t.Helper()
 
 	updated, cmd := model.Update(tea.KeyMsg{Type: key})
+	next, ok := updated.(Model)
+	if !ok {
+		t.Fatalf("updated model type = %T, want playable.Model", updated)
+	}
+	return next, cmd
+}
+
+func updateWithWindowSize(t *testing.T, model Model, width int, height int) (Model, tea.Cmd) {
+	t.Helper()
+
+	updated, cmd := model.Update(tea.WindowSizeMsg{Width: width, Height: height})
 	next, ok := updated.(Model)
 	if !ok {
 		t.Fatalf("updated model type = %T, want playable.Model", updated)

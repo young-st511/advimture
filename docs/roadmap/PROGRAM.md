@@ -17,6 +17,11 @@ Phase: Vim Learning Foundation
 
 ## 방금 완료한 슬라이스
 
+### UI-LAYOUT-001. Responsive FocusPanel Layout
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-layout-001-responsive-focus-panel.md`
+- 완료일: 2026-05-23
+
 ### UI-EVIDENCE-002. Final Screen Evidence
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/ui-evidence-002-screen-final.md`

@@ -62,6 +62,54 @@ func TestRenderScreenIncludesFocusPanelBeforeConsole(t *testing.T) {
 	}
 }
 
+func TestRenderCentersFocusPanelWhenWidthIsKnown(t *testing.T) {
+	view := Render(Screen{
+		Width:       100,
+		Title:       "커서 위치 맞추기",
+		Message:     "목표까지 이동하세요.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "training",
+			Title: "TRAINING BRIEF",
+			Lines: []string{"?: hint  q: quit"},
+		},
+	})
+
+	borderIndex := strings.Index(view, "┌")
+	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
+	if borderIndex == -1 || consoleIndex == -1 {
+		t.Fatalf("Render output = %q, want focus panel and console", view)
+	}
+	panelLineStart := strings.LastIndex(view[:borderIndex], "\n") + 1
+	if borderIndex-panelLineStart == 0 {
+		t.Fatalf("Render output = %q, want centered focus panel with leading spaces", view)
+	}
+}
+
+func TestRenderShrinksFocusPanelForNarrowWidth(t *testing.T) {
+	view := Render(Screen{
+		Width:       36,
+		Title:       "커서 위치 맞추기",
+		Message:     "목표까지 이동하세요.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "training",
+			Title: "TRAINING BRIEF",
+			Lines: []string{"?: hint  q: quit"},
+		},
+	})
+
+	for _, line := range strings.Split(view, "\n") {
+		if strings.Contains(line, "TRAINING BRIEF") && len([]rune(line)) > 36 {
+			t.Fatalf("focus panel line width = %d, want <= 36: %q", len([]rune(line)), line)
+		}
+	}
+}
+
 func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 	view := Render(Screen{
 		PlaylistTitle: "Tutorial 0",
