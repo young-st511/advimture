@@ -176,6 +176,7 @@ type evidenceConfig struct {
 	SaveRawANSI        bool `yaml:"save_raw_ansi"`
 	SaveCleanScreen    bool `yaml:"save_clean_screen"`
 	SaveScreenTimeline bool `yaml:"save_screen_timeline"`
+	SaveScreenFinal    bool `yaml:"save_screen_final"`
 	SaveKeyTrace       bool `yaml:"save_key_trace"`
 	SaveSummary        bool `yaml:"save_summary"`
 	SaveAppState       bool `yaml:"save_app_state"`
@@ -203,6 +204,7 @@ type summaryEvidence struct {
 	KeyTrace           []string `json:"key_trace"`
 	ScreenBytes        int      `json:"screen_bytes"`
 	ScreenTimeline     bool     `json:"screen_timeline_evidence"`
+	ScreenFinal        bool     `json:"screen_final_evidence"`
 	ProgressFileExists bool     `json:"progress_file_exists"`
 	ProgressEvidence   bool     `json:"progress_evidence"`
 	AppStatePath       string   `json:"app_state_path,omitempty"`
@@ -266,7 +268,7 @@ func loadScenario(path string) (scenario, error) {
 	if sc.Terminal.Height == 0 {
 		sc.Terminal.Height = 30
 	}
-	if !sc.Evidence.SaveRawANSI && !sc.Evidence.SaveCleanScreen && !sc.Evidence.SaveKeyTrace && !sc.Evidence.SaveSummary && !sc.Evidence.SaveAppState && !sc.Evidence.SaveProgress {
+	if !sc.Evidence.SaveRawANSI && !sc.Evidence.SaveCleanScreen && !sc.Evidence.SaveScreenFinal && !sc.Evidence.SaveKeyTrace && !sc.Evidence.SaveSummary && !sc.Evidence.SaveAppState && !sc.Evidence.SaveProgress {
 		sc.Evidence.SaveSummary = true
 	}
 	return sc, nil
@@ -627,6 +629,11 @@ func writeEvidence(root string, sc scenario, result runResult, runErr error) err
 			return err
 		}
 	}
+	if sc.Evidence.SaveScreenFinal {
+		if err := os.WriteFile(filepath.Join(dir, "screen_final.txt"), []byte(cleanFinalScreen(result.raw)), 0o644); err != nil {
+			return err
+		}
+	}
 	if sc.Evidence.SaveKeyTrace {
 		if err := os.WriteFile(filepath.Join(dir, "key_trace.txt"), []byte(strings.Join(result.trace, "\n")), 0o644); err != nil {
 			return err
@@ -668,6 +675,7 @@ func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
 		KeyTrace:           append([]string(nil), result.trace...),
 		ScreenBytes:        len(result.clean),
 		ScreenTimeline:     sc.Evidence.SaveScreenTimeline,
+		ScreenFinal:        sc.Evidence.SaveScreenFinal,
 		ProgressFileExists: result.progressFileExists || progressFileExists(result.homeDir),
 		ProgressEvidence:   len(result.progressRaw) > 0,
 		AppStatePath:       appStatePath(result.homeDir, sc.Assert.AppState.Path),
@@ -938,6 +946,16 @@ func cleanTerminal(raw []byte) string {
 		}
 	}
 	return b.String()
+}
+
+func cleanFinalScreen(raw []byte) string {
+	clean := strings.TrimSpace(cleanTerminal(raw))
+	for _, marker := range []string{"ADVIMTURE |", "Playable error:"} {
+		if idx := strings.LastIndex(clean, marker); idx >= 0 {
+			return strings.TrimSpace(clean[idx:])
+		}
+	}
+	return clean
 }
 
 func exitCode(cmd *exec.Cmd) int {

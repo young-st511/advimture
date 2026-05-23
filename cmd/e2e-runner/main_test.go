@@ -44,6 +44,29 @@ func TestCleanTerminal(t *testing.T) {
 	}
 }
 
+func TestCleanFinalScreenKeepsLastAdvimtureFrame(t *testing.T) {
+	raw := []byte("ADVIMTURE | Tutorial | Exercise: 1/4\nold frame\nADVIMTURE | Tutorial | Exercise: 2/4\nnew frame\n")
+
+	final := cleanFinalScreen(raw)
+
+	if strings.Contains(final, "old frame") {
+		t.Fatalf("cleanFinalScreen = %q, should not include earlier frame", final)
+	}
+	if !strings.Contains(final, "ADVIMTURE | Tutorial | Exercise: 2/4") || !strings.Contains(final, "new frame") {
+		t.Fatalf("cleanFinalScreen = %q, want last frame", final)
+	}
+}
+
+func TestCleanFinalScreenKeepsPlayableErrorFrame(t *testing.T) {
+	raw := []byte("boot\nPlayable error: content missing\nq: quit\n")
+
+	final := cleanFinalScreen(raw)
+
+	if final != "Playable error: content missing\nq: quit" {
+		t.Fatalf("cleanFinalScreen = %q, want playable error frame", final)
+	}
+}
+
 func TestWaitForScreenIgnoresOutputBeforeOffset(t *testing.T) {
 	var raw bytes.Buffer
 	raw.WriteString("old screen\nNext: enter\n")
@@ -584,6 +607,44 @@ func TestWriteEvidenceWritesScreenTimeline(t *testing.T) {
 	}
 	if !summary.ScreenTimeline {
 		t.Fatal("summary.ScreenTimeline = false, want true")
+	}
+}
+
+func TestWriteEvidenceWritesScreenFinal(t *testing.T) {
+	root := t.TempDir()
+	result := runResult{
+		raw:      []byte("ADVIMTURE | old\nold frame\nADVIMTURE | final\nfinal frame"),
+		clean:    "ADVIMTURE | old\nold frame\nADVIMTURE | final\nfinal frame",
+		exitCode: 0,
+		homeDir:  t.TempDir(),
+	}
+	sc := scenario{
+		ID: "final",
+		Evidence: evidenceConfig{
+			SaveScreenFinal: true,
+		},
+	}
+
+	if err := writeEvidence(root, sc, result, nil); err != nil {
+		t.Fatalf("writeEvidence returned error: %v", err)
+	}
+	raw, err := os.ReadFile(filepath.Join(root, "final", "screen_final.txt"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(raw), "old frame") || !strings.Contains(string(raw), "final frame") {
+		t.Fatalf("screen_final.txt = %q, want only final frame", raw)
+	}
+	summaryRaw, err := os.ReadFile(filepath.Join(root, "final", "summary.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var summary summaryEvidence
+	if err := json.Unmarshal(summaryRaw, &summary); err != nil {
+		t.Fatal(err)
+	}
+	if !summary.ScreenFinal {
+		t.Fatal("summary.ScreenFinal = false, want true")
 	}
 }
 
