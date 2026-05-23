@@ -67,14 +67,15 @@ type StepResult struct {
 }
 
 type Session struct {
-	exercise Exercise
-	initial  vimengine.State
-	engine   *vimengine.Engine
-	status   Status
-	keyTrace []string
-	attempts int
-	failure  FailureReason
-	message  string
+	exercise                       Exercise
+	initial                        vimengine.State
+	engine                         *vimengine.Engine
+	status                         Status
+	keyTrace                       []string
+	attempts                       int
+	failure                        FailureReason
+	message                        string
+	matchedGoalWithMissingRequired bool
 }
 
 func CursorGoal(row int, col int) *vimengine.Cursor {
@@ -154,8 +155,18 @@ func (s *Session) ApplyKey(key string) StepResult {
 
 	vimResult := s.engine.Apply(key)
 	matched := s.exercise.Goal.Matches(vimResult.State)
+	if !matched {
+		s.matchedGoalWithMissingRequired = false
+	}
 	if matched {
 		if missing := s.missingRequiredKeys(); len(missing) > 0 {
+			if s.shouldFailMissingRequiredKeys() {
+				s.fail(FailureRequiredKeysMissing, "목표에는 도착했지만 이번 문항의 의도한 입력을 사용하지 않았습니다.")
+			} else {
+				s.matchedGoalWithMissingRequired = true
+			}
+			matched = false
+		} else if s.matchedGoalWithMissingRequired {
 			s.fail(FailureRequiredKeysMissing, "목표에는 도착했지만 이번 문항의 의도한 입력을 사용하지 않았습니다.")
 			matched = false
 		} else {
@@ -177,6 +188,7 @@ func (s *Session) Retry() State {
 	s.attempts++
 	s.failure = FailureNone
 	s.message = ""
+	s.matchedGoalWithMissingRequired = false
 	if s.canSucceedWithCurrentTrace(s.engine.State()) {
 		s.status = StatusSucceeded
 	}
@@ -238,6 +250,11 @@ func (s *Session) missingRequiredKeys() []string {
 		}
 	}
 	return missing
+}
+
+func (s *Session) shouldFailMissingRequiredKeys() bool {
+	maxInputs := s.exercise.Constraints.MaxInputs
+	return maxInputs <= 0 || len(s.keyTrace) >= maxInputs
 }
 
 func (s *Session) canSucceedWithCurrentTrace(state vimengine.State) bool {

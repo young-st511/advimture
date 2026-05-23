@@ -314,8 +314,13 @@ exercises:
         row: 0
         col: 12
     optimal_keys: ["w", "w"]
-    allowed_keys: ["h", "j", "k", "l", "w", "b", "e", "esc"]
+    allowed_keys: ["j", "k", "w", "b", "e", "esc"]
     forbidden_keys: ["right", "left", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["w"]
+      forbidden_keys: ["h", "l"]
+      attempt_limit: 0
     hints:
       - after_keys: 1
         text: "한 글자씩 이동하지 말고 단어 단위로 이동해보세요."
@@ -355,8 +360,13 @@ exercises:
         row: 0
         col: 12
     optimal_keys: ["b"]
-    allowed_keys: ["h", "j", "k", "l", "w", "b", "e", "esc"]
+    allowed_keys: ["j", "k", "w", "b", "e", "esc"]
     forbidden_keys: ["right", "left", "up", "down"]
+    constraints:
+      max_inputs: 1
+      required_keys: ["b"]
+      forbidden_keys: ["h", "l"]
+      attempt_limit: 0
     hints:
       - after_keys: 1
         text: "b는 이전 단어의 시작으로 이동합니다."
@@ -396,8 +406,13 @@ exercises:
         row: 0
         col: 18
     optimal_keys: ["e"]
-    allowed_keys: ["h", "j", "k", "l", "w", "b", "e", "esc"]
+    allowed_keys: ["j", "k", "w", "b", "e", "esc"]
     forbidden_keys: ["right", "left", "up", "down"]
+    constraints:
+      max_inputs: 1
+      required_keys: ["e"]
+      forbidden_keys: ["h", "l"]
+      attempt_limit: 0
     hints:
       - after_keys: 1
         text: "e는 현재 단어의 끝으로 이동합니다."
@@ -877,7 +892,7 @@ exercises:
     mistake_focus: ["undo한 변경을 다시 적용하는 흐름을 모른다."]
     replay_status: pass
     title: "되돌린 변경 다시 적용하기"
-    goal_for_player: "p를 지웠다가 u로 되돌린 뒤 ctrl+r로 다시 적용하고 a 위로 돌아와 ai를 확인하세요."
+    goal_for_player: "p를 지웠다가 u로 되돌린 뒤 ctrl+r로 다시 적용해 ai를 확인하세요."
     initial_state:
       mode: normal
       cursor:
@@ -889,14 +904,14 @@ exercises:
       mode: normal
       cursor:
         row: 0
-        col: 0
+        col: 1
       buffer: |
         ai
-    optimal_keys: ["x", "u", "ctrl+r", "h"]
-    allowed_keys: ["x", "u", "ctrl+r", "h", "esc"]
+    optimal_keys: ["x", "u", "ctrl+r"]
+    allowed_keys: ["x", "u", "ctrl+r", "esc"]
     forbidden_keys: ["i", "a", "A", "r"]
     constraints:
-      max_inputs: 4
+      max_inputs: 3
       required_keys: ["ctrl+r"]
       forbidden_keys: ["i", "a", "A", "r"]
       attempt_limit: 0
@@ -904,15 +919,15 @@ exercises:
       - after_keys: 2
         text: "undo로 되돌린 변경은 ctrl+r로 다시 적용할 수 있습니다."
       - after_keys: 3
-        text: "ctrl+r는 Normal mode의 redo입니다. 마지막 h로 a 위에 돌아와 결과를 확인하세요."
+        text: "ctrl+r는 Normal mode의 redo입니다. 방금 되돌린 삭제를 다시 적용합니다."
     grading:
-      pass_condition: "buffer[0] == ai && cursor.row == 0 && cursor.col == 0"
-      optimal_key_count: 4
+      pass_condition: "buffer[0] == ai && cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 3
     e2e_assertions:
       buffer: ["ai"]
       cursor:
         row: 0
-        col: 0
+        col: 1
       mode: normal
       status: succeeded
 

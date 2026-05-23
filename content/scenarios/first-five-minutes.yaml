@@ -214,7 +214,7 @@ scenarios:
     exercise_id: single-char-edit-001
     engine_support: implemented
     learning_reinforcement: "x는 Normal mode에서 현재 커서 아래 문자 하나를 지운다."
-    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    does_not_change: []
     mission_title: "중복 글자 제거"
     briefing: "라우트 이름에 i가 하나 더 들어갔습니다. Insert mode로 들어가지 말고 커서 아래 글자 하나만 지워 api로 정리하세요."
     context_role: "짧은 서비스 라우트 이름"
@@ -306,7 +306,7 @@ scenarios:
     learning_reinforcement: "ctrl+r는 undo로 되돌린 변경을 다시 적용한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
     mission_title: "되돌림 다시 적용"
-    briefing: "p를 지우는 판단이 맞았는데 u로 되돌려버렸습니다. 이번에는 ctrl+r로 방금 변경을 다시 적용하고 a 위로 돌아와 확인하세요."
+    briefing: "p를 지우는 판단이 맞았는데 u로 되돌려버렸습니다. 이번에는 ctrl+r로 방금 변경을 다시 적용해 ai를 확인하세요."
     context_role: "짧은 서비스 라우트 이름"
     mentor_success: "좋습니다. ctrl+r까지 알면 되돌림도 다시 적용도 안전하게 실험할 수 있습니다."
     mentor_failure: "undo 이후에도 길은 남아 있습니다. 다시 적용하려면 Normal mode에서 ctrl+r입니다."

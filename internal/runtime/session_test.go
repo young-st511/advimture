@@ -281,6 +281,96 @@ func TestSessionFailsWhenGoalReachedWithoutRequiredKey(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyDollar})
 }
 
+func TestSessionKeepsRunningWhenGoalReachedWithoutRequiredKeyAndInputsRemain(t *testing.T) {
+	initial := vimengine.NewState([]string{"api"})
+	initial.Cursor.Col = 1
+	initial.Cursor.DesiredCol = 1
+	session := NewSession(Exercise{
+		ID:      "redo-training",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"ai"},
+			Cursor: CursorGoal(0, 1),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			MaxInputs:    3,
+			RequiredKeys: []string{vimengine.KeyCtrlR},
+		},
+	})
+
+	result := session.ApplyKey(vimengine.KeyX)
+	if result.State.Status != StatusRunning {
+		t.Fatalf("status after x = %q, want running", result.State.Status)
+	}
+	if result.State.Failure != FailureNone {
+		t.Fatalf("failure after x = %q, want none", result.State.Failure)
+	}
+	if result.MatchedGoal {
+		t.Fatal("MatchedGoal after x = true, want false until required key is used")
+	}
+
+	result = session.ApplyKey(vimengine.KeyU)
+	if result.State.Status != StatusRunning {
+		t.Fatalf("status after u = %q, want running", result.State.Status)
+	}
+
+	result = session.ApplyKey(vimengine.KeyCtrlR)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after ctrl+r = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyX, vimengine.KeyU, vimengine.KeyCtrlR})
+}
+
+func TestSessionFailsWhenRequiredKeyIsPressedAfterShortcutWithoutLeavingGoal(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "shortcut-then-required",
+		Initial: vimengine.NewState([]string{"abc"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 2),
+		},
+		Constraints: Constraints{
+			MaxInputs:    2,
+			RequiredKeys: []string{vimengine.KeyL},
+		},
+	})
+
+	result := session.ApplyKey(vimengine.KeyDollar)
+	if result.State.Status != StatusRunning {
+		t.Fatalf("status after shortcut = %q, want running", result.State.Status)
+	}
+
+	result = session.ApplyKey(vimengine.KeyL)
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status after l = %q, want failed", result.State.Status)
+	}
+	if result.State.Failure != FailureRequiredKeysMissing {
+		t.Fatalf("failure = %q, want %q", result.State.Failure, FailureRequiredKeysMissing)
+	}
+}
+
+func TestSessionFailsMissingRequiredKeyWhenInputBudgetIsSpent(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "required-key-budget",
+		Initial: vimengine.NewState([]string{"abc"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 2),
+		},
+		Constraints: Constraints{
+			MaxInputs:    1,
+			RequiredKeys: []string{vimengine.KeyL},
+		},
+	})
+
+	result := session.ApplyKey(vimengine.KeyDollar)
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status = %q, want failed", result.State.Status)
+	}
+	if result.State.Failure != FailureRequiredKeysMissing {
+		t.Fatalf("failure = %q, want %q", result.State.Failure, FailureRequiredKeysMissing)
+	}
+}
+
 func TestStateExposesRequiredKeysForCoaching(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "coaching",

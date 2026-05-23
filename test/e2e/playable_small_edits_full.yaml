@@ -60,8 +60,6 @@ steps:
   - send: "u"
   - wait_ms: 50
   - send: "ctrl+r"
-  - wait_ms: 50
-  - send: "h"
   - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
@@ -104,13 +102,12 @@ assert:
     - "x"
     - "u"
     - "ctrl+r"
-    - "h"
     - "q"
   app_state:
     buffer: ["ai"]
     cursor:
       row: 0
-      col: 0
+      col: 1
     mode: "normal"
     status: "succeeded"
     score:

@@ -659,6 +659,16 @@ func TestLoadLibraryPreservesExerciseConstraints(t *testing.T) {
 	}
 	assertStrings(t, compiled.Exercise.Constraints.RequiredKeys, []string{"l"})
 	assertStrings(t, compiled.Exercise.Constraints.ForbiddenKeys, []string{"right", "left", "up", "down", "w"})
+
+	word, err := lib.CompileExercise("word-motion-basic-001")
+	if err != nil {
+		t.Fatalf("CompileExercise word returned error: %v", err)
+	}
+	if word.Exercise.Constraints.MaxInputs != 2 {
+		t.Fatalf("word max inputs = %d, want 2", word.Exercise.Constraints.MaxInputs)
+	}
+	assertStrings(t, word.Exercise.Constraints.RequiredKeys, []string{"w"})
+	assertStrings(t, word.Exercise.Constraints.ForbiddenKeys, []string{"right", "left", "up", "down", "h", "l"})
 }
 
 func TestLoadLibraryRejectsMissingCommandClusterReference(t *testing.T) {

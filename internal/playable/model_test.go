@@ -378,15 +378,13 @@ func TestPlayableFailsShortcutThatSkipsRequiredInput(t *testing.T) {
 	})
 
 	model, _ = updateWithKey(t, model, "$")
+	model, _ = updateWithKey(t, model, "l")
 
 	if model.State().Status != "failed" {
 		t.Fatalf("status = %q, want failed", model.State().Status)
 	}
 	if !strings.Contains(model.View(), "의도한 입력을 사용하지 않았습니다") {
 		t.Fatalf("view = %q, want required input coaching", model.View())
-	}
-	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
-		t.Fatalf("view = %q, want required key coaching", model.View())
 	}
 }
 

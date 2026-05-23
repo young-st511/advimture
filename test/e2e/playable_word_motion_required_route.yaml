@@ -1,0 +1,50 @@
+id: playable_word_motion_required_route
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 110
+  height: 34
+setup:
+  home: temp
+  complete_before: word-motion-basic-001
+steps:
+  - wait_screen_contains: "라우팅 설정 한 줄에서 backend로 바로 이동해야 합니다"
+  - send: "l"
+  - wait_screen_contains: "이 입력은 이번 문항"
+  - send: "enter"
+  - wait_screen_contains: "라우팅 설정 한 줄에서 backend로 바로 이동해야 합니다"
+  - send: "w"
+  - wait_ms: 50
+  - send: "w"
+  - wait_screen_contains: "Next: enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Grade: F"
+    - "단어 시작점으로 뛰어가기"
+    - "Next: enter"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"word-motion-basic-001\""
+  key_trace:
+    - "l"
+    - "enter"
+    - "w"
+    - "w"
+    - "q"
+  app_state:
+    buffer: ["service api backend enabled"]
+    cursor:
+      row: 0
+      col: 12
+    mode: "normal"
+    status: "succeeded"
+    progress:
+      mission_id: "word-motion-basic-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

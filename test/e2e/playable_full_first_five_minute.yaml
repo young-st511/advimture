@@ -156,8 +156,6 @@ steps:
   - send: "u"
   - wait_ms: 50
   - send: "ctrl+r"
-  - wait_ms: 50
-  - send: "h"
   - wait_screen_contains: "Next tutorial: enter"
   - send: "enter"
 

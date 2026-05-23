@@ -17,6 +17,11 @@ Phase: Vim Learning Foundation
 
 ## 방금 완료한 슬라이스
 
+### BUGFIX-REQUIRED-KEY-ROUTE. Required key route gate
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/bugfix-required-key-route.md`
+- 완료일: 2026-05-23
+
 ### UI-EVIDENCE-001. Screen evidence timeline
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/ui-evidence-001-screen-timeline.md`

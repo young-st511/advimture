@@ -9,6 +9,8 @@ setup:
 steps:
   - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
   - send: "$"
+  - wait_ms: 50
+  - send: "l"
   - wait_screen_contains: "목표에는 도착했지만"
   - send: "q"
 assert:
@@ -22,6 +24,7 @@ assert:
   progress_file_exists: false
   key_trace:
     - "$"
+    - "l"
     - "q"
   app_state:
     buffer: ["abc"]

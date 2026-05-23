@@ -64,13 +64,13 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `constraints.max_inputs` 초과와 `constraints.forbidden_keys` 입력은 Vim state를 추가 진행시키지 않고 즉시 실패한다.
 - `left/right/up/down` 화살표 입력은 `h/j/k/l`로 변환하지 않고 원래 key name으로 runtime에 전달해 `forbidden_keys`가 검출할 수 있어야 한다.
 - `ctrl+c` 입력도 quit으로 가로채지 않고 원래 key name으로 runtime에 전달해 content constraint나 unsupported key handling이 처리하게 한다.
-- 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 실패한다.
+- 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 성공하지 않는다. 단, `constraints.max_inputs`가 남아 있으면 즉시 실패하지 않고 계속 진행할 수 있다. 이후 목표 상태를 벗어났다가 required key로 다시 목표에 도달하면 성공할 수 있지만, 목표 상태에 머문 채 required key를 나중에 덧붙이는 우회는 `required_keys_missing`으로 실패한다. 입력 제한이 끝났거나 입력 제한이 없으면 `required_keys_missing`으로 실패한다.
 - 실패 상태는 progress를 저장하지 않으며, 실패 화면은 `Grade: F`, 남은 입력 수, 재시도 안내를 보여준다.
 - 실패 화면은 attempt count를 표시하며 `attempt_limit: 0`은 `unlimited`로 표현한다.
 - scoring result는 runtime failure reason을 보존하며, `required_keys_missing`은 `IntentSatisfied=false`, `Grade=F`로 평가한다.
 - `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`은 approved + implemented tutorial cluster이며 `x`, `r`, `i`, `a`, `A`, `u`, `ctrl+r` coverage와 replay gate를 통과한다.
 - `tutorial-3-small-edits`는 7문항짜리 작은 수정 튜토리얼이며 Ex command보다 먼저 실행된다.
-- `undo-redo-basic` 문항은 required key 없이 최종 목표에 먼저 도착하지 않도록 target cursor와 optimal trace를 설계한다.
+- `undo-redo-basic` 문항은 redo처럼 중간 상태가 목표와 같아질 수 있는 경우에도 required key를 사용할 때까지 성공하지 않아야 하며, `undo-redo-basic-002`는 `x`, `u`, `ctrl+r` 3입력으로 clear된다.
 - `tutorial-5-operator-grammar`는 `dw`, `d$`, `dd`, `cw`, `c$`, `cc`를 각각 한 문항씩 다루는 6문항 operator grammar 입문 tutorial이다.
 - `delete-with-motion`, `change-with-motion`은 approved + implemented tutorial cluster이며 replay gate와 E2E assertion gate를 통과한다.
 - 현재 pedagogical `cw`는 `dw`와 같은 범위로 단어 뒤 공백까지 삭제하므로, 단어 교체 문항은 새 단어 뒤 공백 입력을 optimal trace에 포함한다.

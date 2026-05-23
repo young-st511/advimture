@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-23 — BUGFIX-REQUIRED-KEY-ROUTE 완료
+
+이전 가정: 목표 상태에 도달했을 때 required key가 없으면 즉시 실패하는 방식으로 우회를 막을 수 있었다.
+
+새 가정: redo 학습처럼 중간 상태가 목표와 같아지는 문항은 입력 여지가 남아 있으면 즉시 실패하지 않고 계속 진행할 수 있다. 단, 목표 상태에 머문 채 required key를 나중에 덧붙이는 우회는 실패한다.
+
+이유: `undo-redo-basic-002`는 `ctrl+r` 자체가 학습 목표인데 숨은 `h` 입력을 요구했고, word motion 문항은 `h/l` 우회를 막는 constraints가 부족했다.
+
+영향: `undo-redo-basic-002`는 `x`, `u`, `ctrl+r` 3입력으로 clear된다. `word-motion-basic-*`는 `w/b/e` required key와 h/l forbidden route를 갖는다.
+
 ## 2026-05-23 — UI-EVIDENCE-001 완료
 
 이전 가정: E2E evidence의 `screen.txt`는 cleaned terminal text였지만, UI QA에서 이것이 최종 화면인지 누적 흐름인지 이름만으로 분명하지 않았다.
