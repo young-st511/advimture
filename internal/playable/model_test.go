@@ -459,6 +459,29 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	}
 }
 
+func TestPlayableShowsTextEntryHelpInsteadOfHintInInsertMode(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "insert-mode-entry-001"),
+	})
+
+	model, _ = updateWithKey(t, model, "i")
+
+	view := model.View()
+	if model.State().Mode != "insert" {
+		t.Fatalf("mode = %q, want insert", model.State().Mode)
+	}
+	if !strings.Contains(view, "Keys: type text  esc: normal") {
+		t.Fatalf("view = %q, want insert action panel", view)
+	}
+	if strings.Contains(view, "?: hint") {
+		t.Fatalf("view = %q, should not show hint prompt in insert mode", view)
+	}
+	if strings.Contains(view, "q: quit") {
+		t.Fatalf("view = %q, should not show quit prompt in insert mode", view)
+	}
+}
+
 func TestPlayableShowsSearchLineInSearchMode(t *testing.T) {
 	model := New(Options{ContentRoot: contentRootForTest()})
 

@@ -459,6 +459,8 @@ func (m Model) actionPanelLines(state scenario.State, view tuiadapter.ViewModel)
 	switch {
 	case view.Mode == string(vimengine.ModeVisual):
 		lines = append(lines, "Keys: motion expands selection  esc/v: normal")
+	case view.Mode == string(vimengine.ModeInsert):
+		lines = append(lines, "Keys: type text  esc: normal")
 	case view.Mode == string(vimengine.ModeCommand):
 		lines = append(lines, "Keys: type command  enter: run  esc: normal")
 	case view.Mode == string(vimengine.ModeSearch):
