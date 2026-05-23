@@ -15,6 +15,7 @@ type State struct {
 	Score     Score      `json:"score"`
 	Progress  Progress   `json:"progress"`
 	Review    Review     `json:"review"`
+	UI        UI         `json:"ui"`
 	Selection *Selection `json:"selection,omitempty"`
 }
 
@@ -47,6 +48,16 @@ type Review struct {
 	PrimaryExerciseID string `json:"primary_exercise_id,omitempty"`
 	PrimaryReason     string `json:"primary_reason,omitempty"`
 	DailyRoute        string `json:"daily_route,omitempty"`
+}
+
+type UI struct {
+	FocusPanel FocusPanel `json:"focus_panel"`
+}
+
+type FocusPanel struct {
+	Kind  string   `json:"kind"`
+	Title string   `json:"title"`
+	Lines []string `json:"lines"`
 }
 
 func DefaultPath(home string) string {

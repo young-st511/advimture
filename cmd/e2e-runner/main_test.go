@@ -255,6 +255,45 @@ func TestAssertScenarioChecksAppStateReview(t *testing.T) {
 	}
 }
 
+func TestAssertScenarioChecksAppStateUIFocusPanel(t *testing.T) {
+	home := t.TempDir()
+	stateDir := filepath.Join(home, ".advimture")
+	if err := os.MkdirAll(stateDir, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	statePath := filepath.Join(stateDir, "e2e_state.json")
+	raw := []byte(`{
+		"ui": {
+			"focus_panel": {
+				"kind": "training",
+				"title": "TRAINING BRIEF",
+				"lines": ["Coach: 훈련 키 l", "?: hint  q: quit"]
+			}
+		}
+	}`)
+	if err := os.WriteFile(statePath, raw, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	sc := scenario{
+		Assert: assertionConfig{
+			AppState: appStateAssertion{
+				UI: &uiAssertion{
+					FocusPanel: &focusPanelAssertion{
+						Kind:  "training",
+						Title: "TRAINING BRIEF",
+						Lines: []string{"Coach: 훈련 키 l", "?: hint  q: quit"},
+					},
+				},
+			},
+		},
+	}
+
+	if err := assertScenario(sc, runResult{homeDir: home}); err != nil {
+		t.Fatalf("assertScenario returned error: %v", err)
+	}
+}
+
 func TestAssertScenarioReportsAppStateReviewMismatch(t *testing.T) {
 	home := t.TempDir()
 	stateDir := filepath.Join(home, ".advimture")

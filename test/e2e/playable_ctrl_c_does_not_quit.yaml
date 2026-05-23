@@ -14,7 +14,7 @@ steps:
 assert:
   screen_contains:
     - "커서 위치 맞추기"
-    - "ACTION"
+    - "TRAINING BRIEF"
   exit_code: 0
   progress_file_exists: false
   key_trace:
@@ -30,6 +30,10 @@ assert:
     progress:
       mission_id: "normal-motion-basic-001"
       completed: false
+    ui:
+      focus_panel:
+        kind: "training"
+        title: "TRAINING BRIEF"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true

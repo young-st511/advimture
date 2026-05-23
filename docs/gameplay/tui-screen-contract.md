@@ -69,9 +69,14 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - status line은 한 줄을 기본으로 한다.
 - `Mode:`, `Status:` 같은 개발식 label은 장기적으로 `NORMAL | running | cursor 0,2` 형태로 줄인다.
 
-### 5. Action / Debrief Panel
+### 5. FocusPanel / Debrief Panel
 
 역할: 다음 행동을 명확히 안내한다.
+
+위치:
+
+- 기본 위치는 Briefing/OPS 아래, `RUNBOOK CONSOLE` 위다.
+- 하단 보조 안내보다 현재 조작 표면에 가까워야 한다.
 
 상태별 규칙:
 
@@ -81,9 +86,15 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - failed: 실패 이유, 남은 입력, attempts, retry
 - succeeded: 복구 기록, best record, runbook completion, residual risk, next
 
+구조:
+
+- `kind`: `training`, `incident`, `failure`, `success`, `mode`
+- `title`: `TRAINING BRIEF`, `OPERATOR JUDGMENT`, `RECOVERY REQUIRED`, `STEP SEALED`, `COMMAND CHANNEL` 등
+- `lines`: 사용자에게 보일 안내 문구
+
 금지:
 
-- 현재 목표보다 먼저 action panel이 시선을 빼앗는 것
+- 현재 목표보다 먼저 focus panel이 시선을 빼앗는 것
 - incident 첫 화면에서 모든 정답 key를 과하게 노출하는 것
 
 ## Tutorial과 Incident의 차이
@@ -98,7 +109,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 ## 검증 기준
 
 - E2E는 화면 문구와 함께 app_state를 본다.
+- focus panel은 `app_state.ui.focus_panel`으로 kind/title/lines를 검증할 수 있어야 한다.
 - review/daily는 `app_state.review` typed assertion으로 검증한다.
 - visual selection은 app_state selection object로 검증한다.
 - 화면 레이아웃 변경 후에도 key trace와 progress assertion이 유지되어야 한다.
-

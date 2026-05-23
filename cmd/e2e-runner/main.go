@@ -71,6 +71,7 @@ type appStateAssertion struct {
 	Score     *scoreAssertion     `yaml:"score"`
 	Progress  *progressAssertion  `yaml:"progress"`
 	Review    *reviewAssertion    `yaml:"review"`
+	UI        *uiAssertion        `yaml:"ui"`
 	Selection *selectionAssertion `yaml:"selection"`
 	Contains  map[string]string   `yaml:"contains"`
 }
@@ -97,6 +98,16 @@ type reviewAssertion struct {
 	DailyRoute        string `yaml:"daily_route"`
 }
 
+type uiAssertion struct {
+	FocusPanel *focusPanelAssertion `yaml:"focus_panel"`
+}
+
+type focusPanelAssertion struct {
+	Kind  string   `yaml:"kind"`
+	Title string   `yaml:"title"`
+	Lines []string `yaml:"lines"`
+}
+
 type selectionAssertion struct {
 	Active *bool            `yaml:"active"`
 	Kind   string           `yaml:"kind"`
@@ -115,6 +126,7 @@ type appStateSummary struct {
 	Score     appStateScore      `json:"score"`
 	Progress  appStateProgress   `json:"progress"`
 	Review    appStateReview     `json:"review"`
+	UI        appStateUI         `json:"ui"`
 	Selection *appStateSelection `json:"selection"`
 	Extra     map[string]any     `json:"-"`
 }
@@ -139,6 +151,16 @@ type appStateReview struct {
 	PrimaryExerciseID string `json:"primary_exercise_id"`
 	PrimaryReason     string `json:"primary_reason"`
 	DailyRoute        string `json:"daily_route"`
+}
+
+type appStateUI struct {
+	FocusPanel appStateFocusPanel `json:"focus_panel"`
+}
+
+type appStateFocusPanel struct {
+	Kind  string   `json:"kind"`
+	Title string   `json:"title"`
+	Lines []string `json:"lines"`
 }
 
 type appStateSelection struct {
@@ -694,6 +716,7 @@ func wantsAppStateAssertion(assertion appStateAssertion) bool {
 		assertion.Score != nil ||
 		assertion.Progress != nil ||
 		assertion.Review != nil ||
+		assertion.UI != nil ||
 		assertion.Selection != nil ||
 		len(assertion.Contains) > 0
 }
@@ -775,6 +798,11 @@ func assertAppState(assertion appStateAssertion, state appStateSummary, raw []by
 			return err
 		}
 	}
+	if assertion.UI != nil {
+		if err := assertUI(*assertion.UI, state.UI); err != nil {
+			return err
+		}
+	}
 	if assertion.Selection != nil {
 		if state.Selection == nil {
 			return fmt.Errorf("app state selection: got nil, want assertion")
@@ -788,6 +816,28 @@ func assertAppState(assertion appStateAssertion, state appStateSummary, raw []by
 		if !strings.Contains(text, want) {
 			return fmt.Errorf("app state contains %q: missing %q", key, want)
 		}
+	}
+	return nil
+}
+
+func assertUI(assertion uiAssertion, state appStateUI) error {
+	if assertion.FocusPanel != nil {
+		if err := assertFocusPanel(*assertion.FocusPanel, state.FocusPanel); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func assertFocusPanel(assertion focusPanelAssertion, state appStateFocusPanel) error {
+	if assertion.Kind != "" && state.Kind != assertion.Kind {
+		return fmt.Errorf("app state ui focus_panel kind: got %q, want %q", state.Kind, assertion.Kind)
+	}
+	if assertion.Title != "" && state.Title != assertion.Title {
+		return fmt.Errorf("app state ui focus_panel title: got %q, want %q", state.Title, assertion.Title)
+	}
+	if len(assertion.Lines) > 0 && !sameStrings(state.Lines, assertion.Lines) {
+		return fmt.Errorf("app state ui focus_panel lines: got %v, want %v", state.Lines, assertion.Lines)
 	}
 	return nil
 }

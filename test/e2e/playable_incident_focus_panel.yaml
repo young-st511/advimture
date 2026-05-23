@@ -1,0 +1,35 @@
+id: playable_incident_focus_panel
+command: ["go", "run", "."]
+timeout_ms: 15000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-hotfix-001
+steps:
+  - wait_screen_contains: "OPERATOR JUDGMENT"
+  - send: "q"
+assert:
+  screen_contains:
+    - "OPERATOR JUDGMENT"
+    - "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
+  exit_code: 0
+  progress_file_exists: true
+  key_trace:
+    - "q"
+  app_state:
+    mode: "normal"
+    status: "running"
+    progress:
+      mission_id: "incident-hotfix-001"
+      completed: false
+    ui:
+      focus_panel:
+        kind: "incident"
+        title: "OPERATOR JUDGMENT"
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

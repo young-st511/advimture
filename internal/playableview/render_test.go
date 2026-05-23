@@ -33,7 +33,7 @@ func TestRenderLineShowsLinewiseVisualSelection(t *testing.T) {
 	}
 }
 
-func TestRenderScreenIncludesActionPanel(t *testing.T) {
+func TestRenderScreenIncludesFocusPanelBeforeConsole(t *testing.T) {
 	view := Render(Screen{
 		PlaylistTitle: "Tutorial 0",
 		Title:         "커서 위치 맞추기",
@@ -43,13 +43,22 @@ func TestRenderScreenIncludesActionPanel(t *testing.T) {
 		Status:        "running",
 		CursorCol:     1,
 		ExerciseTotal: 4,
-		ActionLines:   []string{"ACTION", "?: hint  q: quit"},
+		FocusPanel: &FocusPanel{
+			Kind:  "training",
+			Title: "TRAINING BRIEF",
+			Lines: []string{"Coach: 훈련 키 l", "?: hint  q: quit"},
+		},
 	})
 
-	for _, want := range []string{"Tutorial 0", "커서 위치 맞추기", "> a[b]c", "Exercise: 1/4", "ACTION"} {
+	for _, want := range []string{"Tutorial 0", "커서 위치 맞추기", "> a[b]c", "Exercise: 1/4", "TRAINING BRIEF"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want %q", view, want)
 		}
+	}
+	panelIndex := strings.Index(view, "TRAINING BRIEF")
+	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
+	if panelIndex == -1 || consoleIndex == -1 || panelIndex > consoleIndex {
+		t.Fatalf("Render output = %q, want focus panel before console", view)
 	}
 }
 
@@ -64,7 +73,11 @@ func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 		Mode:          "normal",
 		Status:        "running",
 		ExerciseTotal: 4,
-		ActionLines:   []string{"ACTION"},
+		FocusPanel: &FocusPanel{
+			Kind:  "training",
+			Title: "TRAINING BRIEF",
+			Lines: []string{"?: hint  q: quit"},
+		},
 	})
 
 	titleIndex := strings.Index(view, "커서 위치 맞추기")

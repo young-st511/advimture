@@ -148,7 +148,7 @@ func (m Model) View() string {
 		Grade:           view.Grade,
 		CommandLine:     view.CommandLine,
 		LastCommand:     view.LastCommand,
-		ActionLines:     m.actionPanelLines(state, view),
+		FocusPanel:      m.focusPanel(state, view),
 		ShowLastCommand: true,
 	}
 	if entry, ok := m.currentEntry(); ok {
@@ -186,6 +186,7 @@ func (m Model) State() e2estate.State {
 		MissionID: m.currentExerciseID(),
 		Completed: state.Status == exerciseruntime.StatusSucceeded,
 	}
+	focusPanel := m.focusPanel(state, tuiadapter.RenderState(state))
 	return e2estate.State{
 		Buffer: append([]string(nil), state.Runtime.Vim.Lines...),
 		Cursor: e2estate.Cursor{
@@ -198,6 +199,7 @@ func (m Model) State() e2estate.State {
 		Score:     score,
 		Progress:  progressState,
 		Review:    m.e2eReview(),
+		UI:        e2eUI(focusPanel),
 		Selection: e2eSelection(state.Runtime.Vim.Selection),
 	}
 }
@@ -454,8 +456,38 @@ func contentRoot(root string) string {
 	return "content"
 }
 
-func (m Model) actionPanelLines(state scenario.State, view tuiadapter.ViewModel) []string {
-	lines := []string{"ACTION"}
+func (m Model) focusPanel(state scenario.State, view tuiadapter.ViewModel) *playableview.FocusPanel {
+	kind, title := focusPanelIdentity(state, view, m.currentEntryIsIncident())
+	return &playableview.FocusPanel{
+		Kind:  kind,
+		Title: title,
+		Lines: m.focusPanelLines(state, view),
+	}
+}
+
+func focusPanelIdentity(state scenario.State, view tuiadapter.ViewModel, incident bool) (string, string) {
+	switch {
+	case view.Mode == string(vimengine.ModeVisual):
+		return "mode", "VISUAL CHANNEL"
+	case view.Mode == string(vimengine.ModeInsert):
+		return "mode", "INSERT CHANNEL"
+	case view.Mode == string(vimengine.ModeCommand):
+		return "mode", "COMMAND CHANNEL"
+	case view.Mode == string(vimengine.ModeSearch):
+		return "mode", "SEARCH CHANNEL"
+	case state.Status == exerciseruntime.StatusSucceeded:
+		return "success", "STEP SEALED"
+	case state.Status == exerciseruntime.StatusFailed:
+		return "failure", "RECOVERY REQUIRED"
+	case incident:
+		return "incident", "OPERATOR JUDGMENT"
+	default:
+		return "training", "TRAINING BRIEF"
+	}
+}
+
+func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) []string {
+	lines := []string{}
 	switch {
 	case view.Mode == string(vimengine.ModeVisual):
 		lines = append(lines, "Keys: motion expands selection  esc/v: normal")
@@ -539,6 +571,19 @@ func e2eSelection(selection *vimengine.Selection) *e2estate.Selection {
 		Head:   e2eCursor(selection.Head),
 		Start:  e2eCursor(selection.Start),
 		End:    e2eCursor(selection.End),
+	}
+}
+
+func e2eUI(panel *playableview.FocusPanel) e2estate.UI {
+	if panel == nil {
+		return e2estate.UI{}
+	}
+	return e2estate.UI{
+		FocusPanel: e2estate.FocusPanel{
+			Kind:  panel.Kind,
+			Title: panel.Title,
+			Lines: append([]string(nil), panel.Lines...),
+		},
 	}
 }
 

@@ -103,6 +103,7 @@ evidence:
 - `app_state`: test HOME 내부 app state summary JSON 검증
 - `app_state.selection`: visual mode의 selection active/kind/anchor/head/start/end 검증
 - `app_state.review`: review queue count, primary exercise/reason, daily route 문구 검증
+- `app_state.ui.focus_panel`: 현재 focus panel의 kind/title/lines 검증
 - `setup.progress_file`: test HOME의 `.advimture/progress.json`에 미리 쓸 JSON fixture
 - `playable_small_edits_full`: 7개 small edits exercise와 `ctrl+r` 입력을 검증하는 집중 E2E
 - `playable_arrow_forbidden`: 실제 방향키 escape sequence가 `h/j/k/l`로 우회되지 않고 forbidden input으로 실패하는지 검증하는 E2E
@@ -139,6 +140,10 @@ assert:
       primary_exercise_id: normal-motion-basic-002
       primary_reason: incomplete
       daily_route: "오늘의 복구 루트: 3건 대기"
+    ui:
+      focus_panel:
+        kind: "success"
+        title: "STEP SEALED"
     selection:
       active: true
       kind: "charwise"

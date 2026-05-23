@@ -27,10 +27,17 @@ type Screen struct {
 	Grade           string
 	CommandLine     string
 	LastCommand     string
+	FocusPanel      *FocusPanel
 	ActionLines     []string
 	CommandPrompt   string
 	ShowCommandLine bool
 	ShowLastCommand bool
+}
+
+type FocusPanel struct {
+	Kind  string
+	Title string
+	Lines []string
 }
 
 var actionPanelStyle = lipgloss.NewStyle().
@@ -55,6 +62,10 @@ func Render(screen Screen) string {
 		}
 		b.WriteString("\n")
 	}
+	if screen.FocusPanel != nil {
+		b.WriteString(RenderFocusPanel(*screen.FocusPanel))
+		b.WriteString("\n\n")
+	}
 	b.WriteString("RUNBOOK CONSOLE\n")
 	for row, line := range screen.BufferLines {
 		b.WriteString(RenderLine(line, row, screen.CursorRow, screen.CursorCol, screen.Selection))
@@ -78,7 +89,9 @@ func Render(screen Screen) string {
 	if screen.ShowLastCommand && screen.LastCommand != "" {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
 	}
-	b.WriteString(RenderActionPanel(screen.ActionLines))
+	if screen.FocusPanel == nil {
+		b.WriteString(RenderActionPanel(screen.ActionLines))
+	}
 	return b.String()
 }
 
@@ -100,6 +113,11 @@ func RenderActionPanel(lines []string) string {
 	if len(lines) == 0 {
 		return ""
 	}
+	return actionPanelStyle.Render(strings.Join(lines, "\n"))
+}
+
+func RenderFocusPanel(panel FocusPanel) string {
+	lines := append([]string{panel.Title}, panel.Lines...)
 	return actionPanelStyle.Render(strings.Join(lines, "\n"))
 }
 

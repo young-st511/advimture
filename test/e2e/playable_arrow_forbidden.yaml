@@ -13,7 +13,7 @@ steps:
   - send: "q"
 assert:
   screen_contains:
-    - "ACTION"
+    - "RECOVERY REQUIRED"
     - "Grade: F"
     - "Inputs left: 1/2"
     - "Retry: r or enter"
@@ -35,6 +35,10 @@ assert:
     progress:
       mission_id: "normal-motion-basic-001"
       completed: false
+    ui:
+      focus_panel:
+        kind: "failure"
+        title: "RECOVERY REQUIRED"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true

@@ -17,6 +17,11 @@ Phase: Vim Learning Foundation
 
 ## 방금 완료한 슬라이스
 
+### UI-MODAL-001. Focus Modal Foundation
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-modal-001-focus-panel.md`
+- 완료일: 2026-05-23
+
 ### BUGFIX-REQUIRED-KEY-ROUTE. Required key route gate
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/bugfix-required-key-route.md`

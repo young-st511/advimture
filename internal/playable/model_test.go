@@ -40,6 +40,15 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
 		t.Fatalf("view = %q, want proactive coaching", model.View())
 	}
+	if !strings.Contains(model.View(), "TRAINING BRIEF") {
+		t.Fatalf("view = %q, want training focus panel", model.View())
+	}
+	if strings.Contains(model.View(), "ACTION") {
+		t.Fatalf("view = %q, should not show debug action label", model.View())
+	}
+	if model.State().UI.FocusPanel.Kind != "training" || model.State().UI.FocusPanel.Title != "TRAINING BRIEF" {
+		t.Fatalf("ui focus panel = %+v, want training TRAINING BRIEF", model.State().UI.FocusPanel)
+	}
 }
 
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
@@ -219,8 +228,8 @@ func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
 	if !strings.Contains(model.View(), "Runbook: 4/4 복구 완료") {
 		t.Fatalf("view = %q, want completed playlist debrief", model.View())
 	}
-	if !strings.Contains(model.View(), "ACTION") {
-		t.Fatalf("view = %q, want action panel", model.View())
+	if !strings.Contains(model.View(), "STEP SEALED") {
+		t.Fatalf("view = %q, want success focus panel", model.View())
 	}
 
 	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
@@ -284,8 +293,8 @@ func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.
 	if !strings.Contains(model.View(), "Retry: r or enter") {
 		t.Fatalf("view = %q, want retry prompt", model.View())
 	}
-	if !strings.Contains(model.View(), "ACTION") {
-		t.Fatalf("view = %q, want action panel", model.View())
+	if !strings.Contains(model.View(), "RECOVERY REQUIRED") {
+		t.Fatalf("view = %q, want failure focus panel", model.View())
 	}
 	if !strings.Contains(model.View(), "Attempts: 1/unlimited") {
 		t.Fatalf("view = %q, want attempt count", model.View())
@@ -448,8 +457,8 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	if !strings.Contains(view, ":") {
 		t.Fatalf("view = %q, want command prompt", view)
 	}
-	if !strings.Contains(view, "ACTION") {
-		t.Fatalf("view = %q, want action panel", view)
+	if !strings.Contains(view, "COMMAND CHANNEL") {
+		t.Fatalf("view = %q, want command focus panel", view)
 	}
 	if strings.Contains(view, "q: quit") {
 		t.Fatalf("view = %q, should not show q quit hint in command mode", view)

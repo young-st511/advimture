@@ -31,6 +31,13 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 			PrimaryReason:     "incomplete",
 			DailyRoute:        "오늘의 복구 루트: 2건 대기",
 		},
+		UI: UI{
+			FocusPanel: FocusPanel{
+				Kind:  "success",
+				Title: "STEP SEALED",
+				Lines: []string{"Next: enter"},
+			},
+		},
 		Selection: &Selection{
 			Active: true,
 			Kind:   "charwise",
@@ -64,5 +71,8 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 	}
 	if got.Review.QueueCount != 2 || got.Review.PrimaryExerciseID != "mission-2" {
 		t.Fatalf("review = %+v, want queue count 2 and primary mission-2", got.Review)
+	}
+	if got.UI.FocusPanel.Kind != "success" || got.UI.FocusPanel.Title != "STEP SEALED" {
+		t.Fatalf("ui focus panel = %+v, want success STEP SEALED", got.UI.FocusPanel)
 	}
 }
