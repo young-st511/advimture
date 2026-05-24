@@ -215,10 +215,14 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 }
 
 func RenderState(state scenario.State) ViewModel {
+	message := state.Message
+	if state.Status != "" && state.Status != "running" && state.Briefing != "" {
+		message = state.Briefing
+	}
 	view := ViewModel{
 		ScenarioID:  state.ScenarioID,
 		Title:       state.Title,
-		Message:     state.Message,
+		Message:     message,
 		Status:      string(state.Status),
 		Mode:        string(state.Runtime.Vim.Mode),
 		CommandLine: state.Runtime.Vim.CommandLine,

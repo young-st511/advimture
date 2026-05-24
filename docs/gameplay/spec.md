@@ -52,8 +52,10 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `RUNBOOK CONSOLE` 위의 structured `FocusPanel`로 표시한다.
 - `FocusPanel`은 `kind`, `title`, `lines`를 가진다. tutorial running은 `training`/`TRAINING BRIEF`, incident running은 `incident`/`OPERATOR JUDGMENT`, failed는 `failure`/`RECOVERY REQUIRED`, succeeded는 `success`/`STEP SEALED`, mode-specific 안내는 `mode` kind를 사용한다.
 - `FocusPanel`은 `tea.WindowSizeMsg`로 전달된 terminal width가 있으면 화면 중앙에 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
+- `FocusPanel`은 terminal height가 있으면 고정 modal layer 안에서 렌더링해 상태별 안내 줄 수가 바뀌어도 `RUNBOOK CONSOLE` 위치를 밀지 않는다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시한다.
 - `?` hint 요청 결과는 `FocusPanel`에 `Hint: ...`로 표시하며, command/search/insert mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
+- failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
 - 성공 FocusPanel은 현재 복구 기록, 기존 progress 기반 최단 복구 기록, 현재 Runbook 복구 완료 수를 표시한다.
@@ -66,6 +68,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `constraints.max_inputs` 초과와 `constraints.forbidden_keys` 입력은 Vim state를 추가 진행시키지 않고 즉시 실패한다.
 - `left/right/up/down` 화살표 입력은 `h/j/k/l`로 변환하지 않고 원래 key name으로 runtime에 전달해 `forbidden_keys`가 검출할 수 있어야 한다.
 - `ctrl+c` 입력도 quit으로 가로채지 않고 원래 key name으로 runtime에 전달해 content constraint나 unsupported key handling이 처리하게 한다.
+- command goal 문항에서 목표와 다른 command를 실행하면 즉시 실패한다. `:q!` 목표에서 `:wq`, `:wq` 목표에서 `:q!`를 실행하면 저장/폐기 의도 차이를 설명하는 회복 피드백을 보여준다.
 - 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 성공하지 않는다. 단, `constraints.max_inputs`가 남아 있으면 즉시 실패하지 않고 계속 진행할 수 있다. 이후 목표 상태를 벗어났다가 required key로 다시 목표에 도달하면 성공할 수 있지만, 목표 상태에 머문 채 required key를 나중에 덧붙이는 우회는 `required_keys_missing`으로 실패한다. 입력 제한이 끝났거나 입력 제한이 없으면 `required_keys_missing`으로 실패한다.
 - 실패 상태는 progress를 저장하지 않으며, 실패 화면은 `Grade: F`, 남은 입력 수, 재시도 안내를 보여준다.
 - 실패 화면은 attempt count를 표시하며 `attempt_limit: 0`은 `unlimited`로 표현한다.

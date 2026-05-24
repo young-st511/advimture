@@ -64,7 +64,9 @@ func Render(screen Screen) string {
 		}
 		b.WriteString("\n")
 	}
-	if screen.FocusPanel != nil {
+	if screen.Height > 0 {
+		b.WriteString(RenderFocusLayer(screen.FocusPanel, screen.Width))
+	} else if screen.FocusPanel != nil {
 		b.WriteString(RenderFocusPanel(*screen.FocusPanel, screen.Width))
 		b.WriteString("\n\n")
 	}
@@ -126,6 +128,68 @@ func RenderFocusPanel(panel FocusPanel, screenWidth int) string {
 		return rendered
 	}
 	return lipgloss.PlaceHorizontal(screenWidth, lipgloss.Center, rendered)
+}
+
+func RenderFocusLayer(panel *FocusPanel, screenWidth int) string {
+	const layerHeight = 9
+	lines := make([]string, layerHeight)
+	if panel == nil {
+		return strings.Join(lines, "\n") + "\n"
+	}
+	rendered := strings.Split(RenderFocusPanel(*panel, screenWidth), "\n")
+	rendered = fitFocusPanelLines(rendered, layerHeight)
+	start := (layerHeight - len(rendered)) / 2
+	if start < 0 {
+		start = 0
+	}
+	for i, line := range rendered {
+		target := start + i
+		if target >= len(lines) {
+			break
+		}
+		lines[target] = line
+	}
+	return strings.Join(lines, "\n") + "\n"
+}
+
+func fitFocusPanelLines(rendered []string, maxHeight int) []string {
+	if len(rendered) <= maxHeight || maxHeight < 3 {
+		return rendered
+	}
+	interiorLimit := maxHeight - 2
+	fitted := make([]string, 0, maxHeight)
+	fitted = append(fitted, rendered[0])
+	interior := append([]string(nil), rendered[1:len(rendered)-1]...)
+	if len(interior) > interiorLimit {
+		interior = interior[:interiorLimit]
+	}
+	if priority := focusPanelPriorityLine(rendered[1 : len(rendered)-1]); priority != "" && !containsLine(interior, priority) {
+		interior[len(interior)-1] = priority
+	}
+	fitted = append(fitted, interior...)
+	fitted = append(fitted, rendered[len(rendered)-1])
+	return fitted
+}
+
+func focusPanelPriorityLine(lines []string) string {
+	for _, marker := range []string{"Retry:", "Next:", "Next tutorial:", "Playlist complete", "q: quit"} {
+		for i := len(lines) - 1; i >= 0; i-- {
+			line := lines[i]
+			if strings.Contains(line, marker) {
+				return line
+			}
+		}
+	}
+	return ""
+}
+
+func containsLine(lines []string, target string) bool {
+	for _, line := range lines {
+		if line == target {
+			return true
+		}
+	}
+	return false
 }
 
 func focusPanelWidth(screenWidth int) int {

@@ -21,6 +21,7 @@ type Spec struct {
 type State struct {
 	ScenarioID string
 	Title      string
+	Briefing   string
 	Message    string
 	Status     exerciseruntime.Status
 	Runtime    exerciseruntime.State
@@ -65,12 +66,20 @@ func (r *Run) State() State {
 	return State{
 		ScenarioID: r.spec.ID,
 		Title:      r.spec.Title,
+		Briefing:   r.briefing(),
 		Message:    r.message,
 		Status:     r.session.State().Status,
 		Runtime:    r.session.State(),
 		Score:      copyScore(r.score),
 		HintsUsed:  r.hintsUsed,
 	}
+}
+
+func (r *Run) briefing() string {
+	if r.spec.Briefing != "" {
+		return r.spec.Briefing
+	}
+	return r.spec.Title
 }
 
 func (r *Run) ApplyKey(key string) StepResult {

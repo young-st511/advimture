@@ -505,6 +505,9 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 	case view.Mode == string(vimengine.ModeSearch):
 		lines = append(lines, "Keys: type search  enter: find  esc: normal")
 	case state.Status == exerciseruntime.StatusSucceeded:
+		if feedback := scenarioFeedbackLine(state); feedback != "" {
+			lines = append(lines, feedback)
+		}
 		lines = append(lines, m.successDebriefLines(state)...)
 		if m.current+1 < len(m.entries) {
 			if m.nextEntryStartsNewPlaylist() {
@@ -517,6 +520,9 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 			lines = append(lines, "q: quit")
 		}
 	case state.Status == exerciseruntime.StatusFailed:
+		if feedback := scenarioFeedbackLine(state); feedback != "" {
+			lines = append(lines, feedback)
+		}
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
@@ -542,6 +548,15 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		lines = append(lines, "?: hint  q: quit")
 	}
 	return lines
+}
+
+func scenarioFeedbackLine(state scenario.State) string {
+	message := strings.TrimSpace(state.Message)
+	briefing := strings.TrimSpace(state.Briefing)
+	if message == "" || message == briefing {
+		return ""
+	}
+	return message
 }
 
 func (m Model) runningCoachingLine(state scenario.State) string {

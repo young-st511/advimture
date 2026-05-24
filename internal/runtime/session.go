@@ -17,6 +17,7 @@ const (
 	FailureForbiddenInput      FailureReason = "forbidden_input"
 	FailureMaxInputsExceeded   FailureReason = "max_inputs_exceeded"
 	FailureRequiredKeysMissing FailureReason = "required_keys_missing"
+	FailureCommandMismatch     FailureReason = "command_mismatch"
 )
 
 type Exercise struct {
@@ -154,6 +155,14 @@ func (s *Session) ApplyKey(key string) StepResult {
 	}
 
 	vimResult := s.engine.Apply(key)
+	if s.shouldFailCommandMismatch(vimResult.State) {
+		s.fail(FailureCommandMismatch, commandMismatchMessage(*s.exercise.Goal.Command, vimResult.State.LastCommand))
+		return StepResult{
+			State:       s.State(),
+			Vim:         copyVimResult(vimResult),
+			MatchedGoal: false,
+		}
+	}
 	matched := s.exercise.Goal.Matches(vimResult.State)
 	if !matched {
 		s.matchedGoalWithMissingRequired = false
@@ -255,6 +264,24 @@ func (s *Session) missingRequiredKeys() []string {
 func (s *Session) shouldFailMissingRequiredKeys() bool {
 	maxInputs := s.exercise.Constraints.MaxInputs
 	return maxInputs <= 0 || len(s.keyTrace) >= maxInputs
+}
+
+func (s *Session) shouldFailCommandMismatch(state vimengine.State) bool {
+	if s.exercise.Goal.Command == nil || state.LastCommand == "" {
+		return false
+	}
+	return state.LastCommand != *s.exercise.Goal.Command
+}
+
+func commandMismatchMessage(expected string, actual string) string {
+	switch {
+	case expected == ":q!" && actual == ":wq":
+		return ":wq가 아니라 :q!로 버리고 나가세요."
+	case expected == ":wq" && actual == ":q!":
+		return ":q!가 아니라 :wq로 저장 후 나가세요."
+	default:
+		return "실행한 command가 이번 목표와 다릅니다. 목표 command를 다시 확인하세요."
+	}
 }
 
 func (s *Session) canSucceedWithCurrentTrace(state vimengine.State) bool {

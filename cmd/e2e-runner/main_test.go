@@ -99,6 +99,15 @@ func TestWaitForScreenFindsOutputAfterOffset(t *testing.T) {
 	}
 }
 
+func TestScreenContainsNormalizesWrappedText(t *testing.T) {
+	screen := "│ 좋습니다. anchor가 오른쪽이어도 선택 범위를 정규화해 정확히 │\n│ 제거했습니다. │"
+	want := "좋습니다. anchor가 오른쪽이어도 선택 범위를 정규화해 정확히 제거했습니다."
+
+	if !screenContains(screen, want) {
+		t.Fatalf("screenContains(%q, %q) = false, want true", screen, want)
+	}
+}
+
 func TestAssertScenarioChecksKeyTrace(t *testing.T) {
 	sc := scenario{
 		Assert: assertionConfig{

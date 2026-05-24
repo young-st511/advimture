@@ -67,6 +67,47 @@ func TestPlayablePassesWindowSizeToRenderer(t *testing.T) {
 	}
 }
 
+func TestPlayableShowsFailureFeedbackInFocusPanel(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "word-motion-basic-001"),
+	})
+
+	model, _ = updateWithKey(t, model, "l")
+
+	if model.State().Status != "failed" {
+		t.Fatalf("status = %q, want failed", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "라우팅 설정 한 줄에서 backend로 바로 이동해야 합니다") {
+		t.Fatalf("view = %q, want original briefing", model.View())
+	}
+	lines := model.State().UI.FocusPanel.Lines
+	if !containsLineWith(lines, "한 글자씩 가면 늦습니다.") {
+		t.Fatalf("focus panel lines = %v, want failure feedback", lines)
+	}
+}
+
+func TestPlayableRejectsWriteQuitForDiscardMission(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "survival-save-quit-002"),
+	})
+
+	for _, key := range []string{":", "w", "q", "enter"} {
+		model, _ = updateWithKey(t, model, key)
+	}
+
+	if model.State().Status != "failed" {
+		t.Fatalf("status = %q, want failed", model.State().Status)
+	}
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, ":wq가 아니라 :q!") {
+		t.Fatalf("focus panel lines = %v, want :wq rejection", model.State().UI.FocusPanel.Lines)
+	}
+	if !strings.Contains(model.View(), "임시 설정을 잘못 열었습니다.") {
+		t.Fatalf("view = %q, want original briefing after failed command", model.View())
+	}
+}
+
 func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	saveCalls := 0
 	model := New(Options{
@@ -100,6 +141,15 @@ func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	if saveCalls != 1 {
 		t.Fatalf("saveCalls = %d, want 1", saveCalls)
 	}
+}
+
+func containsLineWith(lines []string, want string) bool {
+	for _, line := range lines {
+		if strings.Contains(line, want) {
+			return true
+		}
+	}
+	return false
 }
 
 func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
@@ -348,8 +398,8 @@ func TestPlayableFailsArrowKeyShortcutWithoutSaving(t *testing.T) {
 	if saveCalls != 0 {
 		t.Fatalf("saveCalls = %d, want 0", saveCalls)
 	}
-	if !strings.Contains(model.View(), "이 입력은 이번 문항에서 사용할 수 없습니다.") {
-		t.Fatalf("view = %q, want forbidden input message", model.View())
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "이 입력은 이번 문항에서 사용할 수 없습니다.") {
+		t.Fatalf("focus panel lines = %v, want forbidden input message", model.State().UI.FocusPanel.Lines)
 	}
 	if !strings.Contains(model.View(), "Retry: r or enter") {
 		t.Fatalf("view = %q, want retry prompt", model.View())
@@ -408,8 +458,8 @@ func TestPlayableFailsShortcutThatSkipsRequiredInput(t *testing.T) {
 	if model.State().Status != "failed" {
 		t.Fatalf("status = %q, want failed", model.State().Status)
 	}
-	if !strings.Contains(model.View(), "의도한 입력을 사용하지 않았습니다") {
-		t.Fatalf("view = %q, want required input coaching", model.View())
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "의도한 입력을 사용하지 않았습니다") {
+		t.Fatalf("focus panel lines = %v, want required input coaching", model.State().UI.FocusPanel.Lines)
 	}
 }
 

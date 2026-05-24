@@ -79,6 +79,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - 하단 보조 안내보다 현재 조작 표면에 가까워야 한다.
 - terminal width가 알려진 경우 horizontal center 정렬을 사용한다.
 - 좁은 화면에서는 panel width가 terminal width를 넘지 않도록 줄어든다.
+- terminal height가 알려진 경우 고정 modal layer를 사용해 panel line count가 console 위치를 밀지 않게 한다.
 
 상태별 규칙:
 
@@ -87,6 +88,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - failed: 실패 이유, 남은 입력, attempts, retry
 - succeeded: 복구 기록, best record, runbook completion, residual risk, next
+- failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
 
 구조:
 

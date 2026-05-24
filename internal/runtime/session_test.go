@@ -69,6 +69,50 @@ func TestSessionSucceedsWhenCommandGoalMatches(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyColon, "w", "q", vimengine.KeyEnter})
 }
 
+func TestSessionFailsWhenDiscardGoalReceivesWriteQuit(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "discard",
+		Initial: vimengine.NewState([]string{"draft"}),
+		Goal: Goal{
+			Command: CommandGoal(":q!"),
+		},
+	})
+
+	session.ApplyKey(vimengine.KeyColon)
+	session.ApplyKey("w")
+	session.ApplyKey("q")
+	result := session.ApplyKey(vimengine.KeyEnter)
+
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status = %q, want failed", result.State.Status)
+	}
+	if result.State.Message != ":wq가 아니라 :q!로 버리고 나가세요." {
+		t.Fatalf("message = %q, want discard command mismatch feedback", result.State.Message)
+	}
+}
+
+func TestSessionFailsWhenWriteGoalReceivesDiscardQuit(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "write",
+		Initial: vimengine.NewState([]string{"draft"}),
+		Goal: Goal{
+			Command: CommandGoal(":wq"),
+		},
+	})
+
+	session.ApplyKey(vimengine.KeyColon)
+	session.ApplyKey("q")
+	session.ApplyKey("!")
+	result := session.ApplyKey(vimengine.KeyEnter)
+
+	if result.State.Status != StatusFailed {
+		t.Fatalf("status = %q, want failed", result.State.Status)
+	}
+	if result.State.Message != ":q!가 아니라 :wq로 저장 후 나가세요." {
+		t.Fatalf("message = %q, want write command mismatch feedback", result.State.Message)
+	}
+}
+
 func TestSessionReplaysLiteralSearchTrace(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "search-timeout",

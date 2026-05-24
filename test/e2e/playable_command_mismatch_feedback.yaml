@@ -1,6 +1,6 @@
-id: playable_command_quit
+id: playable_command_mismatch_feedback
 command: ["go", "run", "."]
-timeout_ms: 20000
+timeout_ms: 15000
 terminal:
   width: 100
   height: 30
@@ -10,44 +10,41 @@ setup:
 steps:
   - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
   - send: ":"
-  - wait_screen_contains: "Keys: type command"
-  - wait_ms: 100
+  - wait_screen_contains: "COMMAND CHANNEL"
+  - send: "w"
+  - wait_ms: 30
   - send: "q"
-  - wait_ms: 50
-  - send: "!"
-  - wait_ms: 50
+  - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: ":q!는 저장하지 않는다는 판단"
+  - wait_screen_contains: "RECOVERY REQUIRED"
   - send: "q"
 assert:
   screen_contains:
-    - "Tutorial 1: Vim 생존 키트"
-    - "Exercise: 2/3"
-    - "Command: :q!"
-    - ":q!는 저장하지 않는다는 판단"
+    - "RECOVERY REQUIRED"
+    - "Retry: r or enter"
   exit_code: 0
   progress_file_exists: true
-  progress_file_contains:
-    - "\"survival-save-quit-002\""
   key_trace:
     - ":"
+    - "w"
     - "q"
-    - "!"
     - "enter"
     - "q"
   app_state:
-    buffer: ["throwaway draft"]
-    cursor:
-      row: 0
-      col: 0
     mode: "normal"
-    command: ":q!"
-    status: "succeeded"
+    status: "failed"
     progress:
       mission_id: "survival-save-quit-002"
-      completed: true
+      completed: false
+    ui:
+      focus_panel:
+        kind: "failure"
+        title: "RECOVERY REQUIRED"
+    contains:
+      command_mismatch: ":wq가 아니라 :q!"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
+  save_screen_final: true
   save_key_trace: true
   save_summary: true

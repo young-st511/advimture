@@ -524,12 +524,28 @@ func waitForScreen(mu *sync.Mutex, raw *bytes.Buffer, want string, deadline time
 			offset = 0
 		}
 		clean := cleanTerminal(snapshot[offset:])
-		if strings.Contains(clean, want) {
+		if screenContains(clean, want) {
 			return len(snapshot), nil
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
 	return offset, fmt.Errorf("timed out waiting for screen to contain %q", want)
+}
+
+func screenContains(screen string, want string) bool {
+	return strings.Contains(screen, want) || strings.Contains(normalizeScreenText(screen), normalizeScreenText(want))
+}
+
+func normalizeScreenText(text string) string {
+	text = strings.Map(func(r rune) rune {
+		switch r {
+		case '│', '┌', '┐', '└', '┘', '─':
+			return ' '
+		default:
+			return r
+		}
+	}, text)
+	return strings.Join(strings.Fields(text), " ")
 }
 
 func waitWithTimeout(cmd *exec.Cmd, timeout time.Duration) error {
@@ -548,7 +564,7 @@ func waitWithTimeout(cmd *exec.Cmd, timeout time.Duration) error {
 
 func assertScenario(sc scenario, result runResult) error {
 	for _, want := range sc.Assert.ScreenContains {
-		if !strings.Contains(result.clean, want) {
+		if !screenContains(result.clean, want) {
 			return fmt.Errorf("screen does not contain %q", want)
 		}
 	}

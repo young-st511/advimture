@@ -11,7 +11,7 @@ steps:
   - send: "w"
   - wait_screen_contains: "Retry: r or enter"
   - send: "enter"
-  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - wait_screen_contains: "Inputs left: 2/2"
   - send: "l"
   - wait_ms: 50
   - send: "l"

@@ -110,6 +110,110 @@ func TestRenderShrinksFocusPanelForNarrowWidth(t *testing.T) {
 	}
 }
 
+func TestRenderFocusPanelOverlayDoesNotMoveConsoleWhenHeightIsKnown(t *testing.T) {
+	base := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "커서 위치 맞추기",
+		Message:     "목표까지 이동하세요.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "running",
+	})
+	withOverlay := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "커서 위치 맞추기",
+		Message:     "목표까지 이동하세요.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "failure",
+			Title: "RECOVERY REQUIRED",
+			Lines: []string{
+				"실패 원인입니다.",
+				"Inputs left: 1/2",
+				"Attempts: 1/unlimited",
+				"Retry: r or enter",
+			},
+		},
+	})
+
+	if lineIndex(base, "RUNBOOK CONSOLE") != lineIndex(withOverlay, "RUNBOOK CONSOLE") {
+		t.Fatalf("base = %q\nwithOverlay = %q\nwant console line unchanged", base, withOverlay)
+	}
+}
+
+func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T) {
+	base := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "되돌아온 커서 정렬",
+		Message:     "표시 지점을 오른쪽으로 지나쳤습니다.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "succeeded",
+	})
+	view := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "되돌아온 커서 정렬",
+		Message:     "표시 지점을 오른쪽으로 지나쳤습니다.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "succeeded",
+		FocusPanel: &FocusPanel{
+			Kind:  "success",
+			Title: "STEP SEALED",
+			Lines: []string{
+				"좋습니다. h는 오른쪽으로 지나쳤을 때 커서를 왼쪽으로 되돌리는 기본 이동입니다.",
+				"복구 기록: grade S, 2 keys",
+				"최단 복구 기록: grade S, 2 keys",
+				"Runbook: 3/4 복구 완료",
+				"잔류 리스크: 위쪽 로그 줄로 복귀하기: 미복구",
+				"오늘의 복구 루트: 3건 대기",
+				"Next: enter",
+			},
+		},
+	})
+
+	if !strings.Contains(view, "Next: enter") {
+		t.Fatalf("Render output = %q, want action line preserved", view)
+	}
+	if lineIndex(view, "RUNBOOK CONSOLE") != lineIndex(base, "RUNBOOK CONSOLE") {
+		t.Fatalf("Render output = %q, want fixed console line", view)
+	}
+}
+
+func TestRenderFocusPanelOverlayPrioritizesRetryOverQuitWhenFailureOverflows(t *testing.T) {
+	view := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "금지 입력 복구",
+		Message:     "한 글자씩 가면 늦습니다.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "failed",
+		FocusPanel: &FocusPanel{
+			Kind:  "failure",
+			Title: "RECOVERY REQUIRED",
+			Lines: []string{
+				"한 글자씩 가면 늦습니다. 다음 단어의 시작으로 이동하는 motion을 사용하세요. 이 입력은 이번 문항에서 사용할 수 없습니다.",
+				"Inputs left: 0/2",
+				"Attempts: 1/unlimited",
+				"Coach: 훈련 키 w",
+				"Retry: r or enter",
+				"?: hint  q: quit",
+			},
+		},
+	})
+
+	if !strings.Contains(view, "Retry: r or enter") {
+		t.Fatalf("Render output = %q, want retry action preserved", view)
+	}
+}
+
 func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 	view := Render(Screen{
 		PlaylistTitle: "Tutorial 0",
@@ -144,4 +248,13 @@ func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 	if !strings.Contains(view, "ADVIMTURE | Tutorial 0 | Exercise: 1/4 | Status: running") {
 		t.Fatalf("Render output = %q, want compact header", view)
 	}
+}
+
+func lineIndex(text string, needle string) int {
+	for i, line := range strings.Split(text, "\n") {
+		if strings.Contains(line, needle) {
+			return i
+		}
+	}
+	return -1
 }
