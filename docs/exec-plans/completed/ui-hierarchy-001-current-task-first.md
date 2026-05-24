@@ -22,7 +22,7 @@ Allowed-Paths:
 
 - Header를 `ADVIMTURE | <playlist> | Exercise: n/m | Status: <status>`로 압축했다.
 - 현재 exercise title/message를 review/daily route보다 먼저 렌더링한다.
-- review/daily route는 `OPS` 영역으로 낮췄다.
+- review/daily route는 `복구 현황` 영역으로 낮췄다.
 - buffer는 `RUNBOOK CONSOLE` 영역 아래에 모았다.
 - 기존 `Exercise:`, `Mode:`, `Status:`, review/daily 문구는 화면에서 계속 찾을 수 있게 유지했다.
 

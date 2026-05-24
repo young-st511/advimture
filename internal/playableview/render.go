@@ -55,7 +55,7 @@ func Render(screen Screen) string {
 	b.WriteString(screen.Title + "\n")
 	b.WriteString(screen.Message + "\n\n")
 	if screen.ReviewSummary != "" || screen.DailyRoute != "" {
-		b.WriteString("OPS\n")
+		b.WriteString("복구 현황\n")
 		if screen.ReviewSummary != "" {
 			b.WriteString(screen.ReviewSummary + "\n")
 		}

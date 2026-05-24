@@ -75,7 +75,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 
 위치:
 
-- 기본 위치는 Briefing/OPS 아래, `RUNBOOK CONSOLE` 위다.
+- 기본 위치는 Briefing/복구 현황 아래, `RUNBOOK CONSOLE` 위다.
 - 하단 보조 안내보다 현재 조작 표면에 가까워야 한다.
 - terminal width가 알려진 경우 horizontal center 정렬을 사용한다.
 - 좁은 화면에서는 panel width가 terminal width를 넘지 않도록 줄어든다.

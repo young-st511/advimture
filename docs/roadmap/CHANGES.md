@@ -36,7 +36,7 @@
 
 이전 가정: 화면 상단은 playlist, review queue, daily route, 현재 문항을 순서대로 보여줬고, 현재 목표보다 메타 정보가 먼저 읽힐 수 있었다.
 
-새 가정: 화면은 current task first다. Header는 위치와 진행 상태를 압축하고, title/briefing을 바로 보여준 뒤 review/daily route는 `OPS` 보조 영역으로 낮춘다.
+새 가정: 화면은 current task first다. Header는 위치와 진행 상태를 압축하고, title/briefing을 바로 보여준 뒤 review/daily route는 `복구 현황` 보조 영역으로 낮춘다.
 
 이유: Vim 학습 게임에서 플레이어가 가장 먼저 알아야 하는 정보는 "지금 무엇을 조작해야 하는가"이며, 반복 학습 동기는 그 다음이어야 한다.
 

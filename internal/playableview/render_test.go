@@ -237,7 +237,13 @@ func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
 	bufferIndex := strings.Index(view, "> [a]bc")
 	if titleIndex == -1 || reviewIndex == -1 || consoleIndex == -1 || bufferIndex == -1 {
-		t.Fatalf("Render output = %q, want current task, ops, and console sections", view)
+		t.Fatalf("Render output = %q, want current task, recovery status, and console sections", view)
+	}
+	if !strings.Contains(view, "복구 현황") {
+		t.Fatalf("Render output = %q, want recovery status section label", view)
+	}
+	if strings.Contains(view, "OPS") {
+		t.Fatalf("Render output = %q, should not expose OPS label", view)
 	}
 	if titleIndex > reviewIndex {
 		t.Fatalf("Render output = %q, want current task before ops summary", view)

@@ -32,7 +32,7 @@ Allowed-Paths:
 - 포함:
   - `playableview.Screen`에 structured focus panel 모델 추가
   - `internal/playable`에서 tutorial/incident/failure/success/mode별 focus panel intent 생성
-  - focus panel을 briefing/OPS 아래, `RUNBOOK CONSOLE` 위에 렌더링
+  - focus panel을 briefing/복구 현황 아래, `RUNBOOK CONSOLE` 위에 렌더링
   - `e2estate.State`와 E2E runner에 `ui.focus_panel` assertion 추가
   - 대표 E2E fixture로 tutorial/failure/incident focus panel 검증
   - 관련 gameplay/verification 문서 동기화
