@@ -10,12 +10,16 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PROGRESS-V2-DECISION-001. Progress Schema v2 Decision
-- 상태: active
-- ExecPlan: `docs/exec-plans/active/progress-v2-decision-001.md`
-- 목표: no-schema loop evidence를 바탕으로 progress schema v2 승인/보류를 결정한다.
+### 다음 슬라이스 미정
+- 상태: pending
+- 목표: Foundation Product Loop 완료 후 다음 중기 플랜을 선택한다.
 
 ## 방금 완료한 슬라이스
+
+### PROGRESS-V2-DECISION-001. Progress Schema v2 Decision
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/progress-v2-decision-001.md`
+- 완료일: 2026-05-25
 
 ### DAILY-ROUTE-001. No-Schema Daily Loop
 - 상태: completed
