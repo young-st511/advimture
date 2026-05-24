@@ -63,6 +63,37 @@ func TestCandidateSummaryExplainsReason(t *testing.T) {
 	}
 }
 
+func TestCandidateDailyRouteLabelIncludesReason(t *testing.T) {
+	tests := []struct {
+		name string
+		in   Candidate
+		want string
+	}{
+		{
+			name: "incomplete",
+			in:   Candidate{Title: "목표 문자까지 이동하기", Reason: ReasonIncomplete},
+			want: "목표 문자까지 이동하기(미복구)",
+		},
+		{
+			name: "low grade",
+			in:   Candidate{Title: "목표 문자까지 이동하기", Reason: ReasonLowGrade, BestGrade: "B"},
+			want: "목표 문자까지 이동하기(등급 B)",
+		},
+		{
+			name: "key count",
+			in:   Candidate{Title: "다음 timeout 찾기", Reason: ReasonKeyCount, BestKeystrokes: 12, OptimalKeys: 10},
+			want: "다음 timeout 찾기(12/10 keys)",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := tt.in.DailyRouteLabel(); got != tt.want {
+				t.Fatalf("DailyRouteLabel() = %q, want %q", got, tt.want)
+			}
+		})
+	}
+}
+
 func loadLibrary(t *testing.T) content.Library {
 	t.Helper()
 	lib, err := content.LoadLibrary(filepath.Join("..", "..", "content"))

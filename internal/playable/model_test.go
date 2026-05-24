@@ -31,7 +31,7 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "재점검 대상: 목표 문자까지 이동하기: 미복구") {
 		t.Fatalf("view = %q, want review queue", model.View())
 	}
-	if !strings.Contains(model.View(), "오늘의 복구 루트: 3건 대기") {
+	if !strings.Contains(model.View(), "오늘의 복구 루트: 목표 문자까지 이동하기(미복구) 외 2건 대기") {
 		t.Fatalf("view = %q, want daily route", model.View())
 	}
 	if model.State().Review.QueueCount != 3 || model.State().Review.PrimaryExerciseID != "normal-motion-basic-001" {
@@ -178,7 +178,7 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 	if !strings.Contains(view, "잔류 리스크: 경고 지점으로 이동하기: 미복구") {
 		t.Fatalf("view = %q, want residual risk recommendation", view)
 	}
-	if !strings.Contains(view, "오늘의 복구 루트: 3건 대기") {
+	if !strings.Contains(view, "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
 		t.Fatalf("view = %q, want daily route after success", view)
 	}
 }

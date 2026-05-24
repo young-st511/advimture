@@ -79,6 +79,23 @@ func (c Candidate) Summary() string {
 	}
 }
 
+func (c Candidate) DailyRouteLabel() string {
+	switch c.Reason {
+	case ReasonIncomplete:
+		return fmt.Sprintf("%s(미복구)", c.Title)
+	case ReasonLowGrade:
+		grade := c.BestGrade
+		if grade == "" {
+			grade = "-"
+		}
+		return fmt.Sprintf("%s(등급 %s)", c.Title, grade)
+	case ReasonKeyCount:
+		return fmt.Sprintf("%s(%d/%d keys)", c.Title, c.BestKeystrokes, c.OptimalKeys)
+	default:
+		return c.Title
+	}
+}
+
 func orderedExerciseIDs(library content.Library, preferred []string) []string {
 	seen := make(map[string]bool)
 	ids := make([]string, 0, len(library.Exercises))

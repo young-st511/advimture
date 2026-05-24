@@ -2,7 +2,8 @@
 
 Slice-ID: DAILY-ROUTE-001
 Created: 2026-05-25
-Status: active
+Status: completed
+Completed: 2026-05-25
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -41,17 +42,31 @@ progress v1 저장 포맷을 바꾸지 않고, 이미 있는 review queue와 con
 
 ## Step 1: Current Contract Review
 
-- [ ] review queue/daily route 현재 구현 확인
-- [ ] app_state summary assertion 확인
+- [x] review queue/daily route 현재 구현 확인
+- [x] app_state summary assertion 확인
 
 ## Step 2: No-Schema Implementation
 
-- [ ] daily route copy/summary 개선
-- [ ] unit test 갱신
-- [ ] focused E2E 갱신 또는 추가
+- [x] daily route copy/summary 개선
+- [x] unit test 갱신
+- [x] focused E2E 갱신 또는 추가
 
 ## Step 3: Verification
 
-- [ ] focused E2E
-- [ ] `go test ./...`
-- [ ] `git diff --check`
+- [x] focused E2E
+- [x] `go test ./...`
+- [x] `git diff --check`
+
+## 결정
+
+- progress v1 저장 구조는 그대로 둔다.
+- daily route 문구는 queue count만 보여주지 않고 primary candidate의 title과 reason을 함께 보여준다.
+- review candidate의 daily label은 `미복구`, `등급 <grade>`, `<best>/<optimal> keys`로 축약한다.
+
+## 검증 결과
+
+- `go test ./internal/review ./internal/playable ./internal/playableview ./cmd/e2e-runner`
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_review_queue.yaml`
+- `go test ./...`
+- `make e2e-playable`
+- `git diff --check`

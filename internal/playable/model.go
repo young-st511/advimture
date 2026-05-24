@@ -316,7 +316,11 @@ func (m Model) dailyRouteSummary() string {
 	if len(m.reviewQueue) == 0 {
 		return ""
 	}
-	return fmt.Sprintf("오늘의 복구 루트: %d건 대기", len(m.reviewQueue))
+	primary := m.reviewQueue[0].DailyRouteLabel()
+	if len(m.reviewQueue) == 1 {
+		return "오늘의 복구 루트: " + primary
+	}
+	return fmt.Sprintf("오늘의 복구 루트: %s 외 %d건 대기", primary, len(m.reviewQueue)-1)
 }
 
 func (m Model) residualRiskSummary() string {

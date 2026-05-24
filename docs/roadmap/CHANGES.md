@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-25 — Daily route를 primary 복구 대상으로 구체화
+
+이전 가정: 저장 포맷 변경 전에는 review queue 개수만 읽어 `오늘의 복구 루트: N건 대기`로 표시한다.
+
+새 가정: 저장 포맷은 그대로 두되, review queue의 primary 대상과 이유를 함께 읽어 `오늘의 복구 루트: 목표 문자까지 이동하기(미복구) 외 2건 대기`처럼 표시한다.
+
+이유: 단순 개수는 반복 학습 동기를 만들기 약하므로, 플레이어가 오늘 무엇부터 복구해야 하는지 즉시 알아야 한다.
+
+영향: progress v2 없이도 daily loop는 더 선명해졌고, mastery/due date 저장 여부는 `PROGRESS-V2-DECISION-001`에서 별도 판단한다.
+
 ## 2026-05-23 — BUGFIX-REQUIRED-KEY-ROUTE 완료
 
 이전 가정: 목표 상태에 도달했을 때 required key가 없으면 즉시 실패하는 방식으로 우회를 막을 수 있었다.

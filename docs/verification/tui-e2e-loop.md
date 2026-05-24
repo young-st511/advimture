@@ -139,7 +139,7 @@ assert:
       queue_count: 3
       primary_exercise_id: normal-motion-basic-002
       primary_reason: incomplete
-      daily_route: "오늘의 복구 루트: 3건 대기"
+      daily_route: "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기"
     ui:
       focus_panel:
         kind: "success"

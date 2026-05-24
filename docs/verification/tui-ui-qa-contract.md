@@ -20,7 +20,7 @@ assert:
       queue_count: 3
       primary_exercise_id: normal-motion-basic-002
       primary_reason: incomplete
-      daily_route: "오늘의 복구 루트: 3건 대기"
+      daily_route: "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기"
 ```
 
 문자열 `contains`는 fallback으로만 사용한다. 새 UI가 review 문구를 다른 위치로 옮겨도 `review` state가 유지되면 테스트는 안정적으로 통과해야 한다.
