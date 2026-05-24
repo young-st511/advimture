@@ -1,0 +1,15 @@
+playlists:
+  - id: incident-005-command-choice
+    status: approved
+    category: incident
+    order: 5
+    title: "릴레이 기지 005: 복구 범위 판별"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-005-001
+        role: choose_linewise_scope
+        command_cluster: visual-line-basic
+        exercise_id: command-choice-scope-001
+        scenario_id: command-choice-scope-001-scenario
+        engine_support: implemented

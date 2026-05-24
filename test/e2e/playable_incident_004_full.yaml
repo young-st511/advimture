@@ -86,13 +86,14 @@ steps:
   - send: "g"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Playlist complete"
+  - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 004: config block 복구"
     - "Exercise: 5/5"
-    - "Playlist complete"
+    - "Next tutorial: enter"
+    - "잔류 리스크: 복구 범위 판별: 미복구"
     - "좋습니다. 남은 hold 상태를 전체 범위에서 live로 승격해 config block 복구 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true

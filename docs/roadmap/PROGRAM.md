@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### CHOICE-PLAY-001. Command Choice Drill Playable
+### DAILY-ROUTE-001. No-Schema Daily Loop
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/choice-play-001-command-choice-playable.md`
-- 목표: docs-only command-choice drill을 첫 playable content와 E2E로 승격한다.
+- ExecPlan: `docs/exec-plans/active/daily-route-001-no-schema-daily-loop.md`
+- 목표: progress v1 저장 포맷 변경 없이 daily/review 반복 동기를 강화한다.
 
 ## 방금 완료한 슬라이스
+
+### CHOICE-PLAY-001. Command Choice Drill Playable
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/choice-play-001-command-choice-playable.md`
+- 완료일: 2026-05-25
 
 ### UI-PLAYTEST-001. HUD Usability Pass
 - 상태: completed

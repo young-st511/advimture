@@ -1,0 +1,50 @@
+id: playable_command_choice_scope
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: command-choice-scope-001
+steps:
+  - wait_screen_contains: "릴레이 기지 005: 복구 범위 판별"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 1,14"
+  - send: "j"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
+  - send: "d"
+  - wait_screen_contains: "RUNBOOK SEALED"
+  - send: "q"
+assert:
+  screen_contains:
+    - "릴레이 기지 005: 복구 범위 판별"
+    - "단어/quote 값에 손대지 않고 quarantine 줄 묶음 전체를 선택해 격리했습니다."
+    - "Playlist complete"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"command-choice-scope-001\""
+  key_trace:
+    - "V"
+    - "j"
+    - "d"
+    - "q"
+  app_state:
+    buffer: ["route=\"safe\"", "route=\"safe\""]
+    cursor:
+      row: 1
+      col: 0
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "command-choice-scope-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true
