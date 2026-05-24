@@ -48,7 +48,20 @@ var actionPanelStyle = lipgloss.NewStyle().
 	Padding(0, 1).
 	Width(58)
 
+var floatingModalStyle = lipgloss.NewStyle().
+	Border(lipgloss.RoundedBorder()).
+	BorderForeground(lipgloss.Color("63")).
+	Padding(0, 1).
+	Width(58)
+
 func Render(screen Screen) string {
+	if screen.Width > 0 && screen.Height > 0 {
+		return renderHUD(screen)
+	}
+	return renderLegacy(screen)
+}
+
+func renderLegacy(screen Screen) string {
 	var b strings.Builder
 	b.WriteString(renderHeader(screen))
 	b.WriteString("\n\n")
@@ -99,6 +112,74 @@ func Render(screen Screen) string {
 	return b.String()
 }
 
+func renderHUD(screen Screen) string {
+	var b strings.Builder
+	b.WriteString(renderHeader(screen))
+	b.WriteString("\n\n")
+	b.WriteString("MISSION\n")
+	b.WriteString(screen.Title + "\n")
+	b.WriteString(screen.Message + "\n")
+	if status := recoveryStatusLine(screen); status != "" {
+		b.WriteString("복구 현황: " + status + "\n")
+	}
+	if cue := renderMissionCue(screen.FocusPanel); cue != "" {
+		b.WriteString(cue)
+	}
+	b.WriteString("\n")
+	b.WriteString("RUNBOOK CONSOLE\n")
+	for row, line := range screen.BufferLines {
+		b.WriteString(RenderLine(line, row, screen.CursorRow, screen.CursorCol, screen.Selection))
+		b.WriteString("\n")
+	}
+	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
+		b.WriteString("\n")
+		b.WriteString(RenderFloatingModal(*screen.FocusPanel, screen.Width))
+		b.WriteString("\n")
+	}
+	b.WriteString("\n")
+	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", screen.Mode, screen.Status, screen.CursorRow, screen.CursorCol))
+	if screen.Selection != nil && screen.Selection.Active {
+		b.WriteString(fmt.Sprintf("Selection: %s %d,%d -> %d,%d\n", screen.Selection.Kind, screen.Selection.Start.Row, screen.Selection.Start.Col, screen.Selection.End.Row, screen.Selection.End.Col))
+	}
+	if screen.ExerciseTotal > 0 {
+		b.WriteString(fmt.Sprintf("Exercise: %d/%d\n", screen.ExerciseIndex+1, screen.ExerciseTotal))
+	}
+	if screen.Grade != "" {
+		b.WriteString(fmt.Sprintf("Grade: %s\n", screen.Grade))
+	}
+	b.WriteString("\n")
+	if screen.ShowCommandLine {
+		b.WriteString(screen.CommandPrompt + screen.CommandLine + "\n\n")
+	}
+	if screen.ShowLastCommand && screen.LastCommand != "" {
+		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
+	}
+	return b.String()
+}
+
+func recoveryStatusLine(screen Screen) string {
+	parts := []string{}
+	if screen.ReviewSummary != "" {
+		parts = append(parts, screen.ReviewSummary)
+	}
+	if screen.DailyRoute != "" {
+		parts = append(parts, screen.DailyRoute)
+	}
+	return strings.Join(parts, " · ")
+}
+
+func renderMissionCue(panel *FocusPanel) string {
+	if panel == nil || isFloatingPanel(*panel) {
+		return ""
+	}
+	lines := append([]string{panel.Title}, panel.Lines...)
+	return strings.Join(lines, " · ") + "\n"
+}
+
+func isFloatingPanel(panel FocusPanel) bool {
+	return panel.Kind == "failure" || panel.Kind == "success"
+}
+
 func renderHeader(screen Screen) string {
 	parts := []string{"ADVIMTURE"}
 	if screen.PlaylistTitle != "" {
@@ -128,6 +209,76 @@ func RenderFocusPanel(panel FocusPanel, screenWidth int) string {
 		return rendered
 	}
 	return lipgloss.PlaceHorizontal(screenWidth, lipgloss.Center, rendered)
+}
+
+func RenderFloatingModal(panel FocusPanel, screenWidth int) string {
+	lines := floatingModalLines(panel)
+	panelWidth := focusPanelWidth(screenWidth)
+	rendered := floatingModalStyle.Width(panelWidth).Render(strings.Join(lines, "\n"))
+	renderedLines := strings.Split(rendered, "\n")
+	renderedLines = fitFocusPanelLines(renderedLines, 12)
+	rendered = strings.Join(renderedLines, "\n")
+	if screenWidth <= 0 || screenWidth <= panelWidth {
+		return rendered
+	}
+	return lipgloss.PlaceHorizontal(screenWidth, lipgloss.Center, rendered)
+}
+
+func floatingModalLines(panel FocusPanel) []string {
+	lines := []string{floatingModalTitle(panel), panel.Title}
+	switch panel.Kind {
+	case "failure":
+		return append(lines, failureModalLines(panel.Lines)...)
+	case "success":
+		return append(lines, successModalLines(panel.Lines)...)
+	default:
+		return append(lines, panel.Lines...)
+	}
+}
+
+func floatingModalTitle(panel FocusPanel) string {
+	switch panel.Kind {
+	case "failure":
+		return "RECOVERY CHECK"
+	case "success":
+		return "RUNBOOK SEALED"
+	default:
+		return panel.Title
+	}
+}
+
+func failureModalLines(lines []string) []string {
+	out := []string{}
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
+		switch {
+		case i == 0:
+			out = append(out, "Mistake  "+line)
+		case strings.HasPrefix(line, "Inputs left:") && i+1 < len(lines) && strings.HasPrefix(lines[i+1], "Attempts:"):
+			out = append(out, line+" · "+lines[i+1])
+			i++
+		case strings.HasPrefix(line, "Coach:") || strings.HasPrefix(line, "복구 힌트:"):
+			out = append(out, "Next     "+line)
+		default:
+			out = append(out, line)
+		}
+	}
+	return out
+}
+
+func successModalLines(lines []string) []string {
+	out := []string{}
+	for i, line := range lines {
+		switch {
+		case i == 0:
+			out = append(out, "Learned  "+line)
+		case strings.HasPrefix(line, "복구 기록:"):
+			out = append(out, "Result   "+line)
+		default:
+			out = append(out, line)
+		}
+	}
+	return out
 }
 
 func RenderFocusLayer(panel *FocusPanel, screenWidth int) string {

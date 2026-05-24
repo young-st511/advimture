@@ -17,6 +17,11 @@ Phase: Vim Learning Foundation
 
 ## 방금 완료한 슬라이스
 
+### UI-HUD-003. Mission HUD + Floating Feedback Modal
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-hud-003-mission-console-modal.md`
+- 완료일: 2026-05-24
+
 ### UI-MODAL-002. Overlay Feedback Modal
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/ui-modal-002-overlay-feedback.md`

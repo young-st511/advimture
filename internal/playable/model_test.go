@@ -57,13 +57,14 @@ func TestPlayablePassesWindowSizeToRenderer(t *testing.T) {
 	model, _ = updateWithWindowSize(t, model, 100, 30)
 
 	view := model.View()
-	borderIndex := strings.Index(view, "┌")
-	if borderIndex == -1 {
-		t.Fatalf("view = %q, want focus panel border", view)
+	if !strings.Contains(view, "MISSION") || !strings.Contains(view, "RUNBOOK CONSOLE") {
+		t.Fatalf("view = %q, want mission HUD and console after window size", view)
 	}
-	lineStart := strings.LastIndex(view[:borderIndex], "\n") + 1
-	if borderIndex-lineStart == 0 {
-		t.Fatalf("view = %q, want centered focus panel after window size", view)
+	if strings.Contains(view, "\n복구 현황\n") {
+		t.Fatalf("view = %q, should fold recovery status into mission HUD", view)
+	}
+	if !strings.Contains(view, "복구 현황: 재점검 대상:") {
+		t.Fatalf("view = %q, want recovery status in mission HUD", view)
 	}
 }
 

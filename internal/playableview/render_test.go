@@ -145,6 +145,81 @@ func TestRenderFocusPanelOverlayDoesNotMoveConsoleWhenHeightIsKnown(t *testing.T
 	}
 }
 
+func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
+	view := Render(Screen{
+		Width:         100,
+		Height:        30,
+		PlaylistTitle: "Tutorial 2",
+		ReviewSummary: "재점검 대상: 단어 시작점으로 뛰어가기: 미복구",
+		DailyRoute:    "오늘의 복구 루트: 3건 대기",
+		Title:         "서비스 이름 찾기",
+		Message:       "backend로 바로 이동하세요.",
+		BufferLines:   []string{"service api backend enabled"},
+		Mode:          "normal",
+		Status:        "running",
+		ExerciseTotal: 7,
+		FocusPanel: &FocusPanel{
+			Kind:  "training",
+			Title: "TRAINING BRIEF",
+			Lines: []string{"Coach: 훈련 키 w", "?: hint  q: quit"},
+		},
+	})
+
+	missionIndex := strings.Index(view, "MISSION")
+	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
+	bufferIndex := strings.Index(view, "> [s]ervice")
+	if missionIndex == -1 || consoleIndex == -1 || bufferIndex == -1 {
+		t.Fatalf("Render output = %q, want mission HUD and console", view)
+	}
+	if missionIndex > consoleIndex || consoleIndex > bufferIndex {
+		t.Fatalf("Render output = %q, want mission -> console -> buffer order", view)
+	}
+	if strings.Contains(view, "\n복구 현황\n") {
+		t.Fatalf("Render output = %q, should not render recovery status as a large pre-console section", view)
+	}
+	if !strings.Contains(view, "복구 현황: 재점검 대상: 단어 시작점으로 뛰어가기: 미복구") {
+		t.Fatalf("Render output = %q, want recovery status folded into mission HUD", view)
+	}
+}
+
+func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {
+	view := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "서비스 이름 찾기",
+		Message:     "backend로 바로 이동하세요.",
+		BufferLines: []string{"service api backend enabled"},
+		Mode:        "normal",
+		Status:      "failed",
+		FocusPanel: &FocusPanel{
+			Kind:  "failure",
+			Title: "RECOVERY REQUIRED",
+			Lines: []string{
+				"한 글자씩 가면 늦습니다. 다음 단어의 시작으로 이동하는 motion을 사용하세요.",
+				"Inputs left: 1/2",
+				"Attempts: 1/unlimited",
+				"Coach: 훈련 키 w",
+				"Retry: r or enter",
+			},
+		},
+	})
+
+	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
+	bufferIndex := strings.Index(view, "> [s]ervice")
+	modalIndex := strings.Index(view, "RECOVERY CHECK")
+	if consoleIndex == -1 || bufferIndex == -1 || modalIndex == -1 {
+		t.Fatalf("Render output = %q, want console buffer and floating modal", view)
+	}
+	if !(consoleIndex < bufferIndex && bufferIndex < modalIndex) {
+		t.Fatalf("Render output = %q, want floating modal after buffer inside console core", view)
+	}
+	for _, want := range []string{"RECOVERY REQUIRED", "Mistake", "Next", "Coach: 훈련 키 w", "Retry: r or enter"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+}
+
 func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T) {
 	base := Render(Screen{
 		Width:       100,

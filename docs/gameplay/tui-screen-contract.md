@@ -69,25 +69,26 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - status line은 한 줄을 기본으로 한다.
 - `Mode:`, `Status:` 같은 개발식 label은 장기적으로 `NORMAL | running | cursor 0,2` 형태로 줄인다.
 
-### 5. FocusPanel / Debrief Panel
+### 5. FocusPanel / Floating Feedback Modal
 
 역할: 다음 행동을 명확히 안내한다.
 
 위치:
 
-- 기본 위치는 Briefing/복구 현황 아래, `RUNBOOK CONSOLE` 위다.
-- 하단 보조 안내보다 현재 조작 표면에 가까워야 한다.
-- terminal width가 알려진 경우 horizontal center 정렬을 사용한다.
-- 좁은 화면에서는 panel width가 terminal width를 넘지 않도록 줄어든다.
-- terminal height가 알려진 경우 고정 modal layer를 사용해 panel line count가 console 위치를 밀지 않게 한다.
+- terminal size가 있는 화면은 `MISSION` HUD → `RUNBOOK CONSOLE` → status line 순서를 따른다.
+- running/mode-specific 안내는 `MISSION` HUD 안의 짧은 cue line으로 접는다.
+- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 안에서 floating modal로 표시한다.
+- floating modal은 terminal width가 알려진 경우 horizontal center 정렬을 사용한다.
+- 좁은 화면에서는 modal width가 terminal width를 넘지 않도록 줄어든다.
+- failed/succeeded modal은 console label과 buffer 위치를 밀지 않는다.
 
 상태별 규칙:
 
-- running tutorial: 훈련 키, hint, quit
-- running incident: 판단 cue, hint, quit
+- running tutorial: `MISSION` HUD cue line에 훈련 키, hint, quit
+- running incident: `MISSION` HUD cue line에 판단 cue, hint, quit
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
-- failed: 실패 이유, 남은 입력, attempts, retry
-- succeeded: 복구 기록, best record, runbook completion, residual risk, next
+- failed: floating modal에 실패 이유, 남은 입력, attempts, retry
+- succeeded: floating modal에 복구 기록, best record, runbook completion, residual risk, next
 - failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
 
 구조:
@@ -95,10 +96,12 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - `kind`: `training`, `incident`, `failure`, `success`, `mode`
 - `title`: `TRAINING BRIEF`, `OPERATOR JUDGMENT`, `RECOVERY REQUIRED`, `STEP SEALED`, `COMMAND CHANNEL` 등
 - `lines`: 사용자에게 보일 안내 문구
+- failed modal은 `RECOVERY CHECK`, success modal은 `RUNBOOK SEALED` heading으로 감싸되, app_state의 원래 focus panel kind/title/lines는 유지한다.
 
 금지:
 
 - 현재 목표보다 먼저 focus panel이 시선을 빼앗는 것
+- `복구 현황`이 별도 큰 pre-console section으로 console 접근을 늦추는 것
 - incident 첫 화면에서 모든 정답 key를 과하게 노출하는 것
 
 ## Tutorial과 Incident의 차이

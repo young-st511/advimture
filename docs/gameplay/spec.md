@@ -49,10 +49,14 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
-- 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 `RUNBOOK CONSOLE` 위의 structured `FocusPanel`로 표시한다.
+- terminal size가 있는 playable 화면은 `MISSION` HUD, `RUNBOOK CONSOLE`, status line 순서로 렌더링한다.
+- 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 structured `FocusPanel` 모델로 관리한다.
 - `FocusPanel`은 `kind`, `title`, `lines`를 가진다. tutorial running은 `training`/`TRAINING BRIEF`, incident running은 `incident`/`OPERATOR JUDGMENT`, failed는 `failure`/`RECOVERY REQUIRED`, succeeded는 `success`/`STEP SEALED`, mode-specific 안내는 `mode` kind를 사용한다.
-- `FocusPanel`은 `tea.WindowSizeMsg`로 전달된 terminal width가 있으면 화면 중앙에 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
-- `FocusPanel`은 terminal height가 있으면 고정 modal layer 안에서 렌더링해 상태별 안내 줄 수가 바뀌어도 `RUNBOOK CONSOLE` 위치를 밀지 않는다.
+- running/mode-specific `FocusPanel`은 `MISSION` HUD 안의 짧은 cue line으로 접어 현재 목표와 함께 보인다.
+- failed/succeeded `FocusPanel`은 `RUNBOOK CONSOLE` 안에서 Zellij floating pane처럼 보이는 modal로 렌더링한다.
+- floating modal은 `tea.WindowSizeMsg`로 전달된 terminal width가 있으면 화면 중앙에 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
+- floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action line(`Retry`, `Next`, `Next tutorial`)이 잘리지 않아야 한다.
+- `복구 현황`은 terminal size가 있는 화면에서 별도 큰 pre-console section이 아니라 `MISSION` HUD 내부의 보조 line으로 표시한다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시한다.
 - `?` hint 요청 결과는 `FocusPanel`에 `Hint: ...`로 표시하며, command/search/insert mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.
