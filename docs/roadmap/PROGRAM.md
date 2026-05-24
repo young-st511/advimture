@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### UI-EVIDENCE-001. Screen evidence timeline
-- 상태: completed
-- ExecPlan: `docs/exec-plans/completed/ui-evidence-001-screen-timeline.md`
-- 목표: TUI E2E가 screen timeline evidence를 남기도록 보강했다.
+### FTUE-001. First 5-Minute Route
+- 상태: active
+- ExecPlan: `docs/exec-plans/active/ftue-001-first-five-minute-route.md`
+- 목표: 처음 실행한 플레이어가 5분 안에 `이동 → 생존 → 빠른 이동 → 작은 수정`의 효용을 느끼는 canonical route를 고정한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAN-REFRESH-006. Foundation Milestone Health Check
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/plan-refresh-006-foundation-milestone.md`
+- 완료일: 2026-05-25
 
 ### UI-HUD-003. Mission HUD + Floating Feedback Modal
 - 상태: completed
