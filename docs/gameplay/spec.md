@@ -48,6 +48,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - playable은 approved/implemented playlist를 `category`, `order`, `id` 순서로 실행한다. `tutorial` category는 `incident` category보다 먼저 실행한다.
 - 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
+- 첫 5분 canonical route는 `docs/gameplay/first-five-minute-route.md`를 따른다. 현재 기준은 `tutorial-0-movement` 전체, `tutorial-1-survival` 전체, `tutorial-2-fast-navigation` 전체, `tutorial-3-small-edits` 첫 문항까지이며, 새 command/schema/progress 변경 없이 현재 playable route를 제품 첫 루프로 고정한다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
 - terminal size가 있는 playable 화면은 `MISSION` HUD, `RUNBOOK CONSOLE`, status line 순서로 렌더링한다.
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 structured `FocusPanel` 모델로 관리한다.
@@ -132,7 +133,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 
 ## 미확인 사항
 
-- [ ] 첫 5분 플레이 루프를 정의해야 한다.
+- [x] 첫 5분 플레이 루프를 정의해야 한다. 결정: `docs/gameplay/first-five-minute-route.md`의 FTUE-001 route를 따른다.
 - [x] CONTENT-001 loader가 읽을 실제 content file 경로를 정해야 한다. 결정: repo root `content/` 아래 YAML.
 - [x] Vim 핵심 영역 coverage rubric을 승인해야 한다. 결정: `docs/gameplay/vim-curriculum-map.md`의 Priority Bands와 Next Playpack Candidate를 따른다.
 - [x] 실패/힌트/등급 시스템이 학습 동기를 해치지 않는 기준을 정의해야 한다. 결정: 최대 입력 수/금지 입력은 즉시 실패, 초반 코칭은 개념 중심, 재시도는 무제한 기본.

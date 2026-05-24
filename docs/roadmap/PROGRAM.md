@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### FTUE-001. First 5-Minute Route
+### UI-PLAYTEST-001. HUD Usability Pass
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/ftue-001-first-five-minute-route.md`
-- 목표: 처음 실행한 플레이어가 5분 안에 `이동 → 생존 → 빠른 이동 → 작은 수정`의 효용을 느끼는 canonical route를 고정한다.
+- ExecPlan: `docs/exec-plans/active/ui-playtest-001-hud-usability-pass.md`
+- 목표: FTUE 대표 화면 evidence를 기준으로 Mission HUD와 floating modal의 읽기/흐름 문제를 점검하고 최소 polish를 닫는다.
 
 ## 방금 완료한 슬라이스
+
+### FTUE-001. First 5-Minute Route
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ftue-001-first-five-minute-route.md`
+- 완료일: 2026-05-25
 
 ### PLAN-REFRESH-006. Foundation Milestone Health Check
 - 상태: completed

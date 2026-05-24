@@ -2,15 +2,18 @@
 
 Slice-ID: FTUE-001
 Created: 2026-05-25
-Status: active
+Status: completed
+Completed: 2026-05-25
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
 - docs/roadmap/MIDTERM_TODO.md
 - docs/gameplay/spec.md
+- docs/gameplay/first-five-minute-route.md
 - docs/gameplay/tui-ux-direction.md
 - docs/verification/spec.md
 - docs/verification/tui-e2e-loop.md
+- Makefile
 - test/e2e/
 - artifacts/e2e/
 
@@ -47,26 +50,37 @@ Allowed-Paths:
 
 - 목표: 현재 첫 실행 흐름과 evidence를 확인한다.
 - 상세 작업:
-  - [ ] current playable playlist order 확인
-  - [ ] Tutorial 0~2의 총 문항 수, 학습 목표, 예상 플레이 시간을 점검
-  - [ ] 기존 E2E fixture 중 첫 루프 검증에 쓸 수 있는 것 표시
+  - [x] current playable playlist order 확인
+  - [x] Tutorial 0~2의 총 문항 수, 학습 목표, 예상 플레이 시간을 점검
+  - [x] 기존 E2E fixture 중 첫 루프 검증에 쓸 수 있는 것 표시
 
 ## Step 2: First 5-Minute Contract
 
 - 목표: 첫 5분 route를 제품 계약으로 고정한다.
 - 상세 작업:
-  - [ ] route include/exclude 결정
-  - [ ] 플레이어 감정 곡선과 학습 목표 작성
-  - [ ] `docs/gameplay/spec.md` 미확인 항목 갱신
+  - [x] route include/exclude 결정
+  - [x] 플레이어 감정 곡선과 학습 목표 작성
+  - [x] `docs/gameplay/spec.md` 미확인 항목 갱신
 
 ## Step 3: Evidence and Follow-up
 
 - 목표: FTUE가 이후 UI/playable/content 작업의 기준이 되게 한다.
 - 상세 작업:
-  - [ ] E2E evidence 경로 기록
-  - [ ] 필요 시 새 focused E2E fixture 초안 작성
-  - [ ] UI-PLAYTEST-001 입력 목록 작성
-  - [ ] 검증: `make e2e-playable` 또는 focused E2E, `git diff --check`
+  - [x] E2E evidence 경로 기록
+  - [x] 필요 시 새 focused E2E fixture 초안 작성
+  - [x] UI-PLAYTEST-001 입력 목록 작성
+  - [x] 검증: `make e2e-playable` 또는 focused E2E, `git diff --check`
+
+## 결정
+
+- 첫 5분 canonical route는 `tutorial-0-movement` 전체, `tutorial-1-survival` 전체, `tutorial-2-fast-navigation` 전체, `tutorial-3-small-edits` 첫 문항까지다.
+- 기존 `playable_full_first_five_minute.yaml`은 Ex command 고급 튜토리얼까지 포함하므로 regression fixture로 유지하되, FTUE 대표 evidence는 `playable_ftue_first_five_route.yaml`로 분리한다.
+- 첫 5분 루프는 새 command/schema/progress 변경 없이 현재 playable 순서를 제품 계약으로 고정한다.
+
+## 검증 결과
+
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_ftue_first_five_route.yaml`
+- `git diff --check`
 
 ## 실행 규칙
 
