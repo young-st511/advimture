@@ -67,7 +67,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 규칙:
 
 - status line은 한 줄을 기본으로 한다.
-- `Mode:`, `Status:` 같은 개발식 label은 장기적으로 `NORMAL | running | cursor 0,2` 형태로 줄인다.
+- terminal size가 있는 HUD 화면은 `NORMAL · running · cursor 0:2` 형태를 사용한다. terminal size가 없는 fallback은 legacy text를 유지할 수 있다.
 
 ### 5. FocusPanel / Floating Feedback Modal
 

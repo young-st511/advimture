@@ -180,6 +180,12 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	if !strings.Contains(view, "복구 현황: 재점검 대상: 단어 시작점으로 뛰어가기: 미복구") {
 		t.Fatalf("Render output = %q, want recovery status folded into mission HUD", view)
 	}
+	if !strings.Contains(view, "NORMAL · running · cursor 0:0") {
+		t.Fatalf("Render output = %q, want polished HUD status line", view)
+	}
+	if strings.Contains(view, "Mode: normal") || strings.Contains(view, "Cursor: 0,0") {
+		t.Fatalf("Render output = %q, should not show debug status labels in HUD", view)
+	}
 }
 
 func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {

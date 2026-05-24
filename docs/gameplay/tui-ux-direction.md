@@ -56,7 +56,7 @@ Status Line
 - Header: `ADVIMTURE / Tutorial / 1 of 4 / running`
 - Briefing: 현재 상황과 익힐 조작을 짧게 표시한다.
 - Console: 수정할 텍스트를 가장 넓게 보여준다.
-- Status Line: mode, cursor, inputs left를 한 줄에 보여준다.
+- Status Line: terminal size가 있는 HUD에서는 `NORMAL · running · cursor 0:2`처럼 개발식 label 없이 한 줄로 보여준다.
 - Mission HUD cue: `TRAINING BRIEF`로 `훈련 키`, `힌트`, `재시도`, `다음`을 현재 목표 바로 아래에 압축한다.
 
 Tutorial에서는 `재점검 대상`, `오늘의 복구 루트`가 현재 목표보다 앞에 오지 않는다. terminal size가 있는 화면에서는 `복구 현황:` 한 줄로 `MISSION` HUD 안에 접는다.

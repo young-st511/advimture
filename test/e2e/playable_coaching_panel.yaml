@@ -9,7 +9,7 @@ setup:
 steps:
   - wait_screen_contains: "Coach: 훈련 키 l"
   - send: "l"
-  - wait_screen_contains: "Cursor: 0,1"
+  - wait_screen_contains: "cursor 0:1"
   - send: "?"
   - wait_screen_contains: "Hint: 오른쪽으로 한 칸 더 이동해야 합니다."
   - send: "l"

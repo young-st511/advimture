@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### UI-PLAYTEST-001. HUD Usability Pass
+### CHOICE-PLAY-001. Command Choice Drill Playable
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/ui-playtest-001-hud-usability-pass.md`
-- 목표: FTUE 대표 화면 evidence를 기준으로 Mission HUD와 floating modal의 읽기/흐름 문제를 점검하고 최소 polish를 닫는다.
+- ExecPlan: `docs/exec-plans/active/choice-play-001-command-choice-playable.md`
+- 목표: docs-only command-choice drill을 첫 playable content와 E2E로 승격한다.
 
 ## 방금 완료한 슬라이스
+
+### UI-PLAYTEST-001. HUD Usability Pass
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-playtest-001-hud-usability-pass.md`
+- 완료일: 2026-05-25
 
 ### FTUE-001. First 5-Minute Route
 - 상태: completed

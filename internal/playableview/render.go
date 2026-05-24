@@ -137,7 +137,7 @@ func renderHUD(screen Screen) string {
 		b.WriteString("\n")
 	}
 	b.WriteString("\n")
-	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", screen.Mode, screen.Status, screen.CursorRow, screen.CursorCol))
+	b.WriteString(renderHUDStatusLine(screen))
 	if screen.Selection != nil && screen.Selection.Active {
 		b.WriteString(fmt.Sprintf("Selection: %s %d,%d -> %d,%d\n", screen.Selection.Kind, screen.Selection.Start.Row, screen.Selection.Start.Col, screen.Selection.End.Row, screen.Selection.End.Col))
 	}
@@ -155,6 +155,18 @@ func renderHUD(screen Screen) string {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
 	}
 	return b.String()
+}
+
+func renderHUDStatusLine(screen Screen) string {
+	mode := strings.ToUpper(screen.Mode)
+	if mode == "" {
+		mode = "-"
+	}
+	status := screen.Status
+	if status == "" {
+		status = "-"
+	}
+	return fmt.Sprintf("%s · %s · cursor %d:%d\n", mode, status, screen.CursorRow, screen.CursorCol)
 }
 
 func recoveryStatusLine(screen Screen) string {

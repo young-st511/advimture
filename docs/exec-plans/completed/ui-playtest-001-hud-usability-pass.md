@@ -2,7 +2,8 @@
 
 Slice-ID: UI-PLAYTEST-001
 Created: 2026-05-25
-Status: active
+Status: completed
+Completed: 2026-05-25
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -46,18 +47,32 @@ FTUE-001에서 고정한 첫 5분 route를 기준으로 `Mission HUD + Runbook C
 
 ## Step 1: Evidence Review
 
-- [ ] `playable_ftue_first_five_route` evidence 확인
-- [ ] failure focused evidence 확인
-- [ ] command mode evidence 확인
+- [x] `playable_ftue_first_five_route` evidence 확인
+- [x] failure focused evidence 확인
+- [x] command mode evidence 확인
 
 ## Step 2: Minimal Polish
 
-- [ ] status/cue/modal에서 즉시 고칠 작은 문제 분류
-- [ ] renderer 테스트 추가 또는 갱신
-- [ ] 필요한 최소 구현
+- [x] status/cue/modal에서 즉시 고칠 작은 문제 분류
+- [x] renderer 테스트 추가 또는 갱신
+- [x] 필요한 최소 구현
 
 ## Step 3: Verification
 
-- [ ] focused E2E
-- [ ] `go test ./...`
-- [ ] `git diff --check`
+- [x] focused E2E
+- [x] `go test ./...`
+- [x] `git diff --check`
+
+## 결정
+
+- 즉시 고칠 문제는 HUD status line의 개발식 label이다.
+- terminal size가 있는 HUD 화면에서는 `NORMAL · running · cursor 0:1` 형식을 사용한다.
+- legacy fallback은 기존 `Mode: ... Status: ... Cursor: ...` 표현을 유지한다.
+- split cockpit, modal input-state, world language overhaul은 후속으로 남긴다.
+
+## 검증 결과
+
+- `go test ./internal/playableview ./internal/playable`
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_coaching_panel.yaml`
+- `go test ./...`
+- `git diff --check`
