@@ -8,7 +8,7 @@ setup:
   home: temp
   complete_before: command-choice-scope-001
 steps:
-  - wait_screen_contains: "릴레이 기지 005: 복구 범위 판별"
+  - wait_screen_contains: "복구 범위를 먼저 판단"
   - send: "V"
   - wait_screen_contains: "Selection: linewise 1,0 -> 1,14"
   - send: "j"
@@ -19,7 +19,8 @@ steps:
 assert:
   screen_contains:
     - "릴레이 기지 005: 복구 범위 판별"
-    - "단어/quote 값에 손대지 않고 quarantine 줄 묶음 전체를 선택해 격리했습니다."
+    - "값/단어를 고치지 말고 복구 범위를 먼저 판단"
+    - "quarantine 줄 묶음만 복구 범위로 판단해 격리했습니다."
     - "Dispatch complete"
   exit_code: 0
   progress_file_exists: true

@@ -118,7 +118,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - command choice drill은 새 command cluster가 아니라 이미 배운 command 중 적절한 도구를 고르는 적용 레이어다. 첫 설계 기준은 `docs/gameplay/command-choice-drills.md`를 따른다.
 - command choice playable은 새 schema 승인 전까지 기존 `constraints.required_keys`와 `constraints.forbidden_keys`로 의도한 선택을 고정한다.
 - command choice scenario는 정답 key sequence보다 선택 이유를 성공/실패 피드백에서 강화한다.
-- `incident-005-command-choice`는 “릴레이 기지 005: 복구 범위 판별”로 표시하며, `choice-001-scope-triage`를 첫 playable command-choice drill로 승격한다. 새 command cluster나 engine 기능을 추가하지 않고 `visual-line-basic`의 `V`, `j`, `d`로 linewise scope choice를 검증한다.
+- `incident-005-command-choice`는 “릴레이 기지 005: 복구 범위 판별”로 표시하며, `choice-001-scope-triage`를 첫 playable command-choice drill로 승격한다. 문항 제목과 피드백은 값/단어가 아니라 줄 묶음을 복구 범위로 판단하는 이유를 강조한다. 새 command cluster나 engine 기능을 추가하지 않고 `visual-line-basic`의 `V`, `j`, `d`로 linewise scope choice를 검증한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.

@@ -2,7 +2,7 @@
 
 Slice-ID: CHOICE-JUDGMENT-001
 Created: 2026-05-26
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -40,19 +40,25 @@ Allowed-Paths:
 
 ## Step 1: Gap Review
 
-- [ ] 현재 command-choice content와 E2E 문구 확인
-- [ ] 암기처럼 보일 수 있는 표현 식별
+- [x] 현재 command-choice content와 E2E 문구 확인
+- [x] 암기처럼 보일 수 있는 표현 식별
 
 ## Step 2: Content and Test
 
-- [ ] exercise/scenario 문구 개선
-- [ ] E2E assertion 보강
-- [ ] 필요한 경우 playable test 보강
+- [x] exercise/scenario 문구 개선
+- [x] E2E assertion 보강
+- [x] 필요한 경우 playable test 보강
 
 ## Step 3: Verification
 
-- [ ] focused Go tests
-- [ ] focused E2E
-- [ ] `go test ./...`
-- [ ] `make e2e-playable`
-- [ ] `git diff --check`
+- [x] focused Go tests
+- [x] focused E2E
+- [x] `go test ./...`
+- [x] `make e2e-playable`
+- [x] `git diff --check`
+
+## 결과
+
+- `command-choice-scope-001`의 목표/힌트/시나리오 문구를 “값/단어가 아니라 줄 묶음을 복구 범위로 판단한다”는 선택 이유 중심으로 조정했다.
+- `playable_command_choice_scope`는 초기 판단 copy와 성공 copy를 함께 검증한다.
+- `playable_incident_004_full`의 다음 잔류 리스크 기대 문구와 command-line 입력 간격을 갱신해 full suite 안정성을 높였다.

@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### CHOICE-JUDGMENT-001. Command Choice Judgment Cue
+### SUCCESS-MODAL-001. Success Modal Density Polish
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/choice-judgment-001-command-choice-cue.md`
-- 목표: command-choice 문항이 key 암기가 아니라 복구 범위 판단 훈련으로 읽히도록 보강한다.
+- ExecPlan: `docs/exec-plans/active/success-modal-001-density-polish.md`
+- 목표: 성공 floating modal의 중복 heading과 record 밀도를 정리한다.
 
 ## 방금 완료한 슬라이스
+
+### CHOICE-JUDGMENT-001. Command Choice Judgment Cue
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/choice-judgment-001-command-choice-cue.md`
+- 완료일: 2026-05-26
 
 ### HELP-AFFORDANCE-001. Hint, Retry, and Quit Affordance
 - 상태: completed

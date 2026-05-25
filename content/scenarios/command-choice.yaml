@@ -5,11 +5,11 @@ scenarios:
     engine_support: implemented
     learning_reinforcement: "복구 대상의 범위를 먼저 판단하고, 줄 묶음이면 linewise visual selection을 선택한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
-    mission_title: "복구 범위 판별"
-    briefing: "릴레이 기지의 라우팅 파일에 안전한 route 값과 quarantine 블록이 함께 보입니다. 값 하나를 고치지 말고 오염된 줄 묶음을 골라 제거하세요."
+    mission_title: "줄 묶음 복구 범위 판별"
+    briefing: "안전한 route 값 사이에 quarantine 블록 두 줄이 끼어 있습니다. 값/단어를 고치지 말고 복구 범위를 먼저 판단해 줄 묶음만 제거하세요."
     context_role: "scope choice drill"
-    mentor_success: "좋습니다. 단어/quote 값에 손대지 않고 quarantine 줄 묶음 전체를 선택해 격리했습니다."
-    mentor_failure: "이번 복구 범위는 글자나 단어가 아니라 연속된 줄 묶음입니다. 줄 단위 선택을 먼저 고르세요."
+    mentor_success: "좋습니다. 정상 route 값은 그대로 두고, quarantine 줄 묶음만 복구 범위로 판단해 격리했습니다."
+    mentor_failure: "이번 복구 범위는 글자나 단어가 아니라 연속된 줄 묶음입니다. 먼저 대상 범위를 판단한 뒤 줄 단위 선택을 고르세요."
     story_constraints:
       - "새 command 소개가 아니라 이미 배운 command 중 범위 선택 판단을 강화한다."
       - "성공/실패 피드백은 key sequence보다 선택 이유를 설명한다."

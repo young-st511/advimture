@@ -56,35 +56,35 @@ steps:
 
   - wait_screen_contains: "블록 정리 후에도 hold 상태"
   - send: ":"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "%"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "s"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "/"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "h"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "o"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "l"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "d"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "/"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "l"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "i"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "v"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "e"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "/"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "g"
-  - wait_ms: 30
+  - wait_ms: 50
   - send: "enter"
   - wait_screen_contains: "Next runbook: enter"
   - send: "q"
@@ -93,7 +93,7 @@ assert:
     - "릴레이 기지 004: config block 복구"
     - "Exercise: 5/5"
     - "Next runbook: enter"
-    - "잔류 리스크: 복구 범위 판별: 미복구"
+    - "잔류 리스크: 줄 묶음 복구 범위 판별: 미복구"
     - "좋습니다. 남은 hold 상태를 전체 범위에서 live로 승격해 config block 복구 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true
