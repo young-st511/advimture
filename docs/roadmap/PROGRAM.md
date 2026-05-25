@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYTEST-EVIDENCE-001. Foundation Route Evidence Review
+### HUD-DENSITY-001. Mission HUD Priority and Wrapping
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/playtest-evidence-001-foundation-routes.md`
-- 목표: FTUE, incident, command-choice 대표 route evidence를 보고 다음 UX polish 후보를 정리한다.
+- ExecPlan: `docs/exec-plans/active/hud-density-001-mission-hud-priority.md`
+- 목표: Mission HUD가 현재 Vim 조작 목표를 먼저 읽히게 하고 review/daily 밀도와 줄바꿈을 정리한다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYTEST-EVIDENCE-001. Foundation Route Evidence Review
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playtest-evidence-001-foundation-routes.md`
+- 완료일: 2026-05-26
 
 ### UX-LANGUAGE-001. Route Action Copy
 - 상태: completed
