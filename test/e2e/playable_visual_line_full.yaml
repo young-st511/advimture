@@ -34,13 +34,13 @@ steps:
   - send: "G"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,8"
   - send: "d"
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "Next runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Visual line mode"
     - "Exercise: 3/3"
-    - "Next tutorial: enter"
+    - "Next runbook: enter"
     - "좋습니다. 파일 끝까지 이어진 stale tail을 한 줄씩 지우지 않고 한 번에 제거했습니다."
   exit_code: 0
   progress_file_exists: true

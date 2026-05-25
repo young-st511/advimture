@@ -14,13 +14,13 @@ steps:
   - send: "j"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
   - send: "d"
-  - wait_screen_contains: "RUNBOOK SEALED"
+  - wait_screen_contains: "Dispatch complete"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 005: 복구 범위 판별"
     - "단어/quote 값에 손대지 않고 quarantine 줄 묶음 전체를 선택해 격리했습니다."
-    - "Playlist complete"
+    - "Dispatch complete"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

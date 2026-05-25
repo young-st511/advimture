@@ -10,11 +10,22 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### 다음 슬라이스 미정
-- 상태: pending
-- 목표: Foundation Product Loop 완료 후 다음 중기 플랜을 선택한다.
+### PLAYTEST-EVIDENCE-001. Foundation Route Evidence Review
+- 상태: active
+- ExecPlan: `docs/exec-plans/active/playtest-evidence-001-foundation-routes.md`
+- 목표: FTUE, incident, command-choice 대표 route evidence를 보고 다음 UX polish 후보를 정리한다.
 
 ## 방금 완료한 슬라이스
+
+### UX-LANGUAGE-001. Route Action Copy
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ux-language-001-route-action-copy.md`
+- 완료일: 2026-05-25
+
+### PLAN-REFRESH-007. Foundation Playtest / UX Polish
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/plan-refresh-007-foundation-playtest-ux-polish.md`
+- 완료일: 2026-05-25
 
 ### PROGRESS-V2-DECISION-001. Progress Schema v2 Decision
 - 상태: completed

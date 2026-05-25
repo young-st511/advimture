@@ -88,7 +88,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - running incident: `MISSION` HUD cue line에 판단 cue, hint, quit
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - failed: floating modal에 실패 이유, 남은 입력, attempts, retry
-- succeeded: floating modal에 복구 기록, best record, runbook completion, residual risk, next
+- succeeded: floating modal에 복구 기록, best record, runbook completion, residual risk, next action
 - failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
 
 구조:
@@ -110,7 +110,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 |------|----------|----------|
 | 목적 | 새 Vim command 학습 | 배운 command 선택/조합 |
 | 키 노출 | 직접 노출 허용 | hint/failure에서 점진 공개 |
-| 문구 | `훈련 키`, `연습`, `다음 튜토리얼` | `판단`, `복구 단계`, `잔류 리스크` |
+| 문구 | `훈련 키`, `연습`, `Next tutorial` | `판단`, `복구 단계`, `잔류 리스크`, `Next runbook`, `Dispatch complete` |
 | review/daily | 보조 정보 | 세계관 메타 정보로 활용 |
 
 ## 검증 기준

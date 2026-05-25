@@ -339,6 +339,26 @@ func (m Model) nextEntryStartsNewPlaylist() bool {
 	return m.entries[m.current].PlaylistID != m.entries[m.current+1].PlaylistID
 }
 
+func (m Model) successActionLines() []string {
+	if m.current+1 < len(m.entries) {
+		if !m.nextEntryStartsNewPlaylist() {
+			return []string{"Next: enter"}
+		}
+		switch m.entries[m.current+1].PlaylistCategory {
+		case "tutorial":
+			return []string{"Next tutorial: enter"}
+		case "incident":
+			return []string{"Next runbook: enter"}
+		default:
+			return []string{"Next playlist: enter"}
+		}
+	}
+	if m.currentEntryIsIncident() {
+		return []string{"Dispatch complete", "q: quit"}
+	}
+	return []string{"Playlist complete", "q: quit"}
+}
+
 func newGameFromContent(root string, progressState *progress.Progress) ([]gameEntry, int, *scenario.Run, error) {
 	library, err := content.LoadLibrary(root)
 	if err != nil {
@@ -513,16 +533,7 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 			lines = append(lines, feedback)
 		}
 		lines = append(lines, m.successDebriefLines(state)...)
-		if m.current+1 < len(m.entries) {
-			if m.nextEntryStartsNewPlaylist() {
-				lines = append(lines, "Next tutorial: enter")
-			} else {
-				lines = append(lines, "Next: enter")
-			}
-		} else {
-			lines = append(lines, "Playlist complete")
-			lines = append(lines, "q: quit")
-		}
+		lines = append(lines, m.successActionLines()...)
 	case state.Status == exerciseruntime.StatusFailed:
 		if feedback := scenarioFeedbackLine(state); feedback != "" {
 			lines = append(lines, feedback)

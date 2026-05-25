@@ -311,6 +311,67 @@ func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
 	}
 }
 
+func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
+	tests := []struct {
+		name  string
+		model Model
+		want  []string
+	}{
+		{
+			name: "same playlist",
+			model: Model{
+				current: 0,
+				entries: []gameEntry{
+					{PlaylistID: "tutorial-0", PlaylistCategory: "tutorial"},
+					{PlaylistID: "tutorial-0", PlaylistCategory: "tutorial"},
+				},
+			},
+			want: []string{"Next: enter"},
+		},
+		{
+			name: "next tutorial",
+			model: Model{
+				current: 0,
+				entries: []gameEntry{
+					{PlaylistID: "tutorial-0", PlaylistCategory: "tutorial"},
+					{PlaylistID: "tutorial-1", PlaylistCategory: "tutorial"},
+				},
+			},
+			want: []string{"Next tutorial: enter"},
+		},
+		{
+			name: "next incident",
+			model: Model{
+				current: 0,
+				entries: []gameEntry{
+					{PlaylistID: "tutorial-93", PlaylistCategory: "tutorial"},
+					{PlaylistID: "incident-001", PlaylistCategory: "incident"},
+				},
+			},
+			want: []string{"Next runbook: enter"},
+		},
+		{
+			name: "final incident",
+			model: Model{
+				current: 0,
+				entries: []gameEntry{
+					{PlaylistID: "incident-005", PlaylistCategory: "incident"},
+				},
+			},
+			want: []string{"Dispatch complete", "q: quit"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.model.successActionLines()
+			if strings.Join(got, "\n") != strings.Join(tt.want, "\n") {
+				t.Fatalf("successActionLines() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 func TestPlayableAutosavesEachCompletedExercise(t *testing.T) {
 	var saved *progress.Progress
 	model := New(Options{

@@ -335,7 +335,7 @@ func fitFocusPanelLines(rendered []string, maxHeight int) []string {
 }
 
 func focusPanelPriorityLine(lines []string) string {
-	for _, marker := range []string{"Retry:", "Next:", "Next tutorial:", "Playlist complete", "q: quit"} {
+	for _, marker := range []string{"Retry:", "Next:", "Next tutorial:", "Next runbook:", "Playlist complete", "Dispatch complete", "q: quit"} {
 		for i := len(lines) - 1; i >= 0; i-- {
 			line := lines[i]
 			if strings.Contains(line, marker) {

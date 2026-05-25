@@ -81,7 +81,7 @@ Incident focus panel의 첫 줄은 `훈련 키`보다 `판단:`을 우선한다.
 - `최단 복구 기록`: progress 기반 best record
 - `잔류 리스크`: 다음 review candidate
 - `오늘의 복구 루트`: primary review 대상, 이유, 남은 review count
-- `Next` 또는 `Next tutorial`: 다음 입력
+- `Next`, `Next tutorial`, `Next runbook`, `Dispatch complete`: 다음 입력/완료 상태
 - terminal size가 있는 화면에서는 `RUNBOOK CONSOLE` 안의 `RUNBOOK SEALED` floating modal로 표시한다.
 
 ### Visual/Selection Screen
