@@ -56,7 +56,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - running/mode-specific `FocusPanel`은 `MISSION` HUD 안의 짧은 cue line으로 접어 현재 목표와 함께 보인다.
 - failed/succeeded `FocusPanel`은 `RUNBOOK CONSOLE` 안에서 Zellij floating pane처럼 보이는 modal로 렌더링한다.
 - floating modal은 `tea.WindowSizeMsg`로 전달된 terminal width가 있으면 화면 중앙에 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
-- floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action line(`Retry`, `Next`, `Next tutorial`, `Next runbook`, `Dispatch complete`)이 잘리지 않아야 한다.
+- floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action line(`Retry`, `Next`, `Next tutorial`, `Next runbook`, `Dispatch complete`)이 잘리지 않아야 한다. 성공 floating modal은 내부 성공 상태명 `STEP SEALED`를 별도 heading으로 중복 표시하지 않는다.
 - `복구 현황`은 terminal size가 있는 화면에서 별도 큰 pre-console section이 아니라 `MISSION` HUD 내부의 보조 line으로 표시한다.
 - running HUD의 review/daily line은 상세 문구를 그대로 노출하지 않고 tutorial에서는 `복구 메모: 재점검 N건 · 다음: <title>`, incident에서는 `복구 현황: 재점검 N건 · 잔류: <title>`로 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.

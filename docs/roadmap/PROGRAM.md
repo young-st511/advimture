@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### SUCCESS-MODAL-001. Success Modal Density Polish
+### UX-BACKLOG-001. Foundation UX Backlog
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/success-modal-001-density-polish.md`
-- 목표: 성공 floating modal의 중복 heading과 record 밀도를 정리한다.
+- ExecPlan: `docs/exec-plans/active/ux-backlog-001-foundation-backlog.md`
+- 목표: Foundation UX polish 이후 남은 개선 후보를 우선순위와 검증 방식까지 정리한다.
 
 ## 방금 완료한 슬라이스
+
+### SUCCESS-MODAL-001. Success Modal Density Polish
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/success-modal-001-density-polish.md`
+- 완료일: 2026-05-26
 
 ### CHOICE-JUDGMENT-001. Command Choice Judgment Cue
 - 상태: completed

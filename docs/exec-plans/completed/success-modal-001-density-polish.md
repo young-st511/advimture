@@ -2,7 +2,7 @@
 
 Slice-ID: SUCCESS-MODAL-001
 Created: 2026-05-26
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -39,19 +39,25 @@ Allowed-Paths:
 
 ## Step 1: Current Modal Review
 
-- [ ] success modal renderer와 playable success lines 확인
-- [ ] 중복 heading과 필수 정보 분리
+- [x] success modal renderer와 playable success lines 확인
+- [x] 중복 heading과 필수 정보 분리
 
 ## Step 2: Implementation
 
-- [ ] success modal density 조정
-- [ ] renderer/playable tests 갱신
-- [ ] E2E expectation 갱신
+- [x] success modal density 조정
+- [x] renderer/playable tests 갱신
+- [x] E2E expectation 갱신
 
 ## Step 3: Verification
 
-- [ ] focused tests
-- [ ] focused E2E
-- [ ] `go test ./...`
-- [ ] `make e2e-playable`
-- [ ] `git diff --check`
+- [x] focused tests
+- [x] focused E2E
+- [x] `go test ./...`
+- [x] `make e2e-playable`
+- [x] `git diff --check`
+
+## 결과
+
+- 성공 floating modal은 `RUNBOOK SEALED`만 heading으로 렌더링하고 내부 상태명 `STEP SEALED`를 중복 표시하지 않는다.
+- app_state focus panel title은 `STEP SEALED`로 유지해 기존 상태 계약은 보존했다.
+- 성공 기록, best record, runbook 완료 수, 잔류 리스크, next action line은 유지했다.

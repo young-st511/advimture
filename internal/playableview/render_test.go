@@ -363,6 +363,12 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 	if !strings.Contains(view, "Next: enter") {
 		t.Fatalf("Render output = %q, want action line preserved", view)
 	}
+	if strings.Contains(view, "STEP SEALED") {
+		t.Fatalf("Render output = %q, should not duplicate success modal heading", view)
+	}
+	if !strings.Contains(view, "RUNBOOK SEALED") {
+		t.Fatalf("Render output = %q, want success modal heading", view)
+	}
 	if lineIndex(view, "RUNBOOK CONSOLE") != lineIndex(base, "RUNBOOK CONSOLE") {
 		t.Fatalf("Render output = %q, want fixed console line", view)
 	}

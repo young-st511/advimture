@@ -379,13 +379,15 @@ func RenderFloatingModal(panel FocusPanel, screenWidth int) string {
 }
 
 func floatingModalLines(panel FocusPanel) []string {
-	lines := []string{floatingModalTitle(panel), panel.Title}
 	switch panel.Kind {
 	case "failure":
+		lines := []string{floatingModalTitle(panel), panel.Title}
 		return append(lines, failureModalLines(panel.Lines)...)
 	case "success":
+		lines := []string{floatingModalTitle(panel)}
 		return append(lines, successModalLines(panel.Lines)...)
 	default:
+		lines := []string{floatingModalTitle(panel), panel.Title}
 		return append(lines, panel.Lines...)
 	}
 }
