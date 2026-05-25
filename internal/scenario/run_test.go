@@ -47,17 +47,21 @@ func TestRunScoresOnSuccess(t *testing.T) {
 func TestRequestHintRecordsHintUse(t *testing.T) {
 	run := newTestRun(t)
 
-	if _, ok := run.RequestHint(); ok {
-		t.Fatal("hint before input ok = true, want false")
-	}
-	run.ApplyKey(vimengine.KeyH)
-
 	hint, ok := run.RequestHint()
 	if !ok || hint != "Use l twice." {
-		t.Fatalf("hint = (%q,%v), want (%q,true)", hint, ok, "Use l twice.")
+		t.Fatalf("hint before input = (%q,%v), want (%q,true)", hint, ok, "Use l twice.")
 	}
 	if run.State().HintsUsed != 1 {
 		t.Fatalf("HintsUsed = %d, want 1", run.State().HintsUsed)
+	}
+	run.ApplyKey(vimengine.KeyH)
+
+	hint, ok = run.RequestHint()
+	if !ok || hint != "Use l twice." {
+		t.Fatalf("hint = (%q,%v), want (%q,true)", hint, ok, "Use l twice.")
+	}
+	if run.State().HintsUsed != 2 {
+		t.Fatalf("HintsUsed = %d, want 2", run.State().HintsUsed)
 	}
 }
 

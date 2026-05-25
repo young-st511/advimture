@@ -205,15 +205,15 @@ func (s *Session) Retry() State {
 }
 
 func (s *Session) CurrentHint() (string, bool) {
+	if len(s.exercise.Hints) == 0 {
+		return "", false
+	}
 	keyCount := len(s.keyTrace)
-	var selected string
+	selected := s.exercise.Hints[0].Text
 	for _, hint := range s.exercise.Hints {
 		if hint.AfterKeys <= keyCount {
 			selected = hint.Text
 		}
-	}
-	if selected == "" {
-		return "", false
 	}
 	return selected, true
 }

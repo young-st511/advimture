@@ -534,17 +534,48 @@ func TestPlayableShowsRequestedHintInActionPanel(t *testing.T) {
 		Progress:    progress.NewProgress(),
 	})
 
-	model, _ = updateWithKey(t, model, "l")
 	model, _ = updateWithKey(t, model, "?")
 
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !strings.Contains(model.View(), "Hint: 오른쪽으로 한 칸 더 이동해야 합니다.") {
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "Hint: 오른쪽으로 한 칸 더 이동해야 합니다.") {
 		t.Fatalf("view = %q, want requested hint", model.View())
 	}
 	if model.State().Progress.Completed {
 		t.Fatal("progress completed = true, want false")
+	}
+}
+
+func TestPlayableShowsIncidentHintWithoutTrainingKeySpoiler(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "incident-hotfix-001"),
+	})
+
+	model, _ = updateWithKey(t, model, "?")
+
+	if model.State().Status != "running" {
+		t.Fatalf("status = %q, want running", model.State().Status)
+	}
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "Hint: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
+		t.Fatalf("view = %q, want incident hint", model.View())
+	}
+	if strings.Contains(model.View(), "Coach: 훈련 키") {
+		t.Fatalf("view = %q, should not reveal training key spoiler", model.View())
+	}
+}
+
+func TestPlayableQuitsWithQFromRunningState(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+	})
+
+	_, cmd := updateWithKey(t, model, "q")
+
+	if cmd == nil {
+		t.Fatal("cmd = nil, want quit command")
 	}
 }
 
@@ -637,6 +668,26 @@ func TestPlayableShowsSearchLineInSearchMode(t *testing.T) {
 	}
 	if strings.Contains(view, "?: hint") {
 		t.Fatalf("view = %q, should not show hint prompt in search mode", view)
+	}
+}
+
+func TestPlayableShowsVisualHelpInsteadOfGenericHintQuit(t *testing.T) {
+	model := New(Options{ContentRoot: contentRootForTest()})
+
+	model, _ = updateWithKey(t, model, "v")
+
+	view := model.View()
+	if model.State().Mode != "visual" {
+		t.Fatalf("mode = %q, want visual", model.State().Mode)
+	}
+	if !strings.Contains(view, "Keys: motion expands selection  esc/v: normal") {
+		t.Fatalf("view = %q, want visual action panel", view)
+	}
+	if strings.Contains(view, "?: hint") {
+		t.Fatalf("view = %q, should not show hint prompt in visual mode", view)
+	}
+	if strings.Contains(view, "q: quit") {
+		t.Fatalf("view = %q, should not show quit prompt in visual mode", view)
 	}
 }
 

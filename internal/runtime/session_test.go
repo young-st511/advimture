@@ -823,12 +823,13 @@ func TestHintIsDeterministicByKeyTraceLength(t *testing.T) {
 		},
 	})
 
-	if _, ok := session.CurrentHint(); ok {
-		t.Fatal("hint before input ok = true, want false")
+	hint, ok := session.CurrentHint()
+	if !ok || hint != "move right" {
+		t.Fatalf("hint before input = (%q,%v), want (%q,true)", hint, ok, "move right")
 	}
 
 	session.ApplyKey(vimengine.KeyH)
-	hint, ok := session.CurrentHint()
+	hint, ok = session.CurrentHint()
 	if !ok || hint != "move right" {
 		t.Fatalf("hint = (%q,%v), want (%q,true)", hint, ok, "move right")
 	}

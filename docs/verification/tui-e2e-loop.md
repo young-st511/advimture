@@ -109,6 +109,7 @@ evidence:
 - `playable_arrow_forbidden`: 실제 방향키 escape sequence가 `h/j/k/l`로 우회되지 않고 forbidden input으로 실패하는지 검증하는 E2E
 - `playable_ctrl_c_does_not_quit`: 실제 Ctrl+C가 앱을 즉시 종료하지 않고 key trace에 남는지 검증하는 E2E
 - `playable_coaching_panel`: strict constraint 문항의 required key coaching과 `?` hint 패널 표시를 검증하는 E2E
+- `playable_incident_hint_affordance`: incident running 상태에서 첫 `?` 입력이 즉시 복구 판단 hint를 표시하고 `q` 종료 affordance가 실제로 동작하는지 검증하는 E2E
 - `playable_full_first_five_minute`: movement/survival/navigation/small-edit/Ex command까지의 first-cut tutorial flow E2E
 - `playable_open_line_full`, `playable_repeat_last_change_full`, `playable_search_basic_full`, `playable_text_object_quote_pair_full`: utility/structure command full playpack E2E
 - `playable_visual_selection_full`: charwise visual delete/yank-put/backward selection tutorial E2E

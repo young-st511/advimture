@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### HELP-AFFORDANCE-001. Hint, Retry, and Quit Affordance
+### CHOICE-JUDGMENT-001. Command Choice Judgment Cue
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/help-affordance-001-hint-retry-quit.md`
-- 목표: 화면에 노출되는 hint/retry/quit 안내와 실제 입력 처리 정합성을 검증하고 보강한다.
+- ExecPlan: `docs/exec-plans/active/choice-judgment-001-command-choice-cue.md`
+- 목표: command-choice 문항이 key 암기가 아니라 복구 범위 판단 훈련으로 읽히도록 보강한다.
 
 ## 방금 완료한 슬라이스
+
+### HELP-AFFORDANCE-001. Hint, Retry, and Quit Affordance
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/help-affordance-001-hint-retry-quit.md`
+- 완료일: 2026-05-26
 
 ### HUD-DENSITY-001. Mission HUD Priority and Wrapping
 - 상태: completed
