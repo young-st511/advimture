@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### UX-BACKLOG-001. Foundation UX Backlog
+### CONTENT-BREADTH-001. Command Choice Extension
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/ux-backlog-001-foundation-backlog.md`
-- 목표: Foundation UX polish 이후 남은 개선 후보를 우선순위와 검증 방식까지 정리한다.
+- ExecPlan: `docs/exec-plans/active/content-breadth-001-command-choice-extension.md`
+- 목표: 새 engine 없이 기존 Vim command를 재조합해 command-choice/applied learning 콘텐츠 폭을 늘린다.
 
 ## 방금 완료한 슬라이스
+
+### UX-BACKLOG-001. Foundation UX Backlog
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ux-backlog-001-foundation-backlog.md`
+- 완료일: 2026-05-26
 
 ### SUCCESS-MODAL-001. Success Modal Density Polish
 - 상태: completed

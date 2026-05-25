@@ -40,3 +40,11 @@ E2E runner는 기존 `summary.json`, `raw.log`, `screen.txt`, `key_trace.txt`에
 - `residual_risk` typed state: 성공 후 다음 재점검 대상의 exercise id/reason 검증
 - `screen_final.txt`: 누적 ANSI stream이 아니라 마지막 viewport 중심 evidence
 - `frames/*.txt`: wait/send 단위 세분화 frame timeline
+
+## Backlog 승격 기준
+
+다음 상황이 반복되면 UI 작업 전에 QA 계약을 먼저 확장한다.
+
+- 같은 의미 상태를 화면 문구 변경 때문에 두 번 이상 E2E fixture에서 수정한다.
+- modal 위치, line wrapping, final frame처럼 사람이 보는 최종 화면 문제가 누적 stream evidence만으로 판별되지 않는다.
+- 새 content가 key trace와 final buffer는 맞지만, 선택 판단이나 hint/retry affordance의 의미를 app_state로 확인할 수 없다.
