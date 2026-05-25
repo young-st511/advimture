@@ -50,3 +50,57 @@ exercises:
         col: 0
       mode: normal
       status: succeeded
+
+  - id: command-choice-repeat-substitute-001
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: [":%s", ".", ":s"]
+    mistake_focus: ["같은 literal이 파일 전체와 한 줄 안에 반복되는데 반복 수정이나 현재 줄 치환으로 접근한다."]
+    replay_status: pass
+    title: "반복 수정과 전체 치환 판별"
+    goal_for_player: "stale가 파일 전체에 반복됩니다. 한 번씩 고치지 말고 전체 범위 치환으로 모두 fresh로 승격하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        state=stale stale
+        route=ok
+        state=stale
+        state=stale
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        state=fresh fresh
+        route=ok
+        state=fresh
+        state=fresh
+    optimal_keys: [":", "%", "s", "/", "s", "t", "a", "l", "e", "/", "f", "r", "e", "s", "h", "/", "g", "enter"]
+    allowed_keys: [":", "%", "s", "/", "t", "a", "l", "e", "f", "r", "h", "g", "enter", "esc"]
+    forbidden_keys: [".", "v", "V", "d", "x", "c", "y", "p", "P", "i", "A", "o", "O", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 18
+      required_keys: [":", "%", "g", "enter"]
+      forbidden_keys: [".", "v", "V", "d", "x", "c", "y", "p", "P", "i", "A", "o", "O", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "stale는 한 줄이 아니라 파일 전체에 반복됩니다. 범위 판단은 전체 파일입니다."
+      - after_keys: 3
+        text: ":%s/old/new/g는 전체 파일의 모든 old를 new로 바꿉니다."
+    grading:
+      pass_condition: "buffer has no stale && mode == normal"
+      optimal_key_count: 18
+    e2e_assertions:
+      buffer: ["state=fresh fresh", "route=ok", "state=fresh", "state=fresh"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded

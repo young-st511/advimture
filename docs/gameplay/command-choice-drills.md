@@ -62,7 +62,7 @@ choice_drill_draft:
 | ID | Focus | Intended choice | 후보 상황 |
 |----|-------|-----------------|-----------|
 | `choice-001-scope-triage` | `scope-choice` | `V...d` | 정상 route 값 사이의 quarantine block을 보고 값/단어가 아니라 줄 묶음을 복구 범위로 먼저 구분한다. Playable: `incident-005-command-choice` / `command-choice-scope-001`. |
-| `choice-002-repeat-or-substitute` | `range-choice` | `:%s` | 같은 literal이 파일 전체에 반복되어 `.`보다 substitute가 자연스럽다. |
+| `choice-002-repeat-or-substitute` | `range-choice` | `:%s` | 같은 literal이 파일 전체와 한 줄 안에 반복되어 `.`보다 substitute가 자연스럽다. Playable: `incident-005-command-choice` / `command-choice-repeat-substitute-001`. |
 | `choice-003-copy-or-retype` | `reuse-choice` | `yi"` + `P` | 이미 검증된 quote 값이 있고, 새 위치에 그대로 붙여야 한다. |
 | `choice-004-search-then-scope` | `search-then-act` | `/token` + `V...d` | 먼저 marker를 찾은 뒤 marker 아래 블록을 linewise로 격리한다. |
 

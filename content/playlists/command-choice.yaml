@@ -13,3 +13,9 @@ playlists:
         exercise_id: command-choice-scope-001
         scenario_id: command-choice-scope-001-scenario
         engine_support: implemented
+      - id: incident-005-002
+        role: choose_global_substitute
+        command_cluster: vim-ex-command-substitute
+        exercise_id: command-choice-repeat-substitute-001
+        scenario_id: command-choice-repeat-substitute-001-scenario
+        engine_support: implemented

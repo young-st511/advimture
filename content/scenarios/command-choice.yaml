@@ -13,3 +13,18 @@ scenarios:
     story_constraints:
       - "새 command 소개가 아니라 이미 배운 command 중 범위 선택 판단을 강화한다."
       - "성공/실패 피드백은 key sequence보다 선택 이유를 설명한다."
+
+  - id: command-choice-repeat-substitute-001-scenario
+    status: approved
+    exercise_id: command-choice-repeat-substitute-001
+    engine_support: implemented
+    learning_reinforcement: "같은 literal이 파일 전체에 반복되면 수동 반복보다 전체 범위 substitute를 선택한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "반복 수정과 전체 치환 판별"
+    briefing: "동일한 stale 상태가 파일 전체와 한 줄 안에 반복됩니다. 점 반복이나 현재 줄 치환으로 한 군데씩 고치지 말고 전체 범위 치환을 선택하세요."
+    context_role: "range choice drill"
+    mentor_success: "좋습니다. 반복 수정 대신 전체 파일 범위 치환을 선택해 모든 stale 상태를 fresh로 승격했습니다."
+    mentor_failure: "이번 복구는 같은 수정을 반복하는 문제가 아닙니다. 파일 전체에 반복된 literal이면 % range로 전체 치환을 선택하세요."
+    story_constraints:
+      - "새 command 소개가 아니라 이미 배운 substitute 범위 판단을 강화한다."
+      - "성공/실패 피드백은 반복 수정과 전체 치환의 선택 이유를 설명한다."

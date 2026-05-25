@@ -2,7 +2,7 @@
 
 Slice-ID: CONTENT-BREADTH-001
 Created: 2026-05-26
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -45,19 +45,25 @@ Allowed-Paths:
 
 ## Step 1: Content Design
 
-- [ ] existing command-choice/Ex command content 확인
-- [ ] `choice-002-repeat-or-substitute` target/optimal/constraints 설계
+- [x] existing command-choice/Ex command content 확인
+- [x] `choice-002-repeat-or-substitute` target/optimal/constraints 설계
 
 ## Step 2: Implementation
 
-- [ ] exercise/scenario/playlist 추가
-- [ ] focused E2E 추가/갱신
-- [ ] docs/spec 갱신
+- [x] exercise/scenario/playlist 추가
+- [x] focused E2E 추가/갱신
+- [x] docs/spec 갱신
 
 ## Step 3: Verification
 
-- [ ] content tests
-- [ ] focused E2E
-- [ ] `go test ./...`
-- [ ] `make e2e-playable`
-- [ ] `git diff --check`
+- [x] content tests
+- [x] focused E2E
+- [x] `go test ./...`
+- [x] `make e2e-playable`
+- [x] `git diff --check`
+
+## 결과
+
+- `command-choice-repeat-substitute-001`을 approved/implemented playable exercise로 추가했다.
+- `incident-005-command-choice`는 linewise scope 판단 뒤 range-choice 판단으로 이어지는 2-beat incident가 됐다.
+- focused E2E는 두 beat를 연속 플레이하며 `:%s/stale/fresh/g` route, progress 저장, app_state final buffer를 검증한다.

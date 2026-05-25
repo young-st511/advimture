@@ -14,27 +14,84 @@ steps:
   - send: "j"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
   - send: "d"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+  - wait_screen_contains: "동일한 stale 상태"
+  - send: ":"
+  - wait_ms: 50
+  - send: "%"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "/"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "/"
+  - wait_ms: 50
+  - send: "f"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "/"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "enter"
   - wait_screen_contains: "Dispatch complete"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 005: 복구 범위 판별"
-    - "값/단어를 고치지 말고 복구 범위를 먼저 판단"
-    - "quarantine 줄 묶음만 복구 범위로 판단해 격리했습니다."
+    - "전체 파일 범위 치환을 선택"
     - "Dispatch complete"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"command-choice-scope-001\""
+    - "\"command-choice-repeat-substitute-001\""
   key_trace:
     - "V"
     - "j"
     - "d"
+    - "enter"
+    - ":"
+    - "%"
+    - "s"
+    - "/"
+    - "s"
+    - "t"
+    - "a"
+    - "l"
+    - "e"
+    - "/"
+    - "f"
+    - "r"
+    - "e"
+    - "s"
+    - "h"
+    - "/"
+    - "g"
+    - "enter"
     - "q"
   app_state:
-    buffer: ["route=\"safe\"", "route=\"safe\""]
+    buffer: ["state=fresh fresh", "route=ok", "state=fresh", "state=fresh"]
     cursor:
-      row: 1
+      row: 0
       col: 0
     mode: "normal"
     status: "succeeded"
@@ -42,7 +99,7 @@ assert:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-scope-001"
+      mission_id: "command-choice-repeat-substitute-001"
       completed: true
 evidence:
   save_raw_ansi: true
