@@ -147,17 +147,20 @@ func TestRenderFocusPanelOverlayDoesNotMoveConsoleWhenHeightIsKnown(t *testing.T
 
 func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	view := Render(Screen{
-		Width:         100,
-		Height:        30,
-		PlaylistTitle: "Tutorial 2",
-		ReviewSummary: "재점검 대상: 단어 시작점으로 뛰어가기: 미복구",
-		DailyRoute:    "오늘의 복구 루트: 3건 대기",
-		Title:         "서비스 이름 찾기",
-		Message:       "backend로 바로 이동하세요.",
-		BufferLines:   []string{"service api backend enabled"},
-		Mode:          "normal",
-		Status:        "running",
-		ExerciseTotal: 7,
+		Width:            100,
+		Height:           30,
+		PlaylistTitle:    "Tutorial 2",
+		PlaylistCategory: "tutorial",
+		ReviewSummary:    "재점검 대상: 단어 시작점으로 뛰어가기: 미복구",
+		DailyRoute:       "오늘의 복구 루트: 3건 대기",
+		ReviewCount:      3,
+		ReviewPrimary:    "단어 시작점으로 뛰어가기",
+		Title:            "서비스 이름 찾기",
+		Message:          "backend로 바로 이동하세요.",
+		BufferLines:      []string{"service api backend enabled"},
+		Mode:             "normal",
+		Status:           "running",
+		ExerciseTotal:    7,
 		FocusPanel: &FocusPanel{
 			Kind:  "training",
 			Title: "TRAINING BRIEF",
@@ -177,14 +180,112 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	if strings.Contains(view, "\n복구 현황\n") {
 		t.Fatalf("Render output = %q, should not render recovery status as a large pre-console section", view)
 	}
-	if !strings.Contains(view, "복구 현황: 재점검 대상: 단어 시작점으로 뛰어가기: 미복구") {
-		t.Fatalf("Render output = %q, want recovery status folded into mission HUD", view)
+	if !strings.Contains(view, "복구 메모: 재점검 3건 · 다음: 단어 시작점으로 뛰어가기") {
+		t.Fatalf("Render output = %q, want compact recovery memo in mission HUD", view)
+	}
+	if strings.Contains(view, "오늘의 복구 루트: 3건 대기") {
+		t.Fatalf("Render output = %q, should not expose detailed daily route in running tutorial HUD", view)
+	}
+	cueIndex := strings.Index(view, "TRAINING BRIEF")
+	recoveryIndex := strings.Index(view, "복구 메모:")
+	if cueIndex == -1 || recoveryIndex == -1 || cueIndex > recoveryIndex {
+		t.Fatalf("Render output = %q, want action cue before recovery memo", view)
 	}
 	if !strings.Contains(view, "NORMAL · running · cursor 0:0") {
 		t.Fatalf("Render output = %q, want polished HUD status line", view)
 	}
 	if strings.Contains(view, "Mode: normal") || strings.Contains(view, "Cursor: 0,0") {
 		t.Fatalf("Render output = %q, should not show debug status labels in HUD", view)
+	}
+}
+
+func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
+	view := Render(Screen{
+		Width:            100,
+		Height:           30,
+		PlaylistTitle:    "릴레이 기지 001",
+		PlaylistCategory: "incident",
+		ReviewSummary:    "재점검 대상: timeout 위치 추적: 미복구",
+		DailyRoute:       "오늘의 복구 루트: timeout 위치 추적(미복구) 외 2건 대기",
+		ReviewCount:      3,
+		ReviewPrimary:    "timeout 위치 추적",
+		Title:            "timeout 위치 추적",
+		Message:          "장애 로그에서 timeout marker를 찾아 복구 지점을 고정하세요.",
+		BufferLines:      []string{"ok", "timeout"},
+		Mode:             "normal",
+		Status:           "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "incident",
+			Title: "OPERATOR JUDGMENT",
+			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "?: hint  q: quit"},
+		},
+	})
+
+	if !strings.Contains(view, "복구 현황: 재점검 3건 · 잔류: timeout 위치 추적") {
+		t.Fatalf("Render output = %q, want compact incident recovery status", view)
+	}
+	if strings.Contains(view, "오늘의 복구 루트: timeout 위치 추적") {
+		t.Fatalf("Render output = %q, should not expose detailed daily route in running incident HUD", view)
+	}
+}
+
+func TestRenderHUDWrapsLongBriefingBeforeConsole(t *testing.T) {
+	view := Render(Screen{
+		Width:            72,
+		Height:           30,
+		PlaylistCategory: "incident",
+		Title:            "복구 범위 판별",
+		Message:          "릴레이 기지의 라우팅 파일에 안전한 route 값과 quarantine 블록이 함께 보입니다. 값 하나를 고치지 말고 오염된 줄 묶음을 골라 제거하세요.",
+		BufferLines:      []string{"route=\"safe\"", "quarantine=temp"},
+		Mode:             "normal",
+		Status:           "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "incident",
+			Title: "OPERATOR JUDGMENT",
+			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "?: hint  q: quit"},
+		},
+	})
+
+	lines := strings.Split(view, "\n")
+	for _, line := range lines {
+		if strings.Contains(line, "릴레이 기지의") && displayWidth(line) > hudTextWidth(72) {
+			t.Fatalf("briefing line width = %d, want <= %d: %q", displayWidth(line), hudTextWidth(72), line)
+		}
+	}
+	if strings.Contains(view, "오염된 줄 묶음을 골\n") || strings.Contains(view, "오염된 줄 묶음을 골라\n") {
+		t.Fatalf("Render output = %q, should not leave incomplete briefing fragment", view)
+	}
+	if lineIndex(view, "OPERATOR JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
+		t.Fatalf("Render output = %q, want cue before console", view)
+	}
+}
+
+func TestRenderHUDKeepsCompactRecoverySummaryInModePanel(t *testing.T) {
+	view := Render(Screen{
+		Width:            100,
+		Height:           30,
+		PlaylistCategory: "incident",
+		ReviewSummary:    "재점검 대상: 복구 범위 판별: 미복구",
+		DailyRoute:       "오늘의 복구 루트: 복구 범위 판별(미복구)",
+		ReviewCount:      1,
+		ReviewPrimary:    "복구 범위 판별",
+		Title:            "복구 범위 판별",
+		Message:          "줄 묶음을 고르세요.",
+		BufferLines:      []string{"quarantine=temp"},
+		Mode:             "visual",
+		Status:           "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "mode",
+			Title: "VISUAL CHANNEL",
+			Lines: []string{"Keys: motion expands selection  esc/v: normal"},
+		},
+	})
+
+	if !strings.Contains(view, "복구 현황: 재점검 1건 · 잔류: 복구 범위 판별") {
+		t.Fatalf("Render output = %q, want compact recovery summary in mode panel", view)
+	}
+	if strings.Contains(view, "오늘의 복구 루트: 복구 범위 판별") {
+		t.Fatalf("Render output = %q, should not expose detailed daily route in mode panel", view)
 	}
 }
 

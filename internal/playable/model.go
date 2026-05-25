@@ -160,11 +160,16 @@ func (m Model) View() string {
 	}
 	if entry, ok := m.currentEntry(); ok {
 		screen.PlaylistTitle = entry.PlaylistTitle
+		screen.PlaylistCategory = entry.PlaylistCategory
 		screen.ExerciseIndex = entry.IndexInPlaylist
 		screen.ExerciseTotal = entry.TotalInPlaylist
 	}
 	screen.ReviewSummary = m.reviewQueueSummary()
 	screen.DailyRoute = m.dailyRouteSummary()
+	screen.ReviewCount = len(m.reviewQueue)
+	if len(m.reviewQueue) > 0 {
+		screen.ReviewPrimary = m.reviewQueue[0].Title
+	}
 	if view.Mode == string(vimengine.ModeCommand) || view.Mode == string(vimengine.ModeSearch) {
 		prompt := ":"
 		if view.Mode == string(vimengine.ModeSearch) {

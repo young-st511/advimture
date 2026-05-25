@@ -94,7 +94,7 @@ steps:
   - wait_screen_contains: "Next: enter"
   - send: "enter"
 
-  - wait_screen_contains: "현재 줄의 키 이름을 다시 확인해야 하니 줄 시작으로 이동하세요"
+  - wait_screen_contains: "현재 줄의 키 이름을 다시 확인"
   - send: "0"
   - wait_screen_contains: "Next: enter"
   - send: "enter"

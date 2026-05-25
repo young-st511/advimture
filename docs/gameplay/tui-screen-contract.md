@@ -77,6 +77,10 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 
 - terminal size가 있는 화면은 `MISSION` HUD → `RUNBOOK CONSOLE` → status line 순서를 따른다.
 - running/mode-specific 안내는 `MISSION` HUD 안의 짧은 cue line으로 접는다.
+- running HUD에서는 cue line을 review/daily summary보다 먼저 배치한다.
+- tutorial running HUD의 review/daily는 `복구 메모: 재점검 N건 · 다음: <title>`처럼 축약한다.
+- incident running HUD의 review/daily는 `복구 현황: 재점검 N건 · 잔류: <title>`처럼 축약한다.
+- HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
 - failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 안에서 floating modal로 표시한다.
 - floating modal은 terminal width가 알려진 경우 horizontal center 정렬을 사용한다.
 - 좁은 화면에서는 modal width가 terminal width를 넘지 않도록 줄어든다.

@@ -11,29 +11,32 @@ import (
 const SelectionLinewise = "linewise"
 
 type Screen struct {
-	Width           int
-	Height          int
-	PlaylistTitle   string
-	ReviewSummary   string
-	DailyRoute      string
-	Title           string
-	Message         string
-	BufferLines     []string
-	Mode            string
-	Status          string
-	CursorRow       int
-	CursorCol       int
-	Selection       *tuiadapter.SelectionView
-	ExerciseIndex   int
-	ExerciseTotal   int
-	Grade           string
-	CommandLine     string
-	LastCommand     string
-	FocusPanel      *FocusPanel
-	ActionLines     []string
-	CommandPrompt   string
-	ShowCommandLine bool
-	ShowLastCommand bool
+	Width            int
+	Height           int
+	PlaylistTitle    string
+	PlaylistCategory string
+	ReviewSummary    string
+	DailyRoute       string
+	ReviewCount      int
+	ReviewPrimary    string
+	Title            string
+	Message          string
+	BufferLines      []string
+	Mode             string
+	Status           string
+	CursorRow        int
+	CursorCol        int
+	Selection        *tuiadapter.SelectionView
+	ExerciseIndex    int
+	ExerciseTotal    int
+	Grade            string
+	CommandLine      string
+	LastCommand      string
+	FocusPanel       *FocusPanel
+	ActionLines      []string
+	CommandPrompt    string
+	ShowCommandLine  bool
+	ShowLastCommand  bool
 }
 
 type FocusPanel struct {
@@ -118,12 +121,14 @@ func renderHUD(screen Screen) string {
 	b.WriteString("\n\n")
 	b.WriteString("MISSION\n")
 	b.WriteString(screen.Title + "\n")
-	b.WriteString(screen.Message + "\n")
-	if status := recoveryStatusLine(screen); status != "" {
-		b.WriteString("복구 현황: " + status + "\n")
+	for _, line := range wrapHUDMessage(screen.Message, screen.Width) {
+		b.WriteString(line + "\n")
 	}
 	if cue := renderMissionCue(screen.FocusPanel); cue != "" {
 		b.WriteString(cue)
+	}
+	if status := recoveryStatusLine(screen); status != "" {
+		b.WriteString(status + "\n")
 	}
 	b.WriteString("\n")
 	b.WriteString("RUNBOOK CONSOLE\n")
@@ -170,6 +175,18 @@ func renderHUDStatusLine(screen Screen) string {
 }
 
 func recoveryStatusLine(screen Screen) string {
+	if screen.FocusPanel != nil && !isFloatingPanel(*screen.FocusPanel) && screen.ReviewCount > 0 {
+		primary := screen.ReviewPrimary
+		if primary == "" {
+			primary = "대기 중"
+		}
+		switch {
+		case screen.FocusPanel.Kind == "training" || screen.PlaylistCategory == "tutorial":
+			return fmt.Sprintf("복구 메모: 재점검 %d건 · 다음: %s", screen.ReviewCount, primary)
+		case screen.FocusPanel.Kind == "incident" || screen.PlaylistCategory == "incident":
+			return fmt.Sprintf("복구 현황: 재점검 %d건 · 잔류: %s", screen.ReviewCount, primary)
+		}
+	}
 	parts := []string{}
 	if screen.ReviewSummary != "" {
 		parts = append(parts, screen.ReviewSummary)
@@ -178,6 +195,131 @@ func recoveryStatusLine(screen Screen) string {
 		parts = append(parts, screen.DailyRoute)
 	}
 	return strings.Join(parts, " · ")
+}
+
+func wrapHUDMessage(message string, screenWidth int) []string {
+	if message == "" {
+		return []string{""}
+	}
+	width := hudTextWidth(screenWidth)
+	words := strings.Fields(message)
+	if len(words) == 0 {
+		return []string{message}
+	}
+	lines := make([]string, 0, 2)
+	current := ""
+	for _, word := range words {
+		next := word
+		if current != "" {
+			next = current + " " + word
+		}
+		if displayWidth(next) <= width {
+			current = next
+			continue
+		}
+		if current != "" {
+			lines = append(lines, current)
+			current = word
+		} else {
+			lines = append(lines, trimRunes(word, width))
+		}
+		if len(lines) == 2 {
+			lines[1] = forceEllipsis(lines[1], width)
+			return lines
+		}
+	}
+	if current != "" {
+		lines = append(lines, current)
+	}
+	if len(lines) > 2 {
+		lines = lines[:2]
+		lines[1] = ellipsize(lines[1], width)
+	}
+	return lines
+}
+
+func forceEllipsis(text string, width int) string {
+	if strings.HasSuffix(text, "...") {
+		return text
+	}
+	if width <= 3 {
+		return trimDisplayWidth(text, width)
+	}
+	return trimDisplayWidth(text, width-3) + "..."
+}
+
+func hudTextWidth(screenWidth int) int {
+	const fallback = 88
+	const minWidth = 36
+	const maxWidth = 88
+	if screenWidth <= 0 {
+		return fallback
+	}
+	width := screenWidth - 8
+	if width < minWidth {
+		width = minWidth
+	}
+	if width > maxWidth {
+		width = maxWidth
+	}
+	return width
+}
+
+func ellipsize(text string, width int) string {
+	if displayWidth(text) <= width {
+		return text
+	}
+	if width <= 3 {
+		return trimDisplayWidth(text, width)
+	}
+	return trimDisplayWidth(text, width-3) + "..."
+}
+
+func trimRunes(text string, limit int) string {
+	if limit <= 0 {
+		return ""
+	}
+	runes := []rune(text)
+	if len(runes) <= limit {
+		return text
+	}
+	return string(runes[:limit])
+}
+
+func runeLen(text string) int {
+	return len([]rune(text))
+}
+
+func displayWidth(text string) int {
+	width := 0
+	for _, r := range text {
+		if r <= 127 {
+			width++
+		} else {
+			width += 2
+		}
+	}
+	return width
+}
+
+func trimDisplayWidth(text string, limit int) string {
+	if limit <= 0 {
+		return ""
+	}
+	width := 0
+	var b strings.Builder
+	for _, r := range text {
+		cellWidth := 1
+		if r > 127 {
+			cellWidth = 2
+		}
+		if width+cellWidth > limit {
+			break
+		}
+		b.WriteRune(r)
+		width += cellWidth
+	}
+	return b.String()
 }
 
 func renderMissionCue(panel *FocusPanel) string {

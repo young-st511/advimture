@@ -2,7 +2,8 @@
 
 Slice-ID: HUD-DENSITY-001
 Created: 2026-05-26
-Status: active
+Status: completed
+Completed: 2026-05-26
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -100,24 +101,42 @@ OPERATOR JUDGMENT · Inputs left: 3/3 · 판단: 목표 상태를 보고 이미 
 
 ## Step 1: Contract and Tests
 
-- [ ] `tui-screen-contract`에 running HUD 축약 원칙 반영
-- [ ] renderer test에 tutorial/incident recovery summary 축약 expectation 추가
-- [ ] command-choice briefing wrap/truncate expectation 추가
+- [x] `tui-screen-contract`에 running HUD 축약 원칙 반영
+- [x] renderer test에 tutorial/incident recovery summary 축약 expectation 추가
+- [x] command-choice briefing wrap/truncate expectation 추가
 
 ## Step 2: Renderer Implementation
 
-- [ ] recovery summary formatter 추가
-- [ ] HUD briefing wrap/truncate helper 추가
-- [ ] tutorial/incident running 화면에서 축약 summary 사용
+- [x] recovery summary formatter 추가
+- [x] HUD briefing wrap/truncate helper 추가
+- [x] tutorial/incident running 화면에서 축약 summary 사용
 
 ## Step 3: E2E Verification
 
-- [ ] `playable_ftue_first_five_route` 갱신/검증
-- [ ] `playable_incident_001_full` 갱신/검증
-- [ ] `playable_command_choice_scope` 갱신/검증
-- [ ] `go test ./...`
-- [ ] `make e2e-playable`
-- [ ] `git diff --check`
+- [x] `playable_ftue_first_five_route` 갱신/검증
+- [x] `playable_incident_001_full` 갱신/검증
+- [x] `playable_command_choice_scope` 갱신/검증
+- [x] `go test ./...`
+- [x] `make e2e-playable`
+- [x] `git diff --check`
+
+## 구현 결과
+
+- `playable.Model`이 `Screen`에 playlist category, review count, primary review title을 넘긴다.
+- running HUD는 tutorial에서 `복구 메모: 재점검 N건 · 다음: <title>`, incident에서 `복구 현황: 재점검 N건 · 잔류: <title>`로 축약한다.
+- command/search/visual 같은 mode cue에서도 현재 playlist category에 맞춰 축약 summary를 유지한다.
+- HUD briefing은 terminal width 기준 최대 2줄로 wrap하고, 초과 시 `...`로 축약한다.
+- app_state review assertion은 기존 상세 daily route를 유지한다.
+
+## 검증 결과
+
+- `go test ./internal/playableview ./internal/playable`
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_ftue_first_five_route.yaml`
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_incident_001_full.yaml`
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_command_choice_scope.yaml`
+- `go test ./...`
+- `make e2e-playable`
+- `git diff --check`
 
 ## 후속 Backlog
 

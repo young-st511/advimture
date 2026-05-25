@@ -391,8 +391,8 @@ Architecture, Learning/Game UX, Scenario/World 리뷰 모두 다음 공통 결�
 | 1 | PLAN-REFRESH-007 | completed | Foundation Playtest / UX Polish 순서 고정 |
 | 2 | UX-LANGUAGE-001 | completed | 성공 modal의 다음 행동 문구를 tutorial/incident 맥락에 맞게 정리 |
 | 3 | PLAYTEST-EVIDENCE-001 | completed | FTUE, incident, command-choice 대표 루트 evidence 점검 |
-| 4 | HUD-DENSITY-001 | active | Mission HUD와 daily/review line의 밀도/줄바꿈 polish |
-| 5 | HELP-AFFORDANCE-001 | planned | `?` hint/help affordance와 실제 입력 처리 정합성 검증 |
+| 4 | HUD-DENSITY-001 | completed | Mission HUD와 daily/review line의 밀도/줄바꿈 polish |
+| 5 | HELP-AFFORDANCE-001 | active | `?` hint/help affordance와 실제 입력 처리 정합성 검증 |
 | 6 | UX-BACKLOG-001 | planned | 다음 content breadth로 넘어가기 전 playtest backlog 정리 |
 
 ## Foundation Playtest / UX Polish 출구 조건
@@ -401,7 +401,7 @@ Architecture, Learning/Game UX, Scenario/World 리뷰 모두 다음 공통 결�
 |----|----------|-------------|------|---------------|
 | UX-LANGUAGE-001 | Foundation Product Loop 완료 | completed: action copy helper, tutorial/incident E2E 갱신 | model tests, `make e2e-playable` | 저장 포맷과 playlist order 변경 금지 |
 | PLAYTEST-EVIDENCE-001 | action copy 정리 완료 | completed: RedTeam representative route evidence review와 backlog | completed: focused E2E evidence | UX 주관 판단을 evidence 없이 문서화하지 않음 |
-| HUD-DENSITY-001 | evidence에서 밀도 문제 확인 | HUD line wrapping/copy polish | renderer tests, focused E2E | console 접근성을 해치지 않음 |
+| HUD-DENSITY-001 | evidence에서 밀도 문제 확인 | completed: HUD line wrapping/copy polish | completed: renderer tests, focused E2E, `make e2e-playable` | console 접근성을 해치지 않음 |
 | HELP-AFFORDANCE-001 | hint/help issue 확인 | `?` affordance 정합성 테스트 | playable/E2E tests | 검색 `?` 구현과 섞지 않음 |
 | UX-BACKLOG-001 | polish pass 완료 | 다음 중기 플랜 후보와 backlog | docs review | 새 engine 기능을 무계획으로 열지 않음 |
 

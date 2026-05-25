@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### HUD-DENSITY-001. Mission HUD Priority and Wrapping
+### HELP-AFFORDANCE-001. Hint, Retry, and Quit Affordance
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/hud-density-001-mission-hud-priority.md`
-- 목표: Mission HUD가 현재 Vim 조작 목표를 먼저 읽히게 하고 review/daily 밀도와 줄바꿈을 정리한다.
+- ExecPlan: `docs/exec-plans/active/help-affordance-001-hint-retry-quit.md`
+- 목표: 화면에 노출되는 hint/retry/quit 안내와 실제 입력 처리 정합성을 검증하고 보강한다.
 
 ## 방금 완료한 슬라이스
+
+### HUD-DENSITY-001. Mission HUD Priority and Wrapping
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/hud-density-001-mission-hud-priority.md`
+- 완료일: 2026-05-26
 
 ### PLAYTEST-EVIDENCE-001. Foundation Route Evidence Review
 - 상태: completed
