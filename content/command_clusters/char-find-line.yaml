@@ -2,7 +2,7 @@ command_clusters:
   - id: char-find-line
     status: approved
     compatibility_tier: pedagogical
-    engine_support: planned
+    engine_support: implemented
     curriculum_area: chapter-3-navigation
     title: "한 줄 안 target 문자 찾기"
     commands: ["f", "t", "df", "dt", "cf", "ct"]

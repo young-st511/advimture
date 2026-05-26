@@ -710,7 +710,7 @@ command_cluster:
   id: char-find-line
   status: approved
   compatibility_tier: pedagogical
-  engine_support: planned
+  engine_support: implemented
   curriculum_area: chapter-3-navigation
   title: 한 줄 안 target 문자 찾기
   commands: ["f", "t", "df", "dt", "cf", "ct"]
@@ -756,7 +756,7 @@ command_cluster:
 - `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했으며 PLAYPACK-008에서 4문항 tutorial content와 full E2E를 연결했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
 - `visual-char-line`은 같은 줄 charwise visual selection의 삭제/복사 tutorial까지 구현했다. visual block, count/register prefix, indentation command는 후속 hardening으로 둔다.
 - `visual-line-basic`은 linewise `V` + `d/y` tutorial까지 구현했다. multi-line charwise operator와 visual block은 후속 hardening으로 둔다.
-- `char-find-line`은 CHAR-FIND-GAP-001에서 approved로 승격했다. 첫 구현 후보는 forward same-line `f/t`와 `df/dt/cf/ct`다.
+- `char-find-line`은 CHAR-FIND-GAP-001에서 approved로 승격했고, VIM-030에서 engine support를 구현했다. 첫 구현은 forward same-line `f/t`와 `df/dt/cf/ct`다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001

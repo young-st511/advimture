@@ -29,6 +29,8 @@ const (
 	KeyW           = "w"
 	KeyB           = "b"
 	KeyE           = "e"
+	KeyF           = "f"
+	KeyT           = "t"
 	KeyG           = "g"
 	KeyShiftG      = "G"
 	KeyZero        = "0"
@@ -59,6 +61,10 @@ const (
 	pendingDeleteInner = KeyD + KeyI
 	pendingChangeInner = KeyC + KeyI
 	pendingYankInner   = KeyY + KeyI
+	pendingDeleteFind  = KeyD + KeyF
+	pendingDeleteTill  = KeyD + KeyT
+	pendingChangeFind  = KeyC + KeyF
+	pendingChangeTill  = KeyC + KeyT
 )
 
 type Cursor struct {
@@ -295,6 +301,15 @@ func applyWithOptions(state State, key string, options applyOptions) Result {
 		return moveWordBackward(next, key)
 	case KeyE:
 		return moveWordEnd(next, key)
+	case KeyF, KeyT:
+		next.PendingKey = key
+		return Result{
+			State: copyState(next),
+			Events: []Event{{
+				Type: EventPendingKey,
+				Key:  key,
+			}},
+		}
 	case KeyG:
 		next.PendingKey = key
 		return Result{
@@ -425,6 +440,10 @@ func recordPendingChange(state State, key string, result Result) State {
 		return startRecording(result.State, []string{KeyC, key}, true)
 	case pendingChangeInner:
 		return startRecording(result.State, []string{KeyC, KeyI, key}, true)
+	case pendingChangeFind:
+		return startRecording(result.State, []string{KeyC, KeyF, key}, true)
+	case pendingChangeTill:
+		return startRecording(result.State, []string{KeyC, KeyT, key}, true)
 	default:
 		return result.State
 	}
@@ -550,6 +569,12 @@ func applyPendingKey(state State, key string) Result {
 	if pending == KeyR {
 		return replaceCurrentChar(next, key)
 	}
+	if pending == KeyF {
+		return moveToCharFind(next, key, false)
+	}
+	if pending == KeyT {
+		return moveToCharFind(next, key, true)
+	}
 	if pending == KeyD {
 		return deleteWithMotion(next, key)
 	}
@@ -577,6 +602,18 @@ func applyPendingKey(state State, key string) Result {
 	if pending == pendingYankInner && key == KeyDoubleQuote {
 		return yankInnerQuote(next, key)
 	}
+	if pending == pendingDeleteFind {
+		return deleteWithCharFind(next, key, false)
+	}
+	if pending == pendingDeleteTill {
+		return deleteWithCharFind(next, key, true)
+	}
+	if pending == pendingChangeFind {
+		return changeWithCharFind(next, key, false)
+	}
+	if pending == pendingChangeTill {
+		return changeWithCharFind(next, key, true)
+	}
 	if pending == pendingDeleteInner || pending == pendingChangeInner || pending == pendingYankInner {
 		return unsupportedTextObject(next, key)
 	}
@@ -594,6 +631,10 @@ func deleteWithMotion(state State, key string) Result {
 	switch key {
 	case KeyI:
 		return enterInnerTextObjectPending(state, pendingDeleteInner, key)
+	case KeyF:
+		return enterCharFindPending(state, pendingDeleteFind, key)
+	case KeyT:
+		return enterCharFindPending(state, pendingDeleteTill, key)
 	case KeyW:
 		return deleteWordForward(state, key)
 	case KeyDollar:
@@ -638,6 +679,10 @@ func changeWithMotion(state State, key string) Result {
 	switch key {
 	case KeyI:
 		return enterInnerTextObjectPending(state, pendingChangeInner, key)
+	case KeyF:
+		return enterCharFindPending(state, pendingChangeFind, key)
+	case KeyT:
+		return enterCharFindPending(state, pendingChangeTill, key)
 	case KeyW:
 		return changeWordForward(state, key)
 	case KeyDollar:
@@ -675,6 +720,18 @@ func unsupportedTextObject(state State, key string) Result {
 			Type:    EventUnsupportedKey,
 			Key:     key,
 			Message: "text object sequence is not supported",
+		}},
+	}
+}
+
+func enterCharFindPending(state State, pending string, key string) Result {
+	next := copyState(state)
+	next.PendingKey = pending
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventPendingKey,
+			Key:  key,
 		}},
 	}
 }
@@ -1048,6 +1105,92 @@ func yankInnerQuote(state State, key string) Result {
 		return boundary(state, key)
 	}
 	return yankLineRange(state, key, start, end)
+}
+
+func moveToCharFind(state State, key string, till bool) Result {
+	targetRunes := []rune(key)
+	if len(targetRunes) != 1 {
+		return unsupportedCharFindTarget(state, key)
+	}
+	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	match, ok := findCharForward(state.Lines[state.Cursor.Row], start, targetRunes[0])
+	if !ok {
+		return boundary(state, key)
+	}
+	target := match
+	if till {
+		target = match - 1
+	}
+	if target <= start {
+		return boundary(state, key)
+	}
+	next := copyState(state)
+	next.Cursor.Col = target
+	next.Cursor.DesiredCol = target
+	return Result{
+		State: copyState(next),
+		Events: []Event{{
+			Type: EventMoved,
+			Key:  key,
+		}},
+	}
+}
+
+func deleteWithCharFind(state State, key string, till bool) Result {
+	start, end, ok := charFindRange(state, key, till)
+	if !ok {
+		return boundary(state, key)
+	}
+	return deleteLineRange(state, key, start, end)
+}
+
+func changeWithCharFind(state State, key string, till bool) Result {
+	start, end, ok := charFindRange(state, key, till)
+	if !ok {
+		return boundary(state, key)
+	}
+	return changeLineRange(state, key, start, end)
+}
+
+func charFindRange(state State, key string, till bool) (int, int, bool) {
+	targetRunes := []rune(key)
+	if len(targetRunes) != 1 {
+		return 0, 0, false
+	}
+	start := clampCol(state.Cursor.Col, state.Lines[state.Cursor.Row])
+	match, ok := findCharForward(state.Lines[state.Cursor.Row], start, targetRunes[0])
+	if !ok {
+		return 0, 0, false
+	}
+	end := match + 1
+	if till {
+		end = match
+	}
+	if end <= start {
+		return 0, 0, false
+	}
+	return start, end, true
+}
+
+func findCharForward(line string, cursorCol int, target rune) (int, bool) {
+	runes := []rune(line)
+	for col := cursorCol + 1; col < len(runes); col++ {
+		if runes[col] == target {
+			return col, true
+		}
+	}
+	return 0, false
+}
+
+func unsupportedCharFindTarget(state State, key string) Result {
+	return Result{
+		State: copyState(state),
+		Events: []Event{{
+			Type:    EventUnsupportedKey,
+			Key:     key,
+			Message: "char find target must be a single character",
+		}},
+	}
 }
 
 func innerWordRange(line []rune, cursorCol int) (int, int, bool) {

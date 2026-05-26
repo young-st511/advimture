@@ -2,7 +2,7 @@
 
 Slice-ID: VIM-030
 Created: 2026-05-26
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -51,19 +51,25 @@ CHAR-FIND-GAP-001에서 고정한 `char-find-line` 첫 scope를 engine 레벨에
 
 ## Step 1: Red Tests
 
-- [ ] vimengine normal `f/t` tests
-- [ ] vimengine `df/dt/cf/ct` tests
-- [ ] tuiadapter/runtime replay tests
+- [x] vimengine normal `f/t` tests
+- [x] vimengine `df/dt/cf/ct` tests
+- [x] tuiadapter/runtime replay tests
 
 ## Step 2: Green Implementation
 
-- [ ] key constants and pending states
-- [ ] char-find helper
-- [ ] normal motion and operator mutation integration
-- [ ] change recording support
+- [x] key constants and pending states
+- [x] char-find helper
+- [x] normal motion and operator mutation integration
+- [x] change recording support
 
 ## Step 3: Verification
 
-- [ ] focused tests
-- [ ] `go test ./...`
-- [ ] `git diff --check`
+- [x] focused tests
+- [x] `go test ./...`
+- [x] `git diff --check`
+
+## 결과
+
+- `f/t` normal motion과 `df/dt/cf/ct` operator 결합을 구현했다.
+- `cf/ct`는 insert recording을 통해 `c`, motion, target char, inserted text, `esc`를 last change로 남긴다.
+- `F/T`, `;`, `,`, count, visual, yank 결합, cross-line search는 구현하지 않았다.

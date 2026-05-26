@@ -246,8 +246,8 @@ Scenario 방향:
 
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
-| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic` |
-| next | 다음 gap planning/구현 후보 | `char-find-line` |
+| foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic`, `char-find-line` |
+| next | 다음 gap planning/구현 후보 | `char-find-line` playable tutorial |
 | soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | quote text object hardening, multi-line charwise visual |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
@@ -292,7 +292,7 @@ ID: `command-choice-drill`
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line visual, linewise `V`, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope와 range-choice beat를 playable로 연결했다. 후속 후보는 reuse-choice와 search-then-act다.
-- `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정한다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
+- `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030에서 engine support를 구현했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
 
 ## Long-Run Platform Direction
 

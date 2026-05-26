@@ -1749,6 +1749,85 @@ func TestChangeWithMotionUndoRedo(t *testing.T) {
 	assertEvent(t, result, EventChanged)
 }
 
+func TestCharFindMovesToTargetAndTillBeforeTarget(t *testing.T) {
+	engine := New([]string{"key=value,backup"})
+
+	assertApply(t, engine, KeyF, 0, 0, EventPendingKey)
+	result := engine.Apply("=")
+	if result.State.Cursor.Col != 3 {
+		t.Fatalf("f= cursor col = %d, want 3", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventMoved)
+
+	engine = New([]string{"key=value,backup"})
+	assertApply(t, engine, KeyT, 0, 0, EventPendingKey)
+	result = engine.Apply(",")
+	if result.State.Cursor.Col != 8 {
+		t.Fatalf("t, cursor col = %d, want 8", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventMoved)
+}
+
+func TestCharFindReportsBoundaryWhenTargetIsMissing(t *testing.T) {
+	engine := New([]string{"key=value"})
+
+	engine.Apply(KeyF)
+	result := engine.Apply(",")
+
+	if result.State.Cursor.Col != 0 {
+		t.Fatalf("cursor col = %d, want unchanged 0", result.State.Cursor.Col)
+	}
+	if result.State.PendingKey != "" {
+		t.Fatalf("pending key = %q, want empty", result.State.PendingKey)
+	}
+	assertEvent(t, result, EventBoundary)
+}
+
+func TestDeleteWithCharFindIncludesOrExcludesTarget(t *testing.T) {
+	engine := New([]string{"alpha,beta"})
+
+	engine.Apply(KeyD)
+	engine.Apply(KeyF)
+	result := engine.Apply(",")
+
+	assertStrings(t, result.State.Lines, []string{"beta"})
+	if result.State.Cursor.Col != 0 {
+		t.Fatalf("df, cursor col = %d, want 0", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+
+	engine = New([]string{"alpha,beta"})
+	engine.Apply(KeyD)
+	engine.Apply(KeyT)
+	result = engine.Apply(",")
+
+	assertStrings(t, result.State.Lines, []string{",beta"})
+	if result.State.Cursor.Col != 0 {
+		t.Fatalf("dt, cursor col = %d, want 0", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestChangeWithCharFindEntersInsertModeAndRecordsChange(t *testing.T) {
+	engine := New([]string{"alpha,beta"})
+
+	engine.Apply(KeyC)
+	engine.Apply(KeyT)
+	result := engine.Apply(",")
+
+	assertStrings(t, result.State.Lines, []string{",beta"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	assertEvent(t, result, EventInsertMode)
+
+	engine.Apply("X")
+	result = engine.Apply(KeyEsc)
+
+	assertStrings(t, result.State.Lines, []string{"X,beta"})
+	assertStrings(t, result.State.LastChange, []string{KeyC, KeyT, ",", "X", KeyEsc})
+}
+
 func TestUnsupportedKeyDoesNotMove(t *testing.T) {
 	engine := New([]string{"abc"})
 	result := engine.Apply("z")

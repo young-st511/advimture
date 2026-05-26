@@ -139,6 +139,28 @@ func TestSessionReplaysLiteralSearchTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeySlash, "t", "i", "m", "e", "o", "u", "t", vimengine.KeyEnter})
 }
 
+func TestSessionReplaysCharFindTrace(t *testing.T) {
+	session := NewSession(Exercise{
+		ID:      "find-equals",
+		Initial: vimengine.NewState([]string{"key=value"}),
+		Goal: Goal{
+			Cursor: CursorGoal(0, 3),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyF},
+		},
+	})
+
+	session.ApplyKey(vimengine.KeyF)
+	result := session.ApplyKey("=")
+
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyF, "="})
+}
+
 func TestSessionSucceedsWithVisualDeleteTrace(t *testing.T) {
 	session := NewSession(Exercise{
 		ID:      "visual-delete",

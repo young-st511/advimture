@@ -201,6 +201,8 @@ func TestMapInputMapsNavigationKeys(t *testing.T) {
 		"0": vimengine.KeyZero,
 		"$": vimengine.KeyDollar,
 		".": vimengine.KeyDot,
+		"f": vimengine.KeyF,
+		"t": vimengine.KeyT,
 	}
 
 	for input, wantKey := range cases {

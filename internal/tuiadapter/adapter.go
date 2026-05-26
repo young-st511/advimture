@@ -170,6 +170,10 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		return Action{Type: ActionKey, Key: vimengine.KeyB}
 	case "e":
 		return Action{Type: ActionKey, Key: vimengine.KeyE}
+	case "f":
+		return Action{Type: ActionKey, Key: vimengine.KeyF}
+	case "t":
+		return Action{Type: ActionKey, Key: vimengine.KeyT}
 	case "g":
 		return Action{Type: ActionKey, Key: vimengine.KeyG}
 	case "0":
