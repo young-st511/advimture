@@ -28,3 +28,18 @@ scenarios:
     story_constraints:
       - "새 command 소개가 아니라 이미 배운 substitute 범위 판단을 강화한다."
       - "성공/실패 피드백은 반복 수정과 전체 치환의 선택 이유를 설명한다."
+
+  - id: command-choice-inline-target-001-scenario
+    status: approved
+    exercise_id: command-choice-inline-target-001
+    engine_support: implemented
+    learning_reinforcement: "delimiter를 보존해야 하는 hyphenated 값 교체에는 target 직전까지 바꾸는 ct,를 선택한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "inline target 범위 판별"
+    briefing: "target 값은 손상됐지만 comma 뒤 route는 정상입니다. comma를 지우지 말고 앞쪽 hyphenated 값만 stable로 교체하세요."
+    context_role: "inline target choice drill"
+    mentor_success: "좋습니다. comma를 보존해야 한다는 조건을 보고 cf,가 아니라 ct,를 선택했습니다."
+    mentor_failure: "comma 뒤 route는 정상입니다. delimiter를 지우지 않도록 t,로 target 직전까지만 change하세요."
+    story_constraints:
+      - "새 command 소개가 아니라 f/t 범위 선택 판단을 강화한다."
+      - "성공/실패 피드백은 ct,와 cf,의 선택 이유를 설명한다."

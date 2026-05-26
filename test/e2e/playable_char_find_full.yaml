@@ -1,0 +1,142 @@
+id: playable_char_find_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: char-find-line-001
+steps:
+  - wait_screen_contains: "route 구분자"
+  - send: "f"
+  - wait_ms: 50
+  - send: "="
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "comma 직전"
+  - send: "t"
+  - wait_ms: 50
+  - send: ","
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "stale prefix"
+  - send: "d"
+  - wait_ms: 50
+  - send: "f"
+  - wait_ms: 50
+  - send: ","
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "delimiter 보존"
+  - send: "d"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: ","
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "status 값"
+  - send: "c"
+  - wait_ms: 50
+  - send: "f"
+  - wait_ms: 50
+  - send: ","
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "quoted token"
+  - send: "c"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "\""
+  - wait_ms: 50
+  - send: "f"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next runbook: enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Inline target"
+    - "Exercise: 6/6"
+    - "Next runbook: enter"
+    - "좋습니다. quote를 건드리지 않고 값만 교체했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"char-find-line-001\""
+    - "\"char-find-line-002\""
+    - "\"char-find-line-003\""
+    - "\"char-find-line-004\""
+    - "\"char-find-line-005\""
+    - "\"char-find-line-006\""
+  key_trace:
+    - "f"
+    - "="
+    - "enter"
+    - "t"
+    - ","
+    - "enter"
+    - "d"
+    - "f"
+    - ","
+    - "enter"
+    - "d"
+    - "t"
+    - ","
+    - "enter"
+    - "c"
+    - "f"
+    - ","
+    - "u"
+    - "p"
+    - "esc"
+    - "enter"
+    - "c"
+    - "t"
+    - "\""
+    - "f"
+    - "r"
+    - "e"
+    - "s"
+    - "h"
+    - "esc"
+    - "q"
+  app_state:
+    buffer: ["token=fresh\" keep"]
+    cursor:
+      row: 0
+      col: 11
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "char-find-line-006"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true

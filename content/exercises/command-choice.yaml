@@ -104,3 +104,51 @@ exercises:
         col: 0
       mode: normal
       status: succeeded
+
+  - id: command-choice-inline-target-001
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["ct", "cf", "cw", "c$"]
+    mistake_focus: ["delimiter를 보존해야 하는데 cf,로 comma까지 지우거나 cw로 hyphenated 값 일부만 고친다."]
+    replay_status: pass
+    title: "delimiter 보존 범위 판별"
+    goal_for_player: "route 뒤쪽은 정상입니다. comma 앞 hyphenated 값만 stable로 바꾸고 comma는 보존하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        target=old-value,route=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 13
+      buffer: |
+        target=stable,route=live
+    optimal_keys: ["c", "t", ",", "s", "t", "a", "b", "l", "e", "esc"]
+    allowed_keys: ["c", "t", ",", "s", "a", "b", "l", "e", "esc"]
+    forbidden_keys: ["f", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["c", "t", "esc"]
+      forbidden_keys: ["f", "h", "j", "k", "w", "0", "$", "/", "?", ":", "d", "x", "r", "i", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "comma 뒤 route는 정상입니다. target 문자는 보존해야 하므로 t,로 comma 앞까지만 범위를 잡으세요."
+      - after_keys: 9
+        text: "stable 입력 후 esc로 Normal mode에 돌아와 복구를 확정합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["target=stable,route=live"]
+      cursor:
+        row: 0
+        col: 13
+      mode: normal
+      status: succeeded

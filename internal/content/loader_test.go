@@ -19,14 +19,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 19 {
 		t.Fatalf("command clusters = %d, want 19", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 87 {
-		t.Fatalf("exercises = %d, want 87", len(lib.Exercises))
+	if len(lib.Exercises) != 94 {
+		t.Fatalf("exercises = %d, want 94", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 87 {
-		t.Fatalf("scenarios = %d, want 87", len(lib.Scenarios))
+	if len(lib.Scenarios) != 94 {
+		t.Fatalf("scenarios = %d, want 94", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 20 {
-		t.Fatalf("playlists = %d, want 20", len(lib.Playlists))
+	if len(lib.Playlists) != 21 {
+		t.Fatalf("playlists = %d, want 21", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 87 {
-		t.Fatalf("playable exercises = %d, want 87: %+v", len(playable), playable)
+	if len(playable) != 94 {
+		t.Fatalf("playable exercises = %d, want 94: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -47,6 +47,13 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"change-with-motion-001",
 		"change-with-motion-002",
 		"change-with-motion-003",
+		"char-find-line-001",
+		"char-find-line-002",
+		"char-find-line-003",
+		"char-find-line-004",
+		"char-find-line-005",
+		"char-find-line-006",
+		"command-choice-inline-target-001",
 		"command-choice-repeat-substitute-001",
 		"command-choice-scope-001",
 		"delete-with-motion-001",
@@ -168,6 +175,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-91-text-object-quote-pair",
 		"tutorial-92-visual-selection",
 		"tutorial-93-visual-line",
+		"tutorial-94-char-find-line",
 		"incident-001-hotfix",
 		"incident-002-structure-recovery",
 		"incident-003-visual-recovery",
@@ -471,6 +479,12 @@ func TestCoverageReportsOperatorGrammarCommandsCovered(t *testing.T) {
 	assertStrings(t, searchReport.Covered, []string{"/", "n", "N"})
 	if len(searchReport.Missing) != 0 {
 		t.Fatalf("search basic missing coverage = %+v, want empty", searchReport.Missing)
+	}
+
+	charFindReport := reports["char-find-line"]
+	assertStrings(t, charFindReport.Covered, []string{"f", "t", "df", "dt", "cf", "ct"})
+	if len(charFindReport.Missing) != 0 {
+		t.Fatalf("char find missing coverage = %+v, want empty", charFindReport.Missing)
 	}
 }
 

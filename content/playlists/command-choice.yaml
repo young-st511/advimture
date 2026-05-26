@@ -19,3 +19,9 @@ playlists:
         exercise_id: command-choice-repeat-substitute-001
         scenario_id: command-choice-repeat-substitute-001-scenario
         engine_support: implemented
+      - id: incident-005-003
+        role: choose_inline_target_range
+        command_cluster: char-find-line
+        exercise_id: command-choice-inline-target-001
+        scenario_id: command-choice-inline-target-001-scenario
+        engine_support: implemented

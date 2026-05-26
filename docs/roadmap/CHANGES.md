@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-26 — Inline target motion을 tutorial까지 승격
+
+이전 가정: `f/t`는 다음 engine 후보였고, operator 결합과 playable tutorial 범위는 아직 분리 계획 단계였다.
+
+새 가정: `char-find-line`은 forward same-line `f/t`와 `df/dt/cf/ct`를 구현하고, `tutorial-94-char-find-line` 6문항으로 replay/coverage/E2E까지 연결한다. 이어서 `incident-005-command-choice`에 `choice-005-inline-target-range`를 third beat로 추가해 `ct,`와 `cf,`의 delimiter 보존 판단까지 적용한다.
+
+이유: `f/t`는 단순 이동보다 delimiter/quote/comma를 기준으로 정확한 범위를 잡을 때 학습 가치가 크다. 따라서 tutorial 직후 적용 루프로 넘어가야 장기 반복 학습 플랫폼의 “유용하고 재미있는 command 선택” 철학과 맞는다.
+
+영향: `Inline Target Motions` 중기 플랜은 scope planning, engine, tutorial, applied command-choice까지 완료됐다. 다음 후보는 `/target` 검색 후 `ct,`로 comma 앞 값만 교체하는 `incident-006-inline-target-repair` 또는 reuse-choice drill이다.
+
 ## 2026-05-25 — Daily route를 primary 복구 대상으로 구체화
 
 이전 가정: 저장 포맷 변경 전에는 review queue 개수만 읽어 `오늘의 복구 루트: N건 대기`로 표시한다.

@@ -1,0 +1,84 @@
+scenarios:
+  - id: char-find-line-001-scenario
+    status: approved
+    exercise_id: char-find-line-001
+    engine_support: implemented
+    learning_reinforcement: "f{char}는 같은 줄에서 target 문자 위치로 바로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "route 구분자 포착"
+    briefing: "라우팅 설정에서 값의 경계를 확인해야 합니다. 줄 시작에서 f=로 = 구분자 위치까지 바로 이동하세요."
+    context_role: "route key/value 경계"
+    mentor_success: "좋습니다. l을 반복하지 않고 target 문자 =를 한 번에 잡았습니다."
+    mentor_failure: "이번 훈련은 같은 줄 target 문자 이동입니다. f를 누른 뒤 찾을 문자 =를 입력하세요."
+    story_constraints:
+      - "한 줄 안 delimiter 이동 감각을 강조한다."
+
+  - id: char-find-line-002-scenario
+    status: approved
+    exercise_id: char-find-line-002
+    engine_support: implemented
+    learning_reinforcement: "t{char}는 target 문자 바로 전 위치로 이동한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "comma 직전 정렬"
+    briefing: "relay 이름 끝만 확인해야 합니다. t,로 comma 바로 앞 문자까지 이동하고 delimiter는 건드리지 마세요."
+    context_role: "relay 이름과 fallback 경계"
+    mentor_success: "좋습니다. t는 target을 밟지 않고 바로 앞에 멈춥니다."
+    mentor_failure: "comma 자체가 아니라 comma 직전이 목표입니다. t,를 사용하세요."
+    story_constraints:
+      - "f와 t의 target 포함 차이를 분리해 보여준다."
+
+  - id: char-find-line-003-scenario
+    status: approved
+    exercise_id: char-find-line-003
+    engine_support: implemented
+    learning_reinforcement: "df{char}는 현재 위치부터 target 문자까지 포함해 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "stale prefix 제거"
+    briefing: "live 값 앞에 stale prefix가 붙었습니다. df,로 stale과 comma를 함께 제거하세요."
+    context_role: "stale prefix와 live 값"
+    mentor_success: "좋습니다. df,로 delimiter까지 포함해 stale prefix를 걷어냈습니다."
+    mentor_failure: "comma까지 같이 없어져야 합니다. d 다음 f,로 target 포함 range를 잡으세요."
+    story_constraints:
+      - "operator + f의 inclusive range를 강조한다."
+
+  - id: char-find-line-004-scenario
+    status: approved
+    exercise_id: char-find-line-004
+    engine_support: implemented
+    learning_reinforcement: "dt{char}는 현재 위치부터 target 문자 바로 전까지 삭제한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "delimiter 보존 제거"
+    briefing: "delimiter는 다음 파서가 필요로 합니다. dt,로 stale 값만 제거하고 comma는 남기세요."
+    context_role: "보존해야 하는 delimiter"
+    mentor_success: "좋습니다. dt,로 값만 제거하고 comma 경계를 살렸습니다."
+    mentor_failure: "comma는 남아야 합니다. df가 아니라 dt,로 target 직전까지만 삭제하세요."
+    story_constraints:
+      - "df와 dt의 삭제 범위 차이를 상황으로 설명한다."
+
+  - id: char-find-line-005-scenario
+    status: approved
+    exercise_id: char-find-line-005
+    engine_support: implemented
+    learning_reinforcement: "cf{char}는 target 문자를 포함해 change하고 Insert mode로 진입한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "status 값 교체"
+    briefing: "status 값과 뒤 comma를 한 번에 걷어내고 up으로 교체해야 합니다. cf, 후 up을 입력하고 esc로 확정하세요."
+    context_role: "상태 값 긴급 교체"
+    mentor_success: "좋습니다. cf,로 range를 잡아 값 교체와 mode 전환을 한 번에 처리했습니다."
+    mentor_failure: "이번에는 삭제가 아니라 change입니다. c, f, comma 뒤 up을 입력하고 esc로 복귀하세요."
+    story_constraints:
+      - "change operator가 Insert mode로 이어지는 흐름을 강조한다."
+
+  - id: char-find-line-006-scenario
+    status: approved
+    exercise_id: char-find-line-006
+    engine_support: implemented
+    learning_reinforcement: "ct{char}는 target 문자를 보존하며 앞쪽 값만 change한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "quoted token 보존 교체"
+    briefing: "token 값은 바꾸되 quote 경계는 보존해야 합니다. ct\"로 quote 앞까지만 fresh로 교체하세요."
+    context_role: "quote로 닫히는 token 값"
+    mentor_success: "좋습니다. quote를 건드리지 않고 값만 교체했습니다."
+    mentor_failure: "quote는 남겨야 합니다. ct\"로 target 바로 전까지만 change하세요."
+    story_constraints:
+      - "ct의 exclusive range와 quote 보존을 강조한다."

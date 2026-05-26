@@ -1,0 +1,45 @@
+playlists:
+  - id: tutorial-94-char-find-line
+    status: approved
+    category: tutorial
+    order: 14
+    title: "Mid Tutorial: Inline target"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-94-001
+        role: find_delimiter
+        command_cluster: char-find-line
+        exercise_id: char-find-line-001
+        scenario_id: char-find-line-001-scenario
+        engine_support: implemented
+      - id: tutorial-94-002
+        role: till_delimiter
+        command_cluster: char-find-line
+        exercise_id: char-find-line-002
+        scenario_id: char-find-line-002-scenario
+        engine_support: implemented
+      - id: tutorial-94-003
+        role: delete_through_delimiter
+        command_cluster: char-find-line
+        exercise_id: char-find-line-003
+        scenario_id: char-find-line-003-scenario
+        engine_support: implemented
+      - id: tutorial-94-004
+        role: delete_till_delimiter
+        command_cluster: char-find-line
+        exercise_id: char-find-line-004
+        scenario_id: char-find-line-004-scenario
+        engine_support: implemented
+      - id: tutorial-94-005
+        role: change_through_delimiter
+        command_cluster: char-find-line
+        exercise_id: char-find-line-005
+        scenario_id: char-find-line-005-scenario
+        engine_support: implemented
+      - id: tutorial-94-006
+        role: change_till_quote
+        command_cluster: char-find-line
+        exercise_id: char-find-line-006
+        scenario_id: char-find-line-006-scenario
+        engine_support: implemented

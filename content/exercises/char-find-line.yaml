@@ -1,0 +1,280 @@
+exercises:
+  - id: char-find-line-001
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["f"]
+    reviewed_commands: []
+    mistake_focus: ["=까지 l을 반복하거나 / 검색으로 우회하려고 한다."]
+    replay_status: pass
+    title: "구분자 =로 바로 이동"
+    goal_for_player: "route 줄 시작에서 f=로 = 문자 위치까지 바로 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route=primary backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        route=primary backup
+    optimal_keys: ["f", "="]
+    allowed_keys: ["f", "=", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["f"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "/", "?", ":", "d", "c", "x", "r", "i", "a", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "f는 같은 줄에서 입력한 target 문자 위로 바로 이동합니다. 이번 target은 =입니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["route=primary backup"]
+      cursor:
+        row: 0
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: char-find-line-002
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["t"]
+    reviewed_commands: []
+    mistake_focus: ["comma 자체로 이동해야 하는지, comma 직전으로 이동해야 하는지 혼동한다."]
+    replay_status: pass
+    title: "comma 직전으로 이동"
+    goal_for_player: "relay 줄 시작에서 t,로 comma 바로 앞 문자까지 이동하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        relay-primary, fallback
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 12
+      buffer: |
+        relay-primary, fallback
+    optimal_keys: ["t", ","]
+    allowed_keys: ["t", ",", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 2
+      required_keys: ["t"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "/", "?", ":", "d", "c", "x", "r", "i", "a", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "t는 target 문자 바로 전까지 이동합니다. comma를 남겨두고 앞 문자에 멈춥니다."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 2
+    e2e_assertions:
+      buffer: ["relay-primary, fallback"]
+      cursor:
+        row: 0
+        col: 12
+      mode: normal
+      status: succeeded
+
+  - id: char-find-line-003
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["df"]
+    reviewed_commands: ["d", "f"]
+    mistake_focus: ["쉼표까지 지워야 하는데 dt를 써서 comma를 남긴다."]
+    replay_status: pass
+    title: "comma까지 stale 값 제거"
+    goal_for_player: "df,로 stale 값과 comma를 함께 제거해 live만 남기세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        stale,live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        live
+    optimal_keys: ["d", "f", ","]
+    allowed_keys: ["d", "f", ",", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "f"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "/", "?", ":", "c", "x", "r", "i", "a", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "df,는 현재 위치부터 comma까지 포함해서 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["live"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: char-find-line-004
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["dt"]
+    reviewed_commands: ["d", "t"]
+    mistake_focus: ["comma를 남겨야 하는 상황에서 df로 delimiter까지 지운다."]
+    replay_status: pass
+    title: "comma는 남기고 stale 제거"
+    goal_for_player: "dt,로 stale 값만 제거하고 comma는 남기세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        stale,live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        ,live
+    optimal_keys: ["d", "t", ","]
+    allowed_keys: ["d", "t", ",", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "t"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "/", "?", ":", "c", "x", "r", "i", "a", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "dt,는 comma 바로 전까지 삭제합니다. delimiter를 보존해야 할 때 씁니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: [",live"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: char-find-line-005
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["cf"]
+    reviewed_commands: ["c", "f", "esc"]
+    mistake_focus: ["값 교체를 x 반복이나 직접 입력 우회로 처리하려고 한다."]
+    replay_status: pass
+    title: "comma까지 값 교체"
+    goal_for_player: "down 값 시작에서 cf,로 comma까지 바꾸고 up을 입력한 뒤 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        status=down,mode=hold
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        status=upmode=hold
+    optimal_keys: ["c", "f", ",", "u", "p", "esc"]
+    allowed_keys: ["c", "f", ",", "u", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["c", "f", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "/", "?", ":", "d", "x", "r", "a", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "cf,는 comma까지 포함해 change하고 Insert mode로 들어갑니다."
+      - after_keys: 5
+        text: "값을 입력했다면 esc로 Normal mode에 복귀해야 복구가 확정됩니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["status=upmode=hold"]
+      cursor:
+        row: 0
+        col: 9
+      mode: normal
+      status: succeeded
+
+  - id: char-find-line-006
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["ct"]
+    reviewed_commands: ["c", "t", "esc"]
+    mistake_focus: ["quote를 보존해야 하는데 cf로 quote까지 지우거나 직접 줄을 다시 입력한다."]
+    replay_status: pass
+    title: "quote 앞까지만 값 교체"
+    goal_for_player: "token 값 시작에서 ct\"로 quote 앞까지만 바꾸고 fresh를 입력한 뒤 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        token=stale" keep
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 11
+      buffer: |
+        token=fresh" keep
+    optimal_keys: ["c", "t", "\"", "f", "r", "e", "s", "h", "esc"]
+    allowed_keys: ["c", "t", "\"", "f", "r", "e", "s", "h", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 9
+      required_keys: ["c", "t", "esc"]
+      forbidden_keys: ["j", "k", "l", "w", "b", "0", "$", "/", "?", ":", "d", "x", "a", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "ct\"는 quote 바로 전까지만 change합니다. quote 자체는 남겨둡니다."
+      - after_keys: 8
+        text: "fresh 입력 후 esc로 Normal mode에 돌아와야 합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 9
+    e2e_assertions:
+      buffer: ["token=fresh\" keep"]
+      cursor:
+        row: 0
+        col: 11
+      mode: normal
+      status: succeeded

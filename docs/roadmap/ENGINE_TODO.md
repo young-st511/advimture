@@ -118,6 +118,8 @@ quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual sele
 |------|------|-------------|-----|
 | CHAR-FIND-GAP-001 | forward same-line `f/t`, `df/dt/cf/ct` scope, 제외 항목 | docs + scope review | 없음 |
 | VIM-030 | `f/t` pending state, normal motion, delete/change operator 결합 | `internal/vimengine`, `internal/tuiadapter`, `internal/runtime` unit | content 연결 전 E2E 없음 |
-| PLAYPACK-012 | `char-find-line` tutorial content | content replay, coverage, playable model | full playlist E2E |
+| PLAYPACK-012 | completed: `char-find-line` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E |
+
+`PLAYPACK-012`는 `tutorial-94-char-find-line` 6문항으로 `f=`, `t,`, `df,`, `dt,`, `cf,`, `ct"`를 연결했다. 다음 단계는 새 engine 확장이 아니라 `CHAR-FIND-APPLIED-001`에서 command-choice 또는 incident 적용 후보를 고르는 것이다.
 
 첫 구현에서는 `F/T`, repeat find `;`/`,`, count prefix, visual mode, yank 결합, cross-line search를 제외한다.

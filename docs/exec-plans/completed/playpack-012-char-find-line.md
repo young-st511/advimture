@@ -2,7 +2,7 @@
 
 Slice-ID: PLAYPACK-012
 Created: 2026-05-26
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -41,20 +41,20 @@ VIM-030에서 구현한 `char-find-line`을 4~6문항 tutorial playpack으로 �
 
 ## Step 1: Content Design
 
-- [ ] exercise set 설계
-- [ ] scenario copy 작성
-- [ ] playlist wiring
+- [x] exercise set 설계
+- [x] scenario copy 작성
+- [x] playlist wiring
 
 ## Step 2: Tests and E2E
 
-- [ ] content loader/replay tests 갱신
-- [ ] focused E2E 추가
-- [ ] Makefile suite 연결
+- [x] content loader/replay tests 갱신
+- [x] focused E2E 추가
+- [x] Makefile suite 연결
 
 ## Step 3: Verification
 
-- [ ] content tests
-- [ ] focused E2E
-- [ ] `go test ./...`
-- [ ] `make e2e-playable`
-- [ ] `git diff --check`
+- [x] content tests
+- [x] focused E2E
+- [x] `go test ./...`
+- [x] `make e2e-playable`
+- [x] `git diff --check`

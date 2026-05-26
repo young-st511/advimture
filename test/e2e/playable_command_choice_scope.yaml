@@ -52,18 +52,41 @@ steps:
   - send: "g"
   - wait_ms: 50
   - send: "enter"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+  - wait_screen_contains: "target 값은 손상"
+  - send: "c"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: ","
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "esc"
   - wait_screen_contains: "Dispatch complete"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 005: 복구 범위 판별"
-    - "전체 파일 범위 치환을 선택"
+    - "cf,가 아니라 ct,를 선택"
     - "Dispatch complete"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
     - "\"command-choice-scope-001\""
     - "\"command-choice-repeat-substitute-001\""
+    - "\"command-choice-inline-target-001\""
   key_trace:
     - "V"
     - "j"
@@ -87,19 +110,30 @@ assert:
     - "/"
     - "g"
     - "enter"
+    - "enter"
+    - "c"
+    - "t"
+    - ","
+    - "s"
+    - "t"
+    - "a"
+    - "b"
+    - "l"
+    - "e"
+    - "esc"
     - "q"
   app_state:
-    buffer: ["state=fresh fresh", "route=ok", "state=fresh", "state=fresh"]
+    buffer: ["target=stable,route=live"]
     cursor:
       row: 0
-      col: 0
+      col: 13
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-repeat-substitute-001"
+      mission_id: "command-choice-inline-target-001"
       completed: true
 evidence:
   save_raw_ansi: true

@@ -247,7 +247,7 @@ Scenario 방향:
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic`, `char-find-line` |
-| next | 다음 gap planning/구현 후보 | `char-find-line` playable tutorial |
+| next | 다음 gap planning/구현 후보 | `incident-006-inline-target-repair` applied run 또는 reuse-choice drill |
 | soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | quote text object hardening, multi-line charwise visual |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
@@ -269,6 +269,7 @@ ID: `command-choice-drill`
 - `reuse-choice`: retype 대신 yank/put 또는 `.` 반복을 고른다.
 - `search-then-act`: `/`, `n`, `N`으로 위치를 찾은 뒤 적절한 편집 command를 고른다.
 - `range-choice`: visual/operator 조작과 substitute/range command 중 더 적합한 방법을 고른다.
+- `inline-target-choice`: comma/quote/delimiter 보존 여부를 보고 `ct,`와 `cf,` 중 적절한 범위를 고른다.
 
 권장 문항 수:
 
@@ -291,8 +292,8 @@ ID: `command-choice-drill`
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line visual, linewise `V`, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
-- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope와 range-choice beat를 playable로 연결했다. 후속 후보는 reuse-choice와 search-then-act다.
-- `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030에서 engine support를 구현했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
+- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice beat를 playable로 연결했다. 후속 후보는 reuse-choice와 search-then-act다.
+- `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030/PLAYPACK-012에서 engine과 tutorial을 연결했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
 
 ## Long-Run Platform Direction
 
@@ -304,8 +305,8 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 2. `applied-incident-run`: 이미 배운 command를 incident 003에서 조합해 도구 선택 능력을 훈련한다.
 3. `incident-flow-continuity`: incident beat가 하나의 runbook 조치처럼 이어지게 만든다.
 4. `linewise-applied-incident`: linewise visual을 실제 config block 복구 run에 적용한다.
-5. `command-choice-drill`: 이미 배운 command를 섞어 범위/반복/검색/치환 중 적합한 도구를 고르는 판단을 훈련한다.
-6. `char-find-line`: 한 줄 안 delimiter를 빠르게 잡는 `f/t`를 새 engine slice로 연다.
+5. `command-choice-drill`: 이미 배운 command를 섞어 범위/반복/검색/치환/inline target 중 적합한 도구를 고르는 판단을 훈련한다.
+6. `incident-006-inline-target-repair`: `/target`과 `ct,`를 조합해 실제 incident run에서 검색 후 정밀 범위 수정을 훈련한다.
 7. `platform-review-loop`: mastery/spaced review/daily run은 progress schema 승인 전까지 RFC와 저장 변경 없는 review만 다룬다.
 
 세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

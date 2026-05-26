@@ -10,12 +10,24 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### PLAYPACK-012. Char Find Line Tutorial
-- 상태: active
-- ExecPlan: `docs/exec-plans/active/playpack-012-char-find-line.md`
-- 목표: `char-find-line` 엔진을 tutorial content와 focused E2E로 연결한다.
+현재 활성 구현 slice 없음. `Inline Target Motions` 중기 플랜은 완료됐고, 다음 후보는 `incident-006-inline-target-repair` applied run 또는 reuse-choice drill이다.
 
 ## 방금 완료한 슬라이스
+
+### CHOICE-PLAY-002. Inline Target Range Choice
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/choice-play-002-inline-target-choice.md`
+- 완료일: 2026-05-26
+
+### CHAR-FIND-APPLIED-001. Inline Target Application Candidate
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/char-find-applied-001-inline-target-application.md`
+- 완료일: 2026-05-26
+
+### PLAYPACK-012. Char Find Line Tutorial
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playpack-012-char-find-line.md`
+- 완료일: 2026-05-26
 
 ### VIM-030. Char Find Engine
 - 상태: completed

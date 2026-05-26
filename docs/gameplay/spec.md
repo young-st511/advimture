@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented playlist를 `category`, `order`, `id` 순서로 실행한다. `tutorial` category는 `incident` category보다 먼저 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`, `tutorial-94-char-find-line`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 첫 5분 canonical route는 `docs/gameplay/first-five-minute-route.md`를 따른다. 현재 기준은 `tutorial-0-movement` 전체, `tutorial-1-survival` 전체, `tutorial-2-fast-navigation` 전체, `tutorial-3-small-edits` 첫 문항까지이며, 새 command/schema/progress 변경 없이 현재 playable route를 제품 첫 루프로 고정한다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
@@ -120,6 +120,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - command choice scenario는 정답 key sequence보다 선택 이유를 성공/실패 피드백에서 강화한다.
 - `incident-005-command-choice`는 “릴레이 기지 005: 복구 범위 판별”로 표시하며, `choice-001-scope-triage`를 첫 playable command-choice drill로 승격한다. 문항 제목과 피드백은 값/단어가 아니라 줄 묶음을 복구 범위로 판단하는 이유를 강조한다. 새 command cluster나 engine 기능을 추가하지 않고 `visual-line-basic`의 `V`, `j`, `d`로 linewise scope choice를 검증한다.
 - `incident-005-command-choice`는 두 번째 beat로 `choice-002-repeat-or-substitute`를 포함한다. 같은 literal이 파일 전체와 한 줄 안에 반복되는 상황에서 `.` 반복/현재 줄 치환보다 `:%s/.../.../g` 전체 범위 치환을 선택하는 판단을 검증한다.
+- `incident-005-command-choice`는 세 번째 beat로 `choice-005-inline-target-range`를 포함한다. hyphenated 값 뒤 comma delimiter를 보존해야 하는 상황에서 `cf,`나 `cw`가 아니라 `ct,`를 선택하는 판단을 검증한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.
@@ -135,7 +136,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - VISUAL-LINE-GAP-001은 다음 visual 후보를 linewise `V` + row motion + `d/y`로 좁혔다. multi-line charwise `v` operator와 visual block은 후속으로 미룬다.
 - VISUAL-LINE-001은 linewise `V`의 첫 구현 범위를 `V` 진입/해제, row motion, linewise `d/y`, linewise register, TUI/app_state `selection.kind: linewise`로 고정한다.
 - `visual-line-basic`은 approved + implemented command cluster다. `tutorial-93-visual-line`은 linewise `V + j + d`, `V + y + j + p`, `V + G + d`를 다루는 3문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
-- `char-find-line`은 approved + engine implemented command cluster다. 첫 scope는 forward same-line `f{char}`, `t{char}`, `df{char}`, `dt{char}`, `cf{char}`, `ct{char}`이며, `F/T`, `;`, `,`, count prefix, cross-line search, visual mode, `yf/yt`는 후속 hardening으로 분리한다.
+- `char-find-line`은 approved + implemented command cluster다. 첫 scope는 forward same-line `f{char}`, `t{char}`, `df{char}`, `dt{char}`, `cf{char}`, `ct{char}`이며, `F/T`, `;`, `,`, count prefix, cross-line search, visual mode, `yf/yt`는 후속 hardening으로 분리한다.
+- `tutorial-94-char-find-line`은 `f=`, `t,`, `df,`, `dt,`, `cf,`, `ct"`를 다루는 6문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 
