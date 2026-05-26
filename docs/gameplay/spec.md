@@ -135,6 +135,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - VISUAL-LINE-GAP-001은 다음 visual 후보를 linewise `V` + row motion + `d/y`로 좁혔다. multi-line charwise `v` operator와 visual block은 후속으로 미룬다.
 - VISUAL-LINE-001은 linewise `V`의 첫 구현 범위를 `V` 진입/해제, row motion, linewise `d/y`, linewise register, TUI/app_state `selection.kind: linewise`로 고정한다.
 - `visual-line-basic`은 approved + implemented command cluster다. `tutorial-93-visual-line`은 linewise `V + j + d`, `V + y + j + p`, `V + G + d`를 다루는 3문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
+- `char-find-line`은 approved + planned command cluster다. 첫 scope는 forward same-line `f{char}`, `t{char}`, `df{char}`, `dt{char}`, `cf{char}`, `ct{char}`이며, `F/T`, `;`, `,`, count prefix, cross-line search, visual mode, `yf/yt`는 후속 hardening으로 분리한다.
 
 > 재기획이 승인되고 구현된 항목만 여기에 이동한다. 기존 `docs/archived/PLAN.md`, `docs/archived/GAME_DESIGN.md`, `internal/` 구현은 참고 자료일 뿐이다.
 

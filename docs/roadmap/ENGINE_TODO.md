@@ -27,17 +27,16 @@
 
 ## 다음 루프 후보
 
-현재 진행 중: Utility Commands and Long-Run Platform.
+현재 진행 중: Inline Target Motions.
 
 다음 후보는 2026-05-21 토론 결과에 따라 아래 순서로 검토한다.
 
 | 우선순위 | 후보 | 필요한 엔진 계약 | 비고 |
 |----------|------|------------------|------|
-| 1 | `open-line-edit` | `o`, `O`, newline insertion, insert mode entry, undo snapshot | 현재 next playable candidate |
-| 2 | `repeat-last-change` | last-change transaction, replayable mutation, undo/redo 상호작용 | efficiency run의 핵심 |
-| 3 | `search-basic` | literal search state, `/` query input, `n/N` match navigation | `?` hint 충돌과 regex는 보류 |
-| 4 | platform debrief | 기존 progress 기반 best record/read-only summary | 저장 포맷 변경 없이 게임성 강화 |
-| 5 | long-run review | mastery/spaced review/daily run progress 후보 | RFC와 사용자 승인 필요 |
+| 1 | `char-find-line` | forward same-line `f/t`, operator motion `df/dt/cf/ct` | 현재 next engine candidate |
+| 2 | `quote text object hardening` | `ci'`, `ci(`, `ci{` 등 pair parsing 확장 | 새 engine보다는 기존 text-object 확장 |
+| 3 | `multi-line charwise visual` | multi-line charwise selection operator semantics | blast radius 큼 |
+| 4 | platform review loop | mastery/spaced review/daily run progress 후보 | RFC와 사용자 승인 필요 |
 
 진행 원칙:
 
@@ -110,3 +109,15 @@ quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual sele
 ## REPEAT / SEARCH 장기 후보
 
 `repeat-last-change`는 REPEAT-GAP-001에서 x, r<char>, insert/change/open-line transaction을 첫 구현 범위로 고정했고, VIM-024/PLAYPACK-007에서 playable tutorial까지 연결했다. `search-basic`은 SEARCH-GAP-001에서 literal `/`, `n`, `N`만 첫 scope로 고정했고, VIM-025/PLAYPACK-008에서 engine support와 playable tutorial까지 연결했다. `?`는 현재 hint key와 충돌하므로 제외한다.
+
+## CHAR-FIND-GAP-001 결정
+
+다음 새 엔진 루프는 `char-find-line`으로 한다. `f/t`는 한 줄 안 delimiter와 quote 앞뒤를 빠르게 잡는 실무 효용이 높고, 기존 `delete/change` operator grammar와 자연스럽게 결합된다.
+
+| 루프 | 범위 | 필수 테스트 | E2E |
+|------|------|-------------|-----|
+| CHAR-FIND-GAP-001 | forward same-line `f/t`, `df/dt/cf/ct` scope, 제외 항목 | docs + scope review | 없음 |
+| VIM-030 | `f/t` pending state, normal motion, delete/change operator 결합 | `internal/vimengine`, `internal/tuiadapter`, `internal/runtime` unit | content 연결 전 E2E 없음 |
+| PLAYPACK-012 | `char-find-line` tutorial content | content replay, coverage, playable model | full playlist E2E |
+
+첫 구현에서는 `F/T`, repeat find `;`/`,`, count prefix, visual mode, yank 결합, cross-line search를 제외한다.

@@ -10,9 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-없음. Foundation Playtest / UX Polish 중기 플랜은 완료됐고, 다음 중기 계획 수립을 기다린다.
+### VIM-030. Char Find Engine
+- 상태: active
+- ExecPlan: `docs/exec-plans/active/vim-030-char-find-engine.md`
+- 목표: `f/t` forward same-line char find와 `df/dt/cf/ct` operator 결합을 engine 레벨에서 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### CHAR-FIND-GAP-001. Line Character Find Scope
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/char-find-gap-001-line-char-find.md`
+- 완료일: 2026-05-26
 
 ### CONTENT-BREADTH-001. Command Choice Extension
 - 상태: completed

@@ -703,6 +703,44 @@ command_cluster:
     - PLAYPACK-011은 3문항으로 Vd, Vy+p, VGd를 다룬다.
 ```
 
+### char-find-line
+
+```yaml
+command_cluster:
+  id: char-find-line
+  status: approved
+  compatibility_tier: pedagogical
+  engine_support: planned
+  curriculum_area: chapter-3-navigation
+  title: 한 줄 안 target 문자 찾기
+  commands: ["f", "t", "df", "dt", "cf", "ct"]
+  coverage_required: ["f", "t", "df", "dt", "cf", "ct"]
+  oracle: optional
+  purpose: 같은 줄 안의 구분자나 quote 같은 target 문자까지 빠르게 이동하고 operator 범위를 잡는다.
+  prerequisite: ["word-motion-basic", "delete-with-motion", "change-with-motion"]
+  difficulty: intermediate
+  useful_when:
+    - 설정 줄에서 =, :, /, comma 같은 구분자로 바로 이동할 때
+    - 쉼표 앞까지 삭제하거나 quote 앞까지 값을 교체할 때
+    - 긴 한 줄에서 h/l 반복 없이 inline target을 잡을 때
+  combo_paths:
+    - ["f", "="]
+    - ["t", ","]
+    - ["d", "f", ","]
+    - ["c", "t", "\""]
+  common_mistakes:
+    - 한 줄 안 target인데 / 검색이나 l 반복으로 이동한다.
+    - f와 t의 target 포함 여부를 혼동한다.
+    - dt가 target 문자를 남긴다는 점을 놓친다.
+  compatibility_notes:
+    - 첫 구현은 forward same-line literal char find만 지원한다.
+    - F/T, ;, ,, count prefix, visual mode, cross-line search는 후속 hardening으로 미룬다.
+    - yf/yt는 첫 구현에서 제외한다.
+  design_notes:
+    - CHAR-FIND-GAP-001에서 첫 scope를 f/t + df/dt/cf/ct로 고정한다.
+    - PLAYPACK-012는 delimiter 이동과 operator 범위 판단을 4~6문항으로 다룬다.
+```
+
 ## First 5-Minute Discovery Notes
 
 - `normal-motion-basic`은 현재 엔진과 playable path에서 `h/j/k/l` optimal coverage를 모두 가진 cluster다.
@@ -718,6 +756,7 @@ command_cluster:
 - `search-basic`은 SEARCH-GAP-001에서 approved로 승격했고, VIM-025에서 engine support를 구현했으며 PLAYPACK-008에서 4문항 tutorial content와 full E2E를 연결했다. 첫 구현은 `/`, `n`, `N` literal search이며 `?`, regex, highlight, search history는 제외한다.
 - `visual-char-line`은 같은 줄 charwise visual selection의 삭제/복사 tutorial까지 구현했다. visual block, count/register prefix, indentation command는 후속 hardening으로 둔다.
 - `visual-line-basic`은 linewise `V` + `d/y` tutorial까지 구현했다. multi-line charwise operator와 visual block은 후속 hardening으로 둔다.
+- `char-find-line`은 CHAR-FIND-GAP-001에서 approved로 승격했다. 첫 구현 후보는 forward same-line `f/t`와 `df/dt/cf/ct`다.
 - CONTENT-001 loader는 `engine_support: planned` 콘텐츠를 읽을 수 있되, playable 후보에서는 제외할 수 있어야 한다.
 
 ## Approval Packet — VIM-001
