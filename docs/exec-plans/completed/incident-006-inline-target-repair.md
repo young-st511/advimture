@@ -2,7 +2,7 @@
 
 Slice-ID: INCIDENT-006
 Created: 2026-05-28
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -44,18 +44,18 @@ Allowed-Paths:
 
 ## Step 1: Content
 
-- [ ] exercise set 작성
-- [ ] scenario copy 작성
-- [ ] playlist wiring
+- [x] exercise set 작성
+- [x] scenario copy 작성
+- [x] playlist wiring
 
 ## Step 2: E2E
 
-- [ ] focused E2E 작성
-- [ ] Makefile suite 연결
-- [ ] loader tests 갱신
+- [x] focused E2E 작성
+- [x] Makefile suite 연결
+- [x] loader tests 갱신
 
 ## Step 3: Verification
 
-- [ ] content tests
-- [ ] focused E2E
-- [ ] full regression
+- [x] content tests
+- [x] focused E2E
+- [x] full regression

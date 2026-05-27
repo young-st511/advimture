@@ -1,4 +1,4 @@
-id: playable_command_choice_scope
+id: playable_incident_006_full
 command: ["go", "run", "."]
 timeout_ms: 30000
 terminal:
@@ -6,55 +6,25 @@ terminal:
   height: 38
 setup:
   home: temp
-  complete_before: command-choice-scope-001
+  complete_before: incident-inline-target-001
 steps:
-  - wait_screen_contains: "복구 범위를 먼저 판단"
-  - send: "V"
-  - wait_screen_contains: "Selection: linewise 1,0 -> 1,14"
-  - send: "j"
-  - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
-  - send: "d"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-  - wait_screen_contains: "동일한 stale 상태"
-  - send: ":"
-  - wait_ms: 50
-  - send: "%"
-  - wait_ms: 50
-  - send: "s"
-  - wait_ms: 50
+  - wait_screen_contains: "route 줄에 손상된 target 값"
   - send: "/"
-  - wait_ms: 50
-  - send: "s"
   - wait_ms: 50
   - send: "t"
   - wait_ms: 50
   - send: "a"
   - wait_ms: 50
-  - send: "l"
-  - wait_ms: 50
-  - send: "e"
-  - wait_ms: 50
-  - send: "/"
-  - wait_ms: 50
-  - send: "f"
-  - wait_ms: 50
   - send: "r"
-  - wait_ms: 50
-  - send: "e"
-  - wait_ms: 50
-  - send: "s"
-  - wait_ms: 50
-  - send: "h"
-  - wait_ms: 50
-  - send: "/"
   - wait_ms: 50
   - send: "g"
   - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
-  - send: "enter"
-  - wait_screen_contains: "target 값은 손상"
+  - wait_ms: 50
   - send: "c"
   - wait_ms: 50
   - send: "t"
@@ -74,43 +44,89 @@ steps:
   - send: "e"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "첫 target은 archive"
+  - send: "/"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "c"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: ","
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Dispatch complete"
   - send: "q"
 assert:
   screen_contains:
-    - "릴레이 기지 005: 복구 범위 판별"
-    - "cf,가 아니라 ct,를 선택"
-    - "Next runbook: enter"
+    - "릴레이 기지 006: inline target 복구"
+    - "Exercise: 2/2"
+    - "Dispatch complete"
+    - "좋습니다. 첫 정상 target을 건너뛰고 다음 손상 값만 delimiter 보존 범위로 복구했습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
-    - "\"command-choice-scope-001\""
-    - "\"command-choice-repeat-substitute-001\""
-    - "\"command-choice-inline-target-001\""
+    - "\"incident-inline-target-001\""
+    - "\"incident-inline-target-002\""
   key_trace:
-    - "V"
-    - "j"
-    - "d"
-    - "enter"
-    - ":"
-    - "%"
-    - "s"
     - "/"
+    - "t"
+    - "a"
+    - "r"
+    - "g"
+    - "e"
+    - "t"
+    - "enter"
+    - "c"
+    - "t"
+    - ","
     - "s"
     - "t"
     - "a"
+    - "b"
     - "l"
     - "e"
+    - "esc"
+    - "enter"
     - "/"
-    - "f"
+    - "t"
+    - "a"
     - "r"
-    - "e"
-    - "s"
-    - "h"
-    - "/"
     - "g"
+    - "e"
+    - "t"
     - "enter"
-    - "enter"
+    - "n"
     - "c"
     - "t"
     - ","
@@ -123,17 +139,17 @@ assert:
     - "esc"
     - "q"
   app_state:
-    buffer: ["target=stable,route=live"]
+    buffer: ["mode=target-archive,route=safe", "node=stable,route=live"]
     cursor:
-      row: 0
-      col: 13
+      row: 1
+      col: 11
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-inline-target-001"
+      mission_id: "incident-inline-target-002"
       completed: true
 evidence:
   save_raw_ansi: true

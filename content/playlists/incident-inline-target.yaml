@@ -1,0 +1,21 @@
+playlists:
+  - id: incident-006-inline-target-repair
+    status: approved
+    category: incident
+    order: 6
+    title: "릴레이 기지 006: inline target 복구"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-006-001
+        role: search_and_repair_inline_target
+        command_cluster: char-find-line
+        exercise_id: incident-inline-target-001
+        scenario_id: incident-inline-target-001-scenario
+        engine_support: implemented
+      - id: incident-006-002
+        role: next_match_inline_repair
+        command_cluster: char-find-line
+        exercise_id: incident-inline-target-002
+        scenario_id: incident-inline-target-002-scenario
+        engine_support: implemented

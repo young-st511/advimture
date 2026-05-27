@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-006. Inline Target Repair Run
+### REUSE-CHOICE-001. Reuse Judgment Drill Design
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/incident-006-inline-target-repair.md`
-- 목표: `/target` 검색 후 `ct,`로 comma 앞 값만 교체하는 applied incident를 구현한다.
+- ExecPlan: `docs/exec-plans/active/reuse-choice-001-reuse-judgment.md`
+- 목표: 직접 재입력 대신 이미 있는 텍스트를 재사용하는 command-choice 후보를 설계한다.
 
 ## 방금 완료한 슬라이스
+
+### INCIDENT-006. Inline Target Repair Run
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-006-inline-target-repair.md`
+- 완료일: 2026-05-28
 
 ### PLAN-REFRESH-008. Applied Mastery Roadmap
 - 상태: completed

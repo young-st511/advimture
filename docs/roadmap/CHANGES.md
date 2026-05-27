@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-28 — Applied mastery run 시작
+
+이전 가정: `Inline Target Motions` 완료 후 다음 후보는 `incident-006-inline-target-repair` 또는 reuse-choice drill이었다.
+
+새 가정: 다음 중기 플랜은 `Applied Mastery Runs`로 고정한다. 첫 구현은 `incident-006-inline-target-repair`이며, `/target`, `n`, `ct,`를 조합해 검색 후 delimiter 보존 수리를 수행한다.
+
+이유: 새 engine을 늘리는 것보다 이미 배운 command를 실제 incident에서 조합하는 판단이 현재 학습/게임성 병목에 더 가깝다.
+
+영향: 다음 루프는 직접 재입력 대신 yank/put, quote object, dot repeat 중 적절한 재사용 도구를 고르는 `REUSE-CHOICE-001`로 진행한다.
+
 ## 2026-05-26 — Inline target motion을 tutorial까지 승격
 
 이전 가정: `f/t`는 다음 engine 후보였고, operator 결합과 playable tutorial 범위는 아직 분리 계획 단계였다.

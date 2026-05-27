@@ -1,0 +1,102 @@
+exercises:
+  - id: incident-inline-target-001
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["ct"]
+    reviewed_commands: ["/", "enter"]
+    mistake_focus: ["검색 후 같은 줄 delimiter를 보존해야 하는데 cf,로 comma까지 지운다."]
+    replay_status: pass
+    title: "target 값 검색 후 교체"
+    goal_for_player: "/target으로 손상 값을 찾고, ct,로 comma 앞 target-old만 stable로 교체하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        boot=ok
+        mode=target-old,route=live
+        guard=on
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 11
+      buffer: |
+        boot=ok
+        mode=stable,route=live
+        guard=on
+    optimal_keys: ["/", "t", "a", "r", "g", "e", "t", "enter", "c", "t", ",", "s", "t", "a", "b", "l", "e", "esc"]
+    allowed_keys: ["/", "t", "a", "r", "g", "e", "enter", "c", ",", "s", "b", "l", "esc"]
+    forbidden_keys: ["f", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 18
+      required_keys: ["/", "enter", "c", "t", "esc"]
+      forbidden_keys: ["f", "h", "j", "k", "w", "0", "$", "?", ":", "d", "x", "i", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "먼저 /target으로 손상 값 위치를 찾습니다."
+      - after_keys: 10
+        text: "comma 뒤 route는 정상입니다. ct,로 comma 앞까지만 change하세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 18
+    e2e_assertions:
+      buffer: ["boot=ok", "mode=stable,route=live", "guard=on"]
+      cursor:
+        row: 1
+        col: 11
+      mode: normal
+      status: succeeded
+
+  - id: incident-inline-target-002
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["ct"]
+    reviewed_commands: ["/", "n", "enter"]
+    mistake_focus: ["첫 target만 보고 멈추거나 다음 match를 다시 검색어로 입력한다."]
+    replay_status: pass
+    title: "다음 target 값 수리"
+    goal_for_player: "/target으로 첫 match를 잡고 n으로 다음 손상 값까지 이동한 뒤, ct,로 bad를 stable로 교체하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        mode=target-archive,route=safe
+        node=target-bad,route=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 11
+      buffer: |
+        mode=target-archive,route=safe
+        node=stable,route=live
+    optimal_keys: ["/", "t", "a", "r", "g", "e", "t", "enter", "n", "c", "t", ",", "s", "t", "a", "b", "l", "e", "esc"]
+    allowed_keys: ["/", "t", "a", "r", "g", "e", "enter", "n", "c", ",", "s", "b", "l", "esc"]
+    forbidden_keys: ["f", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 19
+      required_keys: ["/", "enter", "n", "c", "t", "esc"]
+      forbidden_keys: ["f", "h", "j", "k", "w", "0", "$", "?", ":", "d", "x", "i", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 8
+        text: "첫 target은 archive라 정상입니다. n으로 다음 target match까지 이동하세요."
+      - after_keys: 11
+        text: "두 번째 target 값만 바꾸고 comma 뒤 route는 보존합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 19
+    e2e_assertions:
+      buffer: ["mode=target-archive,route=safe", "node=stable,route=live"]
+      cursor:
+        row: 1
+        col: 11
+      mode: normal
+      status: succeeded

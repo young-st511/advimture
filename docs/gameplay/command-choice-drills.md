@@ -67,7 +67,7 @@ choice_drill_draft:
 | `choice-003-copy-or-retype` | `reuse-choice` | `yi"` + `P` | 이미 검증된 quote 값이 있고, 새 위치에 그대로 붙여야 한다. |
 | `choice-004-search-then-scope` | `search-then-act` | `/token` + `V...d` | 먼저 marker를 찾은 뒤 marker 아래 블록을 linewise로 격리한다. |
 | `choice-005-inline-target-range` | `inline-target-choice` | `ct,` | comma 뒤 route는 정상이고 comma는 보존해야 한다. hyphenated 값만 바꾸려면 `cw`나 `cf,`가 아니라 `ct,`가 적합하다. Playable: `incident-005-command-choice` / `command-choice-inline-target-001`. |
-| `incident-006-inline-target-repair` | `search-then-act` + `inline-target-choice` | `/target` + `ct,` | 먼저 손상된 target 줄을 찾고, 같은 줄 comma 앞 값만 교체한다. `choice-005`가 통과한 뒤 적용 incident 후보로 둔다. |
+| `incident-006-inline-target-repair` | `search-then-act` + `inline-target-choice` | `/target` + `ct,` | 먼저 손상된 target 값을 찾고, 같은 줄 comma 앞 값만 교체한다. Playable: `incident-006-inline-target-repair`. |
 
 ## Inline Target Application Decision
 
@@ -77,7 +77,7 @@ choice_drill_draft:
 
 - command-choice의 본래 목적이 “무슨 도구를 써야 하는가”라서 `ct,`와 `cf,`의 범위 판단을 가장 직접적으로 훈련한다.
 - 새 incident를 만들기 전 기존 `incident-005-command-choice`에 1 beat를 추가하면 흐름과 E2E blast radius가 작다.
-- `incident-006-inline-target-repair`는 `/target`과 `ct,`를 조합하는 더 좋은 applied run 후보지만, 검색과 inline target을 한 번에 섞기 전에 `ct,` 선택 판단을 먼저 검증하는 편이 안정적이다.
+- `incident-006-inline-target-repair`는 `/target`, `n`, `ct,`를 조합하는 applied run으로 승격했다. 다음 command-choice 후보는 직접 재입력 대신 기존 텍스트를 재사용할지 판단하는 `reuse-choice`다.
 
 ## Playable Gate
 

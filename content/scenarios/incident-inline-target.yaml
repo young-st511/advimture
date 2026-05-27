@@ -1,0 +1,28 @@
+scenarios:
+  - id: incident-inline-target-001-scenario
+    status: approved
+    exercise_id: incident-inline-target-001
+    engine_support: implemented
+    learning_reinforcement: "검색으로 손상 값을 찾은 뒤 ct,로 delimiter를 보존하며 값만 교체한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "target 값 검색 후 교체"
+    briefing: "릴레이 기지 006의 route 줄에 손상된 target 값이 섞였습니다. /target으로 위치를 잡고 comma 앞 값만 stable로 교체하세요."
+    context_role: "inline target 복구 진입점"
+    mentor_success: "좋습니다. 검색으로 손상 값을 찾고, comma 뒤 route를 건드리지 않은 채 값만 복구했습니다."
+    mentor_failure: "comma 뒤 route는 정상입니다. /target으로 위치를 잡은 뒤 ct,로 delimiter 앞까지만 교체하세요."
+    story_constraints:
+      - "검색과 inline target change의 조합을 강조한다."
+
+  - id: incident-inline-target-002-scenario
+    status: approved
+    exercise_id: incident-inline-target-002
+    engine_support: implemented
+    learning_reinforcement: "n으로 다음 match에 이동한 뒤 같은 inline target repair를 적용한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "다음 target 값 수리"
+    briefing: "첫 target은 archive라 정상이고, 다음 target 값만 손상됐습니다. n으로 다음 match를 잡고 comma 앞 값만 stable로 교체하세요."
+    context_role: "다음 target match 수리"
+    mentor_success: "좋습니다. 첫 정상 target을 건너뛰고 다음 손상 값만 delimiter 보존 범위로 복구했습니다."
+    mentor_failure: "같은 검색어를 다시 입력하지 마세요. n으로 다음 match에 간 뒤 ct,로 comma 앞 값만 교체합니다."
+    story_constraints:
+      - "검색 반복과 inline target repair를 한 incident 안에서 조합한다."
