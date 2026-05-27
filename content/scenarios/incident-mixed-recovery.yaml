@@ -1,0 +1,70 @@
+scenarios:
+  - id: incident-mixed-recovery-001-scenario
+    status: approved
+    exercise_id: incident-mixed-recovery-001
+    engine_support: implemented
+    learning_reinforcement: "mixed run에서는 먼저 검색으로 손상 지점을 고정한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "breach 표식 찾기"
+    briefing: "릴레이 기지 007의 복구 로그에 breach 표식이 남았습니다. /breach 검색으로 손상 token 줄을 찾으세요."
+    context_role: "mixed recovery 진입점"
+    mentor_success: "좋습니다. 손상 지점을 찾았습니다. 다음 단계에서 quote 내부 값만 바꿉니다."
+    mentor_failure: "한 줄씩 훑지 말고 /breach로 손상 표식을 바로 찾으세요."
+    story_constraints:
+      - "검색이 mixed recovery의 첫 판단임을 강조한다."
+
+  - id: incident-mixed-recovery-002-scenario
+    status: approved
+    exercise_id: incident-mixed-recovery-002
+    engine_support: implemented
+    learning_reinforcement: "quote 내부 값만 바꿀 때는 ci\"를 선택한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "breach token 값 교체"
+    briefing: "breach token의 값만 safe로 바꾸면 됩니다. token key와 quote 문자는 유지하고 내부 값만 교체하세요."
+    context_role: "quote 내부 token 수리"
+    mentor_success: "좋습니다. token 구조를 건드리지 않고 quote 내부 값만 safe로 교체했습니다."
+    mentor_failure: "이번 대상은 줄 전체가 아니라 quote 내부 값입니다. ci\"로 내부 값만 바꾸세요."
+    story_constraints:
+      - "scope 판단을 quote 내부 값으로 제한한다."
+
+  - id: incident-mixed-recovery-003-scenario
+    status: approved
+    exercise_id: incident-mixed-recovery-003
+    engine_support: implemented
+    learning_reinforcement: "줄 묶음 오염은 V + motion + d로 처리한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "quarantine 블록 제거"
+    briefing: "quarantine 줄 두 개가 route 사이에 끼었습니다. 값 하나가 아니라 줄 묶음으로 판단해 블록 전체를 제거하세요."
+    context_role: "오염 줄 묶음"
+    mentor_success: "좋습니다. quarantine 값을 고치려 하지 않고 줄 묶음 전체를 제거했습니다."
+    mentor_failure: "quarantine은 연속된 줄 묶음입니다. V로 linewise range를 열고 두 줄을 잡으세요."
+    story_constraints:
+      - "linewise visual이 block 단위 제거에 적합함을 강조한다."
+
+  - id: incident-mixed-recovery-004-scenario
+    status: approved
+    exercise_id: incident-mixed-recovery-004
+    engine_support: implemented
+    learning_reinforcement: "delimiter를 보존해야 하는 inline 값은 ct,로 교체한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "inline target 값 수리"
+    briefing: "mode 값만 손상됐고 comma 뒤 route는 정상입니다. delimiter를 보존하며 comma 앞 값만 stable로 교체하세요."
+    context_role: "inline route 보존 수리"
+    mentor_success: "좋습니다. route delimiter를 보존하고 target 값만 안정 상태로 돌렸습니다."
+    mentor_failure: "comma 뒤 route는 정상입니다. f가 아니라 t,로 comma 앞까지만 change하세요."
+    story_constraints:
+      - "ct와 cf의 선택 차이를 incident 안에서 재확인한다."
+
+  - id: incident-mixed-recovery-005-scenario
+    status: approved
+    exercise_id: incident-mixed-recovery-005
+    engine_support: implemented
+    learning_reinforcement: "여러 줄에 남은 같은 token은 전체 범위 substitute로 마감한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "잔류 hold 전체 승격"
+    briefing: "마지막 잔류 hold 상태가 두 줄에 남았습니다. 전체 파일 치환으로 모두 live로 승격해 runbook을 닫으세요."
+    context_role: "mixed recovery 마감 조치"
+    mentor_success: "좋습니다. 검색, 구조 편집, 줄 묶음 제거, inline 수리, 전체 치환까지 이어서 릴레이 기지 007 복구를 닫았습니다."
+    mentor_failure: "현재 줄만 바꾸면 잔류 리스크가 남습니다. % range로 전체 hold를 live로 승격하세요."
+    story_constraints:
+      - "mixed run의 마감으로 전체 범위 치환을 사용한다."

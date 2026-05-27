@@ -1,0 +1,39 @@
+playlists:
+  - id: incident-007-mixed-recovery
+    status: approved
+    category: incident
+    order: 7
+    title: "릴레이 기지 007: 혼합 복구 작전"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-007-001
+        role: locate_breach_marker
+        command_cluster: search-basic
+        exercise_id: incident-mixed-recovery-001
+        scenario_id: incident-mixed-recovery-001-scenario
+        engine_support: implemented
+      - id: incident-007-002
+        role: repair_quote_token
+        command_cluster: text-object-quote-pair
+        exercise_id: incident-mixed-recovery-002
+        scenario_id: incident-mixed-recovery-002-scenario
+        engine_support: implemented
+      - id: incident-007-003
+        role: remove_quarantine_block
+        command_cluster: visual-line-basic
+        exercise_id: incident-mixed-recovery-003
+        scenario_id: incident-mixed-recovery-003-scenario
+        engine_support: implemented
+      - id: incident-007-004
+        role: repair_inline_target
+        command_cluster: char-find-line
+        exercise_id: incident-mixed-recovery-004
+        scenario_id: incident-mixed-recovery-004-scenario
+        engine_support: implemented
+      - id: incident-007-005
+        role: promote_residual_hold
+        command_cluster: vim-ex-command-substitute
+        exercise_id: incident-mixed-recovery-005
+        scenario_id: incident-mixed-recovery-005-scenario
+        engine_support: implemented

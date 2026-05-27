@@ -85,13 +85,13 @@ steps:
   - send: "e"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Dispatch complete"
+  - wait_screen_contains: "Next runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 006: inline target 복구"
     - "Exercise: 2/2"
-    - "Dispatch complete"
+    - "Next runbook: enter"
     - "좋습니다. 첫 정상 target을 건너뛰고 다음 손상 값만 delimiter 보존 범위로 복구했습니다."
   exit_code: 0
   progress_file_exists: true

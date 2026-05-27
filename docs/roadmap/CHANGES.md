@@ -6,11 +6,11 @@
 
 이전 가정: `Inline Target Motions` 완료 후 다음 후보는 `incident-006-inline-target-repair` 또는 reuse-choice drill이었다.
 
-새 가정: 다음 중기 플랜은 `Applied Mastery Runs`로 고정한다. 첫 구현은 `incident-006-inline-target-repair`이며, `/target`, `n`, `ct,`를 조합해 검색 후 delimiter 보존 수리를 수행한다.
+새 가정: 다음 중기 플랜은 `Applied Mastery Runs`로 고정한다. `incident-006-inline-target-repair`, quote value reuse-choice, `incident-007-mixed-recovery`를 완료했고, 검색 후 delimiter 보존 수리와 mixed command 적용을 playable path에 연결했다.
 
 이유: 새 engine을 늘리는 것보다 이미 배운 command를 실제 incident에서 조합하는 판단이 현재 학습/게임성 병목에 더 가깝다.
 
-영향: 다음 루프는 직접 재입력 대신 yank/put, quote object, dot repeat 중 적절한 재사용 도구를 고르는 `REUSE-CHOICE-001`로 진행한다.
+영향: 다음 루프는 새 content가 아니라 `E2E-EVIDENCE-008`로 긴 incident의 final/timeline evidence를 보강하는 것을 권장한다.
 
 ## 2026-05-26 — Inline target motion을 tutorial까지 승격
 

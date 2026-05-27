@@ -10,12 +10,19 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### INCIDENT-007. Mixed Recovery Run
-- 상태: active
-- ExecPlan: `docs/exec-plans/active/incident-007-mixed-recovery.md`
-- 목표: search, text object, substitute, visual-line, char-find를 조합한 mixed incident를 구현한다.
+현재 활성 구현 slice 없음. Applied Mastery Runs는 완료됐고, 다음 권장 후보는 긴 incident의 final/timeline evidence를 보강하는 `E2E-EVIDENCE-008`이다.
 
 ## 방금 완료한 슬라이스
+
+### PLAYTEST-REVIEW-002. Applied Mastery Review
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playtest-review-002-applied-mastery.md`
+- 완료일: 2026-05-28
+
+### INCIDENT-007. Mixed Recovery Run
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/incident-007-mixed-recovery.md`
+- 완료일: 2026-05-28
 
 ### CHOICE-PLAY-003. Quote Value Reuse Choice
 - 상태: completed

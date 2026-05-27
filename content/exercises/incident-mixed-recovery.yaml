@@ -1,0 +1,251 @@
+exercises:
+  - id: incident-mixed-recovery-001
+    status: approved
+    command_cluster: search-basic
+    engine_support: implemented
+    trained_commands: ["/"]
+    reviewed_commands: ["enter"]
+    mistake_focus: ["breach 표식을 한 줄씩 훑으려 한다."]
+    replay_status: pass
+    title: "breach 표식 찾기"
+    goal_for_player: "/breach 검색으로 손상된 token 줄을 찾으세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        boot ok
+        breach token="old"
+        guard ok
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        boot ok
+        breach token="old"
+        guard ok
+    optimal_keys: ["/", "b", "r", "e", "a", "c", "h", "enter"]
+    allowed_keys: ["/", "b", "r", "e", "a", "c", "h", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["/", "enter"]
+      forbidden_keys: ["j", "k", "l", "w", "0", "$", "?", ":", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "먼저 / 검색으로 breach 표식을 찾습니다."
+      - after_keys: 7
+        text: "검색어 입력이 끝났으면 enter로 확정하세요."
+    grading:
+      pass_condition: "cursor == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["boot ok", "breach token=\"old\"", "guard ok"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-mixed-recovery-002
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci\""]
+    reviewed_commands: ["esc"]
+    mistake_focus: ["quote 내부 값만 바꾸면 되는데 줄 전체나 token key까지 건드린다."]
+    replay_status: pass
+    title: "breach token 값 교체"
+    goal_for_player: "old 값 안에서 ci\"로 quote 내부 값만 safe로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 15
+      buffer: |
+        breach token="old"
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 18
+      buffer: |
+        breach token="safe"
+    optimal_keys: ["c", "i", "\"", "s", "a", "f", "e", "esc"]
+    allowed_keys: ["c", "i", "\"", "s", "a", "f", "e", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 8
+      required_keys: ["c", "i", "\"", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "0", "$", "d", "y", "x", "r", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "ci\"는 quote 문자를 남기고 내부 값만 change합니다."
+      - after_keys: 7
+        text: "safe 입력 후 esc로 Normal mode에 돌아오세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 8
+    e2e_assertions:
+      buffer: ["breach token=\"safe\""]
+      cursor:
+        row: 0
+        col: 18
+      mode: normal
+      status: succeeded
+
+  - id: incident-mixed-recovery-003
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: ["V", "Vd"]
+    reviewed_commands: ["j", "d"]
+    mistake_focus: ["격리 블록을 단어/문자 단위로 지우려 한다."]
+    replay_status: pass
+    title: "quarantine 블록 제거"
+    goal_for_player: "quarantine 첫 줄에서 V를 열고 j로 두 줄을 잡은 뒤 d로 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        route=live
+        quarantine=temp
+        quarantine=shadow
+        route=backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        route=live
+        route=backup
+    optimal_keys: ["V", "j", "d"]
+    allowed_keys: ["V", "j", "d", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["V", "d"]
+      forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "y", "p", "P", "i", "a", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "quarantine은 값 하나가 아니라 줄 묶음입니다. V로 줄 전체 범위를 잡으세요."
+      - after_keys: 2
+        text: "두 quarantine 줄이 잡혔다면 d로 블록을 제거합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["route=live", "route=backup"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded
+
+  - id: incident-mixed-recovery-004
+    status: approved
+    command_cluster: char-find-line
+    engine_support: implemented
+    trained_commands: ["ct"]
+    reviewed_commands: ["c", "t", "esc"]
+    mistake_focus: ["comma 뒤 route를 보존해야 하는데 delimiter까지 지운다."]
+    replay_status: pass
+    title: "inline target 값 수리"
+    goal_for_player: "target 값 시작에서 ct,로 comma 앞 값만 stable로 교체하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        mode=target-bad,route=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 11
+      buffer: |
+        mode=stable,route=live
+    optimal_keys: ["c", "t", ",", "s", "t", "a", "b", "l", "e", "esc"]
+    allowed_keys: ["c", "t", ",", "s", "a", "b", "l", "e", "esc"]
+    forbidden_keys: ["f", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["c", "t", "esc"]
+      forbidden_keys: ["f", "h", "j", "k", "w", "0", "$", "/", "?", ":", "d", "x", "r", "i", "A", "o", "O", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 2
+        text: "comma 뒤 route는 정상입니다. t,로 comma 앞까지만 range를 잡습니다."
+      - after_keys: 9
+        text: "stable 입력 후 esc로 Normal mode에 돌아오세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["mode=stable,route=live"]
+      cursor:
+        row: 0
+        col: 11
+      mode: normal
+      status: succeeded
+
+  - id: incident-mixed-recovery-005
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: [":%s"]
+    reviewed_commands: [":s"]
+    mistake_focus: ["남은 hold를 한 줄만 바꾸거나 반복 수정하려 한다."]
+    replay_status: pass
+    title: "잔류 hold 전체 승격"
+    goal_for_player: "command-line에서 모든 hold 토큰을 live로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        hold pump
+        hold relay
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        live pump
+        live relay
+    optimal_keys: [":", "%", "s", "/", "h", "o", "l", "d", "/", "l", "i", "v", "e", "/", "g", "enter"]
+    allowed_keys: [":", "%", "s", "/", "h", "o", "l", "d", "i", "v", "e", "g", "enter", "esc"]
+    forbidden_keys: ["ctrl+c"]
+    constraints:
+      max_inputs: 18
+      required_keys: [":", "%", "g", "enter"]
+      forbidden_keys: ["ctrl+c"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "hold가 여러 줄에 남아 있습니다. 전체 파일 range를 사용하세요."
+      - after_keys: 4
+        text: ":%s/hold/live/g로 잔류 hold를 모두 live로 승격합니다."
+    grading:
+      pass_condition: "buffer has no hold"
+      optimal_key_count: 16
+    e2e_assertions:
+      buffer: ["live pump", "live relay"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      status: succeeded
+      command: ":%s/hold/live/g"

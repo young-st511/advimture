@@ -124,6 +124,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-005-command-choice`는 세 번째 beat로 `choice-005-inline-target-range`를 포함한다. hyphenated 값 뒤 comma delimiter를 보존해야 하는 상황에서 `cf,`나 `cw`가 아니라 `ct,`를 선택하는 판단을 검증한다.
 - `incident-005-command-choice`는 네 번째 beat로 `choice-006-quote-value-reuse`를 포함한다. 검증된 quote 내부 값을 직접 재입력하지 않고 `yi"` + `P`로 빈 quote에 재사용하는 판단을 검증한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
+- `incident-007-mixed-recovery`는 “릴레이 기지 007: 혼합 복구 작전”으로 표시하며 `/breach`, `ci"`, linewise `Vd`, `ct,`, `:%s`를 조합한다. replay gate와 full playlist E2E를 통과한다.
 - `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.
 - 첫 visual foundation은 `v` 진입, 기존 normal motion으로 head 이동, `esc`/visual mode 중 `v`로 selection 해제를 다룬다.

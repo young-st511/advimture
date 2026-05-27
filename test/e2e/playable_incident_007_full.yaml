@@ -1,0 +1,198 @@
+id: playable_incident_007_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-mixed-recovery-001
+steps:
+  - wait_screen_contains: "복구 로그에 breach 표식"
+  - send: "/"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "c"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "breach token의 값만 safe"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "\""
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "f"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "quarantine 줄 두 개"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 1,14"
+  - send: "j"
+  - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
+  - send: "d"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "comma 뒤 route는 정상"
+  - send: "c"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: ","
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "마지막 잔류 hold 상태"
+  - send: ":"
+  - wait_ms: 50
+  - send: "%"
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "/"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "o"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "d"
+  - wait_ms: 50
+  - send: "/"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "v"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "/"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_screen_contains: "Dispatch complete"
+  - send: "q"
+assert:
+  screen_contains:
+    - "릴레이 기지 007: 혼합 복구 작전"
+    - "Exercise: 5/5"
+    - "Dispatch complete"
+    - "검색, 구조 편집, 줄 묶음 제거, inline 수리, 전체 치환"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"incident-mixed-recovery-001\""
+    - "\"incident-mixed-recovery-002\""
+    - "\"incident-mixed-recovery-003\""
+    - "\"incident-mixed-recovery-004\""
+    - "\"incident-mixed-recovery-005\""
+  key_trace:
+    - "/"
+    - "b"
+    - "r"
+    - "e"
+    - "a"
+    - "c"
+    - "h"
+    - "enter"
+    - "enter"
+    - "c"
+    - "i"
+    - "\""
+    - "s"
+    - "a"
+    - "f"
+    - "e"
+    - "esc"
+    - "enter"
+    - "V"
+    - "j"
+    - "d"
+    - "enter"
+    - "c"
+    - "t"
+    - ","
+    - "s"
+    - "t"
+    - "a"
+    - "b"
+    - "l"
+    - "e"
+    - "esc"
+    - "enter"
+    - ":"
+    - "%"
+    - "s"
+    - "/"
+    - "h"
+    - "o"
+    - "l"
+    - "d"
+    - "/"
+    - "l"
+    - "i"
+    - "v"
+    - "e"
+    - "/"
+    - "g"
+    - "enter"
+    - "q"
+  app_state:
+    buffer: ["live pump", "live relay"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    command: ":%s/hold/live/g"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "incident-mixed-recovery-005"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true
