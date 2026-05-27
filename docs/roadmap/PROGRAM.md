@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### REUSE-CHOICE-001. Reuse Judgment Drill Design
+### CHOICE-PLAY-003. Quote Value Reuse Choice
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/reuse-choice-001-reuse-judgment.md`
-- 목표: 직접 재입력 대신 이미 있는 텍스트를 재사용하는 command-choice 후보를 설계한다.
+- ExecPlan: `docs/exec-plans/active/choice-play-003-reuse-choice.md`
+- 목표: `incident-005-command-choice`에 `yi"` + `P` quote value reuse-choice beat를 추가한다.
 
 ## 방금 완료한 슬라이스
+
+### REUSE-CHOICE-001. Reuse Judgment Drill Design
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/reuse-choice-001-reuse-judgment.md`
+- 완료일: 2026-05-28
 
 ### INCIDENT-006. Inline Target Repair Run
 - 상태: completed

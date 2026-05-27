@@ -68,6 +68,9 @@ choice_drill_draft:
 | `choice-004-search-then-scope` | `search-then-act` | `/token` + `V...d` | 먼저 marker를 찾은 뒤 marker 아래 블록을 linewise로 격리한다. |
 | `choice-005-inline-target-range` | `inline-target-choice` | `ct,` | comma 뒤 route는 정상이고 comma는 보존해야 한다. hyphenated 값만 바꾸려면 `cw`나 `cf,`가 아니라 `ct,`가 적합하다. Playable: `incident-005-command-choice` / `command-choice-inline-target-001`. |
 | `incident-006-inline-target-repair` | `search-then-act` + `inline-target-choice` | `/target` + `ct,` | 먼저 손상된 target 값을 찾고, 같은 줄 comma 앞 값만 교체한다. Playable: `incident-006-inline-target-repair`. |
+| `choice-006-quote-value-reuse` | `reuse-choice` | `yi"` + `P` | 검증된 quote 내부 token을 빈 quote 위치에 그대로 복제해야 한다. 직접 재입력은 token 길이/오타 리스크가 크다. Next playable candidate: `incident-005-command-choice` fourth beat. |
+| `choice-007-line-reuse` | `reuse-choice` | `V` + `y` + `p` | 검증된 route 줄 전체를 다음 위치에 복제해야 한다. 단어/quote 값이 아니라 줄 전체 재사용 문제다. |
+| `choice-008-repeat-change-reuse` | `reuse-choice` | `.` | 같은 quote 값 변경이 여러 줄에 반복된다. 재입력보다 last change repeat가 적합하다. |
 
 ## Inline Target Application Decision
 
@@ -78,6 +81,18 @@ choice_drill_draft:
 - command-choice의 본래 목적이 “무슨 도구를 써야 하는가”라서 `ct,`와 `cf,`의 범위 판단을 가장 직접적으로 훈련한다.
 - 새 incident를 만들기 전 기존 `incident-005-command-choice`에 1 beat를 추가하면 흐름과 E2E blast radius가 작다.
 - `incident-006-inline-target-repair`는 `/target`, `n`, `ct,`를 조합하는 applied run으로 승격했다. 다음 command-choice 후보는 직접 재입력 대신 기존 텍스트를 재사용할지 판단하는 `reuse-choice`다.
+
+## Reuse Choice Decision
+
+`REUSE-CHOICE-001`의 첫 적용 후보는 `choice-006-quote-value-reuse`로 한다.
+
+이유:
+
+- 기존 engine만으로 `yi"` + `P`를 안정적으로 검증할 수 있고, quote 내부 값 재사용은 실무 config/token 편집에서 자주 등장한다.
+- `choice-007-line-reuse`는 이미 linewise tutorial/incident에서 비슷한 감각을 여러 번 다뤘다.
+- `choice-008-repeat-change-reuse`는 `.`의 효용이 크지만 “재사용”보다 “반복 변경” 판단에 가까워 별도 repeat-choice로 분리하는 편이 낫다.
+
+첫 playable 구현은 `incident-005-command-choice`에 fourth beat로 붙인다. 우회 방지는 `i/a/A/o/O`, `c/d/x/r`, `:`를 금지하고 `y`, `i`, `"`, `P`를 required key로 고정한다.
 
 ## Playable Gate
 
