@@ -122,6 +122,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-005-command-choice`는 “릴레이 기지 005: 복구 범위 판별”로 표시하며, `choice-001-scope-triage`를 첫 playable command-choice drill로 승격한다. 문항 제목과 피드백은 값/단어가 아니라 줄 묶음을 복구 범위로 판단하는 이유를 강조한다. 새 command cluster나 engine 기능을 추가하지 않고 `visual-line-basic`의 `V`, `j`, `d`로 linewise scope choice를 검증한다.
 - `incident-005-command-choice`는 두 번째 beat로 `choice-002-repeat-or-substitute`를 포함한다. 같은 literal이 파일 전체와 한 줄 안에 반복되는 상황에서 `.` 반복/현재 줄 치환보다 `:%s/.../.../g` 전체 범위 치환을 선택하는 판단을 검증한다.
 - `incident-005-command-choice`는 세 번째 beat로 `choice-005-inline-target-range`를 포함한다. hyphenated 값 뒤 comma delimiter를 보존해야 하는 상황에서 `cf,`나 `cw`가 아니라 `ct,`를 선택하는 판단을 검증한다.
+- `incident-005-command-choice`는 네 번째 beat로 `choice-006-quote-value-reuse`를 포함한다. 검증된 quote 내부 값을 직접 재입력하지 않고 `yi"` + `P`로 빈 quote에 재사용하는 판단을 검증한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.
 - VISUAL-GAP-002는 첫 visual 구현 범위를 charwise `v`로 좁혔다. selection은 `kind`, `anchor`, `head`, normalized inclusive `start`/`end`로 표현한다.

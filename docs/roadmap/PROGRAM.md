@@ -10,12 +10,17 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-### CHOICE-PLAY-003. Quote Value Reuse Choice
+### INCIDENT-007. Mixed Recovery Run
 - 상태: active
-- ExecPlan: `docs/exec-plans/active/choice-play-003-reuse-choice.md`
-- 목표: `incident-005-command-choice`에 `yi"` + `P` quote value reuse-choice beat를 추가한다.
+- ExecPlan: `docs/exec-plans/active/incident-007-mixed-recovery.md`
+- 목표: search, text object, substitute, visual-line, char-find를 조합한 mixed incident를 구현한다.
 
 ## 방금 완료한 슬라이스
+
+### CHOICE-PLAY-003. Quote Value Reuse Choice
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/choice-play-003-reuse-choice.md`
+- 완료일: 2026-05-28
 
 ### REUSE-CHOICE-001. Reuse Judgment Drill Design
 - 상태: completed

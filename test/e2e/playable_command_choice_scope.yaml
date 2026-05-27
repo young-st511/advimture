@@ -74,12 +74,26 @@ steps:
   - send: "e"
   - wait_ms: 50
   - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+  - wait_screen_contains: "primary token은 이미 검증"
+  - send: "y"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "\""
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
   - wait_screen_contains: "Next runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 005: 복구 범위 판별"
-    - "cf,가 아니라 ct,를 선택"
+    - "검증된 quote 내부 값만 register로 재사용"
     - "Next runbook: enter"
   exit_code: 0
   progress_file_exists: true
@@ -87,6 +101,7 @@ assert:
     - "\"command-choice-scope-001\""
     - "\"command-choice-repeat-substitute-001\""
     - "\"command-choice-inline-target-001\""
+    - "\"command-choice-quote-reuse-001\""
   key_trace:
     - "V"
     - "j"
@@ -121,19 +136,26 @@ assert:
     - "l"
     - "e"
     - "esc"
+    - "enter"
+    - "y"
+    - "i"
+    - "\""
+    - "j"
+    - "$"
+    - "P"
     - "q"
   app_state:
-    buffer: ["target=stable,route=live"]
+    buffer: ["primary=\"vault-731\"", "mirror=\"vault-731\""]
     cursor:
-      row: 0
-      col: 13
+      row: 1
+      col: 16
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-inline-target-001"
+      mission_id: "command-choice-quote-reuse-001"
       completed: true
 evidence:
   save_raw_ansi: true

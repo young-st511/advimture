@@ -2,7 +2,7 @@
 
 Slice-ID: CHOICE-PLAY-003
 Created: 2026-05-28
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
 - docs/roadmap/PROGRAM.md
@@ -46,17 +46,17 @@ Allowed-Paths:
 
 ## Step 1: Content
 
-- [ ] exercise 추가
-- [ ] scenario 추가
-- [ ] playlist fourth beat 연결
+- [x] exercise 추가
+- [x] scenario 추가
+- [x] playlist fourth beat 연결
 
 ## Step 2: Verification Wiring
 
-- [ ] loader expected counts/IDs 갱신
-- [ ] focused E2E 갱신
+- [x] loader expected counts/IDs 갱신
+- [x] focused E2E 갱신
 
 ## Step 3: Validation
 
-- [ ] content tests
-- [ ] focused E2E
-- [ ] full regression
+- [x] content tests
+- [x] focused E2E
+- [x] full regression

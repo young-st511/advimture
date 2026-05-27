@@ -152,3 +152,53 @@ exercises:
         col: 13
       mode: normal
       status: succeeded
+
+  - id: command-choice-quote-reuse-001
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["yi\"", "P", "i", "ci\""]
+    mistake_focus: ["검증된 quote 값을 직접 다시 입력하거나 값 전체가 아니라 단어 일부만 복사한다."]
+    replay_status: pass
+    title: "quote 값 재사용 판단"
+    goal_for_player: "검증된 primary quote 값을 다시 입력하지 말고 mirror quote 안에 그대로 재사용하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        primary="vault-731"
+        mirror=""
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 16
+      buffer: |
+        primary="vault-731"
+        mirror="vault-731"
+    optimal_keys: ["y", "i", "\"", "j", "$", "P"]
+    allowed_keys: ["y", "i", "\"", "j", "$", "P", "esc"]
+    forbidden_keys: ["p", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "\"", "P"]
+      forbidden_keys: ["p", "h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번 판단은 값을 새로 입력할지, 이미 검증된 quote 값을 재사용할지입니다."
+      - after_keys: 3
+        text: "yi\"로 quote 내부 값만 register에 담았습니다. mirror의 닫는 quote 앞에서 P로 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["primary=\"vault-731\"", "mirror=\"vault-731\""]
+      cursor:
+        row: 1
+        col: 16
+      mode: normal
+      status: succeeded

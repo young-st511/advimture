@@ -25,3 +25,9 @@ playlists:
         exercise_id: command-choice-inline-target-001
         scenario_id: command-choice-inline-target-001-scenario
         engine_support: implemented
+      - id: incident-005-004
+        role: choose_quote_value_reuse
+        command_cluster: text-object-quote-pair
+        exercise_id: command-choice-quote-reuse-001
+        scenario_id: command-choice-quote-reuse-001-scenario
+        engine_support: implemented

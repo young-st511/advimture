@@ -43,3 +43,18 @@ scenarios:
     story_constraints:
       - "새 command 소개가 아니라 f/t 범위 선택 판단을 강화한다."
       - "성공/실패 피드백은 ct,와 cf,의 선택 이유를 설명한다."
+
+  - id: command-choice-quote-reuse-001-scenario
+    status: approved
+    exercise_id: command-choice-quote-reuse-001
+    engine_support: implemented
+    learning_reinforcement: "검증된 quote 내부 값은 직접 재입력하지 않고 yi\" + P로 재사용한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "quote 값 재사용 판단"
+    briefing: "primary token은 이미 검증됐고 mirror는 비어 있습니다. 값을 다시 치지 말고 quote 내부 값만 재사용하세요."
+    context_role: "quote value reuse choice drill"
+    mentor_success: "좋습니다. token을 다시 입력하지 않고 검증된 quote 내부 값만 register로 재사용했습니다."
+    mentor_failure: "이번 문제는 새 값을 만드는 게 아닙니다. primary의 quote 내부 값을 y로 담아 mirror의 빈 quote 안에 붙이세요."
+    story_constraints:
+      - "새 command 소개가 아니라 직접 재입력과 reuse의 선택 이유를 강조한다."
+      - "성공/실패 피드백은 token 오타 리스크와 구조 보존을 설명한다."

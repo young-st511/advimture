@@ -68,7 +68,7 @@ choice_drill_draft:
 | `choice-004-search-then-scope` | `search-then-act` | `/token` + `V...d` | 먼저 marker를 찾은 뒤 marker 아래 블록을 linewise로 격리한다. |
 | `choice-005-inline-target-range` | `inline-target-choice` | `ct,` | comma 뒤 route는 정상이고 comma는 보존해야 한다. hyphenated 값만 바꾸려면 `cw`나 `cf,`가 아니라 `ct,`가 적합하다. Playable: `incident-005-command-choice` / `command-choice-inline-target-001`. |
 | `incident-006-inline-target-repair` | `search-then-act` + `inline-target-choice` | `/target` + `ct,` | 먼저 손상된 target 값을 찾고, 같은 줄 comma 앞 값만 교체한다. Playable: `incident-006-inline-target-repair`. |
-| `choice-006-quote-value-reuse` | `reuse-choice` | `yi"` + `P` | 검증된 quote 내부 token을 빈 quote 위치에 그대로 복제해야 한다. 직접 재입력은 token 길이/오타 리스크가 크다. Next playable candidate: `incident-005-command-choice` fourth beat. |
+| `choice-006-quote-value-reuse` | `reuse-choice` | `yi"` + `P` | 검증된 quote 내부 token을 빈 quote 위치에 그대로 복제해야 한다. 직접 재입력은 token 길이/오타 리스크가 크다. Playable: `incident-005-command-choice` / `command-choice-quote-reuse-001`. |
 | `choice-007-line-reuse` | `reuse-choice` | `V` + `y` + `p` | 검증된 route 줄 전체를 다음 위치에 복제해야 한다. 단어/quote 값이 아니라 줄 전체 재사용 문제다. |
 | `choice-008-repeat-change-reuse` | `reuse-choice` | `.` | 같은 quote 값 변경이 여러 줄에 반복된다. 재입력보다 last change repeat가 적합하다. |
 
