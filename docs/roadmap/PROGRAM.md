@@ -10,9 +10,19 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. Applied Mastery Runs는 완료됐고, 다음 권장 후보는 긴 incident의 final/timeline evidence를 보강하는 `E2E-EVIDENCE-008`이다.
+현재 활성 구현 slice 없음. Long Incident Evidence Hardening은 완료됐고, 다음 권장 후보는 Foundation exit review와 다음 중기 플랜을 고정하는 `PLAN-REFRESH-009`다.
 
 ## 방금 완료한 슬라이스
+
+### E2E-EVIDENCE-008. Long Incident Final/Timeline Evidence
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/e2e-evidence-008-long-incident-evidence.md`
+- 완료일: 2026-05-29
+
+### PLAYTEST-REVIEW-003. Long Incident Evidence Review
+- 상태: completed
+- Review: `docs/roadmap/PLAYTEST_REVIEW_2026-05-29.md`
+- 완료일: 2026-05-29
 
 ### PLAYTEST-REVIEW-002. Applied Mastery Review
 - 상태: completed

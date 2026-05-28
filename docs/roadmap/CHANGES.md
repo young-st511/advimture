@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-29 — Long incident evidence bundle 고정
+
+이전 가정: Applied Mastery Runs는 기능적으로 통과했지만 긴 incident의 `summary.json`에서 `screen_timeline_evidence`와 `screen_final_evidence`가 false라 UI/UX 회귀를 사람이 훑기 어려웠다.
+
+새 가정: 긴 incident full route와 command-choice applied route는 `screen_timeline.txt`와 `screen_final.txt`를 기본 evidence bundle로 남긴다. runner 기능은 그대로 두고 fixture와 verification contract를 고정한다.
+
+이유: 새 content나 engine을 늘리기 전에, 긴 플레이 루트를 Agent와 사람이 같은 증거로 검토할 수 있어야 한다.
+
+영향: 다음 루프는 `PLAN-REFRESH-009`로 Foundation exit review와 다음 중기 플랜을 먼저 고정한다. 새 engine 후보를 연다면 quote-pair hardening이 가장 작은 후보지만, evidence 기반 review를 먼저 둔다.
+
 ## 2026-05-28 — Applied mastery run 시작
 
 이전 가정: `Inline Target Motions` 완료 후 다음 후보는 `incident-006-inline-target-repair` 또는 reuse-choice drill이었다.
