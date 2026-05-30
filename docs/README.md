@@ -45,6 +45,7 @@ docs/
 └── roadmap/
     ├── PRODUCT.md
     ├── PROGRAM.md
+    ├── FORWARD_PLAN.md
     ├── CHANGES.md
     ├── decisions/
     └── archive/
@@ -58,6 +59,7 @@ docs/
 |------|----------|------|-------------|
 | `roadmap/PRODUCT.md` | 사람 + AI | 제품의 영구 컨텍스트 | 제품의 본질, 표면, 기둥 변경 시 |
 | `roadmap/PROGRAM.md` | 사람 + AI | 현재 phase와 활성 slice | 작업 우선순위나 slice 변경 시 |
+| `roadmap/FORWARD_PLAN.md` | 사람 + AI | 앞으로 2~8주 rolling plan과 decision gate | 추천 순서, 출시 기준, 장기 후보 변경 시 |
 | `roadmap/CHANGES.md` | 사람 + AI | 시퀀싱/가정 변경 로그 | phase 가정 변경 시 append-only |
 | `roadmap/MIDTERM_TODO.md` | 사람 + AI | 현재/다음 중기 보드 | 중기 플랜 시작/완료/후보 변경 시 |
 | `roadmap/archive/*` | 사람 + AI | 과거 health check, review, 긴 계획 이력 | 현재 후보로 읽히면 안 되는 문서 이동 시 |
@@ -82,6 +84,7 @@ docs/
 
 - `roadmap/PROGRAM.md`는 현재 phase, active slice, 다음 권장 후보, 최근 완료 5~10개만 둔다.
 - `roadmap/MIDTERM_TODO.md`는 현재 중기 보드와 다음 후보만 둔다. 완료된 긴 중기 플랜 히스토리는 `roadmap/archive/history/`로 이동한다.
+- `roadmap/FORWARD_PLAN.md`는 앞으로 2~8주 방향과 decision gate를 둔다. 매 slice 종료 시 추천 순서가 바뀌었는지 확인한다.
 - 날짜가 붙은 health check/review 문서는 최신 판단에 직접 쓰는 것만 root `roadmap/`에 둔다. 오래된 것은 `roadmap/archive/reviews/`로 이동한다.
 - backlog 문서에는 `Status`와 `Last reviewed`를 둔다. 완료된 항목은 P0/P1/P2에 남기지 않고 `Completed / Retired`로 내린다.
 - `다음 후보`, `next`, `현재 진행 중` 같은 표현을 쓰는 문서는 최신 `PROGRAM.md`와 모순되면 안 된다.

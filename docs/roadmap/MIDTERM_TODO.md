@@ -1,25 +1,25 @@
 # Midterm Todo
 
-> 현재 중기 보드만 둔다. 과거 중기 플랜의 긴 히스토리는 `docs/roadmap/archive/history/MIDTERM_TODO_2026-05-29.md`와 `docs/exec-plans/completed/`를 본다.
+> 현재 중기 보드만 둔다. 앞으로의 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 본다. 과거 중기 플랜의 긴 히스토리는 `docs/roadmap/archive/history/MIDTERM_TODO_2026-05-29.md`와 `docs/exec-plans/completed/`를 본다.
 
 ## 현재 상태
 
 Status: planning needed
 
-현재 active slice는 없다. 가장 최근 중기 플랜인 Long Incident Evidence Hardening은 완료됐고, 다음 단계는 `PLAN-REFRESH-009`로 Foundation exit review와 다음 중기 플랜을 고정하는 것이다.
+현재 active slice는 없다. `PLAN-REFRESH-009`로 forward plan 문서화는 완료됐다. 다음 단계는 `FOUNDATION-EXIT-001`로 Foundation exit review와 다음 중기 플랜을 고정하는 것이다.
 
 ## 다음 중기 플랜 후보
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | PLAN-REFRESH-009 | proposed | Foundation exit review와 다음 중기 플랜 확정 |
-| 2 | QUOTE-PAIR-HARDEN-001 | candidate | `ci'`, `ci(`, `ci{` 등 quote/pair text object hardening |
-| 3 | PLATFORM-REVIEW-003 | candidate | 저장 포맷 변경 없는 mission/review/game loop 강화 |
-| 4 | CONTENT-BREADTH-002 | candidate | 기존 engine만 사용하는 applied incident/command-choice 확장 |
+| 1 | FOUNDATION-EXIT-001 | proposed | Foundation exit review와 다음 중기 플랜 확정 |
+| 2 | PLATFORM-REVIEW-003 | candidate | 저장 포맷 변경 없는 mission/review/game loop 강화 |
+| 3 | CONTENT-BREADTH-002 | candidate | 기존 engine만 사용하는 applied incident/command-choice 확장 |
+| 4 | QUOTE-PAIR-HARDEN-001 | candidate | `ci'`, `ci(`, `ci{` 등 quote/pair text object hardening |
 
-권장은 `PLAN-REFRESH-009`를 먼저 열고, 그 결과로 engine hardening, platform loop, content breadth 중 하나를 고르는 것이다.
+권장은 `FOUNDATION-EXIT-001`을 먼저 열고, 그 결과로 platform loop, content breadth, engine hardening 중 하나를 고르는 것이다. 현재 rolling plan은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
 
-## PLAN-REFRESH-009 출구 조건
+## FOUNDATION-EXIT-001 출구 조건
 
 | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |-----------|-------------|------|---------------|
@@ -35,6 +35,7 @@ Status: planning needed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| PLAN-REFRESH-009 | 2026-05-30 | 앞으로 2~8주 rolling plan과 문서 참고 규칙 작성 |
 | E2E-EVIDENCE-008 | 2026-05-29 | 긴 incident와 command-choice applied route의 final/timeline evidence bundle 고정 |
 | Applied Mastery Runs | 2026-05-28 | `incident-006`, quote value reuse-choice, `incident-007` 완료 |
 | Inline Target Motions | 2026-05-26 | `f/t`, `df/dt/cf/ct`, tutorial, command-choice 적용 beat 완료 |
@@ -43,5 +44,6 @@ Status: planning needed
 ## 운영 규칙
 
 - 이 파일은 현재/다음 중기 계획만 유지한다.
+- 앞으로의 방향이 바뀌면 `docs/roadmap/FORWARD_PLAN.md`도 함께 갱신한다.
 - 완료된 긴 계획표는 `docs/roadmap/archive/history/`로 이동한다.
 - "다음 중기 플랜" 섹션이 여러 개 쌓이면 stale 위험으로 보고 정리한다.

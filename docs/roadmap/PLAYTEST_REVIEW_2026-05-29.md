@@ -27,8 +27,8 @@ Scope: `E2E-EVIDENCE-008`
 
 ## 다음 후보
 
-1. `PLAN-REFRESH-009`: Foundation exit review와 다음 중기 플랜 수립. 지금까지의 engine/content/UI가 첫 제품 기둥을 충분히 세웠는지 점검한다.
+1. `FOUNDATION-EXIT-001`: Foundation exit review와 다음 중기 플랜 수립. 지금까지의 engine/content/UI가 첫 제품 기둥을 충분히 세웠는지 점검한다.
 2. `QUOTE-PAIR-HARDEN-001`: 새 engine을 연다면 `ci'`, `ci(`, `ci{` 같은 pair text object 확장이 가장 작고 실무 효용이 높다.
 3. `PLATFORM-REVIEW-003`: 저장 포맷 변경 없이 mission map/review entry를 더 게임답게 묶을 수 있는지 검토한다.
 
-권장은 `PLAN-REFRESH-009`를 먼저 열고, 그 결과로 quote-pair hardening과 platform review 중 하나를 고르는 것이다.
+권장은 `FOUNDATION-EXIT-001`을 먼저 열고, 그 결과로 quote-pair hardening과 platform review 중 하나를 고르는 것이다. 2026-05-30에 `PLAN-REFRESH-009`는 `docs/roadmap/FORWARD_PLAN.md` 작성으로 완료됐다.

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Foundation forward plan 도입
+
+이전 가정: 다음 권장 후보는 `PROGRAM.md`와 `MIDTERM_TODO.md`에만 두면 충분했다.
+
+새 가정: `PROGRAM.md`는 현재 상태, `MIDTERM_TODO.md`는 현재 중기 보드, `FORWARD_PLAN.md`는 앞으로 2~8주 방향과 decision gate를 맡는다.
+
+이유: 문서 cleanup 이후에도 다음 작업 순서를 지속적으로 참고하려면 current board와 rolling plan을 분리해야 한다.
+
+영향: 다음 실제 작업은 `FOUNDATION-EXIT-001`이다. 이후 platform loop, content breadth, quote-pair hardening 중 하나를 evidence 기반으로 선택한다.
+
 ## 2026-05-30 — Roadmap 문서 신선도 규칙 도입
 
 이전 가정: `PROGRAM.md`, `MIDTERM_TODO.md`, `ENGINE_TODO.md`, health/review 문서가 모두 roadmap root에 남아 있어도 최신 항목을 사람이 구분할 수 있었다.

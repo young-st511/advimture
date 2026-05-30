@@ -16,7 +16,7 @@ Last reviewed: 2026-05-30
 
 현재 활성 engine slice는 없다.
 
-Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. 다음 작업은 바로 새 engine을 여는 것보다 `PLAN-REFRESH-009`에서 Foundation exit review를 먼저 수행한 뒤 고른다.
+Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. 다음 작업은 바로 새 engine을 여는 것보다 `FOUNDATION-EXIT-001`에서 Foundation exit review를 먼저 수행한 뒤 고른다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
 
 ## 완료된 핵심 모듈
 
