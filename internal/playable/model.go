@@ -108,7 +108,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				break
 			}
 			if m.run.State().Status == exerciseruntime.StatusSucceeded && action.Key == vimengine.KeyEnter {
-				m.advanceToNext()
+				m.advanceAfterSuccess()
 				break
 			}
 			m.hintMessage = ""
@@ -237,13 +237,29 @@ func (m *Model) advanceToNext() {
 	if m.current+1 >= len(m.entries) {
 		return
 	}
-	nextIndex := m.current + 1
-	run, err := runForEntry(m.contentRoot, m.entries[nextIndex])
+	m.jumpToEntry(m.current + 1)
+}
+
+func (m *Model) advanceAfterSuccess() {
+	if m.current+1 < len(m.entries) {
+		m.advanceToNext()
+		return
+	}
+	if index, ok := m.reviewDispatchTargetIndex(); ok {
+		m.jumpToEntry(index)
+	}
+}
+
+func (m *Model) jumpToEntry(index int) {
+	if index < 0 || index >= len(m.entries) {
+		return
+	}
+	run, err := runForEntry(m.contentRoot, m.entries[index])
 	if err != nil {
 		m.err = err
 		return
 	}
-	m.current = nextIndex
+	m.current = index
 	m.run = run
 	m.saved = false
 	m.hintMessage = ""
@@ -328,6 +344,17 @@ func (m Model) dailyRouteSummary() string {
 	return fmt.Sprintf("오늘의 복구 루트: %s 외 %d건 대기", primary, len(m.reviewQueue)-1)
 }
 
+func (m Model) nextDispatchSummary() string {
+	if len(m.reviewQueue) == 0 {
+		return ""
+	}
+	primary := m.reviewQueue[0].DailyRouteLabel()
+	if len(m.reviewQueue) == 1 {
+		return "다음 출격: " + primary
+	}
+	return fmt.Sprintf("다음 출격: %s 외 %d건 대기", primary, len(m.reviewQueue)-1)
+}
+
 func (m Model) residualRiskSummary() string {
 	for _, candidate := range m.reviewQueue {
 		if candidate.ExerciseID != m.currentExerciseID() {
@@ -344,6 +371,19 @@ func (m Model) nextEntryStartsNewPlaylist() bool {
 	return m.entries[m.current].PlaylistID != m.entries[m.current+1].PlaylistID
 }
 
+func (m Model) reviewDispatchTargetIndex() (int, bool) {
+	if len(m.reviewQueue) == 0 {
+		return 0, false
+	}
+	target := m.reviewQueue[0].ExerciseID
+	for index, entry := range m.entries {
+		if entry.ExerciseID == target {
+			return index, true
+		}
+	}
+	return 0, false
+}
+
 func (m Model) successActionLines() []string {
 	if m.current+1 < len(m.entries) {
 		if !m.nextEntryStartsNewPlaylist() {
@@ -357,6 +397,9 @@ func (m Model) successActionLines() []string {
 		default:
 			return []string{"Next playlist: enter"}
 		}
+	}
+	if _, ok := m.reviewDispatchTargetIndex(); ok {
+		return []string{"Next dispatch: enter", "q: quit"}
 	}
 	if m.currentEntryIsIncident() {
 		return []string{"Dispatch complete", "q: quit"}
@@ -663,7 +706,7 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 	}
 
 	lines := []string{
-		fmt.Sprintf("복구 기록: grade %s, %d keys", state.Score.Grade, len(state.Runtime.KeyTrace)),
+		fmt.Sprintf("이번 복구: grade %s, %d keys", state.Score.Grade, len(state.Runtime.KeyTrace)),
 	}
 	if best, ok := m.progress.Missions[m.currentExerciseID()]; ok && best.Completed {
 		bestGrade := best.BestGrade
@@ -674,7 +717,10 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 		if best.BestKeystrokes > 0 {
 			bestKeys = fmt.Sprintf("%d keys", best.BestKeystrokes)
 		}
-		lines = append(lines, fmt.Sprintf("최단 복구 기록: grade %s, %s", bestGrade, bestKeys))
+		lines = append(lines, fmt.Sprintf("최단 복구: grade %s, %s", bestGrade, bestKeys))
+	}
+	if state.Score.ExpectedKeyCount > 0 {
+		lines = append(lines, fmt.Sprintf("목표 입력: %d keys", state.Score.ExpectedKeyCount))
 	}
 	if entry, ok := m.currentEntry(); ok {
 		completed, total := m.playlistCompletion(entry.PlaylistID)
@@ -683,8 +729,8 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 	if residual := m.residualRiskSummary(); residual != "" {
 		lines = append(lines, residual)
 	}
-	if daily := m.dailyRouteSummary(); daily != "" {
-		lines = append(lines, daily)
+	if next := m.nextDispatchSummary(); next != "" {
+		lines = append(lines, next)
 	}
 	return lines
 }

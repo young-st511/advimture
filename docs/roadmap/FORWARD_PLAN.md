@@ -23,7 +23,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - Content: tutorial coverage와 incident 001~007이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
-- 출시감: mission/review loop, 반복 동기, UI polish, release readiness가 아직 부족함
+- 출시감: mission/review loop는 한 차례 닫혔고, content breadth, UI polish, release readiness가 아직 부족함
 
 `FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했다. 따라서 다음 순서는 **game loop/platform polish -> content breadth -> small engine hardening -> release readiness**로 간다.
 
@@ -56,57 +56,57 @@ Review: `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`
 - `make e2e-playable`: pass
 - long incident final/timeline evidence spot review 완료
 
-## 2. Immediate Plan
+## 2. Platform Review Result
 
 ### PLATFORM-REVIEW-003 — Mission/Review Game Loop
 
-권장 우선순위: 가장 높음
+Status: completed
+ExecPlan: `docs/exec-plans/completed/platform-review-003-mission-review-loop.md`
 
-목표: 저장 포맷 변경 없이 review queue, mission progress, daily route, best record, playlist 완료 화면을 더 게임다운 반복 루프로 묶는다.
+결과:
 
-산출물:
-
-- mission/review loop spec
-- 저장 변경 없는 acceptance criteria
-- focused E2E plan
-- 다음 행동을 명확히 보여주는 성공/실패/완료 흐름
+- 성공 debrief가 `이번 복구`, `최단 복구`, `목표 입력`, `잔류 리스크`, `다음 출격`을 보여준다.
+- 마지막 dispatch에서 review 후보가 남아 있으면 `Next dispatch: enter`로 primary review exercise에 재진입한다.
+- progress schema v2, daily streak, persisted review due date는 여전히 도입하지 않았다.
 
 검증:
 
-- 관련 runtime/playable tests
-- review/daily app_state assertion
+- `go test ./...`: pass
+- `make e2e-playable`: pass
+- focused review/debrief E2E: pass
+
+## 3. Immediate Plan
+
+### CONTENT-BREADTH-002 — Applied Content Expansion
+
+권장 우선순위: 가장 높음
+
+목표: 새 engine 없이 기존 command를 조합하는 applied incident와 command-choice를 늘린다.
+
+산출물:
+
+- applied incident 또는 command-choice 후보 선정
+- command -> exercise -> scenario 순서의 content spec
+- YAML content와 replay gate
+- focused E2E와 long route final/timeline evidence
+
+검증:
+
+- content loader/replay tests
 - focused E2E
 - 필요 시 `make e2e-playable`
 
 Decision gate:
 
-- game loop가 정리되면 `CONTENT-BREADTH-002`로 간다.
-- content 적용 폭보다 UI 정보 밀도가 다시 병목이면 `UI-POLISH-002`를 먼저 연다.
-- engine coverage가 실제 content 작성 병목이면 `QUOTE-PAIR-HARDEN-001`로 간다.
+- 기존 engine만으로 좋은 적용 run이 가능하면 content부터 늘린다.
+- quote/pair 적용이 content 병목이면 `QUOTE-PAIR-HARDEN-001`을 연다.
+- 화면 정보 밀도가 content 이해를 막으면 `UI-POLISH-002`를 먼저 연다.
 
-## 3. Recommended Midterm Sequence
+## 4. Recommended Midterm Sequence
 
-### 1. PLATFORM-REVIEW-003 — Mission/Review Game Loop
+### 1. CONTENT-BREADTH-002 — Applied Content Expansion
 
 권장 우선순위: 높음
-
-목표: 저장 포맷 변경 없이 review queue, mission progress, daily route를 더 게임답게 묶는다.
-
-포함:
-
-- 첫 화면/완료 화면에서 다음 행동이 더 선명하게 보이게 함
-- `재점검`, `잔류 리스크`, `오늘의 복구 루트`를 mission loop로 정리
-- 실패/낮은 grade/높은 key count를 다음 플레이 이유로 연결
-
-제외:
-
-- progress schema v2
-- daily streak 저장
-- spaced review due date 저장
-
-### 2. CONTENT-BREADTH-002 — Applied Content Expansion
-
-권장 우선순위: 중간
 
 목표: 새 engine 없이 기존 command를 조합하는 applied incident와 command-choice를 늘린다.
 
@@ -123,7 +123,7 @@ Decision gate:
 - 새 command를 소개하지 않는다.
 - long route에는 final/timeline evidence를 남긴다.
 
-### 3. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
+### 2. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 
 권장 우선순위: 중간
 
@@ -142,7 +142,7 @@ Decision gate:
 - around object
 - count/register prefix
 
-### 4. UI-POLISH-002 — Release UI Polish
+### 3. UI-POLISH-002 — Release UI Polish
 
 권장 우선순위: Foundation exit 결과에 따라 결정
 
@@ -160,7 +160,7 @@ Decision gate:
 - 화면 문구보다 `app_state` 검증을 우선한다.
 - color 없는 환경에서도 의미가 보존되어야 한다.
 
-## 4. Release Readiness
+## 5. Release Readiness
 
 첫 공개 전 필요 항목:
 
@@ -180,7 +180,7 @@ Decision gate:
 - long incident evidence가 남는다.
 - progress schema 변경 없이 저장/재개가 안전하다.
 
-## 5. Long-Run Candidates
+## 6. Long-Run Candidates
 
 아래는 출시 전 필수가 아니다.
 
@@ -194,7 +194,7 @@ Decision gate:
 
 이 후보들은 실제 플레이 evidence로 병목이 확인될 때만 연다.
 
-## 6. 문서 업데이트 규칙
+## 7. 문서 업데이트 규칙
 
 각 slice 종료 시:
 

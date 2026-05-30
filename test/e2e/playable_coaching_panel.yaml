@@ -18,7 +18,7 @@ steps:
 assert:
   screen_contains:
     - "Grade: A"
-    - "복구 기록: grade A, 2 keys"
+    - "이번 복구: grade A, 2 keys"
     - "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
   exit_code: 0
   progress_file_exists: true

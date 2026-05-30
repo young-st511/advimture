@@ -56,7 +56,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - running/mode-specific `FocusPanel`은 `MISSION` HUD 안의 짧은 cue line으로 접어 현재 목표와 함께 보인다.
 - failed/succeeded `FocusPanel`은 `RUNBOOK CONSOLE` 안에서 Zellij floating pane처럼 보이는 modal로 렌더링한다.
 - floating modal은 `tea.WindowSizeMsg`로 전달된 terminal width가 있으면 화면 중앙에 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
-- floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action line(`Retry`, `Next`, `Next tutorial`, `Next runbook`, `Dispatch complete`)이 잘리지 않아야 한다. 성공 floating modal은 내부 성공 상태명 `STEP SEALED`를 별도 heading으로 중복 표시하지 않는다.
+- floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action line(`Retry`, `Next`, `Next tutorial`, `Next runbook`, `Next dispatch`, `Dispatch complete`)이 잘리지 않아야 한다. 성공 floating modal은 내부 성공 상태명 `STEP SEALED`를 별도 heading으로 중복 표시하지 않는다.
 - `복구 현황`은 terminal size가 있는 화면에서 별도 큰 pre-console section이 아니라 `MISSION` HUD 내부의 보조 line으로 표시한다.
 - running HUD의 review/daily line은 상세 문구를 그대로 노출하지 않고 tutorial에서는 `복구 메모: 재점검 N건 · 다음: <title>`, incident에서는 `복구 현황: 재점검 N건 · 잔류: <title>`로 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
@@ -65,9 +65,11 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - 다음 playlist가 incident이면 tutorial/incident 어디에서 왔든 `Next runbook: enter`를 표시한다.
-- 마지막 incident 성공 화면은 `Dispatch complete`를 표시한다.
+- 마지막 incident 성공 화면은 review queue 후보가 없으면 `Dispatch complete`를 표시한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
-- 성공 FocusPanel은 현재 복구 기록, 기존 progress 기반 최단 복구 기록, 현재 Runbook 복구 완료 수를 표시한다.
+- 성공 FocusPanel은 `이번 복구`, 기존 progress 기반 `최단 복구`, `목표 입력`, 현재 Runbook 복구 완료 수, 잔류 리스크, 다음 출격 후보를 순서대로 표시한다.
+- 마지막 playable entry에서 성공했고 review queue 후보가 남아 있으면 `Next dispatch: enter`를 표시하고, `enter` 입력은 primary review exercise로 재진입한다.
+- 마지막 playable entry에서 review queue 후보가 없으면 기존처럼 incident는 `Dispatch complete`, tutorial은 `Playlist complete`를 표시한다.
 - 마지막 tutorial playlist 성공 화면은 별도 저장 포맷 변경 없이 같은 debrief와 `Playlist complete` 안내를 표시한다.
 - 향후 exercise constraint는 최대 입력 수 초과와 금지 입력/금지 우회 전략 사용을 즉시 실패로 처리해야 한다.
 - 실패 횟수는 기본 무제한이며, 후반 콘텐츠를 위해 `attempt_limit` 설정 여지는 남긴다.

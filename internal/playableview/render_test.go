@@ -350,8 +350,9 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 			Title: "STEP SEALED",
 			Lines: []string{
 				"좋습니다. h는 오른쪽으로 지나쳤을 때 커서를 왼쪽으로 되돌리는 기본 이동입니다.",
-				"복구 기록: grade S, 2 keys",
-				"최단 복구 기록: grade S, 2 keys",
+				"이번 복구: grade S, 2 keys",
+				"최단 복구: grade S, 2 keys",
+				"목표 입력: 2 keys",
 				"Runbook: 3/4 복구 완료",
 				"잔류 리스크: 위쪽 로그 줄로 복귀하기: 미복구",
 				"오늘의 복구 루트: 3건 대기",
@@ -371,6 +372,37 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 	}
 	if lineIndex(view, "RUNBOOK CONSOLE") != lineIndex(base, "RUNBOOK CONSOLE") {
 		t.Fatalf("Render output = %q, want fixed console line", view)
+	}
+}
+
+func TestRenderFocusPanelOverlayPrioritizesNextDispatchWhenContentOverflows(t *testing.T) {
+	view := Render(Screen{
+		Width:       100,
+		Height:      30,
+		Title:       "잔류 hold 전체 승격",
+		Message:     "마지막 잔류 hold 상태가 두 줄에 남았습니다.",
+		BufferLines: []string{"hold pump", "hold relay"},
+		Mode:        "normal",
+		Status:      "succeeded",
+		FocusPanel: &FocusPanel{
+			Kind:  "success",
+			Title: "STEP SEALED",
+			Lines: []string{
+				"좋습니다. 검색, 구조 편집, 줄 묶음 제거, inline 수리, 전체 치환까지 이어서 릴레이 기지 007 복구를 닫았습니다.",
+				"이번 복구: grade S, 16 keys",
+				"최단 복구: grade S, 16 keys",
+				"목표 입력: 16 keys",
+				"Runbook: 5/5 복구 완료",
+				"잔류 리스크: 목표 문자까지 이동하기: 복구 등급 B",
+				"다음 출격: 목표 문자까지 이동하기(등급 B)",
+				"Next dispatch: enter",
+				"q: quit",
+			},
+		},
+	})
+
+	if !strings.Contains(view, "Next dispatch: enter") {
+		t.Fatalf("Render output = %q, want next dispatch action preserved", view)
 	}
 }
 

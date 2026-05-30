@@ -428,7 +428,7 @@ func successModalLines(lines []string) []string {
 		switch {
 		case i == 0:
 			out = append(out, "Learned  "+line)
-		case strings.HasPrefix(line, "복구 기록:"):
+		case strings.HasPrefix(line, "복구 기록:") || strings.HasPrefix(line, "이번 복구:"):
 			out = append(out, "Result   "+line)
 		default:
 			out = append(out, line)
@@ -479,7 +479,7 @@ func fitFocusPanelLines(rendered []string, maxHeight int) []string {
 }
 
 func focusPanelPriorityLine(lines []string) string {
-	for _, marker := range []string{"Retry:", "Next:", "Next tutorial:", "Next runbook:", "Playlist complete", "Dispatch complete", "q: quit"} {
+	for _, marker := range []string{"Retry:", "Next:", "Next tutorial:", "Next runbook:", "Next dispatch:", "Playlist complete", "Dispatch complete", "q: quit"} {
 		for i := len(lines) - 1; i >= 0; i-- {
 			line := lines[i]
 			if strings.Contains(line, marker) {

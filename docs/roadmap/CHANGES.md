@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Mission/review loop를 next dispatch로 연결
+
+이전 가정: review queue, daily route, best record는 화면에 표시되지만 성공 후 다음 행동과는 느슨하게 연결돼 있었다.
+
+새 가정: 저장 포맷 변경 없이도 성공 debrief가 `이번 복구`, `최단 복구`, `목표 입력`, `잔류 리스크`, `다음 출격`을 보여주고, 마지막 dispatch에서 review 후보가 있으면 `enter`로 primary review exercise에 재진입한다.
+
+이유: Foundation exit review에서 다음 병목은 새 Vim command 수가 아니라 반복 플레이 루프라고 판정했다. 이미 있는 progress v1과 review queue만으로도 “성공 -> 기록 확인 -> 잔류 리스크 -> 재출격” 행동을 만들 수 있다.
+
+영향: `PLATFORM-REVIEW-003`은 완료됐다. 다음 권장 slice는 기존 engine만 사용하는 `CONTENT-BREADTH-002`다.
+
 ## 2026-05-30 — Foundation exit review 완료
 
 이전 가정: `FOUNDATION-EXIT-001`에서 platform loop, content breadth, engine hardening 중 다음 우선순위를 evidence로 결정해야 했다.

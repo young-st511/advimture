@@ -71,7 +71,7 @@ P0로 승격하는 조건:
 
 추천 다음 콘텐츠:
 
-1. `PLATFORM-REVIEW-003`: Foundation exit review 결과에 따라 mission/review/game loop를 먼저 정리한다.
+1. `CONTENT-BREADTH-002`: mission/review loop가 닫혔으므로 기존 engine 기반 applied content를 늘린다.
 2. `UI-COMMAND-MEMORY-001`: applied incident에서 반복 실패 evidence가 쌓이면 hint/failure 중심 command memory를 연다.
 3. `UI-RAIL-001`: mission/review/daily 정보가 HUD를 다시 밀어내면 wide layout side rail을 연다.
 

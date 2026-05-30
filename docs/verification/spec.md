@@ -30,6 +30,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - visual mode selection assertion은 `docs/verification/selection-app-state-contract.md`의 `selection` object를 기준으로 한다. `internal/e2estate.State`, runner `assert.app_state.selection`, content `e2e_assertions.selection`은 같은 shape를 사용한다.
 - review/daily route assertion은 `assert.app_state.review`로 검증한다. `queue_count`, `primary_exercise_id`, `primary_reason`, `daily_route`는 화면 문구 이동과 별개로 stable state로 본다.
 - focus panel assertion은 `assert.app_state.ui.focus_panel`로 검증한다. `kind`, `title`, `lines`는 화면 배치가 바뀌어도 현재 UI intent를 stable state로 본다.
+- mission/review loop E2E는 success debrief의 `이번 복구`, `최단 복구`, `목표 입력`, `다음 출격` 문구와 `ui.focus_panel.kind/title`을 함께 검증한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
 - runner는 `summary.json`, raw ANSI log, cleaned screen stream, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.

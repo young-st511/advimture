@@ -106,7 +106,7 @@ assert:
     - "Tutorial 3: 작은 수정"
     - "Exercise: 1/7"
     - "RUNBOOK SEALED"
-    - "복구 기록: grade S, 1 keys"
+    - "이번 복구: grade S, 1 keys"
     - "x는 작은 오타를 빠르게 치울 때"
   exit_code: 0
   progress_file_exists: true

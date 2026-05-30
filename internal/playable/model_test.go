@@ -10,6 +10,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/young-st511/advimture/internal/content"
 	"github.com/young-st511/advimture/internal/progress"
+	"github.com/young-st511/advimture/internal/review"
 	"github.com/young-st511/advimture/internal/scoring"
 )
 
@@ -169,11 +170,14 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 	model, _ = updateWithKey(t, model, "l")
 
 	view := model.View()
-	if !strings.Contains(view, "복구 기록: grade S, 2 keys") {
+	if !strings.Contains(view, "이번 복구: grade S, 2 keys") {
 		t.Fatalf("view = %q, want success debrief", view)
 	}
-	if !strings.Contains(view, "최단 복구 기록: grade S, 2 keys") {
+	if !strings.Contains(view, "최단 복구: grade S, 2 keys") {
 		t.Fatalf("view = %q, want best record", view)
+	}
+	if !strings.Contains(view, "목표 입력: 2 keys") {
+		t.Fatalf("view = %q, want target key count", view)
 	}
 	if !strings.Contains(view, "Runbook: 1/4 복구 완료") {
 		t.Fatalf("view = %q, want playlist completion count", view)
@@ -181,8 +185,8 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 	if !strings.Contains(view, "잔류 리스크: 경고 지점으로 이동하기: 미복구") {
 		t.Fatalf("view = %q, want residual risk recommendation", view)
 	}
-	if !strings.Contains(view, "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
-		t.Fatalf("view = %q, want daily route after success", view)
+	if !strings.Contains(view, "다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
+		t.Fatalf("view = %q, want next dispatch after success", view)
 	}
 }
 
@@ -363,6 +367,20 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 			},
 			want: []string{"Dispatch complete", "q: quit"},
 		},
+		{
+			name: "final incident with review dispatch",
+			model: Model{
+				current: 1,
+				entries: []gameEntry{
+					{PlaylistID: "tutorial-0", PlaylistCategory: "tutorial", ExerciseID: "normal-motion-basic-001"},
+					{PlaylistID: "incident-005", PlaylistCategory: "incident"},
+				},
+				reviewQueue: []review.Candidate{
+					{ExerciseID: "normal-motion-basic-001", Title: "목표 문자까지 이동하기", Reason: review.ReasonLowGrade},
+				},
+			},
+			want: []string{"Next dispatch: enter", "q: quit"},
+		},
 	}
 
 	for _, tt := range tests {
@@ -372,6 +390,48 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 				t.Fatalf("successActionLines() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestPlayableReviewDispatchReopensPrimaryReviewCandidateAfterFinalIncident(t *testing.T) {
+	p := progressWithAllPlayableCompleted(t)
+	p.Missions["normal-motion-basic-001"] = progress.MissionProgress{
+		Completed:      true,
+		BestGrade:      "B",
+		BestKeystrokes: 2,
+		Attempts:       1,
+	}
+	model := New(Options{
+		ContentRoot:  contentRootForTest(),
+		Progress:     p,
+		SaveProgress: func(*progress.Progress) error { return nil },
+	})
+
+	if got := model.currentExerciseID(); got != "incident-mixed-recovery-005" {
+		t.Fatalf("current exercise = %q, want final incident", got)
+	}
+	for _, key := range []string{":", "%", "s", "/", "h", "o", "l", "d", "/", "l", "i", "v", "e", "/", "g"} {
+		model, _ = updateWithKey(t, model, key)
+	}
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	if model.State().Status != "succeeded" {
+		t.Fatalf("status = %q, want succeeded", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "Next dispatch: enter") {
+		t.Fatalf("view = %q, want review dispatch action", model.View())
+	}
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	if got := model.currentExerciseID(); got != "normal-motion-basic-001" {
+		t.Fatalf("current exercise after review dispatch = %q, want normal-motion-basic-001", got)
+	}
+	if model.State().Status != "running" {
+		t.Fatalf("status after review dispatch = %q, want running", model.State().Status)
+	}
+	if !strings.Contains(model.View(), "목표 문자까지 이동하기") {
+		t.Fatalf("view = %q, want primary review exercise", model.View())
 	}
 }
 

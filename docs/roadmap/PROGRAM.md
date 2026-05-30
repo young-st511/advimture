@@ -10,29 +10,36 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `FOUNDATION-EXIT-001` review는 완료됐고, 다음 권장 작업은 `PLATFORM-REVIEW-003`로 mission/review/game loop를 저장 포맷 변경 없이 다듬는 것이다.
+현재 활성 구현 slice 없음. `PLATFORM-REVIEW-003`은 완료됐고, 다음 권장 작업은 `CONTENT-BREADTH-002`로 기존 engine만 사용하는 applied incident/command-choice를 확장하는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### PLATFORM-REVIEW-003. Mission/Review Game Loop
+### CONTENT-BREADTH-002. Applied Content Expansion
 
 - 상태: proposed
-- 목표: 현재 `재점검`, `잔류 리스크`, `오늘의 복구 루트`, `best record`, playlist 완료 화면을 하나의 반복 플레이 루프로 묶는다.
+- 목표: 새 Vim engine 없이 기존 command를 조합하는 applied incident와 command-choice를 늘린다.
 - 입력 문서:
   - `docs/roadmap/FORWARD_PLAN.md`
-  - `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`
   - `docs/roadmap/MIDTERM_TODO.md`
-  - `docs/roadmap/UX_BACKLOG_001.md`
-  - `docs/roadmap/PLATFORM_RFC_001.md`
+  - `docs/gameplay/command-choice-drills.md`
+  - `docs/gameplay/scenario-bank.md`
+  - `docs/gameplay/spec.md`
 - 제외:
-  - progress schema v2
-  - spaced review due date 저장
-  - daily streak/history 저장
-- 주의: 저장 포맷 변경 없이 현재 progress v1과 runtime 계산만 사용한다.
+  - 새 Vim engine
+  - 새 content schema
+  - progress schema 변경
+- 주의: 한 beat는 하나의 판단만 요구하고, long route에는 final/timeline evidence를 남긴다.
 
 ## 최근 완료
+
+### PLATFORM-REVIEW-003. Mission/Review Game Loop
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/platform-review-003-mission-review-loop.md`
+- 완료일: 2026-05-30
+- 결론: 성공 debrief와 마지막 dispatch를 review queue로 연결했다. 저장 포맷 변경은 없다.
 
 ### FOUNDATION-EXIT-001. Foundation Exit Review
 

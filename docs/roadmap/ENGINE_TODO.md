@@ -16,7 +16,7 @@ Last reviewed: 2026-05-30
 
 현재 활성 engine slice는 없다.
 
-Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. `FOUNDATION-EXIT-001` review 결과 다음 병목은 새 engine이 아니라 mission/review/game loop다. 다음 권장 작업은 `PLATFORM-REVIEW-003`이며, 새 engine은 content 작성 병목이 확인될 때 `QUOTE-PAIR-HARDEN-001`부터 연다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. `PLATFORM-REVIEW-003`으로 mission/review/game loop는 한 차례 닫혔고, 다음 권장 작업은 기존 engine만 사용하는 `CONTENT-BREADTH-002`다. 새 engine은 content 작성 병목이 확인될 때 `QUOTE-PAIR-HARDEN-001`부터 연다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
 
 ## 완료된 핵심 모듈
 
@@ -57,9 +57,9 @@ Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도
 
 | 우선순위 | 후보 | 필요한 계약 | 주의 |
 |----------|------|-------------|------|
-| 1 | `quote-pair-hardening` | `ci'`, `di'`, `yi'`, `ci(`, `ci{`의 pair parsing 범위 | escaped/nested pair는 별도 scope로 분리 |
-| 2 | `platform-review-loop` | 저장 포맷 변경 없는 mission/review/game loop | engine 작업이 아니며 progress schema 변경 금지 |
-| 3 | `command-choice-breadth` | 기존 implemented command 조합 | 새 engine 없이 content/constraints/E2E로 처리 |
+| 1 | `command-choice-breadth` | 기존 implemented command 조합 | 새 engine 없이 content/constraints/E2E로 처리 |
+| 2 | `quote-pair-hardening` | `ci'`, `di'`, `yi'`, `ci(`, `ci{`의 pair parsing 범위 | escaped/nested pair는 별도 scope로 분리 |
+| 3 | `platform-review-loop` | 저장 포맷 변경 없는 mission/review/game loop | completed, 후속은 progress schema 필요성 확인 시 재검토 |
 | 4 | `search-hardening` | `?`, regex, highlight, history 중 일부 | `?`는 현재 hint key와 충돌하므로 UX 결정 필요 |
 | 5 | `visual-advanced` | visual block, multi-line charwise, count/register prefix | blast radius 큼, E2E selection contract 선행 |
 | 6 | `automation-advanced` | macro/register/count prefix | 출시 전 필수 아님 |

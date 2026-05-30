@@ -20,7 +20,9 @@ assert:
     - "재점검 대상: 경고 지점으로 이동하기: 미복구"
     - "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기"
     - "잔류 리스크: 경고 지점으로 이동하기: 미복구"
-    - "복구 기록: grade S, 2 keys"
+    - "이번 복구: grade S, 2 keys"
+    - "목표 입력: 2 keys"
+    - "다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
@@ -47,6 +49,10 @@ assert:
       primary_exercise_id: "normal-motion-basic-002"
       primary_reason: "incomplete"
       daily_route: "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기"
+    ui:
+      focus_panel:
+        kind: "success"
+        title: "STEP SEALED"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
