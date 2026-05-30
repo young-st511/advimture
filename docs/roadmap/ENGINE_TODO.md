@@ -45,7 +45,7 @@ Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도
 | `delete-with-motion` / `change-with-motion` | `dw`, `d$`, `dd`, `cw`, `c$`, `cc` | tutorial/E2E completed |
 | `yank-put-basic` | `yw`, `y$`, `yy`, `p`, `P` | tutorial/E2E completed |
 | `text-object-inner-word` | `diw`, `ciw`, `yiw` | tutorial/E2E completed |
-| `text-object-quote-pair` | `di"`, `ci"`, `yi"` | tutorial/E2E completed |
+| `text-object-quote-pair` | `di"`, `ci"`, `yi"`, `di'`, `ci'`, `yi'` | tutorial/E2E completed |
 | `open-line-edit` | `o`, `O` | tutorial/E2E completed |
 | `repeat-last-change` | `.` | tutorial/E2E completed |
 | `search-basic` | `/`, `n`, `N` | tutorial/E2E completed |
@@ -57,8 +57,8 @@ Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도
 
 | 우선순위 | 후보 | 필요한 계약 | 주의 |
 |----------|------|-------------|------|
-| 1 | `command-choice-breadth` | 기존 implemented command 조합 | 새 engine 없이 content/constraints/E2E로 처리 |
-| 2 | `quote-pair-hardening` | `ci'`, `di'`, `yi'`, `ci(`, `ci{`의 pair parsing 범위 | escaped/nested pair는 별도 scope로 분리 |
+| 1 | `quote-pair-hardening` | `ci(`, `ci{`의 pair parsing 범위 | escaped/nested pair는 별도 scope로 분리. `ci'`, `di'`, `yi'`는 completed |
+| 2 | `command-choice-breadth` | 기존 implemented command 조합 | 새 engine 없이 content/constraints/E2E로 처리 |
 | 3 | `platform-review-loop` | 저장 포맷 변경 없는 mission/review/game loop | completed, 후속은 progress schema 필요성 확인 시 재검토 |
 | 4 | `search-hardening` | `?`, regex, highlight, history 중 일부 | `?`는 현재 hint key와 충돌하므로 UX 결정 필요 |
 | 5 | `visual-advanced` | visual block, multi-line charwise, count/register prefix | blast radius 큼, E2E selection contract 선행 |

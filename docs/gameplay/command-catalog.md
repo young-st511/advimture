@@ -525,9 +525,9 @@ command_cluster:
   compatibility_tier: pedagogical
   engine_support: implemented
   curriculum_area: chapter-3-operator-grammar
-  title: Text object: 따옴표 내부 대상 편집
-  commands: ["i\"", "di\"", "ci\"", "yi\""]
-  coverage_required: ["di\"", "ci\"", "yi\""]
+  title: Text object: quote 내부 대상 편집
+  commands: ["i\"", "di\"", "ci\"", "yi\"", "i'", "di'", "ci'", "yi'"]
+  coverage_required: ["di\"", "ci\"", "yi\"", "di'", "ci'", "yi'"]
   oracle: optional
   purpose: 커서가 따옴표 내부 어디에 있든 값 내부를 삭제, 변경, 복사한다.
   prerequisite: ["text-object-inner-word", "yank-put-basic", "change-with-motion"]
@@ -546,12 +546,13 @@ command_cluster:
     - operator 뒤의 i를 Insert mode로 착각한다.
     - quote 문자까지 지워야 한다고 착각한다.
   compatibility_notes:
-    - 첫 구현은 double quote 내부 object만 다룬다.
+    - 현재 구현은 double quote와 single quote 내부 object를 다룬다.
     - quote 문자는 대상에 포함하지 않는다.
-    - nested pair, escaped quote, single quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 미룬다.
+    - nested pair, escaped quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 미룬다.
   design_notes:
     - TEXT-PAIR-GAP-001은 double quote 내부 object로 첫 scope를 고정했다.
     - VIM-026은 double quote 내부 object의 engine/runtime support를 구현했고, content/E2E는 PLAYPACK-009로 분리한다.
+    - QUOTE-PAIR-HARDEN-001은 single quote 내부 object를 같은 semantics로 추가했다.
 ```
 
 ### repeat-last-change

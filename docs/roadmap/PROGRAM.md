@@ -10,30 +10,39 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `CONTENT-BREADTH-002`는 완료됐고, 다음 권장 작업은 `QUOTE-PAIR-HARDEN-001`로 기존 double quote text object를 작은 quote/pair 범위로 확장하는 것이다.
+현재 활성 구현 slice 없음. `QUOTE-PAIR-HARDEN-001`은 완료됐고, 다음 권장 작업은 `UI-POLISH-002`로 출시 전 TUI 정보 밀도와 command memory를 다듬는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### QUOTE-PAIR-HARDEN-001. Quote/Pair Text Object Hardening
+### UI-POLISH-002. Release UI Polish
 
 - 상태: proposed
-- 목표: 기존 `i"` text object를 `i'`, `i(`, `i{` 중 작은 범위부터 확장한다.
+- 목표: 출시 전 화면을 개발용 테스트 UI가 아니라 Vim adventure console처럼 읽히게 다듬는다.
 - 입력 문서:
   - `docs/roadmap/FORWARD_PLAN.md`
   - `docs/roadmap/MIDTERM_TODO.md`
-  - `docs/gameplay/vim-curriculum-map.md`
+  - `docs/gameplay/tui-screen-contract.md`
+  - `docs/gameplay/tui-ux-direction.md`
+  - `docs/roadmap/UX_BACKLOG_001.md`
   - `docs/gameplay/spec.md`
+  - `docs/verification/spec.md`
 - 제외:
-  - nested pair
-  - escaped quote
-  - around object
-  - count/register prefix
+  - 저장 포맷 변경
+  - 새 Vim engine
+  - 새 content schema
   - progress schema 변경
-- 주의: 새 pair 하나씩 engine contract와 replay gate를 먼저 닫는다.
+- 주의: 화면 문구보다 app_state/evidence 검증을 우선한다.
 
 ## 최근 완료
+
+### QUOTE-PAIR-HARDEN-001. Single Quote Text Object
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/quote-pair-harden-001-single-quote.md`
+- 완료일: 2026-05-30
+- 결론: `di'`, `ci'`, `yi'` single quote 내부 object를 engine/runtime/content/E2E까지 연결했다. `i(`, `i{`는 후속 hardening으로 남긴다.
 
 ### CONTENT-BREADTH-002. Repeat Change Choice
 

@@ -96,28 +96,39 @@ ExecPlan: `docs/exec-plans/completed/content-breadth-002-repeat-choice.md`
 
 ### QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 
-권장 우선순위: 가장 높음
+Status: completed
+ExecPlan: `docs/exec-plans/completed/quote-pair-harden-001-single-quote.md`
 
-목표: 기존 `text-object-quote-pair`를 double quote에서 작은 quote/pair 범위로 확장한다.
+결과:
 
-산출물:
-
-- `i'`, `i(`, `i{` 중 첫 scope 결정
-- engine contract와 Red tests
-- tutorial/content 후보와 replay gate
-- focused E2E
+- `di'`, `ci'`, `yi'` single quote 내부 object를 engine/runtime/content/E2E까지 연결했다.
+- `tutorial-91-text-object-quote-pair`는 7문항으로 확장됐고 8문항 제한을 유지한다.
+- `i(`, `i{`, nested/escaped/around/count/register는 후속 hardening으로 남긴다.
 
 검증:
 
-- `go test ./internal/vimengine ./internal/runtime ./internal/content`
-- focused E2E
-- 필요 시 `go test ./...`, `make e2e-playable`
+- `go test ./internal/vimengine ./internal/runtime ./internal/content`: pass
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_text_object_quote_pair_full.yaml`: pass
+- `go test ./...`: pass
+- `make e2e-playable`: pass
+
+### UI-POLISH-002 — Release UI Polish
+
+권장 우선순위: 가장 높음
+
+목표: 출시 전 화면을 개발 UI가 아니라 Vim adventure console처럼 읽히게 다듬는다.
+
+산출물:
+
+- UI polish scope와 evidence 기준
+- command memory 또는 learned command cue의 최소 구현
+- 대표 route focused E2E evidence
 
 Decision gate:
 
-- `i'`만으로 충분한 학습/적용 가치가 있으면 가장 작은 scope부터 닫는다.
-- bracket pair가 더 실무적이면 `i(` 또는 `i{` 하나만 먼저 연다.
-- nested/escaped/around/count/register가 필요해지면 별도 hardening으로 분리한다.
+- 화면 밀도/문구만 바꾸면 충분하면 renderer/playableview 중심으로 닫는다.
+- command memory가 progress schema를 요구하면 저장 변경 없이 runtime 계산으로 제한한다.
+- release readiness 문서가 더 급하면 `RELEASE-READINESS-001`과 묶지 않고 다음 slice로 분리한다.
 
 ## 4. Recommended Midterm Sequence
 
@@ -147,26 +158,31 @@ Status: completed
 
 ### 2. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 
-권장 우선순위: 중간
+Status: completed
 
 목표: 기존 `i"` text object를 `i'`, `i(`, `i{`로 확장한다.
 
 포함:
 
 - `ci'`, `di'`, `yi'`
-- `ci(` 또는 `ci{` 중 작은 첫 scope
 - config/JSON/function-argument style exercise
 
 제외:
 
+- `ci(`, `ci{`
 - nested pair
 - escaped quote
 - around object
 - count/register prefix
 
+완료 결과:
+
+- 첫 hardening scope는 `i'`로 닫았다.
+- `i(`, `i{`는 bracket pair hardening 후보로 유지한다.
+
 ### 3. UI-POLISH-002 — Release UI Polish
 
-권장 우선순위: Foundation exit 결과에 따라 결정
+권장 우선순위: 높음
 
 목표: 출시 전 화면을 개발 UI가 아니라 Vim adventure console처럼 읽히게 다듬는다.
 

@@ -249,23 +249,23 @@ Scenario 방향:
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic`, `char-find-line` |
-| decision | 다음 계획에서 먼저 결정할 것 | `QUOTE-PAIR-HARDEN-001` quote/pair text object hardening |
-| soon | 다음 milestone 후보이나 review 후 선택 | release UI polish, release readiness, 추가 command-choice breadth |
+| decision | 다음 계획에서 먼저 결정할 것 | `UI-POLISH-002` release UI polish |
+| soon | 다음 milestone 후보이나 review 후 선택 | release readiness, bracket pair hardening, 추가 command-choice breadth |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
 ### Current Planning Candidate
 
-ID: `quote-pair-hardening`
+ID: `ui-polish-release`
 
-목표: double quote 내부 object로 닫힌 `text-object-quote-pair`를 작은 quote/pair 범위로 확장한다. 첫 scope는 `i'`, `i(`, `i{` 중 하나씩 검증 가능한 단위로 고른다.
+목표: 출시 전 TUI를 Vim adventure console처럼 읽히게 다듬는다. command 학습 상태, mission context, failure/success feedback이 화면에서 더 빠르게 읽히는지 evidence로 확인한다.
 
 선택 후보:
 
 | Candidate | Layer | 이유 |
 |-----------|-------|------|
-| `single-quote-object` | engine hardening | shell/env/config 값 편집에 자주 나오며 double quote object와 가장 가까운 확장이다. |
-| `paren-object` | engine hardening | 함수 인자와 command argument 수정에 유용하지만 pair matching 범위 검증이 필요하다. |
-| `brace-object` | engine hardening | JSON/config block 값 수정에 유용하지만 nested/escaped 제외 범위를 더 명확히 해야 한다. |
+| `command-memory-cue` | UI/gameplay | 배운 command와 이번 문항의 판단 축을 짧게 보여주면 장기 반복 학습성이 좋아진다. |
+| `visual-emphasis-pass` | UI renderer | 색/강조/section hierarchy를 다듬어 briefing과 modal action이 더 눈에 들어오게 한다. |
+| `pre-run-briefing` | UI flow | runbook 시작 전 목표와 추천 복구 루트를 한 번에 보여주면 세계관과 플레이 동기가 선명해진다. |
 
 ### Command Choice Layer
 
@@ -306,7 +306,7 @@ ID: `quote-pair-hardening`
 - `repeat-last-change`: PLAYPACK-007에서 `.` 반복 기본 흐름을 다뤘다. delete/yank/put/search/macro/register/count prefix는 후속 hardening이다.
 - `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했고, VIM-025/PLAYPACK-008에서 engine과 tutorial을 연결했다. `?`, regex, highlight, search history는 후속 hardening으로 남는다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
-- `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
+- `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했고, QUOTE-PAIR-HARDEN-001에서 single quote 내부 object를 연결했다. parenthesis, brace, nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse, repeat-change reuse beat를 playable로 연결했다. 후속 후보는 line reuse, search-then-act다.
@@ -318,9 +318,9 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 
 현재 우선순위:
 
-1. `quote-pair-hardening`: 새 engine을 연다면 기존 quote object의 작은 확장으로 제한한다.
-2. `ui-polish-release`: release 전 TUI polish와 command memory를 보강한다.
-3. `release-readiness`: 설치/실행/터미널 크기/known limitations/release build gate를 정리한다.
+1. `ui-polish-release`: release 전 TUI polish와 command memory를 보강한다.
+2. `release-readiness`: 설치/실행/터미널 크기/known limitations/release build gate를 정리한다.
+3. `bracket-pair-hardening`: `i(`, `i{`는 single quote 이후 별도 engine hardening으로 연다.
 4. `command-choice-breadth`: 이미 배운 command를 섞어 검색/줄 재사용/범위 판단을 더 훈련한다.
 5. `progress-schema-v2`: mastery/spaced review/daily run 저장은 실제 병목이 evidence로 확인된 뒤 사용자 승인으로만 연다.
 

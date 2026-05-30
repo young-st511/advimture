@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Single quote text object hardening 완료
+
+이전 가정: `text-object-quote-pair`는 double quote 내부 object `di"`, `ci"`, `yi"`만 구현했고, single quote, parenthesis, brace는 후속 hardening 후보였다.
+
+새 가정: `text-object-quote-pair`는 double quote와 single quote 내부 object를 지원한다. `tutorial-91-text-object-quote-pair`는 `ci'`, `di'`, `yi'`를 포함한 7문항 tutorial이다.
+
+이유: single quote는 shell/env/config 편집에서 실용성이 높고, 기존 double quote range semantics를 delimiter만 확장하면 되어 첫 hardening scope로 가장 안전했다. `i(`, `i{`는 pair matching/nesting 리스크 때문에 후속으로 분리한다.
+
+영향: `QUOTE-PAIR-HARDEN-001`은 완료됐다. 다음 권장 slice는 release 전 `UI-POLISH-002`다.
+
 ## 2026-05-30 — Command-choice에 repeat-change 판단 추가
 
 이전 가정: `incident-005-command-choice`는 linewise scope, global substitute, inline target range, quote value reuse까지 다루며, 다음 content breadth 후보는 line reuse 또는 repeat-change reuse였다.

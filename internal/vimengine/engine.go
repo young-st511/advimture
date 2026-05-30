@@ -55,6 +55,7 @@ const (
 	KeyU           = "u"
 	KeyCtrlR       = "ctrl+r"
 	KeyDoubleQuote = "\""
+	KeySingleQuote = "'"
 )
 
 const (
@@ -593,13 +594,13 @@ func applyPendingKey(state State, key string) Result {
 	if pending == pendingYankInner && key == KeyW {
 		return yankInnerWord(next, key)
 	}
-	if pending == pendingDeleteInner && key == KeyDoubleQuote {
+	if pending == pendingDeleteInner && isSymmetricQuoteKey(key) {
 		return deleteInnerQuote(next, key)
 	}
-	if pending == pendingChangeInner && key == KeyDoubleQuote {
+	if pending == pendingChangeInner && isSymmetricQuoteKey(key) {
 		return changeInnerQuote(next, key)
 	}
-	if pending == pendingYankInner && key == KeyDoubleQuote {
+	if pending == pendingYankInner && isSymmetricQuoteKey(key) {
 		return yankInnerQuote(next, key)
 	}
 	if pending == pendingDeleteFind {
@@ -1082,7 +1083,7 @@ func yankInnerWord(state State, key string) Result {
 
 func deleteInnerQuote(state State, key string) Result {
 	line := []rune(state.Lines[state.Cursor.Row])
-	start, end, ok := innerQuoteRange(line, state.Cursor.Col)
+	start, end, ok := innerQuoteRangeForKey(line, state.Cursor.Col, key)
 	if !ok {
 		return boundary(state, key)
 	}
@@ -1091,7 +1092,7 @@ func deleteInnerQuote(state State, key string) Result {
 
 func changeInnerQuote(state State, key string) Result {
 	line := []rune(state.Lines[state.Cursor.Row])
-	start, end, ok := innerQuoteRange(line, state.Cursor.Col)
+	start, end, ok := innerQuoteRangeForKey(line, state.Cursor.Col, key)
 	if !ok {
 		return boundary(state, key)
 	}
@@ -1100,7 +1101,7 @@ func changeInnerQuote(state State, key string) Result {
 
 func yankInnerQuote(state State, key string) Result {
 	line := []rune(state.Lines[state.Cursor.Row])
-	start, end, ok := innerQuoteRange(line, state.Cursor.Col)
+	start, end, ok := innerQuoteRangeForKey(line, state.Cursor.Col, key)
 	if !ok {
 		return boundary(state, key)
 	}
@@ -1219,6 +1220,24 @@ func innerWordRange(line []rune, cursorCol int) (int, int, bool) {
 }
 
 func innerQuoteRange(line []rune, cursorCol int) (int, int, bool) {
+	return innerDelimitedRange(line, cursorCol, '"')
+}
+
+func innerQuoteRangeForKey(line []rune, cursorCol int, key string) (int, int, bool) {
+	if key == KeyDoubleQuote {
+		return innerDelimitedRange(line, cursorCol, '"')
+	}
+	if key == KeySingleQuote {
+		return innerDelimitedRange(line, cursorCol, '\'')
+	}
+	return 0, 0, false
+}
+
+func isSymmetricQuoteKey(key string) bool {
+	return key == KeyDoubleQuote || key == KeySingleQuote
+}
+
+func innerDelimitedRange(line []rune, cursorCol int, delimiter rune) (int, int, bool) {
 	if len(line) == 0 {
 		return 0, 0, false
 	}
@@ -1228,13 +1247,13 @@ func innerQuoteRange(line []rune, cursorCol int) (int, int, bool) {
 	if cursorCol >= len(line) {
 		cursorCol = len(line) - 1
 	}
-	if line[cursorCol] == '"' {
+	if line[cursorCol] == delimiter {
 		return 0, 0, false
 	}
 
 	left := -1
 	for index := cursorCol - 1; index >= 0; index-- {
-		if line[index] == '"' {
+		if line[index] == delimiter {
 			left = index
 			break
 		}
@@ -1245,7 +1264,7 @@ func innerQuoteRange(line []rune, cursorCol int) (int, int, bool) {
 
 	right := -1
 	for index := cursorCol + 1; index < len(line); index++ {
-		if line[index] == '"' {
+		if line[index] == delimiter {
 			right = index
 			break
 		}

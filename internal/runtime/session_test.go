@@ -744,6 +744,36 @@ func TestSessionReplaysQuoteTextObjectTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyI, vimengine.KeyDoubleQuote, "u", "p", vimengine.KeyEsc})
 }
 
+func TestSessionReplaysSingleQuoteTextObjectTrace(t *testing.T) {
+	initial := vimengine.NewState([]string{"status='down'"})
+	initial.Cursor.Col = 9
+	initial.Cursor.DesiredCol = 9
+	session := NewSession(Exercise{
+		ID:      "change-inner-single-quote",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"status='up'"},
+			Cursor: CursorGoal(0, 10),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyC, vimengine.KeyI, "'", vimengine.KeyEsc},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyC, vimengine.KeyI, "'", "u", "p"} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEsc)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after esc = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyI, "'", "u", "p", vimengine.KeyEsc})
+}
+
 func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
 	initial := vimengine.NewState([]string{"api"})
 	initial.Cursor.Col = 1

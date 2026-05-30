@@ -6,23 +6,22 @@
 
 Status: next slice proposed
 
-현재 active slice는 없다. `CONTENT-BREADTH-002`로 command-choice applied content를 한 단계 확장했다. 다음 단계는 `QUOTE-PAIR-HARDEN-001`로 quote/pair text object를 작은 범위부터 강화하는 것이다.
+현재 active slice는 없다. `QUOTE-PAIR-HARDEN-001`로 single quote text object까지 tutorial/E2E에 연결했다. 다음 단계는 `UI-POLISH-002`로 출시 전 TUI polish를 진행하는 것이다.
 
 ## 다음 중기 플랜 후보
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | QUOTE-PAIR-HARDEN-001 | proposed | `ci'`, `ci(`, `ci{` 등 quote/pair text object hardening |
-| 2 | UI-POLISH-002 | candidate | 출시 전 color/emphasis, command memory, briefing polish |
-| 3 | RELEASE-READINESS-001 | candidate | 첫 공개 전 설치/실행/터미널 크기/known limitations/release build gate 정리 |
+| 1 | UI-POLISH-002 | proposed | 출시 전 color/emphasis, command memory, briefing polish |
+| 2 | RELEASE-READINESS-001 | candidate | 첫 공개 전 설치/실행/터미널 크기/known limitations/release build gate 정리 |
 
-권장은 `QUOTE-PAIR-HARDEN-001`을 먼저 열고, 그 다음 release UI polish와 readiness를 순서대로 판단하는 것이다. 현재 rolling plan은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+권장은 `UI-POLISH-002`를 먼저 열고, 그 다음 release readiness를 진행하는 것이다. 현재 rolling plan은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
 
-## QUOTE-PAIR-HARDEN-001 출구 조건
+## UI-POLISH-002 출구 조건
 
 | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |-----------|-------------|------|---------------|
-| Content breadth 완료 | quote/pair engine contract, Red tests, tutorial/content 후보, focused E2E | vimengine/runtime/content replay, focused E2E, 필요 시 `make e2e-playable` | nested/escaped/around/count/register를 첫 scope에서 제외 |
+| Quote hardening 완료 | UI polish contract, focused renderer/playable tests, representative E2E evidence | playableview/playable tests, focused E2E, 필요 시 `make e2e-playable` | 색/문구 변경이 app_state 의미 검증을 약화하지 않게 유지 |
 
 ## 다음 결정 기준
 
@@ -34,6 +33,7 @@ Status: next slice proposed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| QUOTE-PAIR-HARDEN-001 | 2026-05-30 | `di'`, `ci'`, `yi'` single quote text object를 tutorial/E2E까지 연결 |
 | CONTENT-BREADTH-002 | 2026-05-30 | `incident-005-command-choice` fifth beat로 repeat-change choice 추가 |
 | PLATFORM-REVIEW-003 | 2026-05-30 | 성공 debrief와 마지막 dispatch를 review queue로 연결. progress schema 변경 없음 |
 | FOUNDATION-EXIT-001 | 2026-05-30 | Foundation 조건부 통과. 다음 병목은 새 engine보다 mission/review/game loop로 판정 |

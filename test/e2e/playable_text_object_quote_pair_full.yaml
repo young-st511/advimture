@@ -67,14 +67,53 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "."
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "status 값이 single quote"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "'"
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "임시 토큰 DELETE가 single quote"
+  - send: "d"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "'"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "source의 alpha 값을 target"
+  - send: "y"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "'"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
   - wait_screen_contains: "Next tutorial: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Quote text object"
-    - "Exercise: 4/4"
+    - "Exercise: 7/7"
     - "Next tutorial: enter"
-    - "좋습니다. 구조 대상 편집과 반복 변경을 함께 사용했습니다."
+    - "좋습니다. single quote 내부 값만 register로 담아 target에 재사용했습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:
@@ -82,6 +121,9 @@ assert:
     - "\"text-object-quote-pair-002\""
     - "\"text-object-quote-pair-003\""
     - "\"text-object-quote-pair-004\""
+    - "\"text-object-quote-pair-005\""
+    - "\"text-object-quote-pair-006\""
+    - "\"text-object-quote-pair-007\""
   key_trace:
     - "c"
     - "i"
@@ -111,22 +153,43 @@ assert:
     - "j"
     - "h"
     - "."
+    - "enter"
+    - "c"
+    - "i"
+    - "'"
+    - "u"
+    - "p"
+    - "esc"
+    - "enter"
+    - "d"
+    - "i"
+    - "'"
+    - "enter"
+    - "y"
+    - "i"
+    - "'"
+    - "j"
+    - "$"
+    - "P"
     - "q"
   app_state:
-    buffer: ["a=\"new\"", "b=\"new\""]
+    buffer: ["source='alpha'", "target='alpha'"]
     cursor:
       row: 1
-      col: 6
+      col: 12
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "text-object-quote-pair-004"
+      mission_id: "text-object-quote-pair-007"
       completed: true
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
   save_key_trace: true
+  save_app_state: true
   save_summary: true

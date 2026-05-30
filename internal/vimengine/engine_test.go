@@ -1252,6 +1252,81 @@ func TestYankInnerQuoteStoresValueWithoutMutating(t *testing.T) {
 	assertEvent(t, result, EventYanked)
 }
 
+func TestDeleteInnerSingleQuoteDeletesValue(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode='broken'"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        8,
+			DesiredCol: 8,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 8, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 8, EventPendingKey)
+	result := engine.Apply("'")
+
+	assertStrings(t, result.State.Lines, []string{"mode=''"})
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor col = %d, want 6", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestChangeInnerSingleQuoteEntersInsertModeInsideQuotes(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode='broken'"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        9,
+			DesiredCol: 9,
+		},
+	})
+
+	assertApply(t, engine, KeyC, 0, 9, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 9, EventPendingKey)
+	result := engine.Apply("'")
+
+	assertStrings(t, result.State.Lines, []string{"mode=''"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor col = %d, want 6", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestYankInnerSingleQuoteStoresValueWithoutMutating(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"mode='stable'"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        8,
+			DesiredCol: 8,
+		},
+	})
+
+	assertApply(t, engine, KeyY, 0, 8, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 8, EventPendingKey)
+	result := engine.Apply("'")
+
+	assertStrings(t, result.State.Lines, []string{"mode='stable'"})
+	if result.State.Register.Text != "stable" {
+		t.Fatalf("register text = %q, want stable", result.State.Register.Text)
+	}
+	if result.State.Register.Linewise {
+		t.Fatal("register linewise = true, want false")
+	}
+	assertEvent(t, result, EventYanked)
+}
+
 func TestInnerQuoteWithoutPairDoesNotMutate(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,

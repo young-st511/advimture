@@ -58,3 +58,48 @@ scenarios:
     story_constraints:
       - "반복 학습은 dot repeat 체감을 위한 보조 목표다."
       - "새 text object command 학습을 가리지 않는다."
+
+  - id: text-object-quote-pair-005-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-005
+    engine_support: implemented
+    learning_reinforcement: "ci'는 single quote 문자는 남기고 내부 값 전체를 교체한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "single quote 상태 복구"
+    briefing: "status 값이 single quote 안에서 down으로 떨어졌습니다. quote 종류를 보고 ci'로 내부 값 전체를 up으로 교체하세요."
+    context_role: "single quoted 상태 설정"
+    mentor_success: "좋습니다. single quote 구조는 유지하고 내부 값만 교체했습니다."
+    mentor_failure: "이번 대상은 double quote가 아니라 single quote 내부 전체입니다. ci'로 quote 종류에 맞춰 잡으세요."
+    story_constraints:
+      - "double quote와 single quote의 delimiter 선택 차이를 강조한다."
+      - "시나리오는 target state와 constraints를 바꾸지 않는다."
+
+  - id: text-object-quote-pair-006-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-006
+    engine_support: implemented
+    learning_reinforcement: "di'는 single quote 내부 값만 삭제하고 Normal mode를 유지한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "single quote 민감 값 비우기"
+    briefing: "임시 토큰 DELETE가 single quote 안에 남아 있습니다. quote는 남기고 내부 값만 di'로 비우세요."
+    context_role: "single quoted 민감 값"
+    mentor_success: "좋습니다. single quote 구조는 유지한 채 내부 값만 비웠습니다."
+    mentor_failure: "따옴표까지 없애면 설정 구조가 깨집니다. di'로 내부만 제거하세요."
+    story_constraints:
+      - "삭제 범위가 single quote 내부라는 점을 강화한다."
+      - "줄 전체 삭제나 문자 반복 삭제를 유도하지 않는다."
+
+  - id: text-object-quote-pair-007-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-007
+    engine_support: implemented
+    learning_reinforcement: "yi'는 single quote 내부 값만 register에 담아 재사용한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "single quote 값 미러링"
+    briefing: "source의 alpha 값을 target에도 넣어야 합니다. yi'로 내부 값만 복사해 닫는 quote 앞에 붙이세요."
+    context_role: "동기화가 필요한 single quoted 값"
+    mentor_success: "좋습니다. single quote 내부 값만 register로 담아 target에 재사용했습니다."
+    mentor_failure: "수동 입력하지 마세요. yi'로 내부 값만 담아 target의 닫는 quote 앞에 P로 넣습니다."
+    story_constraints:
+      - "복사 대상이 single quote 내부 값이라는 점을 강조한다."
+      - "P를 쓰는 위치는 닫는 quote 앞이다."
