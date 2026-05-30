@@ -10,30 +10,38 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `UI-POLISH-002`는 완료됐고, 다음 권장 작업은 `RELEASE-READINESS-001`로 첫 공개 전 실행/검증/제한사항을 정리하는 것이다.
+현재 활성 구현 slice 없음. `RELEASE-READINESS-001`은 완료됐고, 다음 권장 작업은 `PLAYTEST-GATE-001`로 release candidate를 실제 fresh run 관점에서 점검하는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### RELEASE-READINESS-001. First Release Readiness
+### PLAYTEST-GATE-001. Fresh Playtest Release Gate
 
 - 상태: proposed
-- 목표: 첫 공개 전 설치/실행/검증/터미널 크기/known limitations/release build 기준을 정리한다.
+- 목표: README 기준으로 처음 실행하는 플레이어 관점에서 첫 5분, tutorial 확장, incident 3개 이상을 직접 훑고 출시 전 UX/content blocker를 분리한다.
 - 입력 문서:
+  - `README.md`
   - `docs/roadmap/FORWARD_PLAN.md`
   - `docs/roadmap/MIDTERM_TODO.md`
-  - `README.md`
-  - `Makefile`
-  - `docs/verification/spec.md`
+  - `docs/roadmap/UX_BACKLOG_001.md`
+  - `docs/verification/tui-ui-qa-contract.md`
+  - `artifacts/e2e/`
 - 제외:
   - 저장 포맷 변경
   - 새 Vim engine
   - 새 content schema
-- 기능 확장
-- 주의: 출시 문서는 현재 구현/검증과 정확히 맞아야 한다.
+  - 기능 확장
+- 주의: 버그는 즉시 별도 fix slice로 분리하고, 취향/세계관/콘텐츠 확장은 release 이후 후보로 나눈다.
 
 ## 최근 완료
+
+### RELEASE-READINESS-001. First Release Readiness
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/release-readiness-001-first-release.md`
+- 완료일: 2026-05-30
+- 결론: README를 실행 가능한 게임 안내로 갱신하고 `make build`, `make test`, `make release-check`를 추가했다. release gate는 `make test`, `make build`, `make e2e-playable`을 묶는다.
 
 ### UI-POLISH-002. Command Memory Cue
 

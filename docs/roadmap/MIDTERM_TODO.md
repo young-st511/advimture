@@ -6,21 +6,21 @@
 
 Status: next slice proposed
 
-현재 active slice는 없다. `UI-POLISH-002`로 command memory cue까지 연결했다. 다음 단계는 `RELEASE-READINESS-001`로 첫 공개 전 문서와 검증 기준을 정리하는 것이다.
+현재 active slice는 없다. `RELEASE-READINESS-001`로 첫 공개 전 문서와 release gate를 정리했다. 다음 단계는 `PLAYTEST-GATE-001`로 README 기준 fresh run을 점검하는 것이다.
 
 ## 다음 중기 플랜 후보
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | RELEASE-READINESS-001 | proposed | 첫 공개 전 설치/실행/터미널 크기/known limitations/release build gate 정리 |
+| 1 | PLAYTEST-GATE-001 | proposed | README 기준 fresh run으로 출시 전 UX/content blocker 분리 |
 
-권장은 `RELEASE-READINESS-001`을 열어 release 문서와 known limitations를 현재 구현에 맞추는 것이다. 현재 rolling plan은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+권장은 새 engine을 바로 열기보다 `PLAYTEST-GATE-001`로 실제 처음 실행 관점의 막힘을 확인하는 것이다. 현재 rolling plan은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
 
-## RELEASE-READINESS-001 출구 조건
+## PLAYTEST-GATE-001 출구 조건
 
 | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |-----------|-------------|------|---------------|
-| UI polish 완료 | README/usage/test/known limitations/release build gate 정리 | `go test ./...`, `make e2e-playable`, `go build .` | 문서가 구현보다 앞서거나 stale next plan을 만들지 않음 |
+| release readiness 완료 | fresh run notes, blocker/follow-up 분류, 필요 시 bugfix ExecPlan 후보 | `make release-check`, 대표 화면/evidence 재검토 | 기능 욕심보다 첫 플레이 막힘 제거를 우선 |
 
 ## 다음 결정 기준
 
@@ -32,6 +32,7 @@ Status: next slice proposed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| RELEASE-READINESS-001 | 2026-05-30 | README, Makefile release gate, known limitations 정리 |
 | UI-POLISH-002 | 2026-05-30 | tutorial/incident command memory cue 추가. schema 변경 없음 |
 | QUOTE-PAIR-HARDEN-001 | 2026-05-30 | `di'`, `ci'`, `yi'` single quote text object를 tutorial/E2E까지 연결 |
 | CONTENT-BREADTH-002 | 2026-05-30 | `incident-005-command-choice` fifth beat로 repeat-change choice 추가 |

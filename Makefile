@@ -1,9 +1,17 @@
-.PHONY: run e2e-smoke e2e-playable
+.PHONY: run build test release-check e2e-smoke e2e-playable
 
 E2E_GOCACHE ?= $(CURDIR)/artifacts/go-build-cache
 
 run:
 	go run .
+
+build:
+	GOCACHE=$(E2E_GOCACHE) go build .
+
+test:
+	GOCACHE=$(E2E_GOCACHE) go test ./...
+
+release-check: test build e2e-playable
 
 e2e-smoke:
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_hjkl_success.yaml

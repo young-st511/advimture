@@ -5,9 +5,13 @@
 ## 현재 설정된 가드레일
 
 - Go 테스트: `go test ./...`
+- Makefile test: `make test`
+- Release build: `make build`
+- Local release gate: `make release-check`
 - 패키지별 테스트: `internal/vimengine`, `internal/runtime`, `internal/content`, `internal/scoring`, `internal/scenario`, `internal/tuiadapter`, `internal/progressadapter`, `internal/vimoracle`, `internal/playable`, `internal/progress`
 - E2E smoke: `make e2e-smoke`
-- Makefile: `make run`, `make e2e-smoke`, `make e2e-playable`
+- Full playable E2E: `make e2e-playable`
+- Makefile: `make run`, `make build`, `make test`, `make release-check`, `make e2e-smoke`, `make e2e-playable`
 - `.gitignore`: 바이너리, IDE 파일, OS 파일, `coverage.out`, `artifacts/`
 
 ## 현재 비어 있는 부분
@@ -15,7 +19,6 @@
 - CI 설정 없음
 - 전용 lint 설정 없음
 - pre-commit hook 없음
-- full TUI E2E suite 없음
 - 검증 evidence stage 차단 규칙 없음
 
 ## 권장 추가 가드레일
@@ -27,6 +30,8 @@
 1. `go test ./...`
 2. `go vet ./...`
 3. `make e2e-smoke`
+
+로컬 공개 전 검증은 `make release-check`를 사용한다. 이 target은 `make test`, `make build`, `make e2e-playable`을 순서대로 실행한다.
 
 ### TUI E2E QA Loop
 

@@ -21,6 +21,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 
 - E2E runner는 별도 CLI `cmd/e2e-runner`로 제공한다.
 - smoke 실행 명령은 `make e2e-smoke`이다.
+- 공개 전 로컬 release gate는 `make release-check`이며 `make test`, `make build`, `make e2e-playable`을 순서대로 실행한다.
 - Makefile은 runner 실행 시 `artifacts/go-build-cache`를 `GOCACHE`로 사용해 사용자 Go build cache에 쓰지 않는다.
 - runner는 scenario YAML의 `setup.home: temp`일 때 테스트 전용 HOME을 만들고 앱을 실행한다.
 - runner는 `setup.progress_file` JSON fixture로 테스트 전용 HOME에 `.advimture/progress.json`을 미리 생성할 수 있다.

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Release readiness 문서와 로컬 gate 정리
+
+이전 가정: README는 재기획/워크플로우 온보딩 중심이었고, release build와 전체 playable 검증을 한 번에 실행하는 기준이 문서화되지 않았다.
+
+새 가정: README는 현재 실행 가능한 Vim adventure game, 진행 저장 위치, reset 방법, playable command 범위, known limitations를 먼저 설명한다. 로컬 공개 전 검증은 `make release-check`로 `make test`, `make build`, `make e2e-playable`을 묶어 실행한다.
+
+이유: 이제 foundation loop와 UI polish가 어느 정도 닫혔으므로, 새 기능 추가보다 처음 실행하는 사람이 막히지 않는 문서와 검증 기준이 필요하다.
+
+영향: `RELEASE-READINESS-001`은 완료됐다. 다음 권장 slice는 새 engine이 아니라 `PLAYTEST-GATE-001` fresh playtest release gate다.
+
 ## 2026-05-30 — Tutorial/incident command memory cue 추가
 
 이전 가정: tutorial은 `Coach: 훈련 키 ...`로 필요한 입력을 보여주고, incident는 판단 cue와 hint/failure에서만 키를 드러냈다.

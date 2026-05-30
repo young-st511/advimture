@@ -23,9 +23,9 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - Content: tutorial coverage와 incident 001~007이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
-- 출시감: mission/review loop와 첫 content breadth 보강은 한 차례 닫혔고, quote/pair hardening, UI polish, release readiness가 아직 부족함
+- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness는 한 차례 닫혔고, 다음 병목은 실제 fresh playtest에서 드러나는 막힘이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했다. 따라서 다음 순서는 **game loop/platform polish -> content breadth -> small engine hardening -> release readiness**로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했다. 따라서 다음 순서는 **fresh playtest release gate -> blocker fix -> post-release content/engine expansion**으로 간다.
 
 ## 0. 운영 원칙
 
@@ -131,15 +131,33 @@ ExecPlan: `docs/exec-plans/completed/ui-polish-002-command-memory.md`
 
 ### RELEASE-READINESS-001 — First Release Readiness
 
-권장 우선순위: 가장 높음
+Status: completed
+ExecPlan: `docs/exec-plans/completed/release-readiness-001-first-release.md`
 
 목표: 첫 공개 전 설치/실행/검증/터미널 크기/known limitations/release build 기준을 정리한다.
 
+완료 결과:
+
+- README가 현재 실행 가능한 Vim adventure game, 진행 저장, reset, known limitations를 설명한다.
+- Makefile에 `build`, `test`, `release-check` target을 추가했다.
+- `make release-check`는 `make test`, `make build`, `make e2e-playable`을 순서대로 실행한다.
+
+검증:
+
+- `go test ./...`: pass
+- `make release-check`: pass
+
+### PLAYTEST-GATE-001 — Fresh Playtest Release Gate
+
+권장 우선순위: 가장 높음
+
+목표: README 기준으로 처음 실행하는 플레이어 관점에서 첫 5분, tutorial 확장, incident 3개 이상을 직접 훑고 출시 전 blocker와 후속 wishlist를 분리한다.
+
 Decision gate:
 
-- README가 현재 앱 상태와 맞지 않으면 먼저 고친다.
-- release build/test 명령이 불명확하면 Makefile/README에 문서화한다.
-- 기능 확장이 필요해 보이면 release readiness 밖으로 분리한다.
+- 진행이 막히는 버그는 즉시 bugfix ExecPlan으로 분리한다.
+- 문구/세계관/색감 취향은 release 이후 backlog로 분리한다.
+- 새 engine/content 욕심이 생기면 fresh playtest blocker인지 확인한 뒤 결정한다.
 
 ## 4. Recommended Midterm Sequence
 
@@ -218,12 +236,12 @@ Status: completed
 
 첫 공개 전 필요 항목:
 
-- `README.md`에 설치/실행/테스트 안내
-- 첫 실행 경험 검증
-- 터미널 크기별 smoke
-- progress 파일 안전성 점검
-- release build command
-- known limitations 정리
+- `README.md`에 설치/실행/테스트 안내: completed
+- progress 파일 안전성 점검: completed
+- release build command: completed
+- known limitations 정리: completed
+- 첫 실행 경험 검증: next
+- 터미널 크기별 smoke: next or release-candidate QA
 
 첫 공개 기준:
 
@@ -233,6 +251,8 @@ Status: completed
 - `make e2e-playable`이 통과한다.
 - long incident evidence가 남는다.
 - progress schema 변경 없이 저장/재개가 안전하다.
+
+현재 release readiness 문서는 닫혔다. 다음은 문서나 자동화가 아니라 fresh playtest로 실제 첫 실행 막힘을 확인한다.
 
 ## 6. Long-Run Candidates
 
