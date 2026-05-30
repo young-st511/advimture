@@ -88,12 +88,34 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "P"
+  - wait_screen_contains: "Next: enter"
+  - send: "enter"
+  - wait_screen_contains: "route와 probe 값이 같은 stale"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "v"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "."
   - wait_screen_contains: "Next runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 005: 복구 범위 판별"
-    - "검증된 quote 내부 값만 register로 재사용"
+    - "같은 단어 교체가 이어진다는 패턴"
     - "Next runbook: enter"
   exit_code: 0
   progress_file_exists: true
@@ -102,6 +124,7 @@ assert:
     - "\"command-choice-repeat-substitute-001\""
     - "\"command-choice-inline-target-001\""
     - "\"command-choice-quote-reuse-001\""
+    - "\"command-choice-repeat-change-001\""
   key_trace:
     - "V"
     - "j"
@@ -143,19 +166,30 @@ assert:
     - "j"
     - "$"
     - "P"
+    - "enter"
+    - "c"
+    - "i"
+    - "w"
+    - "l"
+    - "i"
+    - "v"
+    - "e"
+    - "esc"
+    - "j"
+    - "."
     - "q"
   app_state:
-    buffer: ["primary=\"vault-731\"", "mirror=\"vault-731\""]
+    buffer: ["route=live", "probe=live", "guard=live"]
     cursor:
       row: 1
-      col: 16
+      col: 9
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-quote-reuse-001"
+      mission_id: "command-choice-repeat-change-001"
       completed: true
 evidence:
   save_raw_ansi: true
@@ -163,4 +197,5 @@ evidence:
   save_screen_timeline: true
   save_screen_final: true
   save_key_trace: true
+  save_app_state: true
   save_summary: true

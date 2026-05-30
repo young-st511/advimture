@@ -70,7 +70,7 @@ choice_drill_draft:
 | `incident-006-inline-target-repair` | `search-then-act` + `inline-target-choice` | `/target` + `ct,` | 먼저 손상된 target 값을 찾고, 같은 줄 comma 앞 값만 교체한다. Playable: `incident-006-inline-target-repair`. |
 | `choice-006-quote-value-reuse` | `reuse-choice` | `yi"` + `P` | 검증된 quote 내부 token을 빈 quote 위치에 그대로 복제해야 한다. 직접 재입력은 token 길이/오타 리스크가 크다. Playable: `incident-005-command-choice` / `command-choice-quote-reuse-001`. |
 | `choice-007-line-reuse` | `reuse-choice` | `V` + `y` + `p` | 검증된 route 줄 전체를 다음 위치에 복제해야 한다. 단어/quote 값이 아니라 줄 전체 재사용 문제다. |
-| `choice-008-repeat-change-reuse` | `reuse-choice` | `.` | 같은 quote 값 변경이 여러 줄에 반복된다. 재입력보다 last change repeat가 적합하다. |
+| `choice-008-repeat-change-reuse` | `reuse-choice` | `.` | 같은 값 변경이 여러 줄에 반복된다. 재입력보다 last change repeat가 적합하다. Playable: `incident-005-command-choice` / `command-choice-repeat-change-001`. |
 
 ## Inline Target Application Decision
 
@@ -93,6 +93,18 @@ choice_drill_draft:
 - `choice-008-repeat-change-reuse`는 `.`의 효용이 크지만 “재사용”보다 “반복 변경” 판단에 가까워 별도 repeat-choice로 분리하는 편이 낫다.
 
 첫 playable 구현은 `incident-005-command-choice`에 fourth beat로 붙인다. 우회 방지는 `i/a/A/o/O`, `c/d/x/r`, `:`를 금지하고 `y`, `i`, `"`, `P`를 required key로 고정한다.
+
+## Repeat Change Choice Decision
+
+`CONTENT-BREADTH-002`의 적용 후보는 `choice-008-repeat-change-reuse`로 한다.
+
+이유:
+
+- `.`은 Vim 효율을 가장 빠르게 체감시키는 command 중 하나이며, 같은 변경이 이어지는 실무 설정 편집에서 자주 등장한다.
+- `choice-007-line-reuse`는 안정적이지만 linewise tutorial/incident에서 이미 비슷한 감각을 다뤘다.
+- 새 engine이나 schema 없이 기존 `repeat-last-change` cluster와 `constraints.required_keys`로 충분히 검증할 수 있다.
+
+첫 playable 구현은 `incident-005-command-choice`에 fifth beat로 붙인다. 우회 방지는 substitute, yank/put, visual route, 직접 두 번째 변경 재입력을 막고 `ciw`, `esc`, `.`을 required key로 고정한다. 입력 literal에 쓰이는 key는 mode와 무관하게 raw constraint에 걸리므로 forbidden key에 넣지 않는다.
 
 ## Playable Gate
 

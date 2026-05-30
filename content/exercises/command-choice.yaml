@@ -202,3 +202,55 @@ exercises:
         col: 16
       mode: normal
       status: succeeded
+
+  - id: command-choice-repeat-change-001
+    status: approved
+    command_cluster: repeat-last-change
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["ciw", ".", ":%s", "yi\""]
+    mistake_focus: ["같은 단어 교체가 두 줄에 이어지는데 두 번째 줄에서도 값을 다시 입력하려고 한다."]
+    replay_status: pass
+    title: "반복 변경 재사용 판단"
+    goal_for_player: "route와 probe가 같은 stale 값입니다. 첫 줄에서 만든 변경을 다음 줄에서는 다시 입력하지 말고 .으로 반복하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        route=stale
+        probe=stale
+        guard=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 9
+      buffer: |
+        route=live
+        probe=live
+        guard=live
+    optimal_keys: ["c", "i", "w", "l", "i", "v", "e", "esc", "j", "."]
+    allowed_keys: ["c", "i", "w", "l", "v", "e", "esc", "j", "."]
+    forbidden_keys: [":", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 10
+      required_keys: ["c", "i", "w", "esc", "."]
+      forbidden_keys: [":", "h", "k", "b", "0", "$", "/", "?", "d", "x", "r", "y", "p", "P", "a", "A", "o", "O", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 3
+        text: "ciw로 만든 단어 교체도 마지막 변경으로 기록됩니다. 첫 줄에서 live를 입력해 변경을 만드세요."
+      - after_keys: 9
+        text: "두 번째 줄에서도 같은 stale 값을 live로 바꿔야 합니다. 다시 입력하지 말고 .으로 마지막 변경을 반복하세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 10
+    e2e_assertions:
+      buffer: ["route=live", "probe=live", "guard=live"]
+      cursor:
+        row: 1
+        col: 9
+      mode: normal
+      status: succeeded

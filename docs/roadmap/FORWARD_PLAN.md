@@ -23,7 +23,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - Content: tutorial coverage와 incident 001~007이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
-- 출시감: mission/review loop는 한 차례 닫혔고, content breadth, UI polish, release readiness가 아직 부족함
+- 출시감: mission/review loop와 첫 content breadth 보강은 한 차례 닫혔고, quote/pair hardening, UI polish, release readiness가 아직 부족함
 
 `FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했다. 따라서 다음 순서는 **game loop/platform polish -> content breadth -> small engine hardening -> release readiness**로 간다.
 
@@ -77,36 +77,53 @@ ExecPlan: `docs/exec-plans/completed/platform-review-003-mission-review-loop.md`
 
 ## 3. Immediate Plan
 
-### CONTENT-BREADTH-002 — Applied Content Expansion
+### CONTENT-BREADTH-002 — Repeat Change Choice
 
-권장 우선순위: 가장 높음
+Status: completed
+ExecPlan: `docs/exec-plans/completed/content-breadth-002-repeat-choice.md`
 
-목표: 새 engine 없이 기존 command를 조합하는 applied incident와 command-choice를 늘린다.
+결과:
 
-산출물:
-
-- applied incident 또는 command-choice 후보 선정
-- command -> exercise -> scenario 순서의 content spec
-- YAML content와 replay gate
-- focused E2E와 long route final/timeline evidence
+- `incident-005-command-choice`에 fifth beat `command-choice-repeat-change-001`을 추가했다.
+- 같은 단어 교체가 이어질 때 두 번째 변경을 다시 입력하지 않고 `.`으로 반복하는 판단을 훈련한다.
+- focused command-choice E2E는 final/timeline/app_state evidence를 남긴다.
 
 검증:
 
-- content loader/replay tests
+- `go test ./internal/content ./internal/playable`: pass
+- `go test ./...`: pass
+- `make e2e-playable`: pass
+
+### QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
+
+권장 우선순위: 가장 높음
+
+목표: 기존 `text-object-quote-pair`를 double quote에서 작은 quote/pair 범위로 확장한다.
+
+산출물:
+
+- `i'`, `i(`, `i{` 중 첫 scope 결정
+- engine contract와 Red tests
+- tutorial/content 후보와 replay gate
 - focused E2E
-- 필요 시 `make e2e-playable`
+
+검증:
+
+- `go test ./internal/vimengine ./internal/runtime ./internal/content`
+- focused E2E
+- 필요 시 `go test ./...`, `make e2e-playable`
 
 Decision gate:
 
-- 기존 engine만으로 좋은 적용 run이 가능하면 content부터 늘린다.
-- quote/pair 적용이 content 병목이면 `QUOTE-PAIR-HARDEN-001`을 연다.
-- 화면 정보 밀도가 content 이해를 막으면 `UI-POLISH-002`를 먼저 연다.
+- `i'`만으로 충분한 학습/적용 가치가 있으면 가장 작은 scope부터 닫는다.
+- bracket pair가 더 실무적이면 `i(` 또는 `i{` 하나만 먼저 연다.
+- nested/escaped/around/count/register가 필요해지면 별도 hardening으로 분리한다.
 
 ## 4. Recommended Midterm Sequence
 
 ### 1. CONTENT-BREADTH-002 — Applied Content Expansion
 
-권장 우선순위: 높음
+Status: completed
 
 목표: 새 engine 없이 기존 command를 조합하는 applied incident와 command-choice를 늘린다.
 
@@ -122,6 +139,11 @@ Decision gate:
 - 한 beat는 하나의 판단만 요구한다.
 - 새 command를 소개하지 않는다.
 - long route에는 final/timeline evidence를 남긴다.
+
+완료 결과:
+
+- repeat-change choice를 fifth beat로 추가했다.
+- 남은 후보인 line reuse, search-then-act, mixed incident 008은 release 전 content polish 후보로 유지한다.
 
 ### 2. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 

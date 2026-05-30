@@ -31,3 +31,9 @@ playlists:
         exercise_id: command-choice-quote-reuse-001
         scenario_id: command-choice-quote-reuse-001-scenario
         engine_support: implemented
+      - id: incident-005-005
+        role: choose_repeat_change_reuse
+        command_cluster: repeat-last-change
+        exercise_id: command-choice-repeat-change-001
+        scenario_id: command-choice-repeat-change-001-scenario
+        engine_support: implemented

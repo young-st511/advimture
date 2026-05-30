@@ -249,23 +249,23 @@ Scenario 방향:
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic`, `char-find-line` |
-| decision | 다음 계획에서 먼저 결정할 것 | `PLAN-REFRESH-009` Foundation exit review |
-| soon | 다음 milestone 후보이나 review 후 선택 | quote text object hardening, 저장 변경 없는 platform/review loop, command-choice breadth |
+| decision | 다음 계획에서 먼저 결정할 것 | `QUOTE-PAIR-HARDEN-001` quote/pair text object hardening |
+| soon | 다음 milestone 후보이나 review 후 선택 | release UI polish, release readiness, 추가 command-choice breadth |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
 ### Current Planning Candidate
 
-ID: `foundation-exit-review`
+ID: `quote-pair-hardening`
 
-목표: foundation 출시 후보 범위와 다음 중기 플랜을 고른다. 바로 새 command를 늘리기보다, 현재 구현된 command coverage가 첫 출시/베타 루프에 충분한지 먼저 판단한다.
+목표: double quote 내부 object로 닫힌 `text-object-quote-pair`를 작은 quote/pair 범위로 확장한다. 첫 scope는 `i'`, `i(`, `i{` 중 하나씩 검증 가능한 단위로 고른다.
 
 선택 후보:
 
 | Candidate | Layer | 이유 |
 |-----------|-------|------|
-| `quote-pair-hardening` | engine hardening | `ci'`, `ci(`, `ci{`는 실무 config/JSON/함수 인자 편집에 유용하고 기존 quote object의 작은 확장이다. |
-| `platform-review-loop` | gameplay system | 장기 반복 학습 플랫폼으로 가려면 저장 변경 전에도 mission/review loop를 더 게임답게 묶어야 한다. |
-| `command-choice-breadth` | content/application | 새 engine 없이 이미 배운 command 선택 판단을 더 훈련할 수 있다. |
+| `single-quote-object` | engine hardening | shell/env/config 값 편집에 자주 나오며 double quote object와 가장 가까운 확장이다. |
+| `paren-object` | engine hardening | 함수 인자와 command argument 수정에 유용하지만 pair matching 범위 검증이 필요하다. |
+| `brace-object` | engine hardening | JSON/config block 값 수정에 유용하지만 nested/escaped 제외 범위를 더 명확히 해야 한다. |
 
 ### Command Choice Layer
 
@@ -281,11 +281,11 @@ ID: `foundation-exit-review`
 - `range-choice`: visual/operator 조작과 substitute/range command 중 더 적합한 방법을 고른다.
 - `inline-target-choice`: comma/quote/delimiter 보존 여부를 보고 `ct,`와 `cf,` 중 적절한 범위를 고른다.
 - `quote-value-reuse`: retype 대신 `yi"` + `P`로 검증된 quote 내부 값을 재사용한다.
+- `repeat-change-reuse`: 같은 단어 교체가 이어질 때 두 번째 변경을 `.`으로 반복한다.
 
 후속 후보:
 
 - line reuse: 검증된 줄 전체를 `V` + `y` + `p`로 재사용한다.
-- repeat-change reuse: 같은 변경을 `.`로 반복할지 판단한다.
 - search-then-act: `/`, `n`, `N`으로 위치를 찾은 뒤 적절한 편집 command를 고른다.
 
 권장 문항 수:
@@ -309,7 +309,7 @@ ID: `foundation-exit-review`
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
-- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse beat를 playable로 연결했다. 후속 후보는 line reuse, repeat-change reuse, search-then-act다.
+- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse, repeat-change reuse beat를 playable로 연결했다. 후속 후보는 line reuse, search-then-act다.
 - `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030/PLAYPACK-012에서 engine과 tutorial을 연결했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
 
 ## Long-Run Platform Direction
@@ -318,10 +318,10 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 
 현재 우선순위:
 
-1. `foundation-exit-review`: 현재 engine/content/UI/E2E가 첫 출시 후보로 충분한지 판단한다.
-2. `platform-review-loop`: progress schema 변경 없이 mission/review/daily motivation을 더 게임답게 묶는다.
-3. `quote-pair-hardening`: 새 engine을 연다면 기존 quote object의 작은 확장으로 제한한다.
-4. `command-choice-breadth`: 이미 배운 command를 섞어 범위/반복/검색/치환/inline target 중 적합한 도구를 고르는 판단을 훈련한다.
+1. `quote-pair-hardening`: 새 engine을 연다면 기존 quote object의 작은 확장으로 제한한다.
+2. `ui-polish-release`: release 전 TUI polish와 command memory를 보강한다.
+3. `release-readiness`: 설치/실행/터미널 크기/known limitations/release build gate를 정리한다.
+4. `command-choice-breadth`: 이미 배운 command를 섞어 검색/줄 재사용/범위 판단을 더 훈련한다.
 5. `progress-schema-v2`: mastery/spaced review/daily run 저장은 실제 병목이 evidence로 확인된 뒤 사용자 승인으로만 연다.
 
 세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

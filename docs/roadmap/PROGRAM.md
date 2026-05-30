@@ -10,29 +10,37 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `PLATFORM-REVIEW-003`은 완료됐고, 다음 권장 작업은 `CONTENT-BREADTH-002`로 기존 engine만 사용하는 applied incident/command-choice를 확장하는 것이다.
+현재 활성 구현 slice 없음. `CONTENT-BREADTH-002`는 완료됐고, 다음 권장 작업은 `QUOTE-PAIR-HARDEN-001`로 기존 double quote text object를 작은 quote/pair 범위로 확장하는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### CONTENT-BREADTH-002. Applied Content Expansion
+### QUOTE-PAIR-HARDEN-001. Quote/Pair Text Object Hardening
 
 - 상태: proposed
-- 목표: 새 Vim engine 없이 기존 command를 조합하는 applied incident와 command-choice를 늘린다.
+- 목표: 기존 `i"` text object를 `i'`, `i(`, `i{` 중 작은 범위부터 확장한다.
 - 입력 문서:
   - `docs/roadmap/FORWARD_PLAN.md`
   - `docs/roadmap/MIDTERM_TODO.md`
-  - `docs/gameplay/command-choice-drills.md`
-  - `docs/gameplay/scenario-bank.md`
+  - `docs/gameplay/vim-curriculum-map.md`
   - `docs/gameplay/spec.md`
 - 제외:
-  - 새 Vim engine
-  - 새 content schema
+  - nested pair
+  - escaped quote
+  - around object
+  - count/register prefix
   - progress schema 변경
-- 주의: 한 beat는 하나의 판단만 요구하고, long route에는 final/timeline evidence를 남긴다.
+- 주의: 새 pair 하나씩 engine contract와 replay gate를 먼저 닫는다.
 
 ## 최근 완료
+
+### CONTENT-BREADTH-002. Repeat Change Choice
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/content-breadth-002-repeat-choice.md`
+- 완료일: 2026-05-30
+- 결론: `incident-005-command-choice`에 `command-choice-repeat-change-001` fifth beat를 추가했다. 같은 단어 교체가 이어질 때 `.`으로 마지막 변경을 반복하는 판단을 검증한다.
 
 ### PLATFORM-REVIEW-003. Mission/Review Game Loop
 

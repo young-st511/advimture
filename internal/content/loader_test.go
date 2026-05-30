@@ -19,11 +19,11 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 19 {
 		t.Fatalf("command clusters = %d, want 19", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 102 {
-		t.Fatalf("exercises = %d, want 102", len(lib.Exercises))
+	if len(lib.Exercises) != 103 {
+		t.Fatalf("exercises = %d, want 103", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 102 {
-		t.Fatalf("scenarios = %d, want 102", len(lib.Scenarios))
+	if len(lib.Scenarios) != 103 {
+		t.Fatalf("scenarios = %d, want 103", len(lib.Scenarios))
 	}
 	if len(lib.Playlists) != 23 {
 		t.Fatalf("playlists = %d, want 23", len(lib.Playlists))
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 102 {
-		t.Fatalf("playable exercises = %d, want 102: %+v", len(playable), playable)
+	if len(playable) != 103 {
+		t.Fatalf("playable exercises = %d, want 103: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -55,6 +55,7 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"char-find-line-006",
 		"command-choice-inline-target-001",
 		"command-choice-quote-reuse-001",
+		"command-choice-repeat-change-001",
 		"command-choice-repeat-substitute-001",
 		"command-choice-scope-001",
 		"delete-with-motion-001",

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Command-choice에 repeat-change 판단 추가
+
+이전 가정: `incident-005-command-choice`는 linewise scope, global substitute, inline target range, quote value reuse까지 다루며, 다음 content breadth 후보는 line reuse 또는 repeat-change reuse였다.
+
+새 가정: `incident-005-command-choice`는 fifth beat로 repeat-change choice를 포함한다. 같은 단어 교체가 이어질 때 두 번째 변경은 직접 재입력하지 않고 `.`으로 마지막 변경을 반복하는 판단을 검증한다.
+
+이유: line reuse는 이미 linewise tutorial/incident에서 여러 번 다뤘고, `.` 반복 변경은 Vim 효율 체감과 실무 설정 편집 재사용성이 더 크다. 기존 engine/schema만으로 replay/E2E 검증도 가능하다.
+
+영향: `CONTENT-BREADTH-002`는 완료됐다. 다음 권장 slice는 `QUOTE-PAIR-HARDEN-001`이다.
+
 ## 2026-05-30 — Mission/review loop를 next dispatch로 연결
 
 이전 가정: review queue, daily route, best record는 화면에 표시되지만 성공 후 다음 행동과는 느슨하게 연결돼 있었다.
