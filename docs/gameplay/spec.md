@@ -61,6 +61,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - running HUD의 review/daily line은 상세 문구를 그대로 노출하지 않고 tutorial에서는 `복구 메모: 재점검 N건 · 다음: <title>`, incident에서는 `복구 현황: 재점검 N건 · 잔류: <title>`로 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시한다.
+- tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다.
+- incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청 또는 실패 후에만 `참고 명령: ...`으로 current exercise의 command memory를 점진 공개한다.
 - `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `Hint: ...`로 표시하며, command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `Next tutorial: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.

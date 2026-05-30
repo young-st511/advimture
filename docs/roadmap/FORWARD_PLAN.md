@@ -112,23 +112,34 @@ ExecPlan: `docs/exec-plans/completed/quote-pair-harden-001-single-quote.md`
 - `go test ./...`: pass
 - `make e2e-playable`: pass
 
-### UI-POLISH-002 — Release UI Polish
+### UI-POLISH-002 — Command Memory Cue
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/ui-polish-002-command-memory.md`
+
+결과:
+
+- tutorial running 화면은 `기억할 명령: ...`으로 current exercise command memory를 보여준다.
+- incident running 기본 화면은 command memory를 숨기고, hint/failure 후 `참고 명령: ...`으로 점진 공개한다.
+- 저장 포맷, content schema, app_state schema는 바꾸지 않았다.
+
+검증:
+
+- `go test ./internal/playable`: pass
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_coaching_panel.yaml`: pass
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_incident_hint_affordance.yaml`: pass
+
+### RELEASE-READINESS-001 — First Release Readiness
 
 권장 우선순위: 가장 높음
 
-목표: 출시 전 화면을 개발 UI가 아니라 Vim adventure console처럼 읽히게 다듬는다.
-
-산출물:
-
-- UI polish scope와 evidence 기준
-- command memory 또는 learned command cue의 최소 구현
-- 대표 route focused E2E evidence
+목표: 첫 공개 전 설치/실행/검증/터미널 크기/known limitations/release build 기준을 정리한다.
 
 Decision gate:
 
-- 화면 밀도/문구만 바꾸면 충분하면 renderer/playableview 중심으로 닫는다.
-- command memory가 progress schema를 요구하면 저장 변경 없이 runtime 계산으로 제한한다.
-- release readiness 문서가 더 급하면 `RELEASE-READINESS-001`과 묶지 않고 다음 slice로 분리한다.
+- README가 현재 앱 상태와 맞지 않으면 먼저 고친다.
+- release build/test 명령이 불명확하면 Makefile/README에 문서화한다.
+- 기능 확장이 필요해 보이면 release readiness 밖으로 분리한다.
 
 ## 4. Recommended Midterm Sequence
 
@@ -182,7 +193,7 @@ Status: completed
 
 ### 3. UI-POLISH-002 — Release UI Polish
 
-권장 우선순위: 높음
+Status: completed
 
 목표: 출시 전 화면을 개발 UI가 아니라 Vim adventure console처럼 읽히게 다듬는다.
 
@@ -197,6 +208,11 @@ Status: completed
 
 - 화면 문구보다 `app_state` 검증을 우선한다.
 - color 없는 환경에서도 의미가 보존되어야 한다.
+
+완료 결과:
+
+- 첫 release polish는 command memory cue로 닫았다.
+- color/emphasis, side rail, pre-start modal은 후속 UI 후보로 유지한다.
 
 ## 5. Release Readiness
 

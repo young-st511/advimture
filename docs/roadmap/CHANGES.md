@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Tutorial/incident command memory cue 추가
+
+이전 가정: tutorial은 `Coach: 훈련 키 ...`로 필요한 입력을 보여주고, incident는 판단 cue와 hint/failure에서만 키를 드러냈다.
+
+새 가정: tutorial running 화면은 `기억할 명령: ...`으로 current exercise의 command memory를 함께 보여준다. incident running 기본 화면은 command memory를 숨기되, `?` hint 또는 실패 후 `참고 명령: ...`으로 점진 공개한다.
+
+이유: 콘텐츠와 command 수가 늘어나면 플레이어가 방금 배운 Vim command를 놓치기 쉽다. 하지만 incident 기본 화면에서 정답 key를 노출하면 command-choice 판단 훈련이 약해지므로 단계적으로 공개한다.
+
+영향: `UI-POLISH-002`는 완료됐다. 다음 권장 slice는 `RELEASE-READINESS-001`이다.
+
 ## 2026-05-30 — Single quote text object hardening 완료
 
 이전 가정: `text-object-quote-pair`는 double quote 내부 object `di"`, `ci"`, `yi"`만 구현했고, single quote, parenthesis, brace는 후속 hardening 후보였다.

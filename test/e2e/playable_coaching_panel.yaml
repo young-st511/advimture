@@ -7,7 +7,7 @@ terminal:
 setup:
   home: temp
 steps:
-  - wait_screen_contains: "Coach: 훈련 키 l"
+  - wait_screen_contains: "기억할 명령: l"
   - send: "l"
   - wait_screen_contains: "cursor 0:1"
   - send: "?"

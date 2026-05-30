@@ -10,13 +10,14 @@ setup:
 steps:
   - wait_screen_contains: "OPERATOR JUDGMENT"
   - send: "?"
-  - wait_screen_contains: "Hint: 복구 작전에서는"
+  - wait_screen_contains: "참고 명령: /"
   - send: "q"
 assert:
   screen_contains:
     - "OPERATOR JUDGMENT"
     - "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
     - "Hint: 복구 작전에서는"
+    - "참고 명령: /"
   exit_code: 0
   progress_file_exists: true
   key_trace:
@@ -32,6 +33,8 @@ assert:
       focus_panel:
         kind: "incident"
         title: "OPERATOR JUDGMENT"
+    contains:
+      command_memory: "참고 명령: /"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true

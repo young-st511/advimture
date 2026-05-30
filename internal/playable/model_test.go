@@ -41,6 +41,9 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
 		t.Fatalf("view = %q, want proactive coaching", model.View())
 	}
+	if !strings.Contains(model.View(), "기억할 명령: l") {
+		t.Fatalf("view = %q, want tutorial command memory", model.View())
+	}
 	if !strings.Contains(model.View(), "TRAINING BRIEF") {
 		t.Fatalf("view = %q, want training focus panel", model.View())
 	}
@@ -49,6 +52,9 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	}
 	if model.State().UI.FocusPanel.Kind != "training" || model.State().UI.FocusPanel.Title != "TRAINING BRIEF" {
 		t.Fatalf("ui focus panel = %+v, want training TRAINING BRIEF", model.State().UI.FocusPanel)
+	}
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "기억할 명령: l") {
+		t.Fatalf("focus panel lines = %v, want command memory", model.State().UI.FocusPanel.Lines)
 	}
 }
 
@@ -216,6 +222,26 @@ func TestIncidentActionPanelUsesJudgementCueWithoutTrainingKeySpoiler(t *testing
 	}
 	if strings.Contains(view, "Coach: 훈련 키") {
 		t.Fatalf("view = %q, should not reveal training keys on running incident", view)
+	}
+	if strings.Contains(view, "기억할 명령:") || strings.Contains(view, "참고 명령:") {
+		t.Fatalf("view = %q, should not reveal command memory on running incident", view)
+	}
+}
+
+func TestIncidentHintCanRevealCommandMemory(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "incident-hotfix-001"),
+	})
+
+	model, _ = updateWithKey(t, model, "?")
+
+	view := model.View()
+	if !strings.Contains(view, "참고 명령: /") {
+		t.Fatalf("view = %q, want incident command memory after hint", view)
+	}
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "참고 명령: /") {
+		t.Fatalf("focus panel lines = %v, want incident command memory", model.State().UI.FocusPanel.Lines)
 	}
 }
 

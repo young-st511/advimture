@@ -8,7 +8,7 @@ Last reviewed: 2026-05-30
 
 Content breadth로 넘어가기 전에 막는 P0 UX 리스크는 없다.
 
-현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation을 E2E로 검증한다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
+현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
 
 ## P0
 
@@ -31,8 +31,9 @@ P0로 승격하는 조건:
 ### UI-COMMAND-MEMORY-001 — Learned Command Memory
 
 - 왜 중요한가: 콘텐츠가 늘면 플레이어가 방금 배운 command를 기억하기 어렵다. 다만 기본 화면에 command list를 크게 노출하면 판단 훈련을 약화할 수 있다.
-- 언제 열 것인가: applied incident에서 같은 command를 반복 실패하거나, command-choice가 정답 암기/찍기처럼 보이는 evidence가 쌓일 때.
-- 어떻게 검증할 것인가: tutorial에서는 current command를 짧게 노출하고, incident에서는 hint/failure에서만 command memory를 열어주는 E2E를 둔다.
+- 상태: completed as `UI-POLISH-002` minimal slice.
+- 결과: tutorial에서는 `기억할 명령`, incident에서는 hint/failure 후 `참고 명령`으로 command memory를 점진 공개한다.
+- 후속: command memory가 길어지거나 command-choice가 여전히 찍기처럼 보이면 side rail 또는 command history로 확장한다.
 
 ### UI-FRAME-TIMELINE-001 — Step Frame Evidence
 
@@ -72,9 +73,10 @@ P0로 승격하는 조건:
 추천 다음 콘텐츠:
 
 1. `CONTENT-BREADTH-002`: mission/review loop가 닫혔으므로 기존 engine 기반 applied content를 늘린다.
-2. `UI-COMMAND-MEMORY-001`: applied incident에서 반복 실패 evidence가 쌓이면 hint/failure 중심 command memory를 연다.
-3. `UI-RAIL-001`: mission/review/daily 정보가 HUD를 다시 밀어내면 wide layout side rail을 연다.
+2. `UI-RAIL-001`: mission/review/daily 정보가 HUD를 다시 밀어내면 wide layout side rail을 연다.
+3. `UI-STYLE-001`: 첫 release polish에서 color/emphasis pass가 필요해지면 연다.
 
 ## Completed / Retired
 
 - `UI-EVIDENCE-003 — Final Frame Evidence`: `UI-EVIDENCE-002`에서 runner의 `screen_final.txt` 저장을 구현했고, `E2E-EVIDENCE-008`에서 long incident route가 final/timeline evidence를 남기도록 고정했다.
+- `UI-COMMAND-MEMORY-001 — Learned Command Memory`: `UI-POLISH-002`에서 tutorial/hint/failure command memory cue를 구현했다.

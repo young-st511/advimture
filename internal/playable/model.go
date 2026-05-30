@@ -52,6 +52,8 @@ type gameEntry struct {
 	ScenarioID       string
 	IndexInPlaylist  int
 	TotalInPlaylist  int
+	TrainedCommands  []string
+	ReviewedCommands []string
 }
 
 func New(options Options) Model {
@@ -471,6 +473,8 @@ func playlistEntries(library content.Library) ([]gameEntry, error) {
 				PlaylistCategory: playlist.Category,
 				ExerciseID:       beat.ExerciseID,
 				ScenarioID:       beat.ScenarioID,
+				TrainedCommands:  append([]string(nil), exercise.TrainedCommands...),
+				ReviewedCommands: append([]string(nil), exercise.ReviewedCommands...),
 			})
 		}
 		total := len(playlistEntries)
@@ -593,6 +597,9 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		if coach := m.coachingLineForCurrentEntry(state); coach != "" {
 			lines = append(lines, coach)
 		}
+		if memory := m.commandMemoryLine(state); memory != "" {
+			lines = append(lines, memory)
+		}
 		if m.hintMessage != "" {
 			lines = append(lines, "Hint: "+m.hintMessage)
 		}
@@ -602,8 +609,14 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
+		if memory := m.commandMemoryLine(state); memory != "" && !m.currentEntryIsIncident() {
+			lines = append(lines, memory)
+		}
 		if coach := m.runningCoachingLine(state); coach != "" {
 			lines = append(lines, coach)
+		}
+		if memory := m.commandMemoryLine(state); memory != "" && m.currentEntryIsIncident() {
+			lines = append(lines, memory)
 		}
 		if m.hintMessage != "" {
 			lines = append(lines, "Hint: "+m.hintMessage)
@@ -624,6 +637,9 @@ func scenarioFeedbackLine(state scenario.State) string {
 
 func (m Model) runningCoachingLine(state scenario.State) string {
 	if m.currentEntryIsIncident() {
+		if m.hintMessage != "" {
+			return ""
+		}
 		return "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
 	}
 	return coachingLine(state)
@@ -635,6 +651,34 @@ func (m Model) coachingLineForCurrentEntry(state scenario.State) string {
 		return coach
 	}
 	return strings.Replace(coach, "Coach: 훈련 키", "복구 힌트: 필요한 키", 1)
+}
+
+func (m Model) commandMemoryLine(state scenario.State) string {
+	entry, ok := m.currentEntry()
+	if !ok {
+		return ""
+	}
+	if m.currentEntryIsIncident() {
+		if state.Status != exerciseruntime.StatusFailed && m.hintMessage == "" {
+			return ""
+		}
+		commands := entry.TrainedCommands
+		if len(commands) == 0 {
+			commands = entry.ReviewedCommands
+		}
+		if memory := commandMemory(commands); memory != "" {
+			return "참고 명령: " + memory
+		}
+		return ""
+	}
+	commands := entry.TrainedCommands
+	if len(commands) == 0 {
+		commands = state.Runtime.RequiredKeys
+	}
+	if memory := commandMemory(commands); memory != "" {
+		return "기억할 명령: " + memory
+	}
+	return ""
 }
 
 func (m Model) currentEntryIsIncident() bool {
@@ -774,6 +818,26 @@ func containsString(values []string, target string) bool {
 		}
 	}
 	return false
+}
+
+func commandMemory(commands []string) string {
+	if len(commands) == 0 {
+		return ""
+	}
+	seen := map[string]bool{}
+	out := make([]string, 0, len(commands))
+	for _, command := range commands {
+		command = strings.TrimSpace(command)
+		if command == "" || seen[command] {
+			continue
+		}
+		seen[command] = true
+		out = append(out, command)
+		if len(out) == 6 {
+			break
+		}
+	}
+	return strings.Join(out, " ")
 }
 
 var _ tea.Model = Model{}

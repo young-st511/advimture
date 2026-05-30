@@ -10,32 +10,37 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `QUOTE-PAIR-HARDEN-001`은 완료됐고, 다음 권장 작업은 `UI-POLISH-002`로 출시 전 TUI 정보 밀도와 command memory를 다듬는 것이다.
+현재 활성 구현 slice 없음. `UI-POLISH-002`는 완료됐고, 다음 권장 작업은 `RELEASE-READINESS-001`로 첫 공개 전 실행/검증/제한사항을 정리하는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### UI-POLISH-002. Release UI Polish
+### RELEASE-READINESS-001. First Release Readiness
 
 - 상태: proposed
-- 목표: 출시 전 화면을 개발용 테스트 UI가 아니라 Vim adventure console처럼 읽히게 다듬는다.
+- 목표: 첫 공개 전 설치/실행/검증/터미널 크기/known limitations/release build 기준을 정리한다.
 - 입력 문서:
   - `docs/roadmap/FORWARD_PLAN.md`
   - `docs/roadmap/MIDTERM_TODO.md`
-  - `docs/gameplay/tui-screen-contract.md`
-  - `docs/gameplay/tui-ux-direction.md`
-  - `docs/roadmap/UX_BACKLOG_001.md`
-  - `docs/gameplay/spec.md`
+  - `README.md`
+  - `Makefile`
   - `docs/verification/spec.md`
 - 제외:
   - 저장 포맷 변경
   - 새 Vim engine
   - 새 content schema
-  - progress schema 변경
-- 주의: 화면 문구보다 app_state/evidence 검증을 우선한다.
+- 기능 확장
+- 주의: 출시 문서는 현재 구현/검증과 정확히 맞아야 한다.
 
 ## 최근 완료
+
+### UI-POLISH-002. Command Memory Cue
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-polish-002-command-memory.md`
+- 완료일: 2026-05-30
+- 결론: tutorial은 `기억할 명령`, incident는 hint/failure 후 `참고 명령`으로 command memory를 점진 공개한다. 저장/schema 변경은 없다.
 
 ### QUOTE-PAIR-HARDEN-001. Single Quote Text Object
 
