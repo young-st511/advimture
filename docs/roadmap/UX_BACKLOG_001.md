@@ -2,6 +2,7 @@
 
 Created: 2026-05-26
 Status: current
+Last reviewed: 2026-05-30
 
 ## 판단
 
@@ -27,17 +28,17 @@ P0로 승격하는 조건:
 - 언제 열 것인가: incident가 6개 이상으로 늘거나 daily/review 표시가 현재 mission briefing을 다시 밀어낼 때.
 - 어떻게 검증할 것인가: desktop width에서 console line index가 고정되고, mobile/narrow width에서는 기존 vertical HUD로 fallback하는 renderer tests와 E2E screenshot/text evidence를 추가한다.
 
-### UI-EVIDENCE-003 — Final Frame Evidence
-
-- 왜 중요한가: 현재 `screen.txt`는 누적 stream 성격이라 최종 viewport 확인이 어렵다.
-- 언제 열 것인가: UI 레이아웃 변경이 두 번 이상 E2E stale expectation을 만들거나, modal 위치/줄바꿈 회귀가 다시 발생할 때.
-- 어떻게 검증할 것인가: E2E runner가 마지막 cleaned frame을 `screen_final.txt`로 저장하고, 실패 시 summary에 마지막 frame path를 남긴다.
-
 ### UI-COMMAND-MEMORY-001 — Learned Command Memory
 
 - 왜 중요한가: 콘텐츠가 늘면 플레이어가 방금 배운 command를 기억하기 어렵다. 다만 기본 화면에 command list를 크게 노출하면 판단 훈련을 약화할 수 있다.
 - 언제 열 것인가: applied incident에서 같은 command를 반복 실패하거나, command-choice가 정답 암기/찍기처럼 보이는 evidence가 쌓일 때.
 - 어떻게 검증할 것인가: tutorial에서는 current command를 짧게 노출하고, incident에서는 hint/failure에서만 command memory를 열어주는 E2E를 둔다.
+
+### UI-FRAME-TIMELINE-001 — Step Frame Evidence
+
+- 왜 중요한가: `screen_final.txt`와 `screen_timeline.txt`는 현재 충분하지만, 복잡한 modal transition을 다룰 때 send/wait 단위 frame이 필요할 수 있다.
+- 언제 열 것인가: final/timeline evidence로는 특정 입력 직후의 transient UI 회귀를 설명하지 못할 때.
+- 어떻게 검증할 것인가: `frames/*.txt`를 선택적으로 저장하고 summary에 frame count/path를 남긴다.
 
 ## P2
 
@@ -70,6 +71,10 @@ P0로 승격하는 조건:
 
 추천 다음 콘텐츠:
 
-1. `choice-002-repeat-or-substitute`: 반복 수정에서 `.`와 `:%s` 중 무엇이 더 적합한지 판단한다.
-2. `choice-003-copy-or-retype`: 이미 검증된 quote 값을 다시 입력하지 않고 `yi"`/`P`로 재사용한다.
-3. `incident-006-review-dispatch`: search, quote object, substitute, visual line을 섞되 새 engine 기능은 추가하지 않는다.
+1. `PLAN-REFRESH-009`: Foundation exit review를 먼저 열어 UI 작업과 content 확장 중 무엇을 우선할지 고른다.
+2. `UI-COMMAND-MEMORY-001`: applied incident에서 반복 실패 evidence가 쌓이면 hint/failure 중심 command memory를 연다.
+3. `UI-RAIL-001`: mission/review/daily 정보가 HUD를 다시 밀어내면 wide layout side rail을 연다.
+
+## Completed / Retired
+
+- `UI-EVIDENCE-003 — Final Frame Evidence`: `UI-EVIDENCE-002`에서 runner의 `screen_final.txt` 저장을 구현했고, `E2E-EVIDENCE-008`에서 long incident route가 final/timeline evidence를 남기도록 고정했다.

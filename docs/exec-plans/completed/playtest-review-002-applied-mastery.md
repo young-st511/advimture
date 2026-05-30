@@ -8,7 +8,7 @@ Allowed-Paths:
 - docs/roadmap/PROGRAM.md
 - docs/roadmap/MIDTERM_TODO.md
 - docs/roadmap/CHANGES.md
-- docs/roadmap/PLAYTEST_REVIEW_2026-05-28.md
+- docs/roadmap/archive/reviews/PLAYTEST_REVIEW_2026-05-28.md
 - docs/exec-plans/active/playtest-review-002-applied-mastery.md
 
 ## 목표

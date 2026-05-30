@@ -1,125 +1,76 @@
-# Engine / Module Todo
+# Engine / Module Status
 
-> Advimture는 엔진, 미들웨어, 어댑터를 분리해서 만든다. 각 항목은 독립 ExecPlan으로 열고, 테스트와 커밋까지 닫은 뒤 다음 항목으로 넘어간다.
+> Advimture는 엔진, 미들웨어, 어댑터를 분리해서 만든다. 이 문서는 현재 engine 상태와 hardening 후보만 둔다. 활성 slice는 항상 `docs/roadmap/PROGRAM.md`가 우선한다.
+
+Last reviewed: 2026-05-30
 
 ## 진행 원칙
 
 - 한 루프는 하나의 엔진 또는 모듈 계약만 다룬다.
 - 새 Vim command 추가와 runtime/UI 연결을 같은 루프에서 섞지 않는다.
-- 기존 구현이 새 경계를 방해하면 먼저 legacy/archive 격리를 검토한다.
-- TUI 연결 전까지는 unit test와 model-level test를 우선한다.
 - TUI로 연결되는 순간 E2E assertion이 부족하면 구현을 멈추고 E2E를 보강한다.
+- 새 engine 후보는 `command catalog -> vimengine -> runtime/tuiadapter -> content/playable -> E2E` 순서로 진행한다.
+- progress 저장 포맷 변경은 engine 작업과 섞지 않는다.
 
-## 순서
+## 현재 판단
 
-| 순서 | ID | 엔진/모듈 | 상태 | 핵심 책임 |
-|------|----|-----------|------|-----------|
-| 1 | VIM-002 | Vim Engine Foundation | completed | `State + Key -> State + Events`, `h/j/k/l` |
-| 2 | VIM-003 | Vim Engine Contract Hardening | completed | 상태 주입, key trace replay, copy/normalize 경계 |
-| 3 | VIM-004 | Exercise Runtime Foundation | completed | 문항 세션, 목표 판정, key trace, retry, hint |
-| 4 | VIM-005 | Content Schema Foundation | completed | command/exercise/scenario 데이터를 runtime spec으로 변환 |
-| 5 | VIM-006 | Grader / Scoring Engine | completed | 정답, 최적 키 대비 평가, 실수/힌트 평가 |
-| 6 | VIM-007 | Scenario Runtime | completed | 검증된 exercise를 어드벤처 사건으로 감싸기 |
-| 7 | VIM-008 | TUI Adapter | completed | Bubble Tea input/output과 runtime 연결 |
-| 8 | VIM-009 | Progress Adapter | completed | runtime 결과를 로컬 저장 포맷으로 변환 |
-| 9 | VIM-010 | Neovim Oracle Runner | completed | `exact` tier command를 Neovim 결과와 비교 |
-| 10 | VIM-011 | Legacy Archive Pass | completed | 기존 `internal/editor/game/app/ui/data` 유지/격리 결정 |
+현재 활성 engine slice는 없다.
 
-## 다음 루프 후보
+Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. 다음 작업은 바로 새 engine을 여는 것보다 `PLAN-REFRESH-009`에서 Foundation exit review를 먼저 수행한 뒤 고른다.
 
-현재 진행 중: Inline Target Motions.
+## 완료된 핵심 모듈
 
-다음 후보는 2026-05-21 토론 결과에 따라 아래 순서로 검토한다.
+| 영역 | 상태 | 비고 |
+|------|------|------|
+| `internal/vimengine` foundation | completed | `State + Key -> State + Events` 순수 전이 |
+| `internal/runtime` | completed | exercise session, constraints, retry/hint |
+| `internal/content` | completed | YAML loader, replay gate, coverage validator |
+| `internal/scoring` | completed | grade/key count/intent scoring |
+| `internal/scenario` | completed | exercise를 scenario/runbook layer로 감싸기 |
+| `internal/tuiadapter` | completed | Bubble Tea input/view model 변환 |
+| `internal/progressadapter` / `internal/progress` | completed | progress v1 저장 경계 유지 |
+| `internal/vimoracle` | completed | optional Neovim oracle comparison |
+| `cmd/e2e-runner` | completed | pty E2E, app_state, final/timeline evidence |
 
-| 우선순위 | 후보 | 필요한 엔진 계약 | 비고 |
-|----------|------|------------------|------|
-| 1 | `char-find-line` | forward same-line `f/t`, operator motion `df/dt/cf/ct` | 현재 next engine candidate |
-| 2 | `quote text object hardening` | `ci'`, `ci(`, `ci{` 등 pair parsing 확장 | 새 engine보다는 기존 text-object 확장 |
-| 3 | `multi-line charwise visual` | multi-line charwise selection operator semantics | blast radius 큼 |
-| 4 | platform review loop | mastery/spaced review/daily run progress 후보 | RFC와 사용자 승인 필요 |
+## Implemented Vim Clusters
 
-진행 원칙:
+| Cluster | 핵심 command | 상태 |
+|---------|--------------|------|
+| `normal-motion-basic` | `h`, `j`, `k`, `l` | tutorial/E2E completed |
+| `survival-save-quit` | `esc`, `:q!`, `:wq` | tutorial/E2E completed |
+| `word-motion-basic` | `w`, `b`, `e` | tutorial/E2E completed |
+| `whole-file-navigation` | `gg`, `G`, `0`, `$` | tutorial/E2E completed |
+| `vim-ex-command-substitute` | `:s`, `:%s`, `:2,3s` | tutorial/E2E completed |
+| `single-char-edit` / `insert-mode-entry` / `undo-redo-basic` | `x`, `r`, `i`, `a`, `A`, `u`, `ctrl+r` | tutorial/E2E completed |
+| `delete-with-motion` / `change-with-motion` | `dw`, `d$`, `dd`, `cw`, `c$`, `cc` | tutorial/E2E completed |
+| `yank-put-basic` | `yw`, `y$`, `yy`, `p`, `P` | tutorial/E2E completed |
+| `text-object-inner-word` | `diw`, `ciw`, `yiw` | tutorial/E2E completed |
+| `text-object-quote-pair` | `di"`, `ci"`, `yi"` | tutorial/E2E completed |
+| `open-line-edit` | `o`, `O` | tutorial/E2E completed |
+| `repeat-last-change` | `.` | tutorial/E2E completed |
+| `search-basic` | `/`, `n`, `N` | tutorial/E2E completed |
+| `visual-char-line` | `v`, visual `d/y` | tutorial/E2E completed |
+| `visual-line-basic` | `V`, linewise `d/y` | tutorial/E2E completed |
+| `char-find-line` | `f/t`, `df/dt/cf/ct` | tutorial/E2E completed |
 
-- 새 Vim command를 늘릴 때는 `command catalog -> vimengine -> oracle comparison -> exercise` 순서로 진행한다.
-- TUI로 연결되는 순간 E2E assertion이 부족하면 구현을 멈추고 E2E를 보강한다.
+## Hardening Candidates
 
-## ENGINE-GAP-001 결정
+| 우선순위 | 후보 | 필요한 계약 | 주의 |
+|----------|------|-------------|------|
+| 1 | `quote-pair-hardening` | `ci'`, `di'`, `yi'`, `ci(`, `ci{`의 pair parsing 범위 | escaped/nested pair는 별도 scope로 분리 |
+| 2 | `platform-review-loop` | 저장 포맷 변경 없는 mission/review/game loop | engine 작업이 아니며 progress schema 변경 금지 |
+| 3 | `command-choice-breadth` | 기존 implemented command 조합 | 새 engine 없이 content/constraints/E2E로 처리 |
+| 4 | `search-hardening` | `?`, regex, highlight, history 중 일부 | `?`는 현재 hint key와 충돌하므로 UX 결정 필요 |
+| 5 | `visual-advanced` | visual block, multi-line charwise, count/register prefix | blast radius 큼, E2E selection contract 선행 |
+| 6 | `automation-advanced` | macro/register/count prefix | 출시 전 필수 아님 |
 
-다음 구현 루프는 `VIM-013: single-char-edit engine`으로 한다.
+## Engine Opening Checklist
 
-| 루프 | 범위 | 필수 테스트 | E2E |
-|------|------|-------------|-----|
-| VIM-013 | `x`, `r`, buffer mutation, cursor clamp | `internal/vimengine` unit, runtime replay smoke | completed: engine/tuiadapter unit까지 연결. content 승격 시 E2E 추가 |
-| VIM-014 | `i`, `a`, `A`, printable insertion, `esc` 복귀 | vimengine/tuiadapter/runtime unit | completed: insert-mode printable input까지 연결. content 승격 시 E2E 추가 |
-| VIM-015 | `u`, `ctrl+r`, mutation history | vimengine unit, scenario scoring regression | completed: mutation snapshot undo/redo 구현. content 승격 시 E2E 추가 |
+새 engine slice를 열기 전에:
 
-`PLAYPACK-002`는 VIM-013~015 중 실제 implemented cluster만 playable로 승격한다. engine support가 planned인 cluster는 YAML에 남길 수 있지만 playable path에는 연결하지 않는다.
-
-## OPERATOR-GAP-001 결정
-
-첫 operator grammar 구현은 `d/c + motion`으로 제한한다. text object, yank/put, count prefix는 다음 milestone로 미룬다.
-
-| 루프 | 범위 | 필수 테스트 | E2E |
-|------|------|-------------|-----|
-| VIM-016 | operator pending mode, `d/c` key mapping, unsupported combo | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
-| VIM-017 | `dw`, `d$`, `dd` 삭제 semantics | completed: vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
-| VIM-018 | `cw`, `c$`, `cc` change semantics | completed: vimengine unit, runtime replay smoke | PLAYPACK-003에서 추가 |
-
-`PLAYPACK-003`은 VIM-016~018이 completed된 뒤 YAML content와 E2E를 연결한다.
-
-## YANK-TEXT-001 결정
-
-다음 구현 루프는 `yank-put-basic`을 먼저 다룬다. text object는 register와 put semantics가 안정된 뒤 별도 gap planning으로 넘긴다.
-
-| 루프 | 범위 | 필수 테스트 | E2E |
-|------|------|-------------|-----|
-| VIM-019 | `y` pending, unnamed register, `yw`, `y$`, `yy` | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
-| VIM-020 | `p`, `P`, charwise/linewise put, undo/redo | completed: vimengine unit, runtime replay smoke | PLAYPACK-004에서 추가 |
-| PLAYPACK-004 | `yank-put-basic` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E |
-| TEXT-OBJECT-001 | `iw` 기반 text object gap planning | docs + scope review | 없음 |
-
-첫 `y/p` 구현은 unnamed register만 다루며 named register, clipboard, count prefix, visual selection은 제외한다.
-
-## TEXT-OBJECT-001 결정
-
-첫 text object 구현은 `iw`만 다룬다. operator grammar는 기존 `d/c/y + motion`에서 `d/c/y + i + w` 3-key sequence로 확장한다.
-
-| 루프 | 범위 | 필수 테스트 | E2E |
-|------|------|-------------|-----|
-| VIM-021 | `operator -> i -> w` pending sequence, inner-word selection helper | completed: `internal/vimengine`, `internal/tuiadapter` unit | content 연결 전 E2E 없음 |
-| VIM-022 | `diw`, `ciw`, `yiw` semantics, undo/register/runtime replay | completed: vimengine unit, runtime replay smoke | PLAYPACK-005에서 추가 |
-| PLAYPACK-005 | `text-object-inner-word` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E |
-| E2E-PLAYPACK-005 | text object playpack QA hardening | completed: E2E evidence and assertions | completed: full playlist + forbidden route |
-
-quote/pair text object(`i"`, `i'`, `i(`, `i{`), around object(`aw`), visual selection, count prefix는 후속 milestone으로 넘긴다.
-
-## OPEN-LINE-001 이후 결정 예정
-
-첫 utility command 구현은 `open-line-edit`로 한다. `o/O`는 현재 줄 주변에 새 줄을 열고 즉시 Insert mode로 진입하는 실무 편집 흐름이다.
-
-| 루프 | 범위 | 필수 테스트 | E2E |
-|------|------|-------------|-----|
-| OPEN-LINE-001 | `o/O` scope, 제외 항목, VIM-023/PLAYPACK-006 분리 계획 | completed: docs + scope review | 없음 |
-| VIM-023 | `o`, `O`, newline insertion, insert mode entry, undo snapshot | completed: `internal/vimengine`, `internal/tuiadapter`, `internal/runtime` unit | content 연결 전 E2E 없음 |
-| PLAYPACK-006 | `open-line-edit` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E + forbidden route |
-| DEBRIEF-001 | 저장 변경 없는 success/playlist completion debrief | completed: playable model tests | completed: focused E2E |
-
-첫 `o/O` 구현에서는 indentation, auto-comment, count prefix, insert-mode Enter, `.` repeat 연계를 제외한다.
-
-## REPEAT / SEARCH 장기 후보
-
-`repeat-last-change`는 REPEAT-GAP-001에서 x, r<char>, insert/change/open-line transaction을 첫 구현 범위로 고정했고, VIM-024/PLAYPACK-007에서 playable tutorial까지 연결했다. `search-basic`은 SEARCH-GAP-001에서 literal `/`, `n`, `N`만 첫 scope로 고정했고, VIM-025/PLAYPACK-008에서 engine support와 playable tutorial까지 연결했다. `?`는 현재 hint key와 충돌하므로 제외한다.
-
-## CHAR-FIND-GAP-001 결정
-
-다음 새 엔진 루프는 `char-find-line`으로 한다. `f/t`는 한 줄 안 delimiter와 quote 앞뒤를 빠르게 잡는 실무 효용이 높고, 기존 `delete/change` operator grammar와 자연스럽게 결합된다.
-
-| 루프 | 범위 | 필수 테스트 | E2E |
-|------|------|-------------|-----|
-| CHAR-FIND-GAP-001 | forward same-line `f/t`, `df/dt/cf/ct` scope, 제외 항목 | docs + scope review | 없음 |
-| VIM-030 | `f/t` pending state, normal motion, delete/change operator 결합 | `internal/vimengine`, `internal/tuiadapter`, `internal/runtime` unit | content 연결 전 E2E 없음 |
-| PLAYPACK-012 | completed: `char-find-line` tutorial content | completed: content replay, coverage, playable model | completed: full playlist E2E |
-
-`PLAYPACK-012`는 `tutorial-94-char-find-line` 6문항으로 `f=`, `t,`, `df,`, `dt,`, `cf,`, `ct"`를 연결했다. 다음 단계는 새 engine 확장이 아니라 `CHAR-FIND-APPLIED-001`에서 command-choice 또는 incident 적용 후보를 고르는 것이다.
-
-첫 구현에서는 `F/T`, repeat find `;`/`,`, count prefix, visual mode, yank 결합, cross-line search를 제외한다.
+- `PROGRAM.md`에 active slice가 있다.
+- command cluster가 `docs/gameplay/command-catalog.md` 또는 ExecPlan에서 승인됐다.
+- 제외 범위가 명확하다.
+- engine unit test와 runtime replay test가 먼저 정의된다.
+- content/playable/E2E는 engine 통과 뒤 별도 step으로 연결한다.
+- TUI E2E assertion이 부족하면 먼저 verification 계약을 확장한다.

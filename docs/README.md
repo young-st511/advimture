@@ -50,6 +50,8 @@ docs/
     └── archive/
 ```
 
+실제 파일 목록은 작업 시작 시 `rg --files docs`로 확인한다. 위 트리는 역할 안내이며, 세부 파일은 phase가 진행되며 늘거나 archive로 이동할 수 있다.
+
 ## 문서별 안내
 
 | 문서 | 대상 독자 | 목적 | 업데이트 시점 |
@@ -57,6 +59,8 @@ docs/
 | `roadmap/PRODUCT.md` | 사람 + AI | 제품의 영구 컨텍스트 | 제품의 본질, 표면, 기둥 변경 시 |
 | `roadmap/PROGRAM.md` | 사람 + AI | 현재 phase와 활성 slice | 작업 우선순위나 slice 변경 시 |
 | `roadmap/CHANGES.md` | 사람 + AI | 시퀀싱/가정 변경 로그 | phase 가정 변경 시 append-only |
+| `roadmap/MIDTERM_TODO.md` | 사람 + AI | 현재/다음 중기 보드 | 중기 플랜 시작/완료/후보 변경 시 |
+| `roadmap/archive/*` | 사람 + AI | 과거 health check, review, 긴 계획 이력 | 현재 후보로 읽히면 안 되는 문서 이동 시 |
 | `exec-plans/*` | 사람 + AI | 비사소한 작업의 실행 계획 | 작업 시작/진행/완료 시 |
 | `archived/*` | 사람 + AI | 과거 구현/기획 스냅샷 보관 | 과거 자료 이동 또는 보존 정책 변경 시 |
 | `workflows/*` | 사람 + AI | 반복 실행 가능한 설계 loop | 제품 설계 프로세스 변경 시 |
@@ -71,6 +75,18 @@ docs/
 | `gameplay/content-requirements.md` | 사람 + AI | loader가 받아야 할 콘텐츠 구조 요구사항 | scenario workflow로 새 콘텐츠 요구가 발견될 때 |
 | `workflows/scenario-production-harness.md` | AI | command→exercise→scenario 제작/검증 하네스 | 콘텐츠 생성 워크플로우 품질 기준 변경 시 |
 | `guardrails.md` | 사람 | 자동 검증과 안전장치 현황 | CI, hooks, 테스트 루프 변경 시 |
+
+## 문서 신선도 규칙
+
+다음 규칙은 오래된 계획이 canonical 위치에 남아 다음 Agent를 오도하지 않기 위한 운영 규칙이다.
+
+- `roadmap/PROGRAM.md`는 현재 phase, active slice, 다음 권장 후보, 최근 완료 5~10개만 둔다.
+- `roadmap/MIDTERM_TODO.md`는 현재 중기 보드와 다음 후보만 둔다. 완료된 긴 중기 플랜 히스토리는 `roadmap/archive/history/`로 이동한다.
+- 날짜가 붙은 health check/review 문서는 최신 판단에 직접 쓰는 것만 root `roadmap/`에 둔다. 오래된 것은 `roadmap/archive/reviews/`로 이동한다.
+- backlog 문서에는 `Status`와 `Last reviewed`를 둔다. 완료된 항목은 P0/P1/P2에 남기지 않고 `Completed / Retired`로 내린다.
+- `다음 후보`, `next`, `현재 진행 중` 같은 표현을 쓰는 문서는 최신 `PROGRAM.md`와 모순되면 안 된다.
+- `screen_final.txt`, linewise visual처럼 구현이 끝난 QA/engine 항목은 contract의 "다음 후보"에 남기지 않는다.
+- 진행 중인 작업이 끝나면 관련 spec/contract/backlog에서 stale next 후보가 생겼는지 함께 확인한다.
 
 ## spec.md 운영 규칙
 

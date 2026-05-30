@@ -221,16 +221,18 @@ Scenario 방향:
 10. Mid tutorial: Quote text object — `ci"`, `di"`, `yi"`
 11. Mid tutorial: Visual selection — `v`, charwise `d/y`
 
-다음 playable milestone은 아래 순서를 우선한다.
+최근 playable milestone은 아래 순서로 완료됐다.
 
 1. Structure editing: quote/pair text object — completed, 설정값, JSON 값, 인자 내부를 구조 기준으로 편집
 2. Adventure middle: search and replace 응용 — completed, search + substitute + quote/pair 조합
 3. Visual selection: completed, 같은 줄 charwise `v` + `d/y` tutorial과 full E2E까지 연결
-4. Post-visual applied mastery: next, visual을 실제 incident 적용 런으로 승격하기 전에 selection 검증과 engine 분리를 보강
+4. Linewise visual: completed, `V` linewise selection과 applied incident까지 연결
+5. Inline target motions: completed, `f/t`, `df/dt/cf/ct` tutorial과 command-choice 적용까지 연결
+6. Applied mastery runs: completed, `incident-006`, quote reuse choice, `incident-007` mixed run까지 연결
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
-중반부터는 `docs/gameplay/scenario-tone.md`의 터미널 문제 해결 생존 어드벤처 톤을 따른다. 생존감은 command 학습을 가리지 않는 배경 압력이며, 첫 operator grammar playpack은 `dw`, `d$`, `cw`, `c$`, `dd`, `u` 복습을 우선 후보로 둔다.
+중반부터는 `docs/gameplay/scenario-tone.md`의 터미널 문제 해결 생존 어드벤처 톤을 따른다. 생존감은 command 학습을 가리지 않는 배경 압력이며, 다음 학습 단위는 `PLAN-REFRESH-009`에서 Foundation exit review 후 고른다.
 
 ## Coverage Rubric
 
@@ -247,29 +249,44 @@ Scenario 방향:
 | Band | 의미 | 현재 cluster |
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic`, `char-find-line` |
-| next | 다음 gap planning/구현 후보 | `incident-006-inline-target-repair` applied run 또는 reuse-choice drill |
-| soon | 다음 milestone 후보이나 next playpack에는 과부하가 될 수 있음 | quote text object hardening, multi-line charwise visual |
+| decision | 다음 계획에서 먼저 결정할 것 | `PLAN-REFRESH-009` Foundation exit review |
+| soon | 다음 milestone 후보이나 review 후 선택 | quote text object hardening, 저장 변경 없는 platform/review loop, command-choice breadth |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
-### Current Design Candidate
+### Current Planning Candidate
 
-ID: `command-choice-drill`
+ID: `foundation-exit-review`
 
-목표: 이미 배운 command 중 상황에 맞는 도구를 고르는 mixed drill을 설계한다.
+목표: foundation 출시 후보 범위와 다음 중기 플랜을 고른다. 바로 새 command를 늘리기보다, 현재 구현된 command coverage가 첫 출시/베타 루프에 충분한지 먼저 판단한다.
 
-적용 레이어 후보:
+선택 후보:
+
+| Candidate | Layer | 이유 |
+|-----------|-------|------|
+| `quote-pair-hardening` | engine hardening | `ci'`, `ci(`, `ci{`는 실무 config/JSON/함수 인자 편집에 유용하고 기존 quote object의 작은 확장이다. |
+| `platform-review-loop` | gameplay system | 장기 반복 학습 플랫폼으로 가려면 저장 변경 전에도 mission/review loop를 더 게임답게 묶어야 한다. |
+| `command-choice-breadth` | content/application | 새 engine 없이 이미 배운 command 선택 판단을 더 훈련할 수 있다. |
+
+### Command Choice Layer
+
+`command-choice-drill`은 새 command cluster가 아니라 이미 배운 command 중 상황에 맞는 도구를 고르는 applied layer다.
 
 | Layer | Commands | Engine support | Oracle | 이유 |
 |-------|----------|----------------|--------|------|
 | `command-choice-drill` | 기존 implemented cluster 조합 | implemented only | not needed | Vim 학습의 다음 병목은 새 key를 외우는 것이 아니라 범위/반복/검색/치환 상황에서 적절한 도구를 고르는 판단이다. |
 
-다음 후보:
+완료된 beat:
 
 - `scope-choice`: `ciw`, `ci"`, `v...d`, `V...d` 중 편집 범위에 맞는 도구를 고른다.
-- `reuse-choice`: retype 대신 yank/put 또는 `.` 반복을 고른다.
-- `search-then-act`: `/`, `n`, `N`으로 위치를 찾은 뒤 적절한 편집 command를 고른다.
 - `range-choice`: visual/operator 조작과 substitute/range command 중 더 적합한 방법을 고른다.
 - `inline-target-choice`: comma/quote/delimiter 보존 여부를 보고 `ct,`와 `cf,` 중 적절한 범위를 고른다.
+- `quote-value-reuse`: retype 대신 `yi"` + `P`로 검증된 quote 내부 값을 재사용한다.
+
+후속 후보:
+
+- line reuse: 검증된 줄 전체를 `V` + `y` + `p`로 재사용한다.
+- repeat-change reuse: 같은 변경을 `.`로 반복할지 판단한다.
+- search-then-act: `/`, `n`, `N`으로 위치를 찾은 뒤 적절한 편집 command를 고른다.
 
 권장 문항 수:
 
@@ -290,23 +307,21 @@ ID: `command-choice-drill`
 - `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했고, VIM-025/PLAYPACK-008에서 engine과 tutorial을 연결했다. `?`, regex, highlight, search history는 후속 hardening으로 남는다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했다. nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
-- `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line visual, linewise `V`, visual block, count/register prefix는 후속 hardening이다.
+- `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
-- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice beat를 playable로 연결했다. 후속 후보는 reuse-choice와 search-then-act다.
+- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse beat를 playable로 연결했다. 후속 후보는 line reuse, repeat-change reuse, search-then-act다.
 - `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030/PLAYPACK-012에서 engine과 tutorial을 연결했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
 
 ## Long-Run Platform Direction
 
 Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한다. 단, 첫 게임성 강화는 새 저장 포맷이 아니라 기존 score/progress를 읽어 성공 화면과 playlist 완료 화면에서 debrief, best record, retry 동기를 제공하는 수준으로 제한한다.
 
-우선순위:
+현재 우선순위:
 
-1. `post-visual-selection-hardening`: selection replay와 charwise visual invariant를 강화한다.
-2. `applied-incident-run`: 이미 배운 command를 incident 003에서 조합해 도구 선택 능력을 훈련한다.
-3. `incident-flow-continuity`: incident beat가 하나의 runbook 조치처럼 이어지게 만든다.
-4. `linewise-applied-incident`: linewise visual을 실제 config block 복구 run에 적용한다.
-5. `command-choice-drill`: 이미 배운 command를 섞어 범위/반복/검색/치환/inline target 중 적합한 도구를 고르는 판단을 훈련한다.
-6. `incident-006-inline-target-repair`: `/target`과 `ct,`를 조합해 실제 incident run에서 검색 후 정밀 범위 수정을 훈련한다.
-7. `platform-review-loop`: mastery/spaced review/daily run은 progress schema 승인 전까지 RFC와 저장 변경 없는 review만 다룬다.
+1. `foundation-exit-review`: 현재 engine/content/UI/E2E가 첫 출시 후보로 충분한지 판단한다.
+2. `platform-review-loop`: progress schema 변경 없이 mission/review/daily motivation을 더 게임답게 묶는다.
+3. `quote-pair-hardening`: 새 engine을 연다면 기존 quote object의 작은 확장으로 제한한다.
+4. `command-choice-breadth`: 이미 배운 command를 섞어 범위/반복/검색/치환/inline target 중 적합한 도구를 고르는 판단을 훈련한다.
+5. `progress-schema-v2`: mastery/spaced review/daily run 저장은 실제 병목이 evidence로 확인된 뒤 사용자 승인으로만 연다.
 
 세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

@@ -6,7 +6,7 @@ Completed: 2026-05-22
 Status: completed
 Scope-Mode: docs-only
 Allowed-Paths:
-- docs/roadmap/POST_VISUAL_REVIEW_2026-05-22.md
+- docs/roadmap/archive/reviews/POST_VISUAL_REVIEW_2026-05-22.md
 - docs/roadmap/PROGRAM.md
 - docs/roadmap/MIDTERM_TODO.md
 - docs/roadmap/CHANGES.md

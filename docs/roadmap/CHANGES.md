@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Roadmap 문서 신선도 규칙 도입
+
+이전 가정: `PROGRAM.md`, `MIDTERM_TODO.md`, `ENGINE_TODO.md`, health/review 문서가 모두 roadmap root에 남아 있어도 최신 항목을 사람이 구분할 수 있었다.
+
+새 가정: root roadmap 문서는 현재 판단만 담고, 오래된 health/review와 긴 중기 플랜 이력은 `docs/roadmap/archive/`로 이동한다. `PROGRAM.md`는 active slice와 최근 완료만, `MIDTERM_TODO.md`는 현재 중기 보드만 유지한다.
+
+이유: Agent가 stale "next 후보"를 active 계획처럼 읽지 않게 하려면 canonical/current/history 경계를 문서 구조로 강제해야 한다.
+
+영향: 다음 루프는 여전히 `PLAN-REFRESH-009`다. 새 engine/content를 열기 전에 slimmed `PROGRAM.md`, current `MIDTERM_TODO.md`, 최신 review를 기준으로 판단한다.
+
 ## 2026-05-29 — Long incident evidence bundle 고정
 
 이전 가정: Applied Mastery Runs는 기능적으로 통과했지만 긴 incident의 `summary.json`에서 `screen_timeline_evidence`와 `screen_final_evidence`가 false라 UI/UX 회귀를 사람이 훑기 어려웠다.

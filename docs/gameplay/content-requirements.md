@@ -2,6 +2,11 @@
 
 > Scenario workflow를 돌리며 발견한 콘텐츠 loader 요구사항이다. 이 문서는 CONTENT-001의 입력으로 사용한다.
 
+Status: historical discovery + schema reference
+Last reviewed: 2026-05-30
+
+CONTENT-001 loader와 replay/coverage validator는 이미 구현됐다. 이 문서는 새 content schema 요구가 발견될 때 참고하는 discovery record로 유지한다. 현재 playable 동작의 canonical source는 `content/` YAML, `docs/gameplay/spec.md`, 그리고 관련 completed ExecPlan이다.
+
 ## 원칙
 
 - 콘텐츠는 항상 `command_cluster -> exercise -> scenario -> playlist` 순서로 연결된다.
@@ -223,6 +228,8 @@ content/
 - retired playlist는 콘텐츠 이력 보관용이며 playable 후보에서 제외한다.
 
 ## CONTENT-001 Acceptance Draft
+
+Status: implemented by `docs/exec-plans/completed/content-001-yaml-loader.md` and follow-up content validation slices.
 
 - [draft] loader는 repo root `content/` 아래의 YAML 파일을 우선 읽어야 한다.
 - [draft] loader는 command cluster, exercise, scenario, playlist 파일을 각각 읽을 수 있어야 한다.
