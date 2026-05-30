@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Foundation exit review 완료
+
+이전 가정: `FOUNDATION-EXIT-001`에서 platform loop, content breadth, engine hardening 중 다음 우선순위를 evidence로 결정해야 했다.
+
+새 가정: Foundation은 조건부 통과했으며, 다음 병목은 새 Vim command 수가 아니라 mission/review/game loop다. 다음 권장 slice는 `PLATFORM-REVIEW-003`이다.
+
+이유: `go test ./...`와 `make e2e-playable`이 통과했고, long incident final/timeline evidence도 사람이 읽을 수 있는 상태다. 반면 review queue, daily route, best record, playlist 완료 흐름은 아직 하나의 반복 플레이 루프로 충분히 묶이지 않았다.
+
+영향: 다음 active slice는 사용자 승인 후 `PLATFORM-REVIEW-003`으로 연다. `CONTENT-BREADTH-002`, `QUOTE-PAIR-HARDEN-001`, release readiness는 후속 후보로 둔다.
+
 ## 2026-05-30 — Foundation forward plan 도입
 
 이전 가정: 다음 권장 후보는 `PROGRAM.md`와 `MIDTERM_TODO.md`에만 두면 충분했다.

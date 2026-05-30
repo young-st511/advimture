@@ -25,7 +25,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
 - 출시감: mission/review loop, 반복 동기, UI polish, release readiness가 아직 부족함
 
-따라서 다음 순서는 **Foundation exit review -> game loop/platform polish -> content breadth 또는 small engine hardening -> release readiness**로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했다. 따라서 다음 순서는 **game loop/platform polish -> content breadth -> small engine hardening -> release readiness**로 간다.
 
 ## 0. 운영 원칙
 
@@ -36,32 +36,55 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - long route E2E는 `screen_timeline.txt`와 `screen_final.txt`를 남긴다.
 - 문서가 stale해질 수 있는 변경을 하면 `PROGRAM.md`, `MIDTERM_TODO.md`, 이 문서를 함께 확인한다.
 
-## 1. Immediate Plan
+## 1. Foundation Exit Result
 
 ### FOUNDATION-EXIT-001 — Foundation Exit Review
 
-목표: 지금의 foundation이 첫 공개 가능한 학습 게임 루프로 충분한지 판정한다.
+Status: completed
+Review: `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`
+
+판정:
+
+- Foundation은 다음 단계로 넘어가도 된다.
+- 판정은 "출시 가능"이 아니라 "출시 가능한 게임 루프를 만들 수 있는 foundation 통과"다.
+- P0 blocker는 없다.
+- 다음 병목은 새 Vim command 수가 아니라 mission/review/game loop다.
+
+확인한 기준:
+
+- `go test ./...`: pass
+- `make e2e-playable`: pass
+- long incident final/timeline evidence spot review 완료
+
+## 2. Immediate Plan
+
+### PLATFORM-REVIEW-003 — Mission/Review Game Loop
+
+권장 우선순위: 가장 높음
+
+목표: 저장 포맷 변경 없이 review queue, mission progress, daily route, best record, playlist 완료 화면을 더 게임다운 반복 루프로 묶는다.
 
 산출물:
 
-- 첫 출시 후보 범위
-- 반드시 고쳐야 할 P0/P1
-- 다음 중기 플랜 확정
-- release gate 초안
+- mission/review loop spec
+- 저장 변경 없는 acceptance criteria
+- focused E2E plan
+- 다음 행동을 명확히 보여주는 성공/실패/완료 흐름
 
 검증:
 
-- 최신 `make e2e-playable` 결과 또는 최신 evidence 확인
-- long incident `screen_final.txt` spot review
-- UI/UX, learning design, architecture 관점 review
+- 관련 runtime/playable tests
+- review/daily app_state assertion
+- focused E2E
+- 필요 시 `make e2e-playable`
 
 Decision gate:
 
-- game loop 부족이 크면 `PLATFORM-REVIEW-003`으로 간다.
-- content 양이 부족하면 `CONTENT-BREADTH-002`로 간다.
-- engine coverage가 병목이면 `QUOTE-PAIR-HARDEN-001`로 간다.
+- game loop가 정리되면 `CONTENT-BREADTH-002`로 간다.
+- content 적용 폭보다 UI 정보 밀도가 다시 병목이면 `UI-POLISH-002`를 먼저 연다.
+- engine coverage가 실제 content 작성 병목이면 `QUOTE-PAIR-HARDEN-001`로 간다.
 
-## 2. Recommended Midterm Sequence
+## 3. Recommended Midterm Sequence
 
 ### 1. PLATFORM-REVIEW-003 — Mission/Review Game Loop
 
@@ -137,7 +160,7 @@ Decision gate:
 - 화면 문구보다 `app_state` 검증을 우선한다.
 - color 없는 환경에서도 의미가 보존되어야 한다.
 
-## 3. Release Readiness
+## 4. Release Readiness
 
 첫 공개 전 필요 항목:
 
@@ -157,7 +180,7 @@ Decision gate:
 - long incident evidence가 남는다.
 - progress schema 변경 없이 저장/재개가 안전하다.
 
-## 4. Long-Run Candidates
+## 5. Long-Run Candidates
 
 아래는 출시 전 필수가 아니다.
 
@@ -171,7 +194,7 @@ Decision gate:
 
 이 후보들은 실제 플레이 evidence로 병목이 확인될 때만 연다.
 
-## 5. 문서 업데이트 규칙
+## 6. 문서 업데이트 규칙
 
 각 slice 종료 시:
 

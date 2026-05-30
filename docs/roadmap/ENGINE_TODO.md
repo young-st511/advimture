@@ -16,7 +16,7 @@ Last reviewed: 2026-05-30
 
 현재 활성 engine slice는 없다.
 
-Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. 다음 작업은 바로 새 engine을 여는 것보다 `FOUNDATION-EXIT-001`에서 Foundation exit review를 먼저 수행한 뒤 고른다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. `FOUNDATION-EXIT-001` review 결과 다음 병목은 새 engine이 아니라 mission/review/game loop다. 다음 권장 작업은 `PLATFORM-REVIEW-003`이며, 새 engine은 content 작성 병목이 확인될 때 `QUOTE-PAIR-HARDEN-001`부터 연다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
 
 ## 완료된 핵심 모듈
 

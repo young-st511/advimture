@@ -2,12 +2,13 @@
 
 Date: 2026-05-29
 Scope: `E2E-EVIDENCE-008`
+Superseded-by: `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`
 
 ## 결론
 
 긴 incident route의 UI/UX 재검토를 막던 evidence 부족은 해소됐다. runner 기능을 새로 만들지 않고, long route fixture가 `screen_timeline.txt`와 `screen_final.txt`를 항상 남기도록 고정했다.
 
-이제 다음 작업은 새 Vim engine을 바로 여는 것보다, 보강된 evidence를 기준으로 Foundation 출구 조건과 다음 학습 단위를 다시 정리하는 쪽이 안전하다.
+이 review의 다음 후보 판단은 `FOUNDATION-EXIT-001`에서 후속 검토됐다. 현재 다음 권장은 `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`를 따른다.
 
 ## 확인한 Evidence
 
@@ -27,8 +28,10 @@ Scope: `E2E-EVIDENCE-008`
 
 ## 다음 후보
 
+아래 후보 판단은 2026-05-29 당시의 review 결과다. 2026-05-30 현재는 `FOUNDATION-EXIT-001`이 완료됐고, 다음 권장은 `PLATFORM-REVIEW-003`이다.
+
 1. `FOUNDATION-EXIT-001`: Foundation exit review와 다음 중기 플랜 수립. 지금까지의 engine/content/UI가 첫 제품 기둥을 충분히 세웠는지 점검한다.
 2. `QUOTE-PAIR-HARDEN-001`: 새 engine을 연다면 `ci'`, `ci(`, `ci{` 같은 pair text object 확장이 가장 작고 실무 효용이 높다.
 3. `PLATFORM-REVIEW-003`: 저장 포맷 변경 없이 mission map/review entry를 더 게임답게 묶을 수 있는지 검토한다.
 
-권장은 `FOUNDATION-EXIT-001`을 먼저 열고, 그 결과로 quote-pair hardening과 platform review 중 하나를 고르는 것이다. 2026-05-30에 `PLAN-REFRESH-009`는 `docs/roadmap/FORWARD_PLAN.md` 작성으로 완료됐다.
+최신 권장은 `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`와 `docs/roadmap/FORWARD_PLAN.md`를 따른다.

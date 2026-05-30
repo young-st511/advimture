@@ -10,30 +10,37 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `PLAN-REFRESH-009`의 forward plan 문서화는 완료됐고, 다음 실제 작업은 `FOUNDATION-EXIT-001`로 foundation exit review를 수행하는 것이다.
+현재 활성 구현 slice 없음. `FOUNDATION-EXIT-001` review는 완료됐고, 다음 권장 작업은 `PLATFORM-REVIEW-003`로 mission/review/game loop를 저장 포맷 변경 없이 다듬는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### FOUNDATION-EXIT-001. Foundation Exit Review
+### PLATFORM-REVIEW-003. Mission/Review Game Loop
 
 - 상태: proposed
-- 목표: 현재 engine/content/UI/E2E가 foundation 출시 후보로 충분한지 점검하고 다음 중기 플랜을 고른다.
+- 목표: 현재 `재점검`, `잔류 리스크`, `오늘의 복구 루트`, `best record`, playlist 완료 화면을 하나의 반복 플레이 루프로 묶는다.
 - 입력 문서:
   - `docs/roadmap/FORWARD_PLAN.md`
-  - `docs/roadmap/PLAYTEST_REVIEW_2026-05-29.md`
+  - `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`
   - `docs/roadmap/MIDTERM_TODO.md`
-  - `docs/gameplay/spec.md`
-  - `docs/gameplay/vim-curriculum-map.md`
   - `docs/roadmap/UX_BACKLOG_001.md`
-- 선택 후보:
-  - `QUOTE-PAIR-HARDEN-001`: `ci'`, `ci(`, `ci{` 등 quote/pair text object 확장
-  - `PLATFORM-REVIEW-003`: 저장 포맷 변경 없는 mission/review/game loop 강화
-  - content breadth: 기존 engine만 사용하는 applied incident/command-choice 확장
-- 주의: evidence 없이 새 engine/content를 열지 않는다.
+  - `docs/roadmap/PLATFORM_RFC_001.md`
+- 제외:
+  - progress schema v2
+  - spaced review due date 저장
+  - daily streak/history 저장
+- 주의: 저장 포맷 변경 없이 현재 progress v1과 runtime 계산만 사용한다.
 
 ## 최근 완료
+
+### FOUNDATION-EXIT-001. Foundation Exit Review
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/foundation-exit-001-review.md`
+- Review: `docs/roadmap/FOUNDATION_EXIT_REVIEW_2026-05-30.md`
+- 완료일: 2026-05-30
+- 결론: Foundation은 조건부 통과. 다음 작업은 새 engine보다 `PLATFORM-REVIEW-003`을 권장한다.
 
 ### PLAN-REFRESH-009. Foundation Forward Plan
 
