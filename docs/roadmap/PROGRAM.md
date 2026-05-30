@@ -10,31 +10,44 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `RELEASE-READINESS-001`은 완료됐고, 다음 권장 작업은 `PLAYTEST-GATE-001`로 release candidate를 실제 fresh run 관점에서 점검하는 것이다.
+현재 활성 구현 slice 없음. `PLAYTEST-GATE-001`은 P0/P1 blocker 없이 완료됐고, 다음 권장 작업은 `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 좁게 다듬는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### PLAYTEST-GATE-001. Fresh Playtest Release Gate
+### FIRST-RUN-POLISH-001. First Run Polish
 
 - 상태: proposed
-- 목표: README 기준으로 처음 실행하는 플레이어 관점에서 첫 5분, tutorial 확장, incident 3개 이상을 직접 훑고 출시 전 UX/content blocker를 분리한다.
+- 목표: 새 engine/content/schema 없이 첫 tutorial cue 밀도, review/daily line 길이, viewport smoke evidence를 좁게 다듬는다.
 - 입력 문서:
-  - `README.md`
-  - `docs/roadmap/FORWARD_PLAN.md`
-  - `docs/roadmap/MIDTERM_TODO.md`
+  - `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
   - `docs/roadmap/UX_BACKLOG_001.md`
   - `docs/verification/tui-ui-qa-contract.md`
-  - `artifacts/e2e/`
+  - `docs/gameplay/tui-screen-contract.md`
 - 제외:
   - 저장 포맷 변경
   - 새 Vim engine
   - 새 content schema
   - 기능 확장
-- 주의: 버그는 즉시 별도 fix slice로 분리하고, 취향/세계관/콘텐츠 확장은 release 이후 후보로 나눈다.
+- 주의: 화면 문구 변경은 app_state/focus_panel assertion을 약화하지 않는다.
+
+### RC-BLOCKER-FIX-001. Release Candidate Blocker Fix
+
+- 상태: skipped for now
+- 목표: `PLAYTEST-GATE-001`에서 P0/P1 blocker가 나오면 새 기능을 멈추고 해당 blocker만 고친다.
+- 조건: fresh run review에서 진행 중단, 저장 손상, 오해를 부르는 필수 조작, terminal clipping 중 하나가 확인될 때 다시 연다.
+- 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### PLAYTEST-GATE-001. Fresh Playtest Release Gate
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playtest-gate-001-fresh-release-gate.md`
+- Review: `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
+- 완료일: 2026-05-30
+- 결론: P0/P1 blocker 없음. P2 first-run polish 후보는 running cue density, review/daily line length, viewport smoke evidence 등이다.
 
 ### RELEASE-READINESS-001. First Release Readiness
 

@@ -6,21 +6,34 @@
 
 Status: next slice proposed
 
-현재 active slice는 없다. `RELEASE-READINESS-001`로 첫 공개 전 문서와 release gate를 정리했다. 다음 단계는 `PLAYTEST-GATE-001`로 README 기준 fresh run을 점검하는 것이다.
+현재 active slice는 없다. `PLAYTEST-GATE-001`은 P0/P1 blocker 없이 완료됐다. 다음 단계는 `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 좁게 다듬는 것이다.
 
-## 다음 중기 플랜 후보
+## 현재 중기 플랜
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | PLAYTEST-GATE-001 | proposed | README 기준 fresh run으로 출시 전 UX/content blocker 분리 |
+| 1 | FIRST-RUN-POLISH-001 | proposed | 첫 실행 cue density, review/daily line, viewport smoke 보강 |
+| 2 | RELEASE-CANDIDATE-001 | gated | release note, 태그 후보, 최종 `make release-check` evidence 정리 |
+| 3 | POST-MVP-CONTENT-001 | later | 출시 후 content breadth 또는 다음 engine hardening 선택 |
 
-권장은 새 engine을 바로 열기보다 `PLAYTEST-GATE-001`로 실제 처음 실행 관점의 막힘을 확인하는 것이다. 현재 rolling plan은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+권장은 새 기능을 열기보다 `FIRST-RUN-POLISH-001`로 P2 polish만 좁게 닫는 것이다. blocker가 없으므로 `RC-BLOCKER-FIX-001`은 지금 열지 않는다.
 
-## PLAYTEST-GATE-001 출구 조건
+## FIRST-RUN-POLISH-001 출구 조건
 
 | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |-----------|-------------|------|---------------|
-| release readiness 완료 | fresh run notes, blocker/follow-up 분류, 필요 시 bugfix ExecPlan 후보 | `make release-check`, 대표 화면/evidence 재검토 | 기능 욕심보다 첫 플레이 막힘 제거를 우선 |
+| playtest gate P0/P1 없음 | cue density polish, review/daily line 축약 또는 판단, viewport smoke fixture | focused E2E, `make release-check` | 새 engine/content/schema 없이 첫 실행 가독성만 개선 |
+
+## PLAYTEST-GATE-001 검사 축
+
+| 축 | 질문 | evidence |
+|----|------|----------|
+| README 실행성 | 처음 온 사람이 README만 보고 실행/검증할 수 있는가? | README, `make release-check` output |
+| 첫 5분 | tutorial 0~3 초반이 command 학습 목적을 잃지 않는가? | `playable_ftue_first_five_route`, final/timeline |
+| tutorial 확장 | 중반 tutorial이 지치거나 command memory가 부족하지 않은가? | open-line/repeat/search/quote/visual/char-find full E2E |
+| incident 감각 | incident 3개 이상이 “복구 작전”처럼 읽히는가? | incident full route final/timeline |
+| 진행/복습 | debrief, review queue, next dispatch가 반복 동기를 주는가? | review/debrief E2E, app_state |
+| terminal UI | modal, HUD, 긴 한국어 문구가 터미널 크기에서 무너지지 않는가? | screen_final, 필요 시 viewport smoke |
 
 ## 다음 결정 기준
 
@@ -32,6 +45,7 @@ Status: next slice proposed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| PLAYTEST-GATE-001 | 2026-05-30 | P0/P1 blocker 없음. 다음은 first-run polish |
 | RELEASE-READINESS-001 | 2026-05-30 | README, Makefile release gate, known limitations 정리 |
 | UI-POLISH-002 | 2026-05-30 | tutorial/incident command memory cue 추가. schema 변경 없음 |
 | QUOTE-PAIR-HARDEN-001 | 2026-05-30 | `di'`, `ci'`, `yi'` single quote text object를 tutorial/E2E까지 연결 |

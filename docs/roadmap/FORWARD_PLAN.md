@@ -25,7 +25,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
 - 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness는 한 차례 닫혔고, 다음 병목은 실제 fresh playtest에서 드러나는 막힘이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했다. 따라서 다음 순서는 **fresh playtest release gate -> blocker fix -> post-release content/engine expansion**으로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. 따라서 다음 순서는 **first-run polish -> release candidate prep -> post-release content/engine expansion**으로 간다.
 
 ## 0. 운영 원칙
 
@@ -149,17 +149,61 @@ ExecPlan: `docs/exec-plans/completed/release-readiness-001-first-release.md`
 
 ### PLAYTEST-GATE-001 — Fresh Playtest Release Gate
 
-권장 우선순위: 가장 높음
+Status: completed
+ExecPlan: `docs/exec-plans/completed/playtest-gate-001-fresh-release-gate.md`
+Review: `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
 
 목표: README 기준으로 처음 실행하는 플레이어 관점에서 첫 5분, tutorial 확장, incident 3개 이상을 직접 훑고 출시 전 blocker와 후속 wishlist를 분리한다.
 
-Decision gate:
+완료 결과:
 
-- 진행이 막히는 버그는 즉시 bugfix ExecPlan으로 분리한다.
-- 문구/세계관/색감 취향은 release 이후 backlog로 분리한다.
-- 새 engine/content 욕심이 생기면 fresh playtest blocker인지 확인한 뒤 결정한다.
+- P0/P1 blocker는 없다.
+- P2 first-run polish 후보가 있다.
+- 다음 권장 slice는 `FIRST-RUN-POLISH-001`이다.
 
-## 4. Recommended Midterm Sequence
+## 4. Next Midterm Sequence
+
+### 1. FIRST-RUN-POLISH-001 — First Run Polish
+
+Status: proposed
+
+목표: 새 engine/content/schema 없이 첫 실행 tutorial cue와 release evidence만 좁게 다듬는다.
+
+포함 후보:
+
+- running cue line 밀도 조정
+- review/daily line 길이 축약 여부 결정
+- quote 주변 cursor marker 혼동 완화
+- mid tutorial final/timeline evidence 보강
+- 80x24 viewport smoke fixture
+
+출구:
+
+- focused E2E와 `make release-check` pass
+- app_state/focus_panel assertion 유지
+- release candidate prep으로 넘어갈 수 있다는 판단
+
+### 2. RC-BLOCKER-FIX-001 — Release Candidate Blocker Fix
+
+Status: skipped for now
+
+목표: fresh run에서 확인된 진행 blocker만 좁게 수정한다.
+
+다시 열리는 조건:
+
+- 앱 진행이 막힘
+- 저장/재개가 위험함
+- README대로 실행이 실패함
+- 필수 조작이 UI에서 오해됨
+- terminal clipping 때문에 주요 action이 보이지 않음
+
+### 3. RELEASE-CANDIDATE-001 — Release Candidate Prep
+
+Status: gated
+
+목표: release note, known limitations, 최종 `make release-check` evidence를 정리한다.
+
+## 5. Completed Midterm Sequence
 
 ### 1. CONTENT-BREADTH-002 — Applied Content Expansion
 
@@ -232,7 +276,7 @@ Status: completed
 - 첫 release polish는 command memory cue로 닫았다.
 - color/emphasis, side rail, pre-start modal은 후속 UI 후보로 유지한다.
 
-## 5. Release Readiness
+## 6. Release Readiness
 
 첫 공개 전 필요 항목:
 
@@ -254,7 +298,7 @@ Status: completed
 
 현재 release readiness 문서는 닫혔다. 다음은 문서나 자동화가 아니라 fresh playtest로 실제 첫 실행 막힘을 확인한다.
 
-## 6. Long-Run Candidates
+## 7. Long-Run Candidates
 
 아래는 출시 전 필수가 아니다.
 
@@ -268,7 +312,7 @@ Status: completed
 
 이 후보들은 실제 플레이 evidence로 병목이 확인될 때만 연다.
 
-## 7. 문서 업데이트 규칙
+## 8. 문서 업데이트 규칙
 
 각 slice 종료 시:
 

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-05-30 — Fresh playtest gate 통과와 first-run polish 전환
+
+이전 가정: release readiness 이후 실제 첫 실행 관점에서 P0/P1 blocker가 있을 수 있으므로 `PLAYTEST-GATE-001`로 확인해야 했다.
+
+새 가정: `make release-check`와 대표 final/timeline evidence spot review 결과 P0/P1 blocker는 확인되지 않았다. 남은 문제는 running cue line 밀도, review/daily line 길이, quote 주변 cursor marker 혼동, viewport smoke 부재 같은 P2 polish다.
+
+이유: 새 Vim command나 content를 추가하기 전에, 첫 플레이어가 이미 있는 루프를 막힘 없이 읽고 진행할 수 있는지 확인해야 했다.
+
+영향: `PLAYTEST-GATE-001`은 완료됐다. 다음 권장 slice는 `FIRST-RUN-POLISH-001`이며, `RC-BLOCKER-FIX-001`은 지금 열지 않는다.
+
 ## 2026-05-30 — Release readiness 문서와 로컬 gate 정리
 
 이전 가정: README는 재기획/워크플로우 온보딩 중심이었고, release build와 전체 playable 검증을 한 번에 실행하는 기준이 문서화되지 않았다.
