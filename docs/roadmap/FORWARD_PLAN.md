@@ -1,6 +1,6 @@
 # Forward Plan — Foundation to First Release
 
-Last reviewed: 2026-05-30
+Last reviewed: 2026-06-01
 Status: current rolling plan
 
 ## 목적
@@ -23,9 +23,9 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - Content: tutorial coverage와 incident 001~007이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
-- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness는 한 차례 닫혔고, 다음 병목은 실제 fresh playtest에서 드러나는 막힘이다.
+- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish는 한 차례 닫혔고, 다음 병목은 공개 후보 문서와 evidence 정리다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. 따라서 다음 순서는 **first-run polish -> release candidate prep -> post-release content/engine expansion**으로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke도 닫혔다. 따라서 다음 순서는 **release candidate prep -> post-release content/engine expansion**으로 간다.
 
 ## 0. 운영 원칙
 
@@ -158,36 +158,42 @@ Review: `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
 완료 결과:
 
 - P0/P1 blocker는 없다.
-- P2 first-run polish 후보가 있다.
-- 다음 권장 slice는 `FIRST-RUN-POLISH-001`이다.
+- P2 first-run polish 후보가 있었다.
+- 후속 `FIRST-RUN-POLISH-001`은 완료됐다.
 
 ## 4. Next Midterm Sequence
 
-### 1. FIRST-RUN-POLISH-001 — First Run Polish
+### 1. RELEASE-CANDIDATE-001 — Release Candidate Prep
 
 Status: proposed
 
-목표: 새 engine/content/schema 없이 첫 실행 tutorial cue와 release evidence만 좁게 다듬는다.
+목표: 첫 공개 후보를 문서와 evidence 기준으로 묶는다.
 
 포함 후보:
 
-- running cue line 밀도 조정
-- review/daily line 길이 축약 여부 결정
-- quote 주변 cursor marker 혼동 완화
-- mid tutorial final/timeline evidence 보강
-- 80x24 viewport smoke fixture
+- release note 초안
+- known limitations 최신화
+- 최종 `make release-check` evidence 위치 정리
+- README와 docs entrypoint spot check
+- 태그/공개 후보 기준 정리
+
+제외:
+
+- 새 engine/content/schema
+- progress 저장 포맷 변경
+- UI renderer 대개편
 
 출구:
 
-- focused E2E와 `make release-check` pass
-- app_state/focus_panel assertion 유지
-- release candidate prep으로 넘어갈 수 있다는 판단
+- `make release-check` pass
+- final/timeline/app_state evidence spot review pass
+- 사람이 공개 전 확인할 항목이 `PROGRAM.md`와 release note에 정리됨
 
 ### 2. RC-BLOCKER-FIX-001 — Release Candidate Blocker Fix
 
 Status: skipped for now
 
-목표: fresh run에서 확인된 진행 blocker만 좁게 수정한다.
+목표: fresh run 또는 release candidate prep에서 확인된 진행 blocker만 좁게 수정한다.
 
 다시 열리는 조건:
 
@@ -197,15 +203,43 @@ Status: skipped for now
 - 필수 조작이 UI에서 오해됨
 - terminal clipping 때문에 주요 action이 보이지 않음
 
-### 3. RELEASE-CANDIDATE-001 — Release Candidate Prep
+### 3. POST-MVP-CONTENT-001 — Post MVP Content/Engine Expansion
 
-Status: gated
+Status: later
 
-목표: release note, known limitations, 최종 `make release-check` evidence를 정리한다.
+목표: 첫 공개 후보가 닫힌 뒤 content breadth 또는 다음 engine hardening을 evidence 기반으로 고른다.
+
+후보:
+
+- line reuse applied drill
+- search-then-act incident
+- bracket pair text object hardening
+- progress v2 decision 재검토
 
 ## 5. Completed Midterm Sequence
 
-### 1. CONTENT-BREADTH-002 — Applied Content Expansion
+### 1. FIRST-RUN-POLISH-001 — First Run Polish
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/first-run-polish-001-cue-viewport.md`
+
+목표: 새 engine/content/schema 없이 첫 실행 tutorial cue와 release evidence만 좁게 다듬는다.
+
+완료 결과:
+
+- tutorial running cue에서 `기억할 명령`과 `Coach` key 중복을 제거했다.
+- success/failure floating modal 주변의 detailed review/daily line을 숨겼다.
+- 80x24 success/failure viewport smoke fixture를 `make e2e-playable`에 추가했다.
+- open-line/repeat/search/visual/char-find full route의 final/timeline/app_state evidence를 보강했다.
+
+검증:
+
+- focused E2E: pass
+- `go test ./...`: pass
+- `make release-check`: pass
+- `git diff --check`: pass
+
+### 2. CONTENT-BREADTH-002 — Applied Content Expansion
 
 Status: completed
 
@@ -229,7 +263,7 @@ Status: completed
 - repeat-change choice를 fifth beat로 추가했다.
 - 남은 후보인 line reuse, search-then-act, mixed incident 008은 release 전 content polish 후보로 유지한다.
 
-### 2. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
+### 3. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 
 Status: completed
 
@@ -253,7 +287,7 @@ Status: completed
 - 첫 hardening scope는 `i'`로 닫았다.
 - `i(`, `i{`는 bracket pair hardening 후보로 유지한다.
 
-### 3. UI-POLISH-002 — Release UI Polish
+### 4. UI-POLISH-002 — Release UI Polish
 
 Status: completed
 
@@ -284,8 +318,8 @@ Status: completed
 - progress 파일 안전성 점검: completed
 - release build command: completed
 - known limitations 정리: completed
-- 첫 실행 경험 검증: next
-- 터미널 크기별 smoke: next or release-candidate QA
+- 첫 실행 경험 검증: completed
+- 터미널 크기별 smoke: completed for 80x24 success/failure modal
 
 첫 공개 기준:
 
@@ -296,7 +330,7 @@ Status: completed
 - long incident evidence가 남는다.
 - progress schema 변경 없이 저장/재개가 안전하다.
 
-현재 release readiness 문서는 닫혔다. 다음은 문서나 자동화가 아니라 fresh playtest로 실제 첫 실행 막힘을 확인한다.
+현재 release readiness와 first-run polish는 닫혔다. 다음은 release candidate prep으로 공개 후보 설명과 evidence를 한곳에 묶는다.
 
 ## 7. Long-Run Candidates
 

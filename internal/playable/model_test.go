@@ -38,11 +38,11 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if model.State().Review.QueueCount != 3 || model.State().Review.PrimaryExerciseID != "normal-motion-basic-001" {
 		t.Fatalf("review state = %+v, want first review candidate", model.State().Review)
 	}
-	if !strings.Contains(model.View(), "Coach: 훈련 키 l") {
-		t.Fatalf("view = %q, want proactive coaching", model.View())
-	}
 	if !strings.Contains(model.View(), "기억할 명령: l") {
 		t.Fatalf("view = %q, want tutorial command memory", model.View())
+	}
+	if strings.Contains(model.View(), "Coach: 훈련 키 l") {
+		t.Fatalf("view = %q, should not duplicate tutorial command memory with coach key", model.View())
 	}
 	if !strings.Contains(model.View(), "TRAINING BRIEF") {
 		t.Fatalf("view = %q, want training focus panel", model.View())
@@ -55,6 +55,9 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	}
 	if !containsLineWith(model.State().UI.FocusPanel.Lines, "기억할 명령: l") {
 		t.Fatalf("focus panel lines = %v, want command memory", model.State().UI.FocusPanel.Lines)
+	}
+	if containsLineWith(model.State().UI.FocusPanel.Lines, "Coach: 훈련 키 l") {
+		t.Fatalf("focus panel lines = %v, should not duplicate command memory with coach key", model.State().UI.FocusPanel.Lines)
 	}
 }
 

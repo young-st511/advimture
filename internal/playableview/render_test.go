@@ -375,6 +375,45 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 	}
 }
 
+func TestRenderHUDSuppressesDetailedRecoveryLineForFloatingModal(t *testing.T) {
+	view := Render(Screen{
+		Width:         80,
+		Height:        24,
+		ReviewSummary: "재점검 대상: 경고 지점으로 이동하기: 미복구",
+		DailyRoute:    "오늘의 복구 루트: 경고 지점으로 이동하기(미복구) 외 2건 대기",
+		ReviewCount:   3,
+		ReviewPrimary: "경고 지점으로 이동하기",
+		Title:         "커서 위치 맞추기",
+		Message:       "목표까지 이동하세요.",
+		BufferLines:   []string{"abc"},
+		Mode:          "normal",
+		Status:        "succeeded",
+		FocusPanel: &FocusPanel{
+			Kind:  "success",
+			Title: "STEP SEALED",
+			Lines: []string{
+				"좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다.",
+				"이번 복구: grade S, 2 keys",
+				"최단 복구: grade S, 2 keys",
+				"목표 입력: 2 keys",
+				"Runbook: 1/4 복구 완료",
+				"잔류 리스크: 경고 지점으로 이동하기: 미복구",
+				"다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기",
+				"Next: enter",
+			},
+		},
+	})
+
+	if strings.Contains(view, "\n재점검 대상:") || strings.Contains(view, "\n오늘의 복구 루트:") {
+		t.Fatalf("Render output = %q, should not expose detailed recovery line above floating modal", view)
+	}
+	for _, want := range []string{"RUNBOOK SEALED", "잔류 리스크:", "다음 출격:", "Next: enter"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q in modal", view, want)
+		}
+	}
+}
+
 func TestRenderFocusPanelOverlayPrioritizesNextDispatchWhenContentOverflows(t *testing.T) {
 	view := Render(Screen{
 		Width:       100,

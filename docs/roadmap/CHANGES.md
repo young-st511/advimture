@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-01 — First-run polish 완료와 release candidate prep 전환
+
+이전 가정: fresh playtest 이후 남은 P2 polish는 running cue line 밀도, review/daily line 길이, mid tutorial evidence 편차, viewport smoke 부재였다.
+
+새 가정: tutorial running 화면은 `기억할 명령`과 같은 key를 설명하는 `Coach` line을 중복 표시하지 않는다. Success/failure floating modal이 떠 있을 때는 상단 detailed review/daily line을 숨기고, modal 내부의 `잔류 리스크`/`다음 출격`/`Retry`/`Next`를 primary action 안내로 둔다. 80x24 success/failure viewport smoke와 mid tutorial final/timeline/app_state evidence를 release gate에 포함한다.
+
+이유: 새 engine/content를 열기 전에 첫 플레이어가 이미 있는 루프를 읽을 때 잡음이 덜하고, 작은 터미널에서도 다음 행동이 보이는지 Agent가 검증할 수 있어야 한다.
+
+영향: `FIRST-RUN-POLISH-001`은 완료됐다. 다음 권장 slice는 `RELEASE-CANDIDATE-001`이며, 공개 전 문서/evidence/known limitations를 정리한다.
+
 ## 2026-05-30 — Fresh playtest gate 통과와 first-run polish 전환
 
 이전 가정: release readiness 이후 실제 첫 실행 관점에서 P0/P1 blocker가 있을 수 있으므로 `PLAYTEST-GATE-001`로 확인해야 했다.

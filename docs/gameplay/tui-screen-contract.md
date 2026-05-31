@@ -88,12 +88,13 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 
 상태별 규칙:
 
-- running tutorial: `MISSION` HUD cue line에 훈련 키, command memory, hint, quit
+- running tutorial: `MISSION` HUD cue line에 command memory, 필요한 경우 훈련 키, hint, quit. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
 - running incident: `MISSION` HUD cue line에 판단 cue, hint, quit. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - failed: floating modal에 실패 이유, 남은 입력, attempts, retry
 - succeeded: floating modal에 복구 기록, best record, runbook completion, residual risk, next action
 - failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
+- failed/succeeded floating modal 주변에는 detailed review/daily line을 다시 올리지 않는다. review/daily 의미는 modal 내부의 residual risk/next action과 `app_state.review`로 유지한다.
 
 구조:
 

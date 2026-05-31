@@ -10,27 +10,27 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `PLAYTEST-GATE-001`은 P0/P1 blocker 없이 완료됐고, 다음 권장 작업은 `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 좁게 다듬는 것이다.
+현재 활성 구현 slice 없음. `FIRST-RUN-POLISH-001`은 완료됐고, 다음 권장 작업은 `RELEASE-CANDIDATE-001`로 첫 공개 후보 문서와 evidence bundle을 정리하는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### FIRST-RUN-POLISH-001. First Run Polish
+### RELEASE-CANDIDATE-001. Release Candidate Prep
 
 - 상태: proposed
-- 목표: 새 engine/content/schema 없이 첫 tutorial cue 밀도, review/daily line 길이, viewport smoke evidence를 좁게 다듬는다.
+- 목표: 첫 공개 후보의 release note, known limitations, 최종 `make release-check` evidence, 태그 후보 기준을 정리한다.
 - 입력 문서:
-  - `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
-  - `docs/roadmap/UX_BACKLOG_001.md`
+  - `docs/exec-plans/completed/first-run-polish-001-cue-viewport.md`
+  - `docs/roadmap/FORWARD_PLAN.md`
   - `docs/verification/tui-ui-qa-contract.md`
-  - `docs/gameplay/tui-screen-contract.md`
+  - `README.md`
 - 제외:
   - 저장 포맷 변경
   - 새 Vim engine
   - 새 content schema
   - 기능 확장
-- 주의: 화면 문구 변경은 app_state/focus_panel assertion을 약화하지 않는다.
+- 주의: 새 기능이 아니라 공개 전 설명, 검증 증거, 알려진 한계 정리만 다룬다.
 
 ### RC-BLOCKER-FIX-001. Release Candidate Blocker Fix
 
@@ -40,6 +40,13 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### FIRST-RUN-POLISH-001. Cue Density and Viewport Evidence
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/first-run-polish-001-cue-viewport.md`
+- 완료일: 2026-06-01
+- 결론: tutorial running cue의 `기억할 명령`/`Coach` 중복을 제거했고, floating modal 주변 detailed review/daily line을 숨겼으며, 80x24 success/failure viewport smoke와 mid tutorial final/timeline/app_state evidence를 보강했다.
 
 ### PLAYTEST-GATE-001. Fresh Playtest Release Gate
 

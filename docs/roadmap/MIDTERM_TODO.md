@@ -4,25 +4,25 @@
 
 ## 현재 상태
 
-Status: next slice proposed
+Status: release candidate prep proposed
 
-현재 active slice는 없다. `PLAYTEST-GATE-001`은 P0/P1 blocker 없이 완료됐다. 다음 단계는 `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 좁게 다듬는 것이다.
+현재 active slice는 없다. `FIRST-RUN-POLISH-001`은 완료됐다. 다음 단계는 `RELEASE-CANDIDATE-001`로 첫 공개 후보의 문서, known limitations, evidence bundle을 정리하는 것이다.
 
 ## 현재 중기 플랜
 
 | 순서 | ID | 상태 | 목표 |
 |------|----|------|------|
-| 1 | FIRST-RUN-POLISH-001 | proposed | 첫 실행 cue density, review/daily line, viewport smoke 보강 |
-| 2 | RELEASE-CANDIDATE-001 | gated | release note, 태그 후보, 최종 `make release-check` evidence 정리 |
-| 3 | POST-MVP-CONTENT-001 | later | 출시 후 content breadth 또는 다음 engine hardening 선택 |
+| 1 | RELEASE-CANDIDATE-001 | proposed | release note, 태그 후보, 최종 `make release-check` evidence 정리 |
+| 2 | POST-MVP-CONTENT-001 | later | 출시 후 content breadth 또는 다음 engine hardening 선택 |
+| 3 | PROGRESS-V2-DECISION-002 | later | 실제 플레이 병목이 확인되면 mastery/review 저장 확장 재검토 |
 
-권장은 새 기능을 열기보다 `FIRST-RUN-POLISH-001`로 P2 polish만 좁게 닫는 것이다. blocker가 없으므로 `RC-BLOCKER-FIX-001`은 지금 열지 않는다.
+권장은 새 기능을 열기보다 `RELEASE-CANDIDATE-001`로 현재 foundation loop를 공개 후보 수준으로 묶는 것이다. blocker가 없으므로 `RC-BLOCKER-FIX-001`은 지금 열지 않는다.
 
-## FIRST-RUN-POLISH-001 출구 조건
+## RELEASE-CANDIDATE-001 출구 조건
 
 | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |-----------|-------------|------|---------------|
-| playtest gate P0/P1 없음 | cue density polish, review/daily line 축약 또는 판단, viewport smoke fixture | focused E2E, `make release-check` | 새 engine/content/schema 없이 첫 실행 가독성만 개선 |
+| first-run polish 완료 | release note 초안, known limitations 최신화, 최종 evidence 위치, 태그/공개 후보 기준 | `make release-check`, evidence spot review, `git diff --check` | 새 engine/content/schema 없이 공개 전 설명과 검증만 정리 |
 
 ## PLAYTEST-GATE-001 검사 축
 
@@ -45,7 +45,8 @@ Status: next slice proposed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
-| PLAYTEST-GATE-001 | 2026-05-30 | P0/P1 blocker 없음. 다음은 first-run polish |
+| FIRST-RUN-POLISH-001 | 2026-06-01 | cue 중복 제거, modal 주변 detailed review/daily line 정리, 80x24 viewport smoke와 mid tutorial evidence 보강 |
+| PLAYTEST-GATE-001 | 2026-05-30 | P0/P1 blocker 없음. 후속 first-run polish 완료 |
 | RELEASE-READINESS-001 | 2026-05-30 | README, Makefile release gate, known limitations 정리 |
 | UI-POLISH-002 | 2026-05-30 | tutorial/incident command memory cue 추가. schema 변경 없음 |
 | QUOTE-PAIR-HARDEN-001 | 2026-05-30 | `di'`, `ci'`, `yi'` single quote text object를 tutorial/E2E까지 연결 |

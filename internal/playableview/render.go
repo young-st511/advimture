@@ -175,6 +175,9 @@ func renderHUDStatusLine(screen Screen) string {
 }
 
 func recoveryStatusLine(screen Screen) string {
+	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
+		return ""
+	}
 	if screen.FocusPanel != nil && !isFloatingPanel(*screen.FocusPanel) && screen.ReviewCount > 0 {
 		primary := screen.ReviewPrimary
 		if primary == "" {

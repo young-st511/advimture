@@ -1,0 +1,49 @@
+id: playable_viewport_failure_modal_80x24
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 80
+  height: 24
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
+  - send: "right"
+  - wait_screen_contains: "Retry: r or enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "RECOVERY CHECK"
+    - "RECOVERY REQUIRED"
+    - "Retry: r or enter"
+    - "Grade: F"
+  exit_code: 0
+  progress_file_exists: false
+  key_trace:
+    - "right"
+    - "q"
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 0
+    mode: "normal"
+    status: "failed"
+    score:
+      grade: "F"
+      passed: false
+    progress:
+      mission_id: "normal-motion-basic-001"
+      completed: false
+    ui:
+      focus_panel:
+        kind: "failure"
+        title: "RECOVERY REQUIRED"
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

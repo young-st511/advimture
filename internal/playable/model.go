@@ -594,10 +594,11 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
 		}
 		lines = append(lines, fmt.Sprintf("Attempts: %d/%s", state.Runtime.Attempts, attemptLimitLabel(state.Runtime.AttemptLimit)))
-		if coach := m.coachingLineForCurrentEntry(state); coach != "" {
+		coach := m.coachingLineForCurrentEntry(state)
+		if coach != "" {
 			lines = append(lines, coach)
 		}
-		if memory := m.commandMemoryLine(state); memory != "" {
+		if memory := m.commandMemoryLine(state); memory != "" && (m.currentEntryIsIncident() || coach == "" || !strings.HasPrefix(coach, "Coach: 훈련 키 ")) {
 			lines = append(lines, memory)
 		}
 		if m.hintMessage != "" {
@@ -642,7 +643,11 @@ func (m Model) runningCoachingLine(state scenario.State) string {
 		}
 		return "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
 	}
-	return coachingLine(state)
+	coach := coachingLine(state)
+	if coach != "" && strings.HasPrefix(coach, "Coach: 훈련 키 ") && m.commandMemoryLine(state) != "" {
+		return ""
+	}
+	return coach
 }
 
 func (m Model) coachingLineForCurrentEntry(state scenario.State) string {
