@@ -2,6 +2,26 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-02 — Pre-RC hardening 완료와 release candidate prep 복귀
+
+이전 가정: release candidate로 바로 묶기 전에 `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence를 한 번 더 확인해야 했다.
+
+새 가정: P0/P1 blocker는 없고, 발견된 P2 hardening 항목은 incident hint cue truncation과 long incident app_state evidence gap이었다. 두 항목은 renderer wrapping, 80x30 incident hint smoke, long incident `save_app_state` 보강으로 닫았다.
+
+이유: 처음 플레이하는 사람이 `?` hint를 눌렀을 때 핵심 힌트가 잘리지 않아야 하고, release candidate 판단에는 사람이 읽을 final/timeline뿐 아니라 typed app_state evidence도 필요하다.
+
+영향: `PRE-RC-HARDENING-001`은 완료됐다. 다음 권장 slice는 다시 `RELEASE-CANDIDATE-001`이다.
+
+## 2026-06-02 — Release candidate 전 pre-RC hardening 추가
+
+이전 가정: `FIRST-RUN-POLISH-001` 완료 후 다음 권장 slice는 바로 `RELEASE-CANDIDATE-001`이었다.
+
+새 가정: release candidate로 문서/evidence를 묶기 전에, `PRE-RC-HARDENING-001`로 첫 5분 route와 대표 incident evidence를 사람이 읽고 기존 loop의 혼동 지점을 한 번 더 보강한다.
+
+이유: 사용자가 아직 보강 여지가 있다고 판단했다. 새 콘텐츠를 늘리기보다, 처음 플레이하는 사람이 덜 헷갈리고 터미널 UI evidence가 더 신뢰 가능한 상태를 먼저 만든다.
+
+영향: active slice는 `PRE-RC-HARDENING-001`이다. 새 engine/content/schema/progress 저장 포맷은 열지 않고, 완료 후 `RELEASE-CANDIDATE-001`로 이동한다.
+
 ## 2026-06-01 — First-run polish 완료와 release candidate prep 전환
 
 이전 가정: fresh playtest 이후 남은 P2 polish는 running cue line 밀도, review/daily line 길이, mid tutorial evidence 편차, viewport smoke 부재였다.

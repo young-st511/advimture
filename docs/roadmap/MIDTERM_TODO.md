@@ -6,7 +6,7 @@
 
 Status: release candidate prep proposed
 
-현재 active slice는 없다. `FIRST-RUN-POLISH-001`은 완료됐다. 다음 단계는 `RELEASE-CANDIDATE-001`로 첫 공개 후보의 문서, known limitations, evidence bundle을 정리하는 것이다.
+현재 active slice는 없다. `PRE-RC-HARDENING-001`은 완료됐다. 다음 단계는 `RELEASE-CANDIDATE-001`로 첫 공개 후보의 문서, known limitations, evidence bundle을 정리하는 것이다.
 
 ## 현재 중기 플랜
 
@@ -22,7 +22,7 @@ Status: release candidate prep proposed
 
 | 입구 조건 | 필수 산출물 | 검증 | 품질 저하 방지 |
 |-----------|-------------|------|---------------|
-| first-run polish 완료 | release note 초안, known limitations 최신화, 최종 evidence 위치, 태그/공개 후보 기준 | `make release-check`, evidence spot review, `git diff --check` | 새 engine/content/schema 없이 공개 전 설명과 검증만 정리 |
+| pre-RC hardening 완료 | release note 초안, known limitations 최신화, 최종 evidence 위치, 태그/공개 후보 기준 | `make release-check`, evidence spot review, `git diff --check` | 새 engine/content/schema 없이 공개 전 설명과 검증만 정리 |
 
 ## PLAYTEST-GATE-001 검사 축
 
@@ -45,6 +45,7 @@ Status: release candidate prep proposed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| PRE-RC-HARDENING-001 | 2026-06-02 | P0/P1 없음. Incident hint cue wrapping과 long incident app_state evidence gap 보강 |
 | FIRST-RUN-POLISH-001 | 2026-06-01 | cue 중복 제거, modal 주변 detailed review/daily line 정리, 80x24 viewport smoke와 mid tutorial evidence 보강 |
 | PLAYTEST-GATE-001 | 2026-05-30 | P0/P1 blocker 없음. 후속 first-run polish 완료 |
 | RELEASE-READINESS-001 | 2026-05-30 | README, Makefile release gate, known limitations 정리 |

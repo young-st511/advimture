@@ -25,7 +25,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
 - 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish는 한 차례 닫혔고, 다음 병목은 공개 후보 문서와 evidence 정리다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke도 닫혔다. 따라서 다음 순서는 **release candidate prep -> post-release content/engine expansion**으로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. 따라서 다음 순서는 **release candidate prep -> post-release content/engine expansion**으로 간다.
 
 ## 0. 운영 원칙
 
@@ -218,7 +218,27 @@ Status: later
 
 ## 5. Completed Midterm Sequence
 
-### 1. FIRST-RUN-POLISH-001 — First Run Polish
+### 1. PRE-RC-HARDENING-001 — First Release Hardening
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/pre-rc-hardening-001-first-release-hardening.md`
+Review: `docs/roadmap/PRE_RC_HARDENING_2026-06-02.md`
+
+완료 결과:
+
+- 첫 5분 route와 대표 incident route evidence를 spot review했고 P0/P1 blocker는 없었다.
+- 긴 incident hint cue가 한 줄에서 잘리는 문제를 terminal width 기반 wrapping으로 보강했다.
+- incident hint affordance를 80x30 viewport smoke와 final/timeline/app_state evidence로 고정했다.
+- 긴 incident full route의 app_state evidence gap을 닫았다.
+
+검증:
+
+- focused E2E: pass
+- `go test ./...`: pass
+- `make release-check`: pass
+- `git diff --check`: pass
+
+### 2. FIRST-RUN-POLISH-001 — First Run Polish
 
 Status: completed
 ExecPlan: `docs/exec-plans/completed/first-run-polish-001-cue-viewport.md`
@@ -239,7 +259,7 @@ ExecPlan: `docs/exec-plans/completed/first-run-polish-001-cue-viewport.md`
 - `make release-check`: pass
 - `git diff --check`: pass
 
-### 2. CONTENT-BREADTH-002 — Applied Content Expansion
+### 3. CONTENT-BREADTH-002 — Applied Content Expansion
 
 Status: completed
 
@@ -263,7 +283,7 @@ Status: completed
 - repeat-change choice를 fifth beat로 추가했다.
 - 남은 후보인 line reuse, search-then-act, mixed incident 008은 release 전 content polish 후보로 유지한다.
 
-### 3. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
+### 4. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 
 Status: completed
 
@@ -287,7 +307,7 @@ Status: completed
 - 첫 hardening scope는 `i'`로 닫았다.
 - `i(`, `i{`는 bracket pair hardening 후보로 유지한다.
 
-### 4. UI-POLISH-002 — Release UI Polish
+### 5. UI-POLISH-002 — Release UI Polish
 
 Status: completed
 
@@ -330,7 +350,7 @@ Status: completed
 - long incident evidence가 남는다.
 - progress schema 변경 없이 저장/재개가 안전하다.
 
-현재 release readiness와 first-run polish는 닫혔다. 다음은 release candidate prep으로 공개 후보 설명과 evidence를 한곳에 묶는다.
+현재 release readiness, first-run polish, pre-RC hardening은 닫혔다. 다음은 release candidate prep으로 공개 후보 설명과 evidence를 한곳에 묶는다.
 
 ## 7. Long-Run Candidates
 

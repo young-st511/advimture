@@ -124,7 +124,7 @@ func renderHUD(screen Screen) string {
 	for _, line := range wrapHUDMessage(screen.Message, screen.Width) {
 		b.WriteString(line + "\n")
 	}
-	if cue := renderMissionCue(screen.FocusPanel); cue != "" {
+	if cue := renderMissionCue(screen.FocusPanel, screen.Width); cue != "" {
 		b.WriteString(cue)
 	}
 	if status := recoveryStatusLine(screen); status != "" {
@@ -325,16 +325,92 @@ func trimDisplayWidth(text string, limit int) string {
 	return b.String()
 }
 
-func renderMissionCue(panel *FocusPanel) string {
+func renderMissionCue(panel *FocusPanel, screenWidth int) string {
 	if panel == nil || isFloatingPanel(*panel) {
 		return ""
 	}
 	lines := append([]string{panel.Title}, panel.Lines...)
-	return strings.Join(lines, " · ") + "\n"
+	return strings.Join(wrapMissionCueLines(lines, hudTextWidth(screenWidth)), "\n") + "\n"
 }
 
 func isFloatingPanel(panel FocusPanel) bool {
 	return panel.Kind == "failure" || panel.Kind == "success"
+}
+
+func wrapMissionCueLines(parts []string, width int) []string {
+	if len(parts) == 0 {
+		return nil
+	}
+	if width <= 0 {
+		return []string{strings.Join(parts, " · ")}
+	}
+	out := []string{}
+	current := ""
+	for _, part := range parts {
+		wrapped := wrapTextByDisplayWidth(part, width)
+		for i, line := range wrapped {
+			if i > 0 && current != "" {
+				out = append(out, current)
+				current = ""
+			}
+			if current == "" {
+				current = line
+				continue
+			}
+			next := current + " · " + line
+			if displayWidth(next) <= width {
+				current = next
+				continue
+			}
+			out = append(out, current)
+			current = line
+		}
+	}
+	if current != "" {
+		out = append(out, current)
+	}
+	return out
+}
+
+func wrapTextByDisplayWidth(text string, width int) []string {
+	if text == "" {
+		return []string{""}
+	}
+	if displayWidth(text) <= width {
+		return []string{text}
+	}
+	words := strings.Fields(text)
+	if len(words) == 0 {
+		return []string{trimDisplayWidth(text, width)}
+	}
+	lines := []string{}
+	current := ""
+	for _, word := range words {
+		if displayWidth(word) > width {
+			if current != "" {
+				lines = append(lines, current)
+				current = ""
+			}
+			lines = append(lines, trimDisplayWidth(word, width))
+			continue
+		}
+		next := word
+		if current != "" {
+			next = current + " " + word
+		}
+		if displayWidth(next) <= width {
+			current = next
+			continue
+		}
+		if current != "" {
+			lines = append(lines, current)
+		}
+		current = word
+	}
+	if current != "" {
+		lines = append(lines, current)
+	}
+	return lines
 }
 
 func renderHeader(screen Screen) string {

@@ -157,4 +157,5 @@ evidence:
   save_screen_timeline: true
   save_screen_final: true
   save_key_trace: true
+  save_app_state: true
   save_summary: true

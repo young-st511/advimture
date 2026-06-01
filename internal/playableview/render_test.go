@@ -229,6 +229,47 @@ func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
 	}
 }
 
+func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
+	view := Render(Screen{
+		Width:            80,
+		Height:           24,
+		PlaylistCategory: "incident",
+		ReviewCount:      3,
+		ReviewPrimary:    "relay error 신호 위치 찾기",
+		Title:            "릴레이 원인 신호 추적",
+		Message:          "릴레이 기지 001의 야간 runbook이 error 신호에서 멈췄습니다.",
+		BufferLines:      []string{"info boot", "error pump", "warn idle"},
+		Mode:             "normal",
+		Status:           "running",
+		FocusPanel: &FocusPanel{
+			Kind:  "incident",
+			Title: "OPERATOR JUDGMENT",
+			Lines: []string{
+				"Inputs left: 9/9",
+				"참고 명령: /",
+				"Hint: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.",
+				"?: hint  q: quit",
+			},
+		},
+	})
+
+	for _, want := range []string{"OPERATOR JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "?: hint  q: quit"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want wrapped cue to preserve %q", view, want)
+		}
+	}
+	for _, line := range strings.Split(view, "\n") {
+		if strings.Contains(line, "OPERATOR JUDGMENT") || strings.Contains(line, "Hint:") || strings.Contains(line, "잡습니다.") {
+			if displayWidth(line) > 80 {
+				t.Fatalf("cue line width = %d, want <= 80: %q\nfull view = %q", displayWidth(line), line, view)
+			}
+		}
+	}
+	if lineIndex(view, "OPERATOR JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
+		t.Fatalf("Render output = %q, want wrapped cue before console", view)
+	}
+}
+
 func TestRenderHUDWrapsLongBriefingBeforeConsole(t *testing.T) {
 	view := Render(Screen{
 		Width:            72,

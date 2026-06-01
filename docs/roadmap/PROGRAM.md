@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `FIRST-RUN-POLISH-001`은 완료됐고, 다음 권장 작업은 `RELEASE-CANDIDATE-001`로 첫 공개 후보 문서와 evidence bundle을 정리하는 것이다.
+현재 활성 구현 slice 없음. `PRE-RC-HARDENING-001`은 완료됐고, 다음 권장 작업은 `RELEASE-CANDIDATE-001`로 첫 공개 후보 문서와 evidence bundle을 정리하는 것이다.
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
@@ -40,6 +40,14 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### PRE-RC-HARDENING-001. First Release Hardening
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/pre-rc-hardening-001-first-release-hardening.md`
+- Review: `docs/roadmap/PRE_RC_HARDENING_2026-06-02.md`
+- 완료일: 2026-06-02
+- 결론: P0/P1 blocker 없음. Incident hint cue wrapping과 long incident app_state evidence gap을 보강했고, 다음은 `RELEASE-CANDIDATE-001`이다.
 
 ### FIRST-RUN-POLISH-001. Cue Density and Viewport Evidence
 

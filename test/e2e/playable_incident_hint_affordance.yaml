@@ -2,8 +2,8 @@ id: playable_incident_hint_affordance
 command: ["go", "run", "."]
 timeout_ms: 15000
 terminal:
-  width: 120
-  height: 38
+  width: 80
+  height: 30
 setup:
   home: temp
   complete_before: incident-hotfix-001
@@ -17,6 +17,8 @@ assert:
     - "OPERATOR JUDGMENT"
     - "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
     - "Hint: 복구 작전에서는"
+    - "원인 신호를"
+    - "잡습니다."
     - "참고 명령: /"
   exit_code: 0
   progress_file_exists: true
@@ -38,5 +40,8 @@ assert:
 evidence:
   save_raw_ansi: true
   save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
   save_key_trace: true
+  save_app_state: true
   save_summary: true
