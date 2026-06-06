@@ -10,13 +10,15 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강 3단계(`CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001`)도 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강 3단계(`CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001`)와 fresh review/line reuse 적용(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`)도 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
 - `docs/exec-plans/completed/content-arc-polish-001-first-dispatch-arc.md`
 - `docs/exec-plans/completed/judgment-drill-review-001-command-choice.md`
 - `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
+- `docs/exec-plans/completed/post-polish-playtest-001-fresh-product-loop-review.md`
+- `docs/exec-plans/completed/line-reuse-applied-001-line-reuse-drill.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
 Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
@@ -25,20 +27,33 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### POST-POLISH-PLAYTEST-001. Fresh Product Loop Review
+### SEARCH-THEN-SCOPE-APPLIED-001. Search Then Scope Drill
 
 - 상태: next candidate
-- 목표: 새 구현 없이 first tour, first dispatch, judgment drill, review loop evidence를 사람이 한 번 더 읽고 다음 병목이 content breadth인지 UI polish인지 판정한다.
+- 목표: `incident-005-command-choice` 또는 별도 applied run에서 먼저 marker를 찾고, 그 주변 줄 묶음을 판단해 처리하는 search-then-scope 문제를 검토한다.
 - 입력 문서:
-  - `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
-  - `docs/gameplay/world-frame.md`
   - `docs/gameplay/command-choice-drills.md`
-  - `docs/gameplay/tui-screen-contract.md`
+  - `docs/gameplay/spec.md`
+  - `docs/roadmap/POST_POLISH_PLAYTEST_2026-06-06.md`
 - 제외:
   - 바로 출시하거나 tag를 찍는 작업
   - 신규 대형 tutorial/incident 구현
   - 사용자 확인 없는 저장 포맷/content schema/의존성 변경
-- 결론: 구현보다 다음 병목 판정이 먼저다.
+- 결론: line reuse 다음의 가장 작은 content-quality 후보지만, command-choice route 길이와 incident 분리 여부를 먼저 판단한다.
+
+### POST-POLISH-PLAYTEST-001. Fresh Product Loop Review
+
+- 상태: completed
+- 목표: 새 구현 없이 first tour, first dispatch, judgment drill, review loop evidence를 사람이 한 번 더 읽고 다음 병목이 content breadth인지 UI polish인지 판정한다.
+- 완료: 다음 slice를 `LINE-REUSE-APPLIED-001`로 판정했다.
+- Review: `docs/roadmap/POST_POLISH_PLAYTEST_2026-06-06.md`
+
+### LINE-REUSE-APPLIED-001. Line Reuse Choice Drill
+
+- 상태: completed
+- 목표: `incident-005-command-choice`에 검증된 줄 전체를 직접 재입력하지 않고 linewise yank/put으로 재사용하는 sixth beat를 추가한다.
+- 완료: `command-choice-line-reuse-001`을 추가하고 focused command-choice E2E를 6-beat route로 갱신했다.
+- 제외: 새 command, 새 schema, progress 저장 포맷 변경
 
 ### CONTENT-ARC-POLISH-001. First Dispatch Arc Polish
 
@@ -50,8 +65,8 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 ### JUDGMENT-DRILL-REVIEW-001. Command Choice as Core Identity
 
 - 상태: completed
-- 목표: `incident-005-command-choice`의 다섯 beat가 scope/range/inline/reuse/repeat-change 판단 질문을 설명하게 한다.
-- 완료: success/failure copy와 `docs/gameplay/command-choice-drills.md`의 mapping을 선택 이유 중심으로 최신화했다.
+- 목표: `incident-005-command-choice`의 기존 beat가 scope/range/inline/reuse/repeat-change 판단 질문을 설명하게 한다.
+- 완료: success/failure copy와 `docs/gameplay/command-choice-drills.md`의 mapping을 선택 이유 중심으로 최신화했다. 이후 `LINE-REUSE-APPLIED-001`로 line reuse 판단이 추가되어 현재 route는 여섯 beat다.
 - 제외: 새 command, 새 schema, 새 exercise
 
 ### UI-CONSOLE-POLISH-001. Runbook Console Product Feel

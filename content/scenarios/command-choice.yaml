@@ -73,3 +73,18 @@ scenarios:
     story_constraints:
       - "새 command 소개가 아니라 같은 변경 반복과 직접 재입력의 선택 이유를 강조한다."
       - "성공/실패 피드백은 repeat-last-change가 적합한 패턴을 설명한다."
+
+  - id: command-choice-line-reuse-001-scenario
+    status: approved
+    exercise_id: command-choice-line-reuse-001
+    engine_support: implemented
+    learning_reinforcement: "검증된 줄 전체는 직접 재입력하지 않고 linewise yank/put으로 재사용한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "줄 전체 재사용 판단"
+    briefing: "릴레이 backup 아래에 검증된 route 줄을 그대로 남겨야 합니다. 값만 다시 치지 말고 줄 전체를 재사용할지 판단하세요."
+    context_role: "line reuse choice drill"
+    mentor_success: "검증된 route 줄 전체가 재사용 단위이므로 다시 입력하지 않고 backup 아래에 linewise로 남겼습니다."
+    mentor_failure: "이번 대상은 단어/quote 값이 아니라 검증된 줄 전체입니다. 줄 단위로 담은 뒤 backup 위치 아래에 붙이세요."
+    story_constraints:
+      - "새 command 소개가 아니라 직접 재입력과 linewise reuse의 선택 이유를 강조한다."
+      - "성공/실패 피드백은 줄 전체가 재사용 단위인 이유를 설명한다."

@@ -69,14 +69,14 @@ choice_drill_draft:
 | `choice-005-inline-target-range` | `inline-target-choice` | `ct,` | comma 뒤 route는 정상이고 comma는 보존해야 한다. hyphenated 값만 바꾸려면 `cw`나 `cf,`가 아니라 `ct,`가 적합하다. Playable: `incident-005-command-choice` / `command-choice-inline-target-001`. |
 | `incident-006-inline-target-repair` | `search-then-act` + `inline-target-choice` | `/target` + `ct,` | 먼저 손상된 target 값을 찾고, 같은 줄 comma 앞 값만 교체한다. Playable: `incident-006-inline-target-repair`. |
 | `choice-006-quote-value-reuse` | `reuse-choice` | `yi"` + `P` | 검증된 quote 내부 token을 빈 quote 위치에 그대로 복제해야 한다. 직접 재입력은 token 길이/오타 리스크가 크다. Playable: `incident-005-command-choice` / `command-choice-quote-reuse-001`. |
-| `choice-007-line-reuse` | `reuse-choice` | `V` + `y` + `p` | 검증된 route 줄 전체를 다음 위치에 복제해야 한다. 단어/quote 값이 아니라 줄 전체 재사용 문제다. |
+| `choice-007-line-reuse` | `reuse-choice` | `V` + `y` + `p` | 검증된 route 줄 전체를 다음 위치에 복제해야 한다. 단어/quote 값이 아니라 줄 전체 재사용 문제다. Playable: `incident-005-command-choice` / `command-choice-line-reuse-001`. |
 | `choice-008-repeat-change-reuse` | `reuse-choice` | `.` | 같은 값 변경이 여러 줄에 반복된다. 재입력보다 last change repeat가 적합하다. Playable: `incident-005-command-choice` / `command-choice-repeat-change-001`. |
 | `choice-009-search-then-scope` | `search-then-act` + `scope-choice` | `/marker` + linewise visual delete | marker를 먼저 찾은 뒤 그 아래/주변의 줄 묶음을 지우는 문제다. 후속 후보이며 이번 scope에서는 구현하지 않는다. |
 | `choice-010-bracket-pair-hardening` | `scope-choice` | `ci(` 또는 `ci{` | quote pair와 같은 구조 편집 판단을 bracket pair로 확장한다. 새 engine capability가 필요하므로 이번 scope에서는 구현하지 않는다. |
 
 ## Current Playable Mapping
 
-`incident-005-command-choice`는 현재 Advimture의 핵심 차별점인 "상황에 맞는 Vim 도구 선택"을 다섯 beat로 검증한다.
+`incident-005-command-choice`는 현재 Advimture의 핵심 차별점인 "상황에 맞는 Vim 도구 선택"을 여섯 beat로 검증한다.
 
 | Playable beat | 판단 질문 | 의도 선택 | 성공 copy 기준 |
 |---------------|-----------|-----------|----------------|
@@ -85,10 +85,11 @@ choice_drill_draft:
 | `command-choice-inline-target-001` | inline target choice: delimiter를 보존해야 하는가? | `ct,` | comma 뒤 route가 정상이라 delimiter 직전까지만 바꾼 이유를 설명한다. |
 | `command-choice-quote-reuse-001` | reuse choice: 검증된 값을 다시 치지 않고 재사용할 수 있는가? | `yi"` + `P` | token 오타 리스크를 줄이고 mirror 구조를 보존한 이유를 설명한다. |
 | `command-choice-repeat-change-001` | repeat-change reuse: 같은 변경을 다시 입력하지 않아도 되는가? | `.` | 같은 단어 교체 패턴이 이어져 마지막 변경 반복이 맞는 이유를 설명한다. |
+| `command-choice-line-reuse-001` | reuse choice: 검증된 줄 전체를 다시 치지 않고 재사용할 수 있는가? | linewise `V` + `y` + `p` | 단어/quote 값이 아니라 줄 전체가 재사용 단위인 이유를 설명한다. |
 
-대표 evidence는 `playable_command_choice_scope`다. 이 route는 final buffer, key trace, app_state를 모두 남기며, 다섯 beat가 새 command 소개 없이 이미 배운 command 선택 판단으로 닫히는지 확인한다.
+대표 evidence는 `playable_command_choice_scope`다. 이 route는 final buffer, key trace, app_state를 모두 남기며, 여섯 beat가 새 command 소개 없이 이미 배운 command 선택 판단으로 닫히는지 확인한다.
 
-후속 후보는 현재 문서 상태로만 둔다. 우선순위는 `line reuse`, `search-then-scope`, `bracket-pair hardening` 순서가 자연스럽지만, bracket pair는 새 engine capability가 필요하므로 별도 ExecPlan과 사용자 승인이 있어야 한다.
+후속 후보는 현재 문서 상태로만 둔다. 우선순위는 `search-then-scope`, `bracket-pair hardening` 순서가 자연스럽지만, bracket pair는 새 engine capability가 필요하므로 별도 ExecPlan과 사용자 승인이 있어야 한다.
 
 ## Inline Target Application Decision
 
@@ -123,6 +124,18 @@ choice_drill_draft:
 - 새 engine이나 schema 없이 기존 `repeat-last-change` cluster와 `constraints.required_keys`로 충분히 검증할 수 있다.
 
 첫 playable 구현은 `incident-005-command-choice`에 fifth beat로 붙인다. 우회 방지는 substitute, yank/put, visual route, 직접 두 번째 변경 재입력을 막고 `ciw`, `esc`, `.`을 required key로 고정한다. 입력 literal에 쓰이는 key는 mode와 무관하게 raw constraint에 걸리므로 forbidden key에 넣지 않는다.
+
+## Line Reuse Choice Decision
+
+`LINE-REUSE-APPLIED-001`의 적용 후보는 `choice-007-line-reuse`로 한다.
+
+이유:
+
+- `V` + `y` + `p`는 이미 tutorial과 incident에서 engine/replay/E2E 경로가 검증됐다.
+- command-choice에서는 새 command 소개가 아니라 "값을 다시 칠지, 검증된 줄 전체를 재사용할지"를 판단하게 만들 수 있다.
+- quote value reuse가 quote 내부 token 단위 재사용을 다룬다면, line reuse는 줄 전체가 재사용 단위인 상황을 보완한다.
+
+첫 playable 구현은 `incident-005-command-choice`에 sixth beat로 붙인다. 우회 방지는 직접 입력, charwise visual, delete/change, Ex command route를 막고 `V`, `y`, `p`를 required key로 고정한다.
 
 ## Playable Gate
 

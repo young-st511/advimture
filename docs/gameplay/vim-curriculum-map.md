@@ -309,7 +309,7 @@ ID: `ui-polish-release`
 - `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했고, QUOTE-PAIR-HARDEN-001에서 single quote 내부 object를 연결했다. parenthesis, brace, nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
-- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse, repeat-change reuse beat를 playable로 연결했다. 후속 후보는 line reuse, search-then-act다.
+- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse, repeat-change reuse, line reuse beat를 playable로 연결했다. 후속 후보는 search-then-act다.
 - `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030/PLAYPACK-012에서 engine과 tutorial을 연결했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
 
 ## Long-Run Platform Direction

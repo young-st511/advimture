@@ -43,7 +43,7 @@ Updated: 2026-06-06
 | First Tour | tutorial 0~3 초반 canonical route 존재 | 충분 |
 | Core Toolbelt | tutorial 4~9, 90~94 구현 및 full E2E 존재 | 충분 |
 | First Dispatch Arc | incident 001~003 mixed/structure/visual recovery 존재, copy polish 완료 | 충분 |
-| Judgment Drill | incident 005 command-choice 5 beat 존재 | 충분하나 선택 이유 review 필요 |
+| Judgment Drill | incident 005 command-choice 6 beat 존재 | 충분. 다음 후보는 search-then-scope |
 | Review Loop | success debrief, residual risk, next dispatch 존재 | 충분 |
 
 현재 부족분은 새 콘텐츠 수가 아니라 **arc framing과 pacing 설명**이다. 즉 다음 콘텐츠 작업은 구현보다 "어떤 순서와 감각으로 플레이어에게 보일지"를 정리하는 것이 우선이다.

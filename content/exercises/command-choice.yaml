@@ -254,3 +254,56 @@ exercises:
         col: 9
       mode: normal
       status: succeeded
+
+  - id: command-choice-line-reuse-001
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["V", "y", "p", "yy", "i"]
+    mistake_focus: ["검증된 줄 전체를 재사용해야 하는데 값을 직접 다시 입력하거나 charwise 복사로 일부만 옮긴다."]
+    replay_status: pass
+    title: "줄 전체 재사용 판단"
+    goal_for_player: "검증된 route 줄 전체를 backup 위치 아래에 남겨야 합니다. 값을 다시 치지 말고 줄 단위로 재사용하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route=stable
+        backup=
+        guard=on
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 0
+      buffer: |
+        route=stable
+        backup=
+        route=stable
+        guard=on
+    optimal_keys: ["V", "y", "j", "p"]
+    allowed_keys: ["V", "y", "j", "p", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 4
+      required_keys: ["V", "y", "p"]
+      forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "d", "P", "i", "a", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번 판단은 값이나 quote 내부 token이 아니라 검증된 줄 전체를 재사용할지입니다."
+      - after_keys: 3
+        text: "linewise register의 p는 현재 줄 아래에 복사한 줄 전체를 삽입합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 4
+    e2e_assertions:
+      buffer: ["route=stable", "backup=", "route=stable", "guard=on"]
+      cursor:
+        row: 2
+        col: 0
+      mode: normal
+      status: succeeded

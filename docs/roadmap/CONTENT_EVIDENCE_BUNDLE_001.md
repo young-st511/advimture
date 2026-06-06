@@ -19,7 +19,7 @@ Created: 2026-06-06
 | `playable_incident_001_full` | 원인 신호 추적, 상태값 복구, guard 추가, route 재사용, 문제 구간 range 정리로 첫 hotfix runbook이 닫히는가? | required |
 | `playable_incident_002_full` | quote 구조를 보존하며 secret/mirror/temp/반복 quote 값을 재동기화하는가? | required |
 | `playable_incident_003_full` | contam 표식 검색, visual 격리, 정상 신호 재사용, 잔류 off 전체 승격이 오염 구간 격리로 읽히는가? | required |
-| `playable_command_choice_scope` | scope/range/inline/reuse/repeat-change 판단이 command 이름보다 선택 이유로 설명되는가? | required |
+| `playable_command_choice_scope` | scope/range/inline/reuse/repeat-change/line-reuse 판단이 command 이름보다 선택 이유로 설명되는가? | required |
 | `playable_review_queue` | 성공 후 residual risk와 next dispatch가 반복 동기로 이어지는가? | supporting |
 
 ## First Dispatch Reading
@@ -34,7 +34,7 @@ Created: 2026-06-06
 
 ## Judgment Drill Reading
 
-`incident-005-command-choice`는 아래 다섯 판단 질문을 한 route에서 검증한다.
+`incident-005-command-choice`는 아래 여섯 판단 질문을 한 route에서 검증한다.
 
 | Beat | 질문 |
 |------|------|
@@ -43,6 +43,7 @@ Created: 2026-06-06
 | inline target choice | delimiter를 보존해야 하는가? |
 | reuse choice | 검증된 값을 다시 입력하지 않고 재사용할 수 있는가? |
 | repeat-change reuse | 같은 변경을 다시 입력하지 않고 반복할 수 있는가? |
+| line reuse choice | 검증된 줄 전체를 다시 입력하지 않고 재사용할 수 있는가? |
 
 성공/실패 copy는 command 이름보다 선택 이유를 먼저 설명해야 한다. 이 원칙은 `docs/gameplay/command-choice-drills.md`의 Current Playable Mapping과 `content/scenarios/command-choice.yaml`의 scenario copy를 기준으로 검토한다.
 

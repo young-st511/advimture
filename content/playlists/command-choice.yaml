@@ -37,3 +37,9 @@ playlists:
         exercise_id: command-choice-repeat-change-001
         scenario_id: command-choice-repeat-change-001-scenario
         engine_support: implemented
+      - id: incident-005-006
+        role: choose_line_reuse
+        command_cluster: visual-line-basic
+        exercise_id: command-choice-line-reuse-001
+        scenario_id: command-choice-line-reuse-001-scenario
+        engine_support: implemented

@@ -4,9 +4,9 @@
 
 ## 현재 상태
 
-Status: first dispatch / judgment drill / console polish completed
+Status: post-polish review / line reuse applied completed
 
-현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001` 중기 보강도 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001` 보강이 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 ## 현재 중기 플랜
 
@@ -14,10 +14,12 @@ Status: first dispatch / judgment drill / console polish completed
 |------|----|------|------|
 | 1 | PLAYABLE-QUALITY-BASELINE-001 | completed | 세계관/UX/UI/콘텐츠 목표/엔진 모듈화를 release-quality 기준으로 점검하고 개선 |
 | 2 | CONTENT-ARC-POLISH-001 | completed | incident 001~003을 원인 신호 추적 -> 구조 재동기화 -> 오염 구간 격리 첫 dispatch arc로 정리 |
-| 3 | JUDGMENT-DRILL-REVIEW-001 | completed | command-choice 5 beat를 Vim 도구 선택 판단 중심으로 보강 |
+| 3 | JUDGMENT-DRILL-REVIEW-001 | completed | command-choice beat를 Vim 도구 선택 판단 중심으로 보강 |
 | 4 | UI-CONSOLE-POLISH-001 | completed | action line 화면 label과 machine-readable action id 분리 |
-| 5 | POST-POLISH-PLAYTEST-001 | next candidate | fresh evidence review로 다음 병목 판정 |
-| 6 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
+| 5 | POST-POLISH-PLAYTEST-001 | completed | fresh evidence review로 다음 병목을 line reuse applied drill로 판정 |
+| 6 | LINE-REUSE-APPLIED-001 | completed | command-choice에 검증된 줄 전체 재사용 판단 beat 추가 |
+| 7 | SEARCH-THEN-SCOPE-APPLIED-001 | next candidate | marker를 먼저 찾고 줄 묶음 scope를 판단하는 applied drill 검토 |
+| 8 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
 
 권장은 release candidate 포장이 아니라 quality baseline 이후의 후속 보강을 필요할 때 좁게 여는 것이다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
 
@@ -50,8 +52,10 @@ Status: first dispatch / judgment drill / console polish completed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| LINE-REUSE-APPLIED-001 | 2026-06-06 | command-choice sixth beat로 검증된 route 줄 전체를 linewise yank/put으로 재사용하는 판단 추가 |
+| POST-POLISH-PLAYTEST-001 | 2026-06-06 | fresh evidence review로 다음 최선 후보를 line reuse applied drill로 판정 |
 | CONTENT-ARC-POLISH-001 | 2026-06-06 | incident 001~003 copy/framing을 첫 Runbook Dispatch arc로 정리. 새 YAML/schema 없음 |
-| JUDGMENT-DRILL-REVIEW-001 | 2026-06-06 | command-choice 5 beat success/failure copy와 drill docs를 선택 이유 중심으로 최신화 |
+| JUDGMENT-DRILL-REVIEW-001 | 2026-06-06 | command-choice success/failure copy와 drill docs를 선택 이유 중심으로 최신화 |
 | UI-CONSOLE-POLISH-001 | 2026-06-06 | FocusPanel action label과 app_state action id를 분리하고 80x24 modal focused E2E 통과 |
 | PLAYABLE-QUALITY-BASELINE-001 | 2026-06-02 | release-quality 기준, 콘텐츠 기획, 모듈/엔진 충분성, header/mode/modal UX 보강, completion audit 완료 |
 | PRE-RC-HARDENING-001 | 2026-06-02 | P0/P1 없음. Incident hint cue wrapping과 long incident app_state evidence gap 보강 |

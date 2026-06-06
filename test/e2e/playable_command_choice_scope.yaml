@@ -110,13 +110,23 @@ steps:
   - send: "j"
   - wait_ms: 50
   - send: "."
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+  - wait_screen_contains: "릴레이 backup 아래"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 0,0 -> 0,11"
+  - send: "y"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "p"
   - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Runbook Dispatch"
     - "릴레이 기지 005: 복구 범위 판별"
-    - "같은 단어 교체 패턴이 이어지므로"
+    - "검증된 route 줄 전체가 재사용 단위"
     - "다음 runbook: enter"
   exit_code: 0
   progress_file_exists: true
@@ -126,6 +136,7 @@ assert:
     - "\"command-choice-inline-target-001\""
     - "\"command-choice-quote-reuse-001\""
     - "\"command-choice-repeat-change-001\""
+    - "\"command-choice-line-reuse-001\""
   key_trace:
     - "V"
     - "j"
@@ -178,19 +189,24 @@ assert:
     - "esc"
     - "j"
     - "."
+    - "enter"
+    - "V"
+    - "y"
+    - "j"
+    - "p"
     - "q"
   app_state:
-    buffer: ["route=live", "probe=live", "guard=live"]
+    buffer: ["route=stable", "backup=", "route=stable", "guard=on"]
     cursor:
-      row: 1
-      col: 9
+      row: 2
+      col: 0
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-repeat-change-001"
+      mission_id: "command-choice-line-reuse-001"
       completed: true
 evidence:
   save_raw_ansi: true

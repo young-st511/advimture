@@ -25,7 +25,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
 - 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline은 한 차례 닫혔다. 하지만 바로 출시할 계획은 없으므로 다음 병목은 release candidate 문서가 아니라 후속 world/UX/content polish를 필요한 순간에 좁게 여는 것이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001`로 세계관/UX/UI/콘텐츠 기획/엔진 모듈화 기준을 닫은 뒤, 2026-06-06에는 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001`까지 완료했다. 따라서 다음 순서는 **fresh evidence review -> narrow applied content or UI polish -> later release candidate prep**으로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001`로 세계관/UX/UI/콘텐츠 기획/엔진 모듈화 기준을 닫은 뒤, 2026-06-06에는 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001`까지 완료했다. 따라서 다음 순서는 **search-then-scope 같은 좁은 applied content 후보를 검토하고, release candidate prep은 나중으로 둔다**로 간다.
 
 ## 0. 운영 원칙
 
@@ -163,6 +163,35 @@ Review: `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
 
 ## 4. Next Midterm Sequence
 
+### 0. POST-POLISH-PLAYTEST-001 — Fresh Product Loop Review
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/post-polish-playtest-001-fresh-product-loop-review.md`
+Review: `docs/roadmap/POST_POLISH_PLAYTEST_2026-06-06.md`
+
+결과:
+
+- first tour, first dispatch, judgment drill, review loop evidence를 fresh review했다.
+- P0/P1 blocker는 보이지 않았다.
+- 다음 최선 후보를 `LINE-REUSE-APPLIED-001`로 판정했다.
+
+### 0.1. LINE-REUSE-APPLIED-001 — Line Reuse Choice Drill
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/line-reuse-applied-001-line-reuse-drill.md`
+
+결과:
+
+- `incident-005-command-choice`에 sixth beat `command-choice-line-reuse-001`을 추가했다.
+- 검증된 route 줄 전체를 직접 다시 입력하지 않고 linewise `V` + `y` + `p`로 backup 아래에 재사용하는 판단을 훈련한다.
+- focused command-choice E2E는 6-beat route와 final/timeline/app_state evidence를 남긴다.
+
+검증:
+
+- `go test ./internal/content ./internal/playable`: pass
+- `go test ./...`: pass
+- `make release-check`: pass
+
 ### 1. PLAYABLE-QUALITY-BASELINE-001 — Release-Quality Playable Baseline
 
 Status: completed
@@ -233,9 +262,9 @@ ExecPlan: `docs/exec-plans/completed/judgment-drill-review-001-command-choice.md
 
 완료 결과:
 
-- `incident-005-command-choice`의 5 beat는 scope/range/inline/reuse/repeat-change 판단 질문에 매핑된다.
+- `incident-005-command-choice`의 6 beat는 scope/range/inline/reuse/repeat-change/line-reuse 판단 질문에 매핑된다.
 - success/failure copy는 command 이름보다 선택 이유를 먼저 설명한다.
-- 후속 후보는 line reuse, search-then-scope, bracket-pair hardening으로 문서에만 정리했다.
+- 후속 후보는 search-then-scope, bracket-pair hardening으로 문서에 남겼고, line reuse는 `LINE-REUSE-APPLIED-001`로 승격했다.
 
 ### 5. UI-CONSOLE-POLISH-001 — Runbook Console Product Feel
 
@@ -269,7 +298,6 @@ Status: later
 
 후보:
 
-- line reuse applied drill
 - search-then-act incident
 - bracket pair text object hardening
 - progress v2 decision 재검토
@@ -325,8 +353,8 @@ Status: completed
 
 후보:
 
-- line reuse choice: 검증된 줄 전체를 `V` + `y` + `p`로 재사용
 - repeat-change choice: 같은 변경을 `.`로 반복할지 판단
+- line reuse choice: 검증된 줄 전체를 `V` + `y` + `p`로 재사용
 - search-then-act incident: `/`, `n`, `N`으로 찾고 적절한 edit command 선택
 - mixed incident 008: 3~5 beat 이하로 제한한 생존 어드벤처 run
 
@@ -339,7 +367,8 @@ Status: completed
 완료 결과:
 
 - repeat-change choice를 fifth beat로 추가했다.
-- 남은 후보인 line reuse, search-then-act, mixed incident 008은 release 전 content polish 후보로 유지한다.
+- line reuse choice는 `LINE-REUSE-APPLIED-001`로 추가했다.
+- 남은 후보인 search-then-act, mixed incident 008은 release 전 content polish 후보로 유지한다.
 
 ### 4. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 

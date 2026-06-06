@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-06 — Post-polish review와 line reuse judgment drill 완료
+
+이전 가정: First Dispatch/Judgment/UI console 보강 후 다음 후보는 fresh evidence review로 결정해야 했다.
+
+새 가정: fresh review 결과 P0/P1 blocker는 보이지 않았고, 다음 최선은 release candidate 포장이나 새 engine hardening이 아니라 기존 `visual-line-basic`을 command-choice 판단 문제로 재사용하는 `LINE-REUSE-APPLIED-001`이었다. `incident-005-command-choice`는 현재 여섯 beat로 scope/range/inline/quote reuse/repeat-change/line reuse 판단을 검증한다.
+
+이유: line reuse는 새 schema/progress/dependency/engine 변경 없이 "검증된 줄 전체를 다시 치지 않고 재사용한다"는 Vim 판단력을 선명하게 추가한다. search-then-scope는 후속 후보로 좋지만 route 길이와 적용 위치를 더 검토해야 하고, bracket pair hardening은 새 engine capability가 필요하다.
+
+영향: `POST-POLISH-PLAYTEST-001`과 `LINE-REUSE-APPLIED-001`은 completed로 이동한다. 다음 후보는 `SEARCH-THEN-SCOPE-APPLIED-001` 검토이며, RC/tag 작업은 여전히 사용자가 명시적으로 원할 때만 연다.
+
 ## 2026-06-06 — First Dispatch/Judgment/UI console 중기 보강 완료
 
 이전 가정: `PLAYABLE-QUALITY-BASELINE-001` 이후 다음 후보는 새 대형 콘텐츠나 release candidate 포장이 아니라 `CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001` 같은 좁은 후속 slice였다.
