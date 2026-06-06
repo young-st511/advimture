@@ -10,14 +10,14 @@ setup:
 steps:
   - wait_screen_contains: "라우트 이름에 i가 하나 더 들어갔습니다"
   - send: "x"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "api가 apx로 찍혔습니다"
   - send: "r"
   - wait_ms: 50
   - send: "i"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "가운데 b가 빠졌습니다"
@@ -26,7 +26,7 @@ steps:
   - send: "b"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "서비스 이름 ap 뒤에 i가 빠졌습니다"
@@ -35,7 +35,7 @@ steps:
   - send: "i"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "배포 체크 줄 끝에 확인 표시가 빠졌습니다"
@@ -44,14 +44,14 @@ steps:
   - send: "!"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "잠깐 손이 미끄러져 p를 지워버렸습니다"
   - send: "x"
   - wait_ms: 50
   - send: "u"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "p를 지우는 판단이 맞았는데 u로 되돌려버렸습니다"
@@ -60,13 +60,13 @@ steps:
   - send: "u"
   - wait_ms: 50
   - send: "ctrl+r"
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Tutorial 3: 작은 수정"
     - "Exercise: 7/7"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "ctrl+r까지 알면 되돌림도 다시 적용도 안전하게 실험"
   exit_code: 0
   progress_file_exists: true

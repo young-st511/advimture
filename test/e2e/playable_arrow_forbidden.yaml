@@ -16,7 +16,7 @@ assert:
     - "RECOVERY REQUIRED"
     - "Grade: F"
     - "Inputs left: 1/2"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
   exit_code: 0
   progress_file_exists: false
   key_trace:

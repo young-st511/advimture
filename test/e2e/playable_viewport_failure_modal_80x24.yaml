@@ -9,13 +9,13 @@ setup:
 steps:
   - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
   - send: "right"
-  - wait_screen_contains: "Retry: r or enter"
+  - wait_screen_contains: "다시 시도: r 또는 enter"
   - send: "q"
 assert:
   screen_contains:
     - "RECOVERY CHECK"
     - "RECOVERY REQUIRED"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
     - "Grade: F"
   exit_code: 0
   progress_file_exists: false
@@ -39,6 +39,11 @@ assert:
       focus_panel:
         kind: "failure"
         title: "RECOVERY REQUIRED"
+        actions:
+          - id: "retry"
+            label: "다시 시도: r 또는 enter"
+          - id: "quit"
+            label: "종료: q"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true

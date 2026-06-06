@@ -23,7 +23,7 @@ steps:
   - wait_ms: 50
   - send: "enter"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "timeout이 두 번 보입니다"
@@ -47,7 +47,7 @@ steps:
   - wait_ms: 50
   - send: "n"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "첫 retry 안쪽에 커서"
@@ -67,7 +67,7 @@ steps:
   - wait_ms: 50
   - send: "N"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "커서는 파일 끝에 있지만 alarm"
@@ -85,13 +85,13 @@ steps:
   - wait_ms: 50
   - send: "enter"
   - wait_ms: 50
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Literal search"
     - "Exercise: 4/4"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "좋습니다. 검색이 문서 위쪽으로 wrap되어 alarm을 찾았습니다."
   exit_code: 0
   progress_file_exists: true

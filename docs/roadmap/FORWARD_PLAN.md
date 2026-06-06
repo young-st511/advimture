@@ -1,11 +1,11 @@
-# Forward Plan — Foundation to First Release
+# Forward Plan — Foundation to Release Quality
 
-Last reviewed: 2026-06-01
+Last reviewed: 2026-06-06
 Status: current rolling plan
 
 ## 목적
 
-이 문서는 앞으로 2~8주 동안 어떤 순서로 Advimture를 출시 가능한 Vim 학습 게임으로 다듬을지 정리한다.
+이 문서는 앞으로 2~8주 동안 어떤 순서로 Advimture를 출시 가능한 품질의 Vim 학습 게임으로 다듬을지 정리한다.
 
 - `PROGRAM.md`: 지금 무엇이 active인지 확인한다.
 - `MIDTERM_TODO.md`: 현재 중기 보드를 확인한다.
@@ -15,7 +15,7 @@ Status: current rolling plan
 
 ## 현재 판단
 
-Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새 Vim command 수가 아니라 출시 가능한 게임 루프다.
+Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새 Vim command 수나 release candidate 포장이 아니라, 현재 playable loop가 "출시 가능한 품질"처럼 느껴지게 만드는 기준선이다.
 
 현재 상태:
 
@@ -23,9 +23,9 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - Content: tutorial coverage와 incident 001~007이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
-- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish는 한 차례 닫혔고, 다음 병목은 공개 후보 문서와 evidence 정리다.
+- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline은 한 차례 닫혔다. 하지만 바로 출시할 계획은 없으므로 다음 병목은 release candidate 문서가 아니라 후속 world/UX/content polish를 필요한 순간에 좁게 여는 것이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. 따라서 다음 순서는 **release candidate prep -> post-release content/engine expansion**으로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001`로 세계관/UX/UI/콘텐츠 기획/엔진 모듈화 기준을 닫은 뒤, 2026-06-06에는 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001`까지 완료했다. 따라서 다음 순서는 **fresh evidence review -> narrow applied content or UI polish -> later release candidate prep**으로 간다.
 
 ## 0. 운영 원칙
 
@@ -66,7 +66,7 @@ ExecPlan: `docs/exec-plans/completed/platform-review-003-mission-review-loop.md`
 결과:
 
 - 성공 debrief가 `이번 복구`, `최단 복구`, `목표 입력`, `잔류 리스크`, `다음 출격`을 보여준다.
-- 마지막 dispatch에서 review 후보가 남아 있으면 `Next dispatch: enter`로 primary review exercise에 재진입한다.
+- 마지막 dispatch에서 review 후보가 남아 있으면 `다음 출격: enter`로 primary review exercise에 재진입한다.
 - progress schema v2, daily streak, persisted review due date는 여전히 도입하지 않았다.
 
 검증:
@@ -163,47 +163,105 @@ Review: `docs/roadmap/PLAYTEST_GATE_2026-05-30.md`
 
 ## 4. Next Midterm Sequence
 
-### 1. RELEASE-CANDIDATE-001 — Release Candidate Prep
+### 1. PLAYABLE-QUALITY-BASELINE-001 — Release-Quality Playable Baseline
 
-Status: proposed
+Status: completed
+ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
+Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 
-목표: 첫 공개 후보를 문서와 evidence 기준으로 묶는다.
+목표: 바로 출시하지 않더라도 현재 playable loop가 출시 가능한 품질에 가까워지도록 세계관, UX/UI, 콘텐츠 목표, 엔진/모듈화 기준을 세우고 개선한다.
 
 포함 후보:
 
-- release note 초안
-- known limitations 최신화
-- 최종 `make release-check` evidence 위치 정리
-- README와 docs entrypoint spot check
-- 태그/공개 후보 기준 정리
+- world-frame/scenario-tone release-quality 기준 정리
+- first-run/tutorial/incident/review UI 기준과 evidence spot review
+- 출시할 만한 콘텐츠 양과 episode arc 기획
+- 현재 엔진/모듈화가 품질 목표를 감당하는지 판정
+- P0/P1/P2를 나눠 focused fix 후보 선정
 
 제외:
 
-- 새 engine/content/schema
-- progress 저장 포맷 변경
-- UI renderer 대개편
+- 바로 release candidate를 묶거나 tag를 찍는 작업
+- 신규 대형 tutorial/incident 구현
+- 사용자 확인 없는 progress 저장 포맷/content schema/의존성 변경
 
 출구:
 
-- `make release-check` pass
-- final/timeline/app_state evidence spot review pass
-- 사람이 공개 전 확인할 항목이 `PROGRAM.md`와 release note에 정리됨
+- 세계관/UX/UI/콘텐츠/엔진 기준과 현재 판정이 문서화됨
+- 필요한 small fix가 적용되거나 큰 구조 변경 후보가 별도 ExecPlan으로 분리됨
+- `make release-check`, `git diff --check` pass
 
-### 2. RC-BLOCKER-FIX-001 — Release Candidate Blocker Fix
+### 2. CONTENT-QUALITY-PLAN-001 — Release-Quality Content Plan
 
-Status: skipped for now
+Status: completed as planning
+Plan: `docs/roadmap/CONTENT_QUALITY_PLAN_001.md`
 
-목표: fresh run 또는 release candidate prep에서 확인된 진행 blocker만 좁게 수정한다.
+목표: 신규 콘텐츠를 바로 구현하지 않고, 출시할 만한 첫 콘텐츠 양과 arc를 기획한다.
+
+포함 후보:
+
+- tutorial first tour에서 first dispatch까지의 전환 설계
+- incident 001~003 relay station arc 재정리
+- command-choice judgment drill 후보 목록
+- 다음 engine candidate를 콘텐츠 병목 기준으로 선정
+
+제외:
+
+- content YAML 구현
+- 새 engine 구현
+- schema 변경
+
+### 3. CONTENT-ARC-POLISH-001 — First Dispatch Arc Polish
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/content-arc-polish-001-first-dispatch-arc.md`
+
+목표: 새 YAML 콘텐츠 없이 incident 001~003의 기존 title/briefing/feedback을 world-frame 기준으로 spot polish한다.
+
+완료 결과:
+
+- incident 001은 원인 신호 추적, 002는 구조 재동기화, 003은 오염 구간 격리로 읽힌다.
+- 변경 범위는 scenario title/briefing/feedback copy와 docs에 머물렀다.
+- exercise target, optimal keys, constraints는 변경하지 않았다.
+
+### 4. JUDGMENT-DRILL-REVIEW-001 — Command Choice as Core Identity
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/judgment-drill-review-001-command-choice.md`
+
+목표: command-choice를 Advimture의 핵심 차별점인 "상황에 맞는 Vim 도구 선택"으로 강화한다.
+
+완료 결과:
+
+- `incident-005-command-choice`의 5 beat는 scope/range/inline/reuse/repeat-change 판단 질문에 매핑된다.
+- success/failure copy는 command 이름보다 선택 이유를 먼저 설명한다.
+- 후속 후보는 line reuse, search-then-scope, bracket-pair hardening으로 문서에만 정리했다.
+
+### 5. UI-CONSOLE-POLISH-001 — Runbook Console Product Feel
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
+
+목표: action line의 화면 label과 E2E action 의미를 분리한다.
+
+완료 결과:
+
+- `FocusPanel.actions` internal DTO와 `app_state.ui.focus_panel.actions`를 추가했다.
+- 사용자 화면 label은 `다음 단계`, `다시 시도`, `다음 runbook`, `출격 완료` 같은 제품 톤을 사용한다.
+- progress schema, content schema, dependency 변경은 없다.
+
+### 6. RELEASE-CANDIDATE-001 — Release Candidate Prep
+
+Status: later
+
+목표: 실제로 공개 후보를 묶기로 결정했을 때 release note, known limitations, final evidence bundle, tag 후보 기준을 정리한다.
 
 다시 열리는 조건:
 
-- 앱 진행이 막힘
-- 저장/재개가 위험함
-- README대로 실행이 실패함
-- 필수 조작이 UI에서 오해됨
-- terminal clipping 때문에 주요 action이 보이지 않음
+- 사용자가 실제 공개 후보 준비를 원함
+- 현재 known limitations와 release gate가 충분히 정리됨
 
-### 3. POST-MVP-CONTENT-001 — Post MVP Content/Engine Expansion
+### 7. POST-MVP-CONTENT-001 — Post Baseline Content/Engine Expansion
 
 Status: later
 

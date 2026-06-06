@@ -22,7 +22,7 @@ assert:
     - "목표 입력: 2 keys"
     - "Runbook: 1/4 복구 완료"
     - "다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기"
-    - "Next: enter"
+    - "다음 단계: enter"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

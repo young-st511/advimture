@@ -2,13 +2,13 @@
 
 Created: 2026-05-26
 Status: current
-Last reviewed: 2026-05-30
+Last reviewed: 2026-06-02
 
 ## 판단
 
 Content breadth로 넘어가기 전에 막는 P0 UX 리스크는 없다.
 
-현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
+현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. `PLAYABLE-QUALITY-BASELINE-001` 이후에도 P0/P1 UX blocker는 없다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
 
 ## P0
 
@@ -61,6 +61,13 @@ P0로 승격하는 조건:
 - 언제 열 것인가: efficiency/review run에서 key count 개선을 본격적으로 다룰 때.
 - 어떻게 검증할 것인가: progress 저장 변경 없이 runtime key_trace tail만 표시하고, E2E key_trace와 화면 표시가 일치하는지 확인한다.
 
+### UI-ACTION-LANGUAGE-001 — Action Line Language Contract
+
+- 상태: completed by `UI-CONSOLE-POLISH-001` on 2026-06-06.
+- 왜 중요했는가: success/failure modal의 보조 label은 한국어화됐지만 `Retry`, `Next`, `Next runbook`, `Dispatch complete` action line은 화면 표시와 E2E priority marker를 겸했다.
+- 완료 내용: 화면 표시 label은 `다시 시도`, `다음 단계`, `다음 runbook`, `출격 완료`처럼 제품 톤에 맞췄고, E2E는 `app_state.ui.focus_panel.actions[].id`로 action 의미를 검증한다.
+- 검증: `playable_viewport_success_modal_80x24`, `playable_viewport_failure_modal_80x24`, `playable_incident_hint_affordance`, `playable_command_mismatch_feedback`.
+
 ## Content Breadth Readiness
 
 다음 content breadth slice는 진행 가능하다.
@@ -80,3 +87,4 @@ P0로 승격하는 조건:
 
 - `UI-EVIDENCE-003 — Final Frame Evidence`: `UI-EVIDENCE-002`에서 runner의 `screen_final.txt` 저장을 구현했고, `E2E-EVIDENCE-008`에서 long incident route가 final/timeline evidence를 남기도록 고정했다.
 - `UI-COMMAND-MEMORY-001 — Learned Command Memory`: `UI-POLISH-002`에서 tutorial/hint/failure command memory cue를 구현했다.
+- `UI-ACTION-LANGUAGE-001 — Action Line Language Contract`: `UI-CONSOLE-POLISH-001`에서 screen label과 action id를 분리했다.

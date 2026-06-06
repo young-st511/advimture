@@ -24,7 +24,7 @@ steps:
   - send: "t"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "secret 값이 stale 상태라"
@@ -45,7 +45,7 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "복구된 fresh 값을 mirror"
@@ -60,7 +60,7 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "P"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "남은 temp 상태가"
@@ -95,7 +95,7 @@ steps:
   - send: "g"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "두 줄의 old 값이 같은 방식"
@@ -118,14 +118,14 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "."
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 002: 구조 설정 재동기화"
     - "Exercise: 5/5"
-    - "Next runbook: enter"
-    - "좋습니다. 같은 구조 수정은 다시 타이핑하지 않고 반복 패치해 구조 재동기화 runbook을 닫았습니다."
+    - "다음 runbook: enter"
+    - ".으로 같은 quote 교체를 반복해 구조 재동기화 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

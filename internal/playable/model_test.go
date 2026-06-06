@@ -325,7 +325,7 @@ func TestPlayableShowsNextTutorialAtEpisodeBoundary(t *testing.T) {
 	}
 	model, _ = updateWithKey(t, model, "k")
 
-	if !strings.Contains(model.View(), "Next tutorial: enter") {
+	if !strings.Contains(model.View(), "다음 튜토리얼: enter") {
 		t.Fatalf("view = %q, want next tutorial transition", model.View())
 	}
 	if !strings.Contains(model.View(), "Runbook: 4/4 복구 완료") {
@@ -362,7 +362,7 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 					{PlaylistID: "tutorial-0", PlaylistCategory: "tutorial"},
 				},
 			},
-			want: []string{"Next: enter"},
+			want: []string{"다음 단계: enter"},
 		},
 		{
 			name: "next tutorial",
@@ -373,7 +373,7 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 					{PlaylistID: "tutorial-1", PlaylistCategory: "tutorial"},
 				},
 			},
-			want: []string{"Next tutorial: enter"},
+			want: []string{"다음 튜토리얼: enter"},
 		},
 		{
 			name: "next incident",
@@ -384,7 +384,7 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 					{PlaylistID: "incident-001", PlaylistCategory: "incident"},
 				},
 			},
-			want: []string{"Next runbook: enter"},
+			want: []string{"다음 runbook: enter"},
 		},
 		{
 			name: "final incident",
@@ -394,7 +394,7 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 					{PlaylistID: "incident-005", PlaylistCategory: "incident"},
 				},
 			},
-			want: []string{"Dispatch complete", "q: quit"},
+			want: []string{"출격 완료", "종료: q"},
 		},
 		{
 			name: "final incident with review dispatch",
@@ -408,7 +408,7 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 					{ExerciseID: "normal-motion-basic-001", Title: "목표 문자까지 이동하기", Reason: review.ReasonLowGrade},
 				},
 			},
-			want: []string{"Next dispatch: enter", "q: quit"},
+			want: []string{"다음 출격: enter", "종료: q"},
 		},
 	}
 
@@ -447,7 +447,7 @@ func TestPlayableReviewDispatchReopensPrimaryReviewCandidateAfterFinalIncident(t
 	if model.State().Status != "succeeded" {
 		t.Fatalf("status = %q, want succeeded", model.State().Status)
 	}
-	if !strings.Contains(model.View(), "Next dispatch: enter") {
+	if !strings.Contains(model.View(), "다음 출격: enter") {
 		t.Fatalf("view = %q, want review dispatch action", model.View())
 	}
 
@@ -510,7 +510,7 @@ func TestPlayableFailsForbiddenInputWithoutSavingAndRetriesWithEnter(t *testing.
 	if saveCalls != 0 {
 		t.Fatalf("saveCalls = %d, want 0", saveCalls)
 	}
-	if !strings.Contains(model.View(), "Retry: r or enter") {
+	if !strings.Contains(model.View(), "다시 시도: r 또는 enter") {
 		t.Fatalf("view = %q, want retry prompt", model.View())
 	}
 	if !strings.Contains(model.View(), "RECOVERY REQUIRED") {
@@ -555,7 +555,7 @@ func TestPlayableFailsArrowKeyShortcutWithoutSaving(t *testing.T) {
 	if !containsLineWith(model.State().UI.FocusPanel.Lines, "이 입력은 이번 문항에서 사용할 수 없습니다.") {
 		t.Fatalf("focus panel lines = %v, want forbidden input message", model.State().UI.FocusPanel.Lines)
 	}
-	if !strings.Contains(model.View(), "Retry: r or enter") {
+	if !strings.Contains(model.View(), "다시 시도: r 또는 enter") {
 		t.Fatalf("view = %q, want retry prompt", model.View())
 	}
 }
@@ -708,7 +708,7 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	if !strings.Contains(view, ":") {
 		t.Fatalf("view = %q, want command prompt", view)
 	}
-	if !strings.Contains(view, "COMMAND CHANNEL") {
+	if !strings.Contains(view, "명령 모드") {
 		t.Fatalf("view = %q, want command focus panel", view)
 	}
 	if strings.Contains(view, "q: quit") {
@@ -731,10 +731,10 @@ func TestPlayableShowsTextEntryHelpInsteadOfHintInInsertMode(t *testing.T) {
 	if model.State().Mode != "insert" {
 		t.Fatalf("mode = %q, want insert", model.State().Mode)
 	}
-	if !strings.Contains(view, "Keys: type text  esc: normal") {
+	if !strings.Contains(view, "입력: 텍스트 작성  esc: normal") {
 		t.Fatalf("view = %q, want insert action panel", view)
 	}
-	if strings.Contains(view, "?: hint") {
+	if strings.Contains(view, "힌트: ?") {
 		t.Fatalf("view = %q, should not show hint prompt in insert mode", view)
 	}
 	if strings.Contains(view, "q: quit") {
@@ -752,10 +752,10 @@ func TestPlayableShowsSearchLineInSearchMode(t *testing.T) {
 	if !strings.Contains(view, "/a") {
 		t.Fatalf("view = %q, want search prompt", view)
 	}
-	if !strings.Contains(view, "Keys: type search  enter: find  esc: normal") {
+	if !strings.Contains(view, "검색: 입력 후 enter 찾기  esc: normal") {
 		t.Fatalf("view = %q, want search action panel", view)
 	}
-	if strings.Contains(view, "?: hint") {
+	if strings.Contains(view, "힌트: ?") {
 		t.Fatalf("view = %q, should not show hint prompt in search mode", view)
 	}
 }
@@ -769,10 +769,10 @@ func TestPlayableShowsVisualHelpInsteadOfGenericHintQuit(t *testing.T) {
 	if model.State().Mode != "visual" {
 		t.Fatalf("mode = %q, want visual", model.State().Mode)
 	}
-	if !strings.Contains(view, "Keys: motion expands selection  esc/v: normal") {
+	if !strings.Contains(view, "선택: 이동 키로 범위 조정  esc/v: normal") {
 		t.Fatalf("view = %q, want visual action panel", view)
 	}
-	if strings.Contains(view, "?: hint") {
+	if strings.Contains(view, "힌트: ?") {
 		t.Fatalf("view = %q, should not show hint prompt in visual mode", view)
 	}
 	if strings.Contains(view, "q: quit") {

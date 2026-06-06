@@ -28,6 +28,19 @@
 - 실패 피드백은 복구 힌트와 학습 의도를 우선한다.
 - replay/review UI는 저장 포맷 변경 없이 “잔류 리스크”, “재점검”, “최단 복구 기록” 언어를 사용할 수 있다.
 
+## Release-Quality 기준
+
+출시 가능한 품질의 세계관은 lore 양이 아니라 일관성으로 판단한다.
+
+- 처음 보는 플레이어가 1분 안에 "나는 원격 복구 오퍼레이터이고, Vim으로 runbook을 복구한다"를 이해해야 한다.
+- tutorial은 첫 투어로 두되, incident로 넘어갈 때 `Runbook Dispatch`에 들어간다는 감각을 짧게 만든다.
+- incident는 "문제 1, 2, 3"이 아니라 "복구 작전의 단계"처럼 읽혀야 한다.
+- 성공 피드백은 세계관 감탄보다 어떤 Vim 조작이 복구에 기여했는지 먼저 말한다.
+- 실패 피드백은 플레이어를 벌주기보다 다음 복구 선택을 알려준다.
+- 장대한 배경 설명, 세력 관계, NPC drama는 현재 scope 밖이다.
+
+현재 판정은 `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`와 `docs/roadmap/CONTENT_QUALITY_PLAN_001.md`를 따른다.
+
 ## Command Mapping
 
 | Vim cluster | 복구 동사 | 짧은 scenario 재료 |
@@ -45,7 +58,7 @@
 
 ### Incident 001
 
-권장 제목: **릴레이 기지 001: 야간 핫픽스 복구**
+권장 제목: **릴레이 기지 001: 원인 신호 추적**
 
 흐름:
 
@@ -56,11 +69,11 @@
 5. `yy/p`로 정상 route를 재사용한다.
 6. `:2,3s`로 문제 구간만 정리한다.
 
-핵심 감각은 “여섯 문제”가 아니라 “끊긴 relay route를 닫는 6단계 runbook”이다.
+핵심 감각은 “여섯 문제”가 아니라 “원인 신호를 고정하고, 확인한 relay route를 단계적으로 복구하는 6단계 runbook”이다. 성공/실패 피드백은 `/`, `n`, `ciw`, `o`, `yy/p`, range substitute가 왜 맞는 선택인지 먼저 말한다.
 
 ### Incident 002
 
-권장 제목: **릴레이 기지 002: 구조 설정 재동기화**
+권장 제목: **릴레이 기지 002: 구조 재동기화**
 
 흐름:
 
@@ -70,7 +83,7 @@
 4. `:%s`로 temp 상태를 live로 승격한다.
 5. `.`으로 같은 quote 패치를 반복한다.
 
-핵심 감각은 “구조 설정을 순서대로 재동기화하는 복구 작전”이다.
+핵심 감각은 “quote 구조를 보존하면서 secret, mirror, temp/live, 반복 quote 값을 순서대로 재동기화하는 복구 작전”이다.
 
 ### Incident 003
 
@@ -84,7 +97,17 @@
 4. backward visual `d`로 뒤쪽 stale tail만 제거한다.
 5. `:%s`로 잔류 off 상태를 on으로 승격한다.
 
-핵심 감각은 “보이는 오염 구간을 지정하고, 정상 신호를 재사용한 뒤, 전체 상태를 마감하는 격리 runbook”이다.
+핵심 감각은 “contam 표식을 검색으로 고정하고, 보이는 오염 구간을 지정하고, 정상 신호를 재사용한 뒤, 전체 상태를 마감하는 격리 runbook”이다.
+
+## First Dispatch Arc Evidence
+
+`incident 001 -> 002 -> 003`은 첫 대표 복구 arc로 읽힌다.
+
+| 순서 | 역할 | Evidence |
+|------|------|----------|
+| 001 | 원인 신호 추적 | `playable_incident_001_full` final/timeline이 검색, 상태 복구, guard 추가, route 재사용, 문제 구간 range 정리를 보여준다. |
+| 002 | 구조 재동기화 | `playable_incident_002_full` final/timeline이 quote 내부 값 복구, mirror 재사용, 전체 상태 승격, 반복 quote 패치를 보여준다. |
+| 003 | 오염 구간 격리 | `playable_incident_003_full` final/timeline이 visual 범위 지정, 정상 신호 재사용, 잔류 상태 전체 승격을 보여준다. |
 
 ## 금지
 

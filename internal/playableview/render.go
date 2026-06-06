@@ -40,9 +40,15 @@ type Screen struct {
 }
 
 type FocusPanel struct {
-	Kind  string
-	Title string
-	Lines []string
+	Kind    string
+	Title   string
+	Lines   []string
+	Actions []ActionLine
+}
+
+type ActionLine struct {
+	ID    string
+	Label string
 }
 
 var actionPanelStyle = lipgloss.NewStyle().
@@ -329,7 +335,7 @@ func renderMissionCue(panel *FocusPanel, screenWidth int) string {
 	if panel == nil || isFloatingPanel(*panel) {
 		return ""
 	}
-	lines := append([]string{panel.Title}, panel.Lines...)
+	lines := focusPanelDisplayLines(*panel)
 	return strings.Join(wrapMissionCueLines(lines, hudTextWidth(screenWidth)), "\n") + "\n"
 }
 
@@ -415,6 +421,9 @@ func wrapTextByDisplayWidth(text string, width int) []string {
 
 func renderHeader(screen Screen) string {
 	parts := []string{"ADVIMTURE"}
+	if track := trackLabel(screen.PlaylistCategory); track != "" {
+		parts = append(parts, track)
+	}
 	if screen.PlaylistTitle != "" {
 		parts = append(parts, screen.PlaylistTitle)
 	}
@@ -427,6 +436,17 @@ func renderHeader(screen Screen) string {
 	return strings.Join(parts, " | ")
 }
 
+func trackLabel(category string) string {
+	switch category {
+	case "tutorial":
+		return "Tutorial"
+	case "incident":
+		return "Runbook Dispatch"
+	default:
+		return ""
+	}
+}
+
 func RenderActionPanel(lines []string) string {
 	if len(lines) == 0 {
 		return ""
@@ -435,7 +455,7 @@ func RenderActionPanel(lines []string) string {
 }
 
 func RenderFocusPanel(panel FocusPanel, screenWidth int) string {
-	lines := append([]string{panel.Title}, panel.Lines...)
+	lines := focusPanelDisplayLines(panel)
 	panelWidth := focusPanelWidth(screenWidth)
 	rendered := actionPanelStyle.Width(panelWidth).Render(strings.Join(lines, "\n"))
 	if screenWidth <= 0 || screenWidth <= panelWidth {
@@ -449,7 +469,7 @@ func RenderFloatingModal(panel FocusPanel, screenWidth int) string {
 	panelWidth := focusPanelWidth(screenWidth)
 	rendered := floatingModalStyle.Width(panelWidth).Render(strings.Join(lines, "\n"))
 	renderedLines := strings.Split(rendered, "\n")
-	renderedLines = fitFocusPanelLines(renderedLines, 12)
+	renderedLines = fitFocusPanelLines(renderedLines, 13, focusPanelActionLabels(panel))
 	rendered = strings.Join(renderedLines, "\n")
 	if screenWidth <= 0 || screenWidth <= panelWidth {
 		return rendered
@@ -458,17 +478,19 @@ func RenderFloatingModal(panel FocusPanel, screenWidth int) string {
 }
 
 func floatingModalLines(panel FocusPanel) []string {
+	var lines []string
 	switch panel.Kind {
 	case "failure":
-		lines := []string{floatingModalTitle(panel), panel.Title}
-		return append(lines, failureModalLines(panel.Lines)...)
+		lines = []string{floatingModalTitle(panel), panel.Title}
+		lines = append(lines, failureModalLines(panel.Lines)...)
 	case "success":
-		lines := []string{floatingModalTitle(panel)}
-		return append(lines, successModalLines(panel.Lines)...)
+		lines = []string{floatingModalTitle(panel)}
+		lines = append(lines, successModalLines(panel.Lines)...)
 	default:
-		lines := []string{floatingModalTitle(panel), panel.Title}
-		return append(lines, panel.Lines...)
+		lines = []string{floatingModalTitle(panel), panel.Title}
+		lines = append(lines, panel.Lines...)
 	}
+	return append(lines, focusPanelActionLabels(panel)...)
 }
 
 func floatingModalTitle(panel FocusPanel) string {
@@ -488,12 +510,14 @@ func failureModalLines(lines []string) []string {
 		line := lines[i]
 		switch {
 		case i == 0:
-			out = append(out, "Mistake  "+line)
+			out = append(out, "실수    "+line)
 		case strings.HasPrefix(line, "Inputs left:") && i+1 < len(lines) && strings.HasPrefix(lines[i+1], "Attempts:"):
 			out = append(out, line+" · "+lines[i+1])
 			i++
-		case strings.HasPrefix(line, "Coach:") || strings.HasPrefix(line, "복구 힌트:"):
-			out = append(out, "Next     "+line)
+		case strings.HasPrefix(line, "Coach:"):
+			out = append(out, "힌트    "+strings.TrimPrefix(line, "Coach: "))
+		case strings.HasPrefix(line, "복구 힌트:"):
+			out = append(out, "힌트    "+strings.TrimPrefix(line, "복구 힌트: "))
 		default:
 			out = append(out, line)
 		}
@@ -506,9 +530,9 @@ func successModalLines(lines []string) []string {
 	for i, line := range lines {
 		switch {
 		case i == 0:
-			out = append(out, "Learned  "+line)
+			out = append(out, "배운 점  "+line)
 		case strings.HasPrefix(line, "복구 기록:") || strings.HasPrefix(line, "이번 복구:"):
-			out = append(out, "Result   "+line)
+			out = append(out, "기록    "+line)
 		default:
 			out = append(out, line)
 		}
@@ -523,7 +547,7 @@ func RenderFocusLayer(panel *FocusPanel, screenWidth int) string {
 		return strings.Join(lines, "\n") + "\n"
 	}
 	rendered := strings.Split(RenderFocusPanel(*panel, screenWidth), "\n")
-	rendered = fitFocusPanelLines(rendered, layerHeight)
+	rendered = fitFocusPanelLines(rendered, layerHeight, focusPanelActionLabels(*panel))
 	start := (layerHeight - len(rendered)) / 2
 	if start < 0 {
 		start = 0
@@ -538,7 +562,7 @@ func RenderFocusLayer(panel *FocusPanel, screenWidth int) string {
 	return strings.Join(lines, "\n") + "\n"
 }
 
-func fitFocusPanelLines(rendered []string, maxHeight int) []string {
+func fitFocusPanelLines(rendered []string, maxHeight int, priorityLabels []string) []string {
 	if len(rendered) <= maxHeight || maxHeight < 3 {
 		return rendered
 	}
@@ -549,7 +573,7 @@ func fitFocusPanelLines(rendered []string, maxHeight int) []string {
 	if len(interior) > interiorLimit {
 		interior = interior[:interiorLimit]
 	}
-	if priority := focusPanelPriorityLine(rendered[1 : len(rendered)-1]); priority != "" && !containsLine(interior, priority) {
+	if priority := focusPanelPriorityLine(rendered[1:len(rendered)-1], priorityLabels); priority != "" && !containsLine(interior, priority) {
 		interior[len(interior)-1] = priority
 	}
 	fitted = append(fitted, interior...)
@@ -557,8 +581,11 @@ func fitFocusPanelLines(rendered []string, maxHeight int) []string {
 	return fitted
 }
 
-func focusPanelPriorityLine(lines []string) string {
-	for _, marker := range []string{"Retry:", "Next:", "Next tutorial:", "Next runbook:", "Next dispatch:", "Playlist complete", "Dispatch complete", "q: quit"} {
+func focusPanelPriorityLine(lines []string, priorityLabels []string) string {
+	markers := append([]string(nil), priorityLabels...)
+	markers = append(markers, "다시 시도:", "다음 단계:", "다음 튜토리얼:", "다음 runbook:", "다음 출격:", "플레이리스트 완료", "출격 완료", "종료: q")
+	markers = append(markers, "Retry:", "Next:", "Next tutorial:", "Next runbook:", "Next dispatch:", "Playlist complete", "Dispatch complete", "q: quit")
+	for _, marker := range markers {
 		for i := len(lines) - 1; i >= 0; i-- {
 			line := lines[i]
 			if strings.Contains(line, marker) {
@@ -576,6 +603,24 @@ func containsLine(lines []string, target string) bool {
 		}
 	}
 	return false
+}
+
+func focusPanelDisplayLines(panel FocusPanel) []string {
+	lines := append([]string{panel.Title}, panel.Lines...)
+	return append(lines, focusPanelActionLabels(panel)...)
+}
+
+func focusPanelActionLabels(panel FocusPanel) []string {
+	if len(panel.Actions) == 0 {
+		return nil
+	}
+	labels := make([]string, 0, len(panel.Actions))
+	for _, action := range panel.Actions {
+		if action.Label != "" {
+			labels = append(labels, action.Label)
+		}
+	}
+	return labels
 }
 
 func focusPanelWidth(screenWidth int) int {

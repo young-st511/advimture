@@ -9,7 +9,7 @@ setup:
 steps:
   - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
   - send: "w"
-  - wait_screen_contains: "Retry: r or enter"
+  - wait_screen_contains: "다시 시도: r 또는 enter"
   - send: "enter"
   - wait_screen_contains: "Inputs left: 2/2"
   - send: "l"

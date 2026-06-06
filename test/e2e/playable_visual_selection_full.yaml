@@ -16,7 +16,7 @@ steps:
   - send: "l"
   - wait_ms: 50
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "node의 ok 신호를 mirror"
@@ -29,7 +29,7 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "p"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "cache 줄의 stale 흔적"
@@ -44,13 +44,13 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "d"
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Visual selection"
     - "Exercise: 3/3"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "좋습니다. anchor가 오른쪽이어도 선택 범위를 정규화해 정확히 제거했습니다."
   exit_code: 0
   progress_file_exists: true

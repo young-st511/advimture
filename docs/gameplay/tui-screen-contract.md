@@ -91,6 +91,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - running tutorial: `MISSION` HUD cue에 command memory, 필요한 경우 훈련 키, hint, quit. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
 - running incident: `MISSION` HUD cue에 판단 cue, hint, quit. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
+- insert/search/command/visual mode cue는 한국어 action label로 표현하고, 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed: floating modal에 실패 이유, 남은 입력, attempts, retry
 - succeeded: floating modal에 복구 기록, best record, runbook completion, residual risk, next action
 - failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
@@ -99,9 +100,24 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 구조:
 
 - `kind`: `training`, `incident`, `failure`, `success`, `mode`
-- `title`: `TRAINING BRIEF`, `OPERATOR JUDGMENT`, `RECOVERY REQUIRED`, `STEP SEALED`, `COMMAND CHANNEL` 등
+- `title`: `TRAINING BRIEF`, `OPERATOR JUDGMENT`, `RECOVERY REQUIRED`, `STEP SEALED`, `명령 모드` 등
 - `lines`: 사용자에게 보일 안내 문구
+- `actions`: retry/next/quit 같은 조작 의미. 화면에는 `label`을 표시하고, E2E는 `id`로 검증한다.
 - failed modal은 `RECOVERY CHECK`, success modal은 `RUNBOOK SEALED` heading으로 감싸되, app_state의 원래 focus panel kind/title/lines는 유지한다.
+- floating modal이 추가하는 보조 label은 `실수`, `힌트`, `배운 점`, `기록`처럼 한국어로 표시한다.
+
+Action label 계약:
+
+| id | label | 의미 |
+|----|-------|------|
+| `retry` | `다시 시도: r 또는 enter` | 실패한 exercise 재시도 |
+| `next` | `다음 단계: enter` | 같은 playlist의 다음 exercise |
+| `next_tutorial` | `다음 튜토리얼: enter` | 다음 tutorial playlist |
+| `next_runbook` | `다음 runbook: enter` | 다음 incident/runbook |
+| `next_dispatch` | `다음 출격: enter` | review queue primary exercise로 재출격 |
+| `dispatch_complete` | `출격 완료` | incident path 완료 |
+| `playlist_complete` | `플레이리스트 완료` | tutorial path 완료 |
+| `quit` | `종료: q` | 현재 화면 종료 |
 
 금지:
 
@@ -115,13 +131,13 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 |------|----------|----------|
 | 목적 | 새 Vim command 학습 | 배운 command 선택/조합 |
 | 키 노출 | 직접 노출 허용, `기억할 명령` 표시 | 기본 화면에서는 숨기고 hint/failure에서 `참고 명령`으로 점진 공개 |
-| 문구 | `훈련 키`, `연습`, `Next tutorial` | `판단`, `복구 단계`, `잔류 리스크`, `Next runbook`, `Dispatch complete` |
+| 문구 | `훈련 키`, `연습`, `다음 튜토리얼` | `판단`, `복구 단계`, `잔류 리스크`, `다음 runbook`, `출격 완료` |
 | review/daily | 보조 정보 | 세계관 메타 정보로 활용 |
 
 ## 검증 기준
 
 - E2E는 화면 문구와 함께 app_state를 본다.
-- focus panel은 `app_state.ui.focus_panel`으로 kind/title/lines를 검증할 수 있어야 한다.
+- focus panel은 `app_state.ui.focus_panel`으로 kind/title/lines/actions를 검증할 수 있어야 한다.
 - review/daily는 `app_state.review` typed assertion으로 검증한다.
 - visual selection은 app_state selection object로 검증한다.
 - 화면 레이아웃 변경 후에도 key trace와 progress assertion이 유지되어야 한다.

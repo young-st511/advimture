@@ -12,14 +12,14 @@ steps:
   - send: "f"
   - wait_ms: 50
   - send: "="
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "comma 직전"
   - send: "t"
   - wait_ms: 50
   - send: ","
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "stale prefix"
@@ -28,7 +28,7 @@ steps:
   - send: "f"
   - wait_ms: 50
   - send: ","
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "delimiter 보존"
@@ -37,7 +37,7 @@ steps:
   - send: "t"
   - wait_ms: 50
   - send: ","
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "status 값"
@@ -52,7 +52,7 @@ steps:
   - send: "p"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "quoted token"
@@ -73,13 +73,13 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Inline target"
     - "Exercise: 6/6"
-    - "Next runbook: enter"
+    - "다음 runbook: enter"
     - "좋습니다. quote를 건드리지 않고 값만 교체했습니다."
   exit_code: 0
   progress_file_exists: true

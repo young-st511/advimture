@@ -10,7 +10,7 @@ setup:
 steps:
   - wait_screen_contains: "svc 상태 줄 아래에 로그 슬롯"
   - send: "O"
-  - wait_screen_contains: "Retry: r or enter"
+  - wait_screen_contains: "다시 시도: r 또는 enter"
   - send: "enter"
   - wait_screen_contains: "svc 상태 줄 아래에 로그 슬롯"
   - send: "o"
@@ -29,12 +29,12 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Grade: F"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
     - "좋습니다. o로 아래에 줄을 열고 값을 넣었습니다."
   exit_code: 0
   progress_file_exists: true

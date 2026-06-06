@@ -19,7 +19,7 @@ steps:
   - wait_ms: 50
   - send: "."
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "두 상태 값이 down"
@@ -39,7 +39,7 @@ steps:
   - wait_ms: 50
   - send: "."
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "svc와 route 아래에 같은 log=ok"
@@ -63,7 +63,7 @@ steps:
   - wait_ms: 50
   - send: "."
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "두 줄 모두 bad가 gad"
@@ -75,13 +75,13 @@ steps:
   - wait_ms: 50
   - send: "."
   - wait_ms: 50
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Repeat last change"
     - "Exercise: 4/4"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "좋습니다. 단일 문자 교체도 .으로 반복했습니다."
   exit_code: 0
   progress_file_exists: true

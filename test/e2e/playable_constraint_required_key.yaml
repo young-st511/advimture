@@ -17,7 +17,7 @@ assert:
   screen_contains:
     - "Status: failed"
     - "Grade: F"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
     - "지금은 오른쪽 이동 감각을 익히는 단계입니다."
     - "목표에는 도착했지만"
   exit_code: 0

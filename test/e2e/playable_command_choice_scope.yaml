@@ -14,7 +14,7 @@ steps:
   - send: "j"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
   - wait_screen_contains: "동일한 stale 상태"
   - send: ":"
@@ -52,7 +52,7 @@ steps:
   - send: "g"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
   - wait_screen_contains: "target 값은 손상"
   - send: "c"
@@ -74,7 +74,7 @@ steps:
   - send: "e"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
   - wait_screen_contains: "primary token은 이미 검증"
   - send: "y"
@@ -88,7 +88,7 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "P"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
   - wait_screen_contains: "route와 probe 값이 같은 stale"
   - send: "c"
@@ -110,13 +110,14 @@ steps:
   - send: "j"
   - wait_ms: 50
   - send: "."
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
+    - "Runbook Dispatch"
     - "릴레이 기지 005: 복구 범위 판별"
-    - "같은 단어 교체가 이어진다는 패턴"
-    - "Next runbook: enter"
+    - "같은 단어 교체 패턴이 이어지므로"
+    - "다음 runbook: enter"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

@@ -24,7 +24,7 @@ steps:
   - send: "m"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "route 줄에 bad 오염 구간"
@@ -35,7 +35,7 @@ steps:
   - send: "l"
   - wait_ms: 50
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "node의 ok 신호"
@@ -48,7 +48,7 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "p"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "cache 줄의 stale tail"
@@ -63,7 +63,7 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "격리 후에도 off 상태"
@@ -92,14 +92,14 @@ steps:
   - send: "g"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 003: 오염 구간 격리"
     - "Exercise: 5/5"
-    - "Next runbook: enter"
-    - "좋습니다. 남은 off 상태를 전체 범위에서 on으로 승격해 오염 구간 격리 runbook을 닫았습니다."
+    - "다음 runbook: enter"
+    - ":%s로 남은 off 상태를 전체 범위에서 on으로 승격해 오염 구간 격리 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

@@ -11,12 +11,12 @@ steps:
   - send: "l"
   - wait_ms: 50
   - send: "l"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "q"
 assert:
   screen_contains:
     - "RUNBOOK SEALED"
-    - "Next: enter"
+    - "다음 단계: enter"
     - "Grade: S"
   exit_code: 0
   progress_file_exists: true
@@ -41,6 +41,9 @@ assert:
       focus_panel:
         kind: "success"
         title: "STEP SEALED"
+        actions:
+          - id: "next"
+            label: "다음 단계: enter"
 evidence:
   save_raw_ansi: true
   save_clean_screen: true

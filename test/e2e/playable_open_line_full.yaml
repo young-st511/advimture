@@ -25,7 +25,7 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "env 줄 아래에 설정 보정 값"
@@ -45,7 +45,7 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "gate 설정 앞에 환경 보정"
@@ -65,7 +65,7 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "zone 줄 앞에 설정 줄"
@@ -85,7 +85,7 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "sync 줄 아래에 종료 표식"
@@ -105,13 +105,13 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Open line edit"
     - "Exercise: 5/5"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "좋습니다. 아래에 열어야 하는 줄을 o로 정확히 추가했습니다."
   exit_code: 0
   progress_file_exists: true

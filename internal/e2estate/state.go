@@ -55,9 +55,15 @@ type UI struct {
 }
 
 type FocusPanel struct {
-	Kind  string   `json:"kind"`
-	Title string   `json:"title"`
-	Lines []string `json:"lines"`
+	Kind    string       `json:"kind"`
+	Title   string       `json:"title"`
+	Lines   []string     `json:"lines"`
+	Actions []ActionLine `json:"actions,omitempty"`
+}
+
+type ActionLine struct {
+	ID    string `json:"id"`
+	Label string `json:"label"`
 }
 
 func DefaultPath(home string) string {

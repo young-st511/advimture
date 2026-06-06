@@ -15,7 +15,7 @@ steps:
   - wait_ms: 50
   - send: "w"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "cmd 줄 안에 DROP 토큰이 끼었습니다"
@@ -25,7 +25,7 @@ steps:
   - wait_ms: 50
   - send: "w"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "status 값이 down으로 내려앉았습니다"
@@ -41,7 +41,7 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "route 목적지가 blackhole로 잡혔습니다"
@@ -63,7 +63,7 @@ steps:
   - wait_ms: 50
   - send: "esc"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "alpha ID 값을 mirror에 동기화"
@@ -79,7 +79,7 @@ steps:
   - wait_ms: 50
   - send: "p"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "443 포트 값을 backup에도 넣어야 합니다"
@@ -95,13 +95,13 @@ steps:
   - wait_ms: 50
   - send: "p"
   - wait_ms: 50
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Text object inner word"
     - "Exercise: 6/6"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "좋습니다. 숫자 값도 yiw로 잡아 안전하게 붙였습니다."
   exit_code: 0
   progress_file_exists: true

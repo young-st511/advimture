@@ -33,9 +33,10 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 		},
 		UI: UI{
 			FocusPanel: FocusPanel{
-				Kind:  "success",
-				Title: "STEP SEALED",
-				Lines: []string{"Next: enter"},
+				Kind:    "success",
+				Title:   "STEP SEALED",
+				Lines:   []string{"이번 복구: grade S, 2 keys"},
+				Actions: []ActionLine{{ID: "next", Label: "다음 단계: enter"}},
 			},
 		},
 		Selection: &Selection{
@@ -74,5 +75,8 @@ func TestWriteStateCreatesSummaryFile(t *testing.T) {
 	}
 	if got.UI.FocusPanel.Kind != "success" || got.UI.FocusPanel.Title != "STEP SEALED" {
 		t.Fatalf("ui focus panel = %+v, want success STEP SEALED", got.UI.FocusPanel)
+	}
+	if len(got.UI.FocusPanel.Actions) != 1 || got.UI.FocusPanel.Actions[0].ID != "next" {
+		t.Fatalf("ui focus panel actions = %+v, want next action", got.UI.FocusPanel.Actions)
 	}
 }

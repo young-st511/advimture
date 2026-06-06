@@ -10,7 +10,7 @@ setup:
 steps:
   - wait_screen_contains: "mode 값 중간에 커서가 멈췄습니다"
   - send: "b"
-  - wait_screen_contains: "Retry: r or enter"
+  - wait_screen_contains: "다시 시도: r 또는 enter"
   - send: "enter"
   - wait_screen_contains: "mode 값 중간에 커서가 멈췄습니다"
   - send: "d"
@@ -19,13 +19,13 @@ steps:
   - wait_ms: 50
   - send: "w"
   - wait_ms: 50
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Grade: F"
     - "Grade: A"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
     - "좋습니다. diw로 현재 단어 전체를 바로 제거했습니다."
   exit_code: 0
   progress_file_exists: true

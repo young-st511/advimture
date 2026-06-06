@@ -299,7 +299,8 @@ func TestAssertScenarioChecksAppStateUIFocusPanel(t *testing.T) {
 			"focus_panel": {
 				"kind": "training",
 				"title": "TRAINING BRIEF",
-				"lines": ["Coach: 훈련 키 l", "?: hint  q: quit"]
+				"lines": ["Coach: 훈련 키 l"],
+				"actions": [{"id": "retry", "label": "다시 시도: r 또는 enter"}]
 			}
 		}
 	}`)
@@ -314,7 +315,10 @@ func TestAssertScenarioChecksAppStateUIFocusPanel(t *testing.T) {
 					FocusPanel: &focusPanelAssertion{
 						Kind:  "training",
 						Title: "TRAINING BRIEF",
-						Lines: []string{"Coach: 훈련 키 l", "?: hint  q: quit"},
+						Lines: []string{"Coach: 훈련 키 l"},
+						Actions: []focusActionAssertion{
+							{ID: "retry", Label: "다시 시도: r 또는 enter"},
+						},
 					},
 				},
 			},

@@ -10,7 +10,7 @@ setup:
 steps:
   - wait_screen_contains: "현재 줄만 긴급 수정"
   - send: ":"
-  - wait_screen_contains: "Keys: type command"
+  - wait_screen_contains: "명령: 입력 후 enter 실행"
   - wait_ms: 100
   - send: "s"
   - wait_ms: 30

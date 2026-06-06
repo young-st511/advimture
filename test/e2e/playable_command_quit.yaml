@@ -10,7 +10,7 @@ setup:
 steps:
   - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
   - send: ":"
-  - wait_screen_contains: "Keys: type command"
+  - wait_screen_contains: "명령: 입력 후 enter 실행"
   - wait_ms: 100
   - send: "q"
   - wait_ms: 50

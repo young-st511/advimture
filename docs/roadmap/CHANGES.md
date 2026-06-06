@@ -2,6 +2,36 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-06 — First Dispatch/Judgment/UI console 중기 보강 완료
+
+이전 가정: `PLAYABLE-QUALITY-BASELINE-001` 이후 다음 후보는 새 대형 콘텐츠나 release candidate 포장이 아니라 `CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001` 같은 좁은 후속 slice였다.
+
+새 가정: 세 slice는 완료됐다. incident 001~003은 첫 Runbook Dispatch arc로 읽히고, command-choice는 "상황에 맞는 Vim 도구 선택"을 다섯 beat로 설명하며, success/failure action line은 화면 label과 `actions.id` QA 계약으로 분리됐다.
+
+이유: 현재 목표는 바로 출시가 아니라 "출시 가능한 수준"으로 계속 개발하는 것이다. 새 command/schema/progress 저장 포맷을 늘리기보다, 이미 있는 playable loop가 더 명확한 제품 정체성과 검증 가능한 UI 계약을 갖추는 것이 우선이었다.
+
+영향: `CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001`은 completed로 이동한다. 다음 후보는 release candidate가 아니라 fresh playtest/evidence review 또는 기존 engine 기반의 좁은 applied content 후보이며, RC/tag 작업은 여전히 사용자가 명시적으로 원할 때만 연다.
+
+## 2026-06-02 — Playable quality baseline 완료
+
+이전 가정: `PLAYABLE-QUALITY-BASELINE-001`으로 세계관, UX/UI, 콘텐츠 목표, 엔진/모듈화 기준을 active하게 점검하고 개선해야 했다.
+
+새 가정: baseline은 완료됐다. 현재 playable loop는 바로 release candidate로 포장된 상태는 아니지만, 출시 가능한 품질 기준에 맞춰 세계관/UX/UI/콘텐츠 기획/엔진 모듈화가 정렬됐고 P0/P1 blocker는 없다.
+
+이유: `PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`가 사용자 목표의 각 항목을 current-state evidence에 매핑했고, `make release-check`와 `git diff --check`가 통과했다.
+
+영향: `PLAYABLE-QUALITY-BASELINE-001`은 completed로 이동한다. 다음 후보는 새 대형 콘텐츠나 release packaging이 아니라 `CONTENT-ARC-POLISH-001`, `UI-ACTION-LANGUAGE-001` 같은 좁은 후속 slice다. 실제 release candidate 준비는 사용자가 원할 때만 연다.
+
+## 2026-06-02 — Release candidate prep 대신 playable quality baseline으로 전환
+
+이전 가정: `PRE-RC-HARDENING-001` 이후 다음 권장 slice는 `RELEASE-CANDIDATE-001`로 release note, known limitations, final evidence, tag 후보 기준을 묶는 것이다.
+
+새 가정: 지금 목표는 바로 출시 후보를 포장하는 것이 아니라, 계속 개발하더라도 Advimture가 출시 가능한 품질에 가까워지도록 세계관, UX/UI, 콘텐츠 기획, 엔진/모듈화 기준을 세우고 개선하는 것이다. Active slice는 `PLAYABLE-QUALITY-BASELINE-001`이다.
+
+이유: 사용자는 "바로 출시"가 아니라 "출시 가능한 수준으로 개발"을 원한다. 따라서 release candidate 문서화보다 제품 품질 기준선과 그 기준을 향한 지속 개선이 우선이다.
+
+영향: `PROGRAM.md`, `MIDTERM_TODO.md`, `FORWARD_PLAN.md`는 release candidate prep을 later로 내리고, `PLAYABLE-QUALITY-BASELINE-001`을 active 방향으로 가리킨다. 큰 구조 변경은 허용하지만 progress 저장 포맷/content schema/새 의존성은 별도 checkpoint 전까지 열지 않는다.
+
 ## 2026-06-02 — Pre-RC hardening 완료와 release candidate prep 복귀
 
 이전 가정: release candidate로 바로 묶기 전에 `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence를 한 번 더 확인해야 했다.

@@ -16,13 +16,13 @@ steps:
   - send: "w"
   - wait_ms: 50
   - send: "w"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Grade: F"
     - "단어 시작점으로 뛰어가기"
-    - "Next: enter"
+    - "다음 단계: enter"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

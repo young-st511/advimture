@@ -10,36 +10,84 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 활성 구현 slice 없음. `PRE-RC-HARDENING-001`은 완료됐고, 다음 권장 작업은 `RELEASE-CANDIDATE-001`로 첫 공개 후보 문서와 evidence bundle을 정리하는 것이다.
+현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강 3단계(`CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001`)도 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+
+Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
+Completed Midterm Polish:
+- `docs/exec-plans/completed/content-arc-polish-001-first-dispatch-arc.md`
+- `docs/exec-plans/completed/judgment-drill-review-001-command-choice.md`
+- `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
+Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
+Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
+Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
+### POST-POLISH-PLAYTEST-001. Fresh Product Loop Review
+
+- 상태: next candidate
+- 목표: 새 구현 없이 first tour, first dispatch, judgment drill, review loop evidence를 사람이 한 번 더 읽고 다음 병목이 content breadth인지 UI polish인지 판정한다.
+- 입력 문서:
+  - `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
+  - `docs/gameplay/world-frame.md`
+  - `docs/gameplay/command-choice-drills.md`
+  - `docs/gameplay/tui-screen-contract.md`
+- 제외:
+  - 바로 출시하거나 tag를 찍는 작업
+  - 신규 대형 tutorial/incident 구현
+  - 사용자 확인 없는 저장 포맷/content schema/의존성 변경
+- 결론: 구현보다 다음 병목 판정이 먼저다.
+
+### CONTENT-ARC-POLISH-001. First Dispatch Arc Polish
+
+- 상태: completed
+- 목표: 새 YAML 콘텐츠 없이 incident 001~003의 기존 title/briefing/feedback을 world-frame 기준으로 spot polish한다.
+- 완료: 원인 신호 추적 -> 구조 재동기화 -> 오염 구간 격리 흐름으로 첫 dispatch arc를 정리했다.
+- 제외: 새 command, 새 content schema, progress 저장 포맷 변경
+
+### JUDGMENT-DRILL-REVIEW-001. Command Choice as Core Identity
+
+- 상태: completed
+- 목표: `incident-005-command-choice`의 다섯 beat가 scope/range/inline/reuse/repeat-change 판단 질문을 설명하게 한다.
+- 완료: success/failure copy와 `docs/gameplay/command-choice-drills.md`의 mapping을 선택 이유 중심으로 최신화했다.
+- 제외: 새 command, 새 schema, 새 exercise
+
+### UI-CONSOLE-POLISH-001. Runbook Console Product Feel
+
+- 상태: completed
+- 목표: success/failure action line의 화면 label과 E2E action 의미를 분리한다.
+- 완료: `FocusPanel.actions` internal DTO와 app_state assertion을 추가하고, 화면 label을 한국어 action language로 정리했다.
+- 제외: progress 저장 포맷 변경, 새 dependency
+
 ### RELEASE-CANDIDATE-001. Release Candidate Prep
 
-- 상태: proposed
-- 목표: 첫 공개 후보의 release note, known limitations, 최종 `make release-check` evidence, 태그 후보 기준을 정리한다.
-- 입력 문서:
-  - `docs/exec-plans/completed/first-run-polish-001-cue-viewport.md`
-  - `docs/roadmap/FORWARD_PLAN.md`
-  - `docs/verification/tui-ui-qa-contract.md`
-  - `README.md`
-- 제외:
-  - 저장 포맷 변경
-  - 새 Vim engine
-  - 새 content schema
-  - 기능 확장
-- 주의: 새 기능이 아니라 공개 전 설명, 검증 증거, 알려진 한계 정리만 다룬다.
-
-### RC-BLOCKER-FIX-001. Release Candidate Blocker Fix
-
-- 상태: skipped for now
-- 목표: `PLAYTEST-GATE-001`에서 P0/P1 blocker가 나오면 새 기능을 멈추고 해당 blocker만 고친다.
-- 조건: fresh run review에서 진행 중단, 저장 손상, 오해를 부르는 필수 조작, terminal clipping 중 하나가 확인될 때 다시 연다.
+- 상태: later
+- 목표: 실제로 공개 후보를 묶기로 결정했을 때 release note, known limitations, final evidence bundle, tag 후보 기준을 정리한다.
+- 조건: 사용자가 실제 release candidate 준비를 원할 때 연다.
 - 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### PLAYABLE-QUALITY-BASELINE-001. Release-Quality Playable Baseline
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
+- Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
+- Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
+- 완료일: 2026-06-02
+- 결론: 세계관/UX/UI/콘텐츠 기획/엔진 모듈화 기준을 release-quality baseline으로 정렬했고, mode/floating modal/header track UX를 보강했다. `make release-check` 통과.
+
+### First Dispatch/Judgment/UI Console Midterm Polish
+
+- 상태: completed
+- ExecPlans:
+  - `docs/exec-plans/completed/content-arc-polish-001-first-dispatch-arc.md`
+  - `docs/exec-plans/completed/judgment-drill-review-001-command-choice.md`
+  - `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
+- 완료일: 2026-06-06
+- 결론: 새 engine/schema/progress 저장 포맷 없이 첫 dispatch arc, judgment drill identity, action label/app_state 계약을 보강했다.
 
 ### PRE-RC-HARDENING-001. First Release Hardening
 
@@ -47,7 +95,7 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - ExecPlan: `docs/exec-plans/completed/pre-rc-hardening-001-first-release-hardening.md`
 - Review: `docs/roadmap/PRE_RC_HARDENING_2026-06-02.md`
 - 완료일: 2026-06-02
-- 결론: P0/P1 blocker 없음. Incident hint cue wrapping과 long incident app_state evidence gap을 보강했고, 다음은 `RELEASE-CANDIDATE-001`이다.
+- 결론: P0/P1 blocker 없음. Incident hint cue wrapping과 long incident app_state evidence gap을 보강했다. 당시 다음 후보는 `RELEASE-CANDIDATE-001`이었으나, 현재 active 방향은 `PLAYABLE-QUALITY-BASELINE-001`이다.
 
 ### FIRST-RUN-POLISH-001. Cue Density and Viewport Evidence
 

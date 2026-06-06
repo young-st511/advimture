@@ -22,7 +22,7 @@ steps:
   - send: "r"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "timeout 신호가 한 번 더"
@@ -45,7 +45,7 @@ steps:
   - send: "enter"
   - wait_ms: 50
   - send: "n"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "route 상태값 down"
@@ -60,7 +60,7 @@ steps:
   - send: "p"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "guard 줄이 필요"
@@ -83,7 +83,7 @@ steps:
   - send: "n"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "검증된 route 줄"
@@ -92,12 +92,12 @@ steps:
   - send: "y"
   - wait_ms: 50
   - send: "p"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "첫 줄은 원인 기록"
   - send: ":"
-  - wait_screen_contains: "Keys: type command"
+  - wait_screen_contains: "명령: 입력 후 enter 실행"
   - send: "2"
   - wait_ms: 30
   - send: ","
@@ -127,15 +127,16 @@ steps:
   - send: "/"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
+    - "Runbook Dispatch"
     - "릴레이 기지 001: 야간 핫픽스 복구"
     - "Exercise: 6/6"
     - "판단:"
-    - "Next runbook: enter"
-    - "좋습니다. 원인 기록을 남기고 문제 relay 구간만 정리해 야간 핫픽스 runbook을 닫았습니다."
+    - "다음 runbook: enter"
+    - "range를 붙여 원인 기록은 남기고 문제 relay 구간만 ok로 정리했습니다. 첫 야간 핫픽스 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

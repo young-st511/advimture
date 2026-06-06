@@ -21,7 +21,7 @@ assert:
     - "Grade: F"
     - "Inputs left: 0/2"
     - "Attempts: 1/unlimited"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
     - "입력 제한을 초과했습니다."
   exit_code: 0
   progress_file_exists: false

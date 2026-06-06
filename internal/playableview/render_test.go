@@ -46,7 +46,7 @@ func TestRenderScreenIncludesFocusPanelBeforeConsole(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "training",
 			Title: "TRAINING BRIEF",
-			Lines: []string{"Coach: 훈련 키 l", "?: hint  q: quit"},
+			Lines: []string{"Coach: 훈련 키 l", "힌트: ?  종료: q"},
 		},
 	})
 
@@ -73,7 +73,7 @@ func TestRenderCentersFocusPanelWhenWidthIsKnown(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "training",
 			Title: "TRAINING BRIEF",
-			Lines: []string{"?: hint  q: quit"},
+			Lines: []string{"힌트: ?  종료: q"},
 		},
 	})
 
@@ -99,7 +99,7 @@ func TestRenderShrinksFocusPanelForNarrowWidth(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "training",
 			Title: "TRAINING BRIEF",
-			Lines: []string{"?: hint  q: quit"},
+			Lines: []string{"힌트: ?  종료: q"},
 		},
 	})
 
@@ -135,8 +135,8 @@ func TestRenderFocusPanelOverlayDoesNotMoveConsoleWhenHeightIsKnown(t *testing.T
 				"실패 원인입니다.",
 				"Inputs left: 1/2",
 				"Attempts: 1/unlimited",
-				"Retry: r or enter",
 			},
+			Actions: []ActionLine{{ID: "retry", Label: "다시 시도: r 또는 enter"}},
 		},
 	})
 
@@ -164,7 +164,7 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "training",
 			Title: "TRAINING BRIEF",
-			Lines: []string{"Coach: 훈련 키 w", "?: hint  q: quit"},
+			Lines: []string{"Coach: 훈련 키 w", "힌트: ?  종료: q"},
 		},
 	})
 
@@ -197,6 +197,9 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	if strings.Contains(view, "Mode: normal") || strings.Contains(view, "Cursor: 0,0") {
 		t.Fatalf("Render output = %q, should not show debug status labels in HUD", view)
 	}
+	if !strings.Contains(view, "ADVIMTURE | Tutorial | Tutorial 2 | Exercise: 1/7 | Status: running") {
+		t.Fatalf("Render output = %q, want tutorial track in header", view)
+	}
 }
 
 func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
@@ -217,7 +220,7 @@ func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "incident",
 			Title: "OPERATOR JUDGMENT",
-			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "?: hint  q: quit"},
+			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "힌트: ?  종료: q"},
 		},
 	})
 
@@ -226,6 +229,9 @@ func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
 	}
 	if strings.Contains(view, "오늘의 복구 루트: timeout 위치 추적") {
 		t.Fatalf("Render output = %q, should not expose detailed daily route in running incident HUD", view)
+	}
+	if !strings.Contains(view, "ADVIMTURE | Runbook Dispatch | 릴레이 기지 001 | Status: running") {
+		t.Fatalf("Render output = %q, want runbook dispatch track in header", view)
 	}
 }
 
@@ -248,12 +254,12 @@ func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
 				"Inputs left: 9/9",
 				"참고 명령: /",
 				"Hint: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.",
-				"?: hint  q: quit",
+				"힌트: ?  종료: q",
 			},
 		},
 	})
 
-	for _, want := range []string{"OPERATOR JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "?: hint  q: quit"} {
+	for _, want := range []string{"OPERATOR JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "힌트: ?  종료: q"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want wrapped cue to preserve %q", view, want)
 		}
@@ -283,7 +289,7 @@ func TestRenderHUDWrapsLongBriefingBeforeConsole(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "incident",
 			Title: "OPERATOR JUDGMENT",
-			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "?: hint  q: quit"},
+			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "힌트: ?  종료: q"},
 		},
 	})
 
@@ -317,8 +323,8 @@ func TestRenderHUDKeepsCompactRecoverySummaryInModePanel(t *testing.T) {
 		Status:           "running",
 		FocusPanel: &FocusPanel{
 			Kind:  "mode",
-			Title: "VISUAL CHANNEL",
-			Lines: []string{"Keys: motion expands selection  esc/v: normal"},
+			Title: "선택 모드",
+			Lines: []string{"선택: 이동 키로 범위 조정  esc/v: normal"},
 		},
 	})
 
@@ -347,8 +353,8 @@ func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {
 				"Inputs left: 1/2",
 				"Attempts: 1/unlimited",
 				"Coach: 훈련 키 w",
-				"Retry: r or enter",
 			},
+			Actions: []ActionLine{{ID: "retry", Label: "다시 시도: r 또는 enter"}},
 		},
 	})
 
@@ -361,7 +367,7 @@ func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {
 	if !(consoleIndex < bufferIndex && bufferIndex < modalIndex) {
 		t.Fatalf("Render output = %q, want floating modal after buffer inside console core", view)
 	}
-	for _, want := range []string{"RECOVERY REQUIRED", "Mistake", "Next", "Coach: 훈련 키 w", "Retry: r or enter"} {
+	for _, want := range []string{"RECOVERY REQUIRED", "실수", "힌트", "훈련 키 w", "다시 시도: r 또는 enter"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want %q", view, want)
 		}
@@ -396,13 +402,12 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 				"목표 입력: 2 keys",
 				"Runbook: 3/4 복구 완료",
 				"잔류 리스크: 위쪽 로그 줄로 복귀하기: 미복구",
-				"오늘의 복구 루트: 3건 대기",
-				"Next: enter",
 			},
+			Actions: []ActionLine{{ID: "next", Label: "다음 단계: enter"}},
 		},
 	})
 
-	if !strings.Contains(view, "Next: enter") {
+	if !strings.Contains(view, "다음 단계: enter") {
 		t.Fatalf("Render output = %q, want action line preserved", view)
 	}
 	if strings.Contains(view, "STEP SEALED") {
@@ -410,6 +415,11 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 	}
 	if !strings.Contains(view, "RUNBOOK SEALED") {
 		t.Fatalf("Render output = %q, want success modal heading", view)
+	}
+	for _, want := range []string{"배운 점", "기록"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
 	}
 	if lineIndex(view, "RUNBOOK CONSOLE") != lineIndex(base, "RUNBOOK CONSOLE") {
 		t.Fatalf("Render output = %q, want fixed console line", view)
@@ -440,15 +450,15 @@ func TestRenderHUDSuppressesDetailedRecoveryLineForFloatingModal(t *testing.T) {
 				"Runbook: 1/4 복구 완료",
 				"잔류 리스크: 경고 지점으로 이동하기: 미복구",
 				"다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기",
-				"Next: enter",
 			},
+			Actions: []ActionLine{{ID: "next", Label: "다음 단계: enter"}},
 		},
 	})
 
 	if strings.Contains(view, "\n재점검 대상:") || strings.Contains(view, "\n오늘의 복구 루트:") {
 		t.Fatalf("Render output = %q, should not expose detailed recovery line above floating modal", view)
 	}
-	for _, want := range []string{"RUNBOOK SEALED", "잔류 리스크:", "다음 출격:", "Next: enter"} {
+	for _, want := range []string{"RUNBOOK SEALED", "잔류 리스크:", "다음 출격:", "다음 단계: enter"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want %q in modal", view, want)
 		}
@@ -474,14 +484,15 @@ func TestRenderFocusPanelOverlayPrioritizesNextDispatchWhenContentOverflows(t *t
 				"목표 입력: 16 keys",
 				"Runbook: 5/5 복구 완료",
 				"잔류 리스크: 목표 문자까지 이동하기: 복구 등급 B",
-				"다음 출격: 목표 문자까지 이동하기(등급 B)",
-				"Next dispatch: enter",
-				"q: quit",
+			},
+			Actions: []ActionLine{
+				{ID: "next_dispatch", Label: "다음 출격: enter"},
+				{ID: "quit", Label: "종료: q"},
 			},
 		},
 	})
 
-	if !strings.Contains(view, "Next dispatch: enter") {
+	if !strings.Contains(view, "다음 출격: enter") {
 		t.Fatalf("Render output = %q, want next dispatch action preserved", view)
 	}
 }
@@ -503,13 +514,16 @@ func TestRenderFocusPanelOverlayPrioritizesRetryOverQuitWhenFailureOverflows(t *
 				"Inputs left: 0/2",
 				"Attempts: 1/unlimited",
 				"Coach: 훈련 키 w",
-				"Retry: r or enter",
-				"?: hint  q: quit",
+				"힌트: ?",
+			},
+			Actions: []ActionLine{
+				{ID: "retry", Label: "다시 시도: r 또는 enter"},
+				{ID: "quit", Label: "종료: q"},
 			},
 		},
 	})
 
-	if !strings.Contains(view, "Retry: r or enter") {
+	if !strings.Contains(view, "다시 시도: r 또는 enter") {
 		t.Fatalf("Render output = %q, want retry action preserved", view)
 	}
 }
@@ -528,7 +542,7 @@ func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 		FocusPanel: &FocusPanel{
 			Kind:  "training",
 			Title: "TRAINING BRIEF",
-			Lines: []string{"?: hint  q: quit"},
+			Lines: []string{"힌트: ?  종료: q"},
 		},
 	})
 

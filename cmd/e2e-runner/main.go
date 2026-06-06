@@ -103,9 +103,15 @@ type uiAssertion struct {
 }
 
 type focusPanelAssertion struct {
-	Kind  string   `yaml:"kind"`
-	Title string   `yaml:"title"`
-	Lines []string `yaml:"lines"`
+	Kind    string                 `yaml:"kind"`
+	Title   string                 `yaml:"title"`
+	Lines   []string               `yaml:"lines"`
+	Actions []focusActionAssertion `yaml:"actions"`
+}
+
+type focusActionAssertion struct {
+	ID    string `yaml:"id"`
+	Label string `yaml:"label"`
 }
 
 type selectionAssertion struct {
@@ -158,9 +164,15 @@ type appStateUI struct {
 }
 
 type appStateFocusPanel struct {
-	Kind  string   `json:"kind"`
-	Title string   `json:"title"`
-	Lines []string `json:"lines"`
+	Kind    string                `json:"kind"`
+	Title   string                `json:"title"`
+	Lines   []string              `json:"lines"`
+	Actions []appStateFocusAction `json:"actions"`
+}
+
+type appStateFocusAction struct {
+	ID    string `json:"id"`
+	Label string `json:"label"`
 }
 
 type appStateSelection struct {
@@ -862,6 +874,27 @@ func assertFocusPanel(assertion focusPanelAssertion, state appStateFocusPanel) e
 	}
 	if len(assertion.Lines) > 0 && !sameStrings(state.Lines, assertion.Lines) {
 		return fmt.Errorf("app state ui focus_panel lines: got %v, want %v", state.Lines, assertion.Lines)
+	}
+	if len(assertion.Actions) > 0 {
+		if err := assertFocusPanelActions(assertion.Actions, state.Actions); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func assertFocusPanelActions(assertions []focusActionAssertion, state []appStateFocusAction) error {
+	if len(assertions) != len(state) {
+		return fmt.Errorf("app state ui focus_panel actions: got %v, want %v", state, assertions)
+	}
+	for i, assertion := range assertions {
+		action := state[i]
+		if assertion.ID != "" && action.ID != assertion.ID {
+			return fmt.Errorf("app state ui focus_panel actions[%d].id: got %q, want %q", i, action.ID, assertion.ID)
+		}
+		if assertion.Label != "" && action.Label != assertion.Label {
+			return fmt.Errorf("app state ui focus_panel actions[%d].label: got %q, want %q", i, action.Label, assertion.Label)
+		}
 	}
 	return nil
 }

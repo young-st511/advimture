@@ -387,26 +387,60 @@ func (m Model) reviewDispatchTargetIndex() (int, bool) {
 }
 
 func (m Model) successActionLines() []string {
+	return actionLabels(m.successActions())
+}
+
+func (m Model) successActions() []playableview.ActionLine {
 	if m.current+1 < len(m.entries) {
 		if !m.nextEntryStartsNewPlaylist() {
-			return []string{"Next: enter"}
+			return []playableview.ActionLine{focusAction("next", "다음 단계: enter")}
 		}
 		switch m.entries[m.current+1].PlaylistCategory {
 		case "tutorial":
-			return []string{"Next tutorial: enter"}
+			return []playableview.ActionLine{focusAction("next_tutorial", "다음 튜토리얼: enter")}
 		case "incident":
-			return []string{"Next runbook: enter"}
+			return []playableview.ActionLine{focusAction("next_runbook", "다음 runbook: enter")}
 		default:
-			return []string{"Next playlist: enter"}
+			return []playableview.ActionLine{focusAction("next_playlist", "다음 플레이리스트: enter")}
 		}
 	}
 	if _, ok := m.reviewDispatchTargetIndex(); ok {
-		return []string{"Next dispatch: enter", "q: quit"}
+		return []playableview.ActionLine{
+			focusAction("next_dispatch", "다음 출격: enter"),
+			focusAction("quit", "종료: q"),
+		}
 	}
 	if m.currentEntryIsIncident() {
-		return []string{"Dispatch complete", "q: quit"}
+		return []playableview.ActionLine{
+			focusAction("dispatch_complete", "출격 완료"),
+			focusAction("quit", "종료: q"),
+		}
 	}
-	return []string{"Playlist complete", "q: quit"}
+	return []playableview.ActionLine{
+		focusAction("playlist_complete", "플레이리스트 완료"),
+		focusAction("quit", "종료: q"),
+	}
+}
+
+func failureActions() []playableview.ActionLine {
+	return []playableview.ActionLine{
+		focusAction("retry", "다시 시도: r 또는 enter"),
+		focusAction("quit", "종료: q"),
+	}
+}
+
+func focusAction(id, label string) playableview.ActionLine {
+	return playableview.ActionLine{ID: id, Label: label}
+}
+
+func actionLabels(actions []playableview.ActionLine) []string {
+	labels := make([]string, 0, len(actions))
+	for _, action := range actions {
+		if action.Label != "" {
+			labels = append(labels, action.Label)
+		}
+	}
+	return labels
 }
 
 func newGameFromContent(root string, progressState *progress.Progress) ([]gameEntry, int, *scenario.Run, error) {
@@ -542,22 +576,23 @@ func contentRoot(root string) string {
 func (m Model) focusPanel(state scenario.State, view tuiadapter.ViewModel) *playableview.FocusPanel {
 	kind, title := focusPanelIdentity(state, view, m.currentEntryIsIncident())
 	return &playableview.FocusPanel{
-		Kind:  kind,
-		Title: title,
-		Lines: m.focusPanelLines(state, view),
+		Kind:    kind,
+		Title:   title,
+		Lines:   m.focusPanelLines(state, view),
+		Actions: m.focusPanelActions(state, view),
 	}
 }
 
 func focusPanelIdentity(state scenario.State, view tuiadapter.ViewModel, incident bool) (string, string) {
 	switch {
 	case view.Mode == string(vimengine.ModeVisual):
-		return "mode", "VISUAL CHANNEL"
+		return "mode", "선택 모드"
 	case view.Mode == string(vimengine.ModeInsert):
-		return "mode", "INSERT CHANNEL"
+		return "mode", "입력 모드"
 	case view.Mode == string(vimengine.ModeCommand):
-		return "mode", "COMMAND CHANNEL"
+		return "mode", "명령 모드"
 	case view.Mode == string(vimengine.ModeSearch):
-		return "mode", "SEARCH CHANNEL"
+		return "mode", "검색 모드"
 	case state.Status == exerciseruntime.StatusSucceeded:
 		return "success", "STEP SEALED"
 	case state.Status == exerciseruntime.StatusFailed:
@@ -573,19 +608,18 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 	lines := []string{}
 	switch {
 	case view.Mode == string(vimengine.ModeVisual):
-		lines = append(lines, "Keys: motion expands selection  esc/v: normal")
+		lines = append(lines, "선택: 이동 키로 범위 조정  esc/v: normal")
 	case view.Mode == string(vimengine.ModeInsert):
-		lines = append(lines, "Keys: type text  esc: normal")
+		lines = append(lines, "입력: 텍스트 작성  esc: normal")
 	case view.Mode == string(vimengine.ModeCommand):
-		lines = append(lines, "Keys: type command  enter: run  esc: normal")
+		lines = append(lines, "명령: 입력 후 enter 실행  esc: normal")
 	case view.Mode == string(vimengine.ModeSearch):
-		lines = append(lines, "Keys: type search  enter: find  esc: normal")
+		lines = append(lines, "검색: 입력 후 enter 찾기  esc: normal")
 	case state.Status == exerciseruntime.StatusSucceeded:
 		if feedback := scenarioFeedbackLine(state); feedback != "" {
 			lines = append(lines, feedback)
 		}
 		lines = append(lines, m.successDebriefLines(state)...)
-		lines = append(lines, m.successActionLines()...)
 	case state.Status == exerciseruntime.StatusFailed:
 		if feedback := scenarioFeedbackLine(state); feedback != "" {
 			lines = append(lines, feedback)
@@ -604,8 +638,7 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		if m.hintMessage != "" {
 			lines = append(lines, "Hint: "+m.hintMessage)
 		}
-		lines = append(lines, "Retry: r or enter")
-		lines = append(lines, "?: hint  q: quit")
+		lines = append(lines, "힌트: ?")
 	default:
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
@@ -622,9 +655,25 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		if m.hintMessage != "" {
 			lines = append(lines, "Hint: "+m.hintMessage)
 		}
-		lines = append(lines, "?: hint  q: quit")
+		lines = append(lines, "힌트: ?  종료: q")
 	}
 	return lines
+}
+
+func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel) []playableview.ActionLine {
+	switch {
+	case view.Mode == string(vimengine.ModeVisual),
+		view.Mode == string(vimengine.ModeInsert),
+		view.Mode == string(vimengine.ModeCommand),
+		view.Mode == string(vimengine.ModeSearch):
+		return nil
+	case state.Status == exerciseruntime.StatusSucceeded:
+		return m.successActions()
+	case state.Status == exerciseruntime.StatusFailed:
+		return failureActions()
+	default:
+		return nil
+	}
 }
 
 func scenarioFeedbackLine(state scenario.State) string {
@@ -714,11 +763,26 @@ func e2eUI(panel *playableview.FocusPanel) e2estate.UI {
 	}
 	return e2estate.UI{
 		FocusPanel: e2estate.FocusPanel{
-			Kind:  panel.Kind,
-			Title: panel.Title,
-			Lines: append([]string(nil), panel.Lines...),
+			Kind:    panel.Kind,
+			Title:   panel.Title,
+			Lines:   append([]string(nil), panel.Lines...),
+			Actions: e2eActions(panel.Actions),
 		},
 	}
+}
+
+func e2eActions(actions []playableview.ActionLine) []e2estate.ActionLine {
+	if len(actions) == 0 {
+		return nil
+	}
+	out := make([]e2estate.ActionLine, 0, len(actions))
+	for _, action := range actions {
+		out = append(out, e2estate.ActionLine{
+			ID:    action.ID,
+			Label: action.Label,
+		})
+	}
+	return out
 }
 
 func (m Model) e2eReview() e2estate.Review {

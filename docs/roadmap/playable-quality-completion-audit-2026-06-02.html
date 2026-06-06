@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advimture Playable Quality Completion Audit</title>
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --ink: #182231;
+      --muted: #627084;
+      --line: #dbe3ec;
+      --soft-line: #edf1f5;
+      --teal: #087f82;
+      --teal-soft: #e5f4f3;
+      --green: #20784f;
+      --green-soft: #e7f4ec;
+      --blue: #2d68b3;
+      --blue-soft: #e8f0fb;
+      --amber: #96610a;
+      --amber-soft: #fff2dc;
+      --red: #b14444;
+      --red-soft: #fae8e8;
+      --shadow: 0 18px 45px rgba(24, 34, 49, 0.08);
+      --radius: 8px;
+      font-family:
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, #eef5f5 0, rgba(238, 245, 245, 0) 360px),
+        var(--bg);
+      line-height: 1.6;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      padding: 0.1rem 0.35rem;
+      border-radius: 5px;
+      background: #f1f4f7;
+      color: #26364a;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.93em;
+    }
+
+    .page {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 28px;
+      width: min(1440px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 0 64px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .sidebar__head {
+      padding: 18px 18px 12px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .sidebar__eyebrow {
+      margin: 0 0 4px;
+      color: var(--teal);
+      font-size: 0.77rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .sidebar__title {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.35;
+    }
+
+    .nav {
+      display: grid;
+      gap: 3px;
+      padding: 10px;
+    }
+
+    .nav a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 650;
+    }
+
+    .nav a:hover {
+      background: var(--blue-soft);
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .content {
+      min-width: 0;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+      gap: 22px;
+      margin-bottom: 22px;
+    }
+
+    .hero__main,
+    .hero__aside,
+    .section,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero__main {
+      padding: 34px;
+    }
+
+    .hero__aside {
+      padding: 24px;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border: 1px solid #bfe0dd;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      max-width: 780px;
+      font-size: clamp(2rem, 4vw, 4.25rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero__summary {
+      max-width: 830px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .meta-grid,
+    .kpi-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .kpi-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 22px;
+    }
+
+    .kpi {
+      min-height: 96px;
+      padding: 16px;
+      border: 1px solid var(--soft-line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .kpi strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 1.65rem;
+      line-height: 1.1;
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .status-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .status-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--soft-line);
+      color: var(--muted);
+    }
+
+    .status-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .check {
+      display: inline-grid;
+      flex: 0 0 auto;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .section {
+      margin-top: 22px;
+      padding: 26px;
+    }
+
+    .section__head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .section__head h2 {
+      margin: 0;
+      font-size: 1.55rem;
+      line-height: 1.2;
+    }
+
+    .section__head p {
+      max-width: 720px;
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .badge {
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .badge--amber {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .badge--blue {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .card {
+      box-shadow: none;
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .axis {
+      border-top: 4px solid var(--teal);
+    }
+
+    .axis:nth-child(2) {
+      border-top-color: var(--blue);
+    }
+
+    .axis:nth-child(3) {
+      border-top-color: var(--amber);
+    }
+
+    .axis:nth-child(4) {
+      border-top-color: var(--green);
+    }
+
+    .audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .audit-table th,
+    .audit-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--soft-line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .audit-table th {
+      background: #f2f6f9;
+      color: #2b3a4d;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+    }
+
+    .audit-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .audit-table td:nth-child(1) {
+      width: 26%;
+      font-weight: 750;
+    }
+
+    .audit-table td:nth-child(3) {
+      width: 90px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 56px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .evidence-card {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      min-height: 270px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .evidence-card__body {
+      padding: 18px 18px 0;
+    }
+
+    .evidence-card__tag {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-size: 0.74rem;
+      font-weight: 800;
+    }
+
+    .terminal {
+      margin: 0;
+      padding: 14px 16px;
+      border-top: 1px solid var(--soft-line);
+      background: #101820;
+      color: #d9f0e8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+
+    .guardrail {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .do-not-touch {
+      border-left: 4px solid var(--green);
+    }
+
+    .not-opened {
+      border-left: 4px solid var(--amber);
+    }
+
+    .list {
+      margin: 12px 0 0;
+      padding-left: 1.1rem;
+      color: var(--muted);
+    }
+
+    .list li + li {
+      margin-top: 6px;
+    }
+
+    .backlog {
+      display: grid;
+      gap: 10px;
+    }
+
+    .backlog-item {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr) 220px;
+      gap: 14px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--soft-line);
+      border-radius: var(--radius);
+      background: #fbfcfe;
+    }
+
+    .backlog-item strong {
+      color: #27384c;
+      font-size: 0.92rem;
+    }
+
+    .backlog-item span,
+    .backlog-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .decision .card {
+      border-top: 4px solid var(--green);
+    }
+
+    .decision .card:last-child {
+      border-top-color: var(--blue);
+    }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 1080px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .hero,
+      .decision,
+      .guardrail {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-3,
+      .grid-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        width: min(100% - 24px, 1440px);
+        padding-top: 14px;
+      }
+
+      .hero__main,
+      .hero__aside,
+      .section {
+        padding: 18px;
+      }
+
+      .kpi-grid,
+      .grid-2,
+      .grid-3,
+      .grid-4,
+      .backlog-item {
+        grid-template-columns: 1fr;
+      }
+
+      .section__head {
+        display: block;
+      }
+
+      .badge {
+        display: inline-flex;
+        margin-top: 10px;
+      }
+
+      .audit-table {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .nav {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        display: block;
+        width: 100%;
+        padding: 0;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .hero__main,
+      .hero__aside,
+      .section,
+      .card {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <aside class="sidebar" aria-label="페이지 목차">
+      <div class="sidebar__head">
+        <p class="sidebar__eyebrow">Audit IA</p>
+        <h2 class="sidebar__title">읽는 순서</h2>
+      </div>
+      <nav class="nav">
+        <a href="#summary">요약 대시보드</a>
+        <a href="#ia">IA / 레이아웃</a>
+        <a href="#requirements">요구사항 감사</a>
+        <a href="#axes">품질 축</a>
+        <a href="#evidence">대표 Evidence</a>
+        <a href="#guardrails">Guardrail</a>
+        <a href="#backlog">후속 Backlog</a>
+        <a href="#verification">검증 결과</a>
+      </nav>
+    </aside>
+
+    <div class="content">
+      <section class="hero" id="summary">
+        <div class="hero__main">
+          <span class="label"><span class="dot"></span>Goal Complete</span>
+          <h1>Advimture Playable Quality Completion Audit</h1>
+          <p class="hero__summary">
+            바로 release candidate를 포장한 것이 아니라, 현재 playable loop가 출시 가능한 품질 기준에 가까워졌는지
+            세계관, UX/UI, 콘텐츠 기획, 엔진/모듈화 증거로 확인한 종합 보고서입니다.
+          </p>
+          <div class="kpi-grid" aria-label="핵심 지표">
+            <div class="kpi">
+              <strong>0</strong>
+              <span>P0/P1 blocker</span>
+            </div>
+            <div class="kpi">
+              <strong>4</strong>
+              <span>Quality axes aligned</span>
+            </div>
+            <div class="kpi">
+              <strong>10</strong>
+              <span>Requirements mapped to evidence</span>
+            </div>
+            <div class="kpi">
+              <strong>Pass</strong>
+              <span><code>make release-check</code></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__aside">
+          <ul class="status-list">
+            <li><span class="check">✓</span><span>세계관 기준과 <code>Runbook Dispatch</code> 프레임 정렬 완료</span></li>
+            <li><span class="check">✓</span><span>mode cue, modal label, header track 등 UX 신호 보강 완료</span></li>
+            <li><span class="check">✓</span><span>콘텐츠는 구현 없이 First Tour / Dispatch / Judgment / Review 구조로 기획 완료</span></li>
+            <li><span class="check">✓</span><span>새 engine 없이 현재 모듈 경계로 다음 개선 slice를 열 수 있음</span></li>
+            <li><span class="check">✓</span><span>저장 포맷, content schema, 의존성 변경 없음</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="section" id="ia">
+        <div class="section__head">
+          <div>
+            <h2>IA / 레이아웃 설계</h2>
+            <p>완료 여부를 먼저 판단하고, 이어서 근거를 파고들 수 있게 계층을 나눴습니다.</p>
+          </div>
+          <span class="badge badge--blue">Reader-first</span>
+        </div>
+        <div class="grid-4">
+          <article class="card">
+            <h3>1. 요약</h3>
+            <p>완료 상태, blocker 수, 검증 gate, guardrail 변경 여부를 첫 화면에서 확인합니다.</p>
+          </article>
+          <article class="card">
+            <h3>2. 요구사항</h3>
+            <p>사용자 목표의 문장을 요구사항으로 쪼개고, 완료 증거와 판정을 한 테이블에 둡니다.</p>
+          </article>
+          <article class="card">
+            <h3>3. Evidence</h3>
+            <p>대표 E2E route가 무엇을 증명하는지 화면 조각과 파일 경로로 연결합니다.</p>
+          </article>
+          <article class="card">
+            <h3>4. 후속 결정</h3>
+            <p>완료 blocker가 아닌 남은 개선 후보를 다음 경로와 함께 정리합니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="requirements">
+        <div class="section__head">
+          <div>
+            <h2>요구사항별 완료 감사</h2>
+            <p>목표의 모든 명시 항목을 current-state evidence에 연결했습니다.</p>
+          </div>
+          <span class="badge">All Complete</span>
+        </div>
+        <table class="audit-table">
+          <thead>
+            <tr>
+              <th>요구사항</th>
+              <th>완료 증거</th>
+              <th>판정</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>세계관 정합성 기준 설정</td>
+              <td><a href="../gameplay/world-frame.md">world-frame.md</a>, <a href="PLAYABLE_QUALITY_BASELINE_2026-06-02.md">PLAYABLE_QUALITY_BASELINE</a></td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>세계관 기준에 맞는 개선</td>
+              <td>Header track label이 <code>Tutorial</code> / <code>Runbook Dispatch</code>를 첫 viewport에 표시. <code>playable_incident_001_full</code>, <code>playable_command_choice_scope</code>가 검증합니다.</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>UX/UI release-quality 목표 설정</td>
+              <td><a href="../gameplay/tui-ux-direction.md">tui-ux-direction.md</a>, <a href="../gameplay/tui-screen-contract.md">tui-screen-contract.md</a>, <a href="UX_BACKLOG_001.md">UX_BACKLOG_001</a></td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>UX/UI 개선</td>
+              <td>mode cue/title 한국어화, success/failure modal 보조 label 한국어화, header track label 추가. 관련 unit test와 focused E2E 통과.</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>콘텐츠 출시 품질 목표 설정</td>
+              <td><a href="CONTENT_QUALITY_PLAN_001.md">CONTENT_QUALITY_PLAN_001</a>의 First Tour, Core Toolbelt, First Dispatch Arc, Judgment Drill, Review Loop</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>현재 콘텐츠 점검</td>
+              <td>현재 tutorial, incident, command-choice, review loop를 minimum release-quality content shape에 매핑했습니다.</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>콘텐츠는 기획까지만 진행</td>
+              <td>새 YAML content, content schema, engine, progress 저장 포맷을 변경하지 않았습니다.</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>모듈화와 엔진 충분성 검증</td>
+              <td><a href="MODULE_QUALITY_REVIEW_2026-06-02.md">MODULE_QUALITY_REVIEW</a>, <code>go list ./internal/...</code>, import flow review</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>큰 구조 변경 허용 원칙</td>
+              <td>즉시 진행 / checkpoint / 사용자 승인 경로로 blast radius를 분류했습니다.</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+            <tr>
+              <td>대표 evidence 기반 P0/P1 blocker 판정</td>
+              <td>first tour, incident 001, command-choice, review queue, viewport modal evidence를 spot review했습니다.</td>
+              <td><span class="pill">완료</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="section" id="axes">
+        <div class="section__head">
+          <div>
+            <h2>품질 축 요약</h2>
+            <p>기준 설정과 실제 개선 결과를 네 축으로 묶었습니다.</p>
+          </div>
+          <span class="badge">Release-quality baseline</span>
+        </div>
+        <div class="grid-4">
+          <article class="card axis">
+            <h3>World</h3>
+            <p>플레이어는 원격 복구 오퍼레이터입니다. Incident는 문제 풀이가 아니라 <code>Runbook Dispatch</code> 작전처럼 보이도록 header track과 용어를 정렬했습니다.</p>
+          </article>
+          <article class="card axis">
+            <h3>UX/UI</h3>
+            <p>현재 목표, 입력 상태, hint/retry/next action, residual risk가 terminal viewport에서 읽히도록 FocusPanel과 modal label을 정돈했습니다.</p>
+          </article>
+          <article class="card axis">
+            <h3>Content</h3>
+            <p>First Tour, Core Toolbelt, First Dispatch Arc, Judgment Drill, Review Loop를 첫 release-quality content shape로 정의했습니다.</p>
+          </article>
+          <article class="card axis">
+            <h3>Engine / Modules</h3>
+            <p>현재 engine은 baseline에 충분합니다. 다음 큰 후보는 새 engine보다 <code>playable</code> orchestration split 또는 pre-start input boundary입니다.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="evidence">
+        <div class="section__head">
+          <div>
+            <h2>대표 Evidence Bundle</h2>
+            <p>각 route가 어떤 제품 품질 가정을 증명하는지 빠르게 확인할 수 있게 정리했습니다.</p>
+          </div>
+          <span class="badge badge--blue">E2E reviewed</span>
+        </div>
+        <div class="grid-2">
+          <article class="card evidence-card">
+            <div class="evidence-card__body">
+              <span class="evidence-card__tag">First Tour</span>
+              <h3>playable_ftue_first_five_route</h3>
+              <p>Tutorial track, 현재 목표, command memory, success modal, residual risk, next action을 유지합니다.</p>
+            </div>
+            <pre class="terminal">ADVIMTURE | Tutorial | Tutorial 3: 작은 수정
+RUNBOOK SEALED
+배운 점  x는 작은 오타를 빠르게...
+잔류 리스크: 문자 하나 교체하기
+Next: enter</pre>
+          </article>
+
+          <article class="card evidence-card">
+            <div class="evidence-card__body">
+              <span class="evidence-card__tag">First Dispatch</span>
+              <h3>playable_incident_001_full</h3>
+              <p><code>Runbook Dispatch</code> track, relay station title, search/change/open/yank/substitute 조합, runbook completion을 검증합니다.</p>
+            </div>
+            <pre class="terminal">ADVIMTURE | Runbook Dispatch | 릴레이 기지 001
+RUNBOOK SEALED
+원인 기록을 남기고 문제 relay 구간만 정리
+Runbook: 6/6 복구 완료
+Next runbook: enter</pre>
+          </article>
+
+          <article class="card evidence-card">
+            <div class="evidence-card__body">
+              <span class="evidence-card__tag">Judgment Drill</span>
+              <h3>playable_command_choice_scope</h3>
+              <p>정답 암기가 아니라, 상황에 맞는 Vim 도구를 선택했다는 이유 중심의 feedback을 유지합니다.</p>
+            </div>
+            <pre class="terminal">ADVIMTURE | Runbook Dispatch | 릴레이 기지 005
+같은 단어 교체가 이어진다는 패턴
+두 번째 복구는 .으로 반복했습니다.
+Runbook: 5/5 복구 완료</pre>
+          </article>
+
+          <article class="card evidence-card">
+            <div class="evidence-card__body">
+              <span class="evidence-card__tag">Review Loop</span>
+              <h3>playable_review_queue</h3>
+              <p>progress v1만으로 <code>잔류 리스크</code>와 <code>다음 출격</code> 반복 동기가 보입니다.</p>
+            </div>
+            <pre class="terminal">RUNBOOK SEALED
+잔류 리스크: 경고 지점으로 이동하기
+다음 출격: 경고 지점으로 이동하기 외 2건
+Next: enter</pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="guardrails">
+        <div class="section__head">
+          <div>
+            <h2>Guardrail Audit</h2>
+            <p>이번 목표에서 의도적으로 건드리지 않은 경계를 분리했습니다.</p>
+          </div>
+          <span class="badge">No forbidden changes</span>
+        </div>
+        <div class="guardrail">
+          <article class="card do-not-touch">
+            <h3>변경하지 않은 경계</h3>
+            <ul class="list">
+              <li><code>go.mod</code>, <code>go.sum</code></li>
+              <li><code>internal/progress/</code></li>
+              <li><code>content/</code></li>
+            </ul>
+          </article>
+          <article class="card not-opened">
+            <h3>의도적으로 열지 않은 작업</h3>
+            <ul class="list">
+              <li>release tag 또는 release candidate packaging</li>
+              <li>새 tutorial/incident YAML 구현</li>
+              <li>content schema / progress 저장 포맷 변경</li>
+              <li>새 의존성, pre-start modal, 새 Vim engine capability</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="backlog">
+        <div class="section__head">
+          <div>
+            <h2>Residual Work</h2>
+            <p>남은 항목은 완료 blocker가 아니라 후속 backlog입니다.</p>
+          </div>
+          <span class="badge badge--amber">Follow-up only</span>
+        </div>
+        <div class="backlog">
+          <div class="backlog-item">
+            <strong>UI-ACTION-LANGUAGE-001</strong>
+            <p><code>Retry</code> / <code>Next runbook</code> action line이 화면 label과 E2E marker를 겸합니다.</p>
+            <span>action id 분리 시 별도 slice</span>
+          </div>
+          <div class="backlog-item">
+            <strong>UI-STYLE-001</strong>
+            <p>ASCII fallback 중심이라 제품 감각 polish 여지가 있습니다.</p>
+            <span>주요 flow 안정 후 style pass</span>
+          </div>
+          <div class="backlog-item">
+            <strong>UI-RAIL-001</strong>
+            <p>wide terminal side rail이 있으면 장기 콘텐츠가 더 안정됩니다.</p>
+            <span>review/daily가 briefing을 밀 때</span>
+          </div>
+          <div class="backlog-item">
+            <strong>UI-PRESTART-001</strong>
+            <p>first dispatch 전환을 더 극적으로 만들 수 있습니다.</p>
+            <span>HUD 두 줄 부족 evidence 반복 시</span>
+          </div>
+          <div class="backlog-item">
+            <strong>CONTENT-ARC-POLISH-001</strong>
+            <p>incident 001~003 arc framing을 더 매끄럽게 다듬을 수 있습니다.</p>
+            <span>scenario copy polish only</span>
+          </div>
+          <div class="backlog-item">
+            <strong>JUDGMENT-DRILL-REVIEW-001</strong>
+            <p>command-choice 선택 이유를 더 정밀하게 감사할 수 있습니다.</p>
+            <span>evidence bundle 기반 review</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="verification">
+        <div class="section__head">
+          <div>
+            <h2>검증 결과</h2>
+            <p>완료 판단에 사용한 마지막 검증 명령입니다.</p>
+          </div>
+          <span class="badge">Pass</span>
+        </div>
+        <div class="decision">
+          <article class="card">
+            <h3>완료 증거</h3>
+            <ul class="list">
+              <li><code>make release-check</code>: pass</li>
+              <li><code>go test ./...</code>: pass</li>
+              <li><code>git diff --check</code>: pass</li>
+              <li><code>git status --short -- go.mod go.sum internal/progress content docs/exec-plans/active</code>: no output</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>최종 판정</h3>
+            <p>
+              현재 playable loop는 바로 release candidate로 포장된 상태는 아니지만, 세계관/UX/UI/콘텐츠 기획/엔진 모듈화가
+              출시 가능한 품질 기준에 맞춰 정렬되었습니다. 남은 항목은 후속 품질 backlog 또는 별도 ExecPlan 후보입니다.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <p class="footer">
+        Source: <a href="PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md">PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md</a>
+        · Generated for local review
+      </p>
+    </div>
+  </main>
+</body>
+</html>

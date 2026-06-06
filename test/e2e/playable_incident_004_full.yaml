@@ -22,7 +22,7 @@ steps:
   - send: "k"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "unsafe 줄 두 개"
@@ -31,7 +31,7 @@ steps:
   - send: "j"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,11"
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "검증된 route 줄"
@@ -42,7 +42,7 @@ steps:
   - send: "j"
   - wait_ms: 50
   - send: "p"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "파일 끝까지 stale tail"
@@ -51,7 +51,7 @@ steps:
   - send: "G"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,11"
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "블록 정리 후에도 hold 상태"
@@ -86,13 +86,13 @@ steps:
   - send: "g"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next runbook: enter"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 004: config block 복구"
     - "Exercise: 5/5"
-    - "Next runbook: enter"
+    - "다음 runbook: enter"
     - "잔류 리스크: 줄 묶음 복구 범위 판별: 미복구"
     - "좋습니다. 남은 hold 상태를 전체 범위에서 live로 승격해 config block 복구 runbook을 닫았습니다."
   exit_code: 0

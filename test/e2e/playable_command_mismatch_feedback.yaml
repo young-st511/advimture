@@ -10,7 +10,7 @@ setup:
 steps:
   - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
   - send: ":"
-  - wait_screen_contains: "COMMAND CHANNEL"
+  - wait_screen_contains: "명령 모드"
   - send: "w"
   - wait_ms: 30
   - send: "q"
@@ -21,7 +21,7 @@ steps:
 assert:
   screen_contains:
     - "RECOVERY REQUIRED"
-    - "Retry: r or enter"
+    - "다시 시도: r 또는 enter"
   exit_code: 0
   progress_file_exists: true
   key_trace:
@@ -40,6 +40,11 @@ assert:
       focus_panel:
         kind: "failure"
         title: "RECOVERY REQUIRED"
+        actions:
+          - id: "retry"
+            label: "다시 시도: r 또는 enter"
+          - id: "quit"
+            label: "종료: q"
     contains:
       command_mismatch: ":wq가 아니라 :q!"
 evidence:

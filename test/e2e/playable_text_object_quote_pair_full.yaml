@@ -20,7 +20,7 @@ steps:
   - send: "p"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "임시 토큰 DELETE"
@@ -29,7 +29,7 @@ steps:
   - send: "i"
   - wait_ms: 50
   - send: '"'
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "secret의 alpha 값을 mirror"
@@ -44,7 +44,7 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "P"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "두 설정 줄의 old 값을 모두 new"
@@ -67,7 +67,7 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "."
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "status 값이 single quote"
@@ -82,7 +82,7 @@ steps:
   - send: "p"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "임시 토큰 DELETE가 single quote"
@@ -91,7 +91,7 @@ steps:
   - send: "i"
   - wait_ms: 50
   - send: "'"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "source의 alpha 값을 target"
@@ -106,13 +106,13 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "P"
-  - wait_screen_contains: "Next tutorial: enter"
+  - wait_screen_contains: "다음 튜토리얼: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Quote text object"
     - "Exercise: 7/7"
-    - "Next tutorial: enter"
+    - "다음 튜토리얼: enter"
     - "좋습니다. single quote 내부 값만 register로 담아 target에 재사용했습니다."
   exit_code: 0
   progress_file_exists: true

@@ -24,7 +24,7 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "breach token의 값만 safe"
@@ -43,7 +43,7 @@ steps:
   - send: "e"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "quarantine 줄 두 개"
@@ -52,7 +52,7 @@ steps:
   - send: "j"
   - wait_screen_contains: "Selection: linewise 1,0 -> 2,16"
   - send: "d"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "comma 뒤 route는 정상"
@@ -75,7 +75,7 @@ steps:
   - send: "e"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "Next: enter"
+  - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
   - wait_screen_contains: "마지막 잔류 hold 상태"
@@ -110,13 +110,13 @@ steps:
   - send: "g"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "Dispatch complete"
+  - wait_screen_contains: "출격 완료"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 007: 혼합 복구 작전"
     - "Exercise: 5/5"
-    - "Dispatch complete"
+    - "출격 완료"
     - "검색, 구조 편집, 줄 묶음 제거, inline 수리, 전체 치환"
   exit_code: 0
   progress_file_exists: true

@@ -2,7 +2,7 @@
 
 > Advimture는 엔진, 미들웨어, 어댑터를 분리해서 만든다. 이 문서는 현재 engine 상태와 hardening 후보만 둔다. 활성 slice는 항상 `docs/roadmap/PROGRAM.md`가 우선한다.
 
-Last reviewed: 2026-05-30
+Last reviewed: 2026-06-02
 
 ## 진행 원칙
 
@@ -16,7 +16,33 @@ Last reviewed: 2026-05-30
 
 현재 활성 engine slice는 없다.
 
-Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. `PLATFORM-REVIEW-003`으로 mission/review/game loop는 한 차례 닫혔고, 다음 권장 작업은 기존 engine만 사용하는 `CONTENT-BREADTH-002`다. 새 engine은 content 작성 병목이 확인될 때 `QUOTE-PAIR-HARDEN-001`부터 연다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+Foundation engine은 tutorial과 incident 적용 런을 만들 수 있을 정도로 충분히 닫혔다. `PLATFORM-REVIEW-003`으로 mission/review/game loop는 한 차례 닫혔고, `PLAYABLE-QUALITY-BASELINE-001`도 완료됐다. 새 engine은 content 작성 병목이 확인될 때만 연다. 2~8주 방향은 `docs/roadmap/FORWARD_PLAN.md`를 따른다.
+
+## Release-Quality 모듈화 판정
+
+현재 모듈 분리는 release-quality baseline을 진행하기에 충분하다.
+
+Review: `docs/roadmap/MODULE_QUALITY_REVIEW_2026-06-02.md`
+
+- `internal/vimengine`은 Vim-like state transition을 담당한다.
+- `internal/runtime`은 exercise session, constraints, retry/hint를 담당한다.
+- `internal/content`는 YAML loader, replay gate, coverage validator를 담당한다.
+- `internal/scenario`는 exercise를 runbook layer로 감싸지만 target/keys/constraints를 바꾸지 않는다.
+- `internal/playable`은 Bubble Tea model과 progress/review/playable flow를 조율한다.
+- `internal/playableview`는 renderer와 viewport 안정성을 테스트할 수 있는 순수 surface다.
+- `cmd/e2e-runner`와 `internal/e2estate`는 사람이 읽는 evidence와 typed app_state evidence를 함께 남긴다.
+
+따라서 다음 품질 개선은 대개 narrow slice로 열 수 있다. 단, 아래 변경은 별도 ExecPlan/checkpoint가 필요하다.
+
+- progress 저장 포맷 변경
+- content schema 변경
+- 새 의존성 추가
+- pre-start modal처럼 Bubble Tea input routing과 runtime key trace를 분리해야 하는 UI 구조 변경
+- visual block, count/register prefix처럼 engine blast radius가 큰 Vim capability
+
+큰 구조 변경은 release-quality 목표에 필요하면 허용한다. 현재 기준은 큰 수정을 피하는 것이 아니라, evidence 없이 저장 포맷/schema/dependency처럼 제품 계약을 흔드는 변경을 피하는 것이다.
+
+현재 판정상 release-quality baseline을 위해 새 Vim engine을 바로 열 필요는 없다. 다음 큰 구조 후보는 새 engine보다 `internal/playable` orchestration 분리 또는 pre-start modal input boundary다.
 
 ## 완료된 핵심 모듈
 
