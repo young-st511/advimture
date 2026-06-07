@@ -25,6 +25,7 @@ Completed Midterm Polish:
 - `docs/exec-plans/completed/review-loop-motivation-001.md`
 - `docs/exec-plans/completed/command-choice-breadth-002.md`
 - `docs/exec-plans/completed/post-breadth-playtest-review-001.md`
+- `docs/exec-plans/completed/success-statusline-cleanup-001.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
 Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
@@ -44,6 +45,13 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
   - 사용자 요청 없는 commit
   - 바로 release/tag 작업
 - 결론: evidence상 추가 hardening은 지금 열 필요가 없다.
+
+### SUCCESS-STATUSLINE-CLEANUP-001. Success Status Line Cleanup
+
+- 상태: completed
+- 목표: succeeded/failed floating modal 이후 화면에 이전 command/search 입력이 `Command: ...`로 남지 않게 한다.
+- 완료: 화면 표시에서는 stale command를 숨기고, 재현 evidence는 `app_state.command`로 유지했다.
+- ExecPlan: `docs/exec-plans/completed/success-statusline-cleanup-001.md`
 
 ### POST-BREADTH-PLAYTEST-REVIEW-001. Post Breadth Playtest Review
 

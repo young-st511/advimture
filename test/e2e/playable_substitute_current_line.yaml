@@ -39,7 +39,6 @@ assert:
   screen_contains:
     - "Mid Tutorial: Ex command 고급 튜토리얼"
     - "Exercise: 1/3"
-    - "Command: :s/api/web/"
     - "좋습니다. :s는 현재 줄의 작은 치환을 빠르게 처리할 때 유용합니다."
   exit_code: 0
   progress_file_exists: true

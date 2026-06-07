@@ -158,7 +158,7 @@ func (m Model) View() string {
 		CommandLine:     view.CommandLine,
 		LastCommand:     view.LastCommand,
 		FocusPanel:      m.focusPanel(state, view),
-		ShowLastCommand: true,
+		ShowLastCommand: state.Status == exerciseruntime.StatusRunning,
 	}
 	if entry, ok := m.currentEntry(); ok {
 		screen.PlaylistTitle = entry.PlaylistTitle

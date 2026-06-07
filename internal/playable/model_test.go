@@ -794,6 +794,31 @@ func TestPlayableShowsSearchLineInSearchMode(t *testing.T) {
 	}
 }
 
+func TestPlayableHidesLastCommandAfterSuccess(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "vim-ex-command-substitute-001"),
+	})
+
+	for _, key := range []string{":", "s", "/", "a", "p", "i", "/", "w", "e", "b", "/", "enter"} {
+		model, _ = updateWithKey(t, model, key)
+	}
+
+	if model.State().Status != "succeeded" {
+		t.Fatalf("status = %q, want succeeded", model.State().Status)
+	}
+	if model.State().Command != ":s/api/web/" {
+		t.Fatalf("state command = %q, want app_state command evidence", model.State().Command)
+	}
+	view := model.View()
+	if strings.Contains(view, "Command: :s/api/web/") {
+		t.Fatalf("view = %q, should not show stale command after success", view)
+	}
+	if !strings.Contains(view, "다음 단계: enter") {
+		t.Fatalf("view = %q, want success action", view)
+	}
+}
+
 func TestPlayableShowsVisualHelpInsteadOfGenericHintQuit(t *testing.T) {
 	model := New(Options{ContentRoot: contentRootForTest()})
 

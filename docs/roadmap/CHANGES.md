@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-08 — Success status line cleanup 완료
+
+이전 가정: fresh playtest 후에는 구현 slice를 새로 열지 않는 것이 기본이었지만, incident success 화면에서 이전 command/search 입력이 `Command: ...`로 남는 작은 UI 결함이 보였다.
+
+새 가정: command/search prompt는 입력 중일 때만 화면에 표시한다. succeeded/failed floating modal 이후의 재현 evidence는 화면 문자열이 아니라 `app_state.command`로 유지한다.
+
+이유: 성공 modal 아래에 이전 command가 남으면 현재 상태와 입력 가능한 행동이 흐려진다. 화면 의미는 action line이 담당하고, QA 재현성은 app_state가 담당하는 편이 계약에 맞다.
+
+영향: `SUCCESS-STATUSLINE-CLEANUP-001`은 completed로 이동한다. 다음은 다시 user decision checkpoint다.
+
 ## 2026-06-07 — Post breadth playtest review 완료
 
 이전 가정: `COMMAND-CHOICE-BREADTH-002` 이후에는 command-choice 7-beat route와 review motivation evidence를 읽고 deeper hardening 필요성을 판정해야 했다.

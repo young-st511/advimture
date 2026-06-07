@@ -23,7 +23,6 @@ assert:
   screen_contains:
     - "Tutorial 1: Vim 생존 키트"
     - "Exercise: 2/3"
-    - "Command: :q!"
     - ":q!는 저장하지 않는다는 판단"
   exit_code: 0
   progress_file_exists: true

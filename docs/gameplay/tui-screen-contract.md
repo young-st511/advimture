@@ -68,6 +68,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 
 - status line은 한 줄을 기본으로 한다.
 - terminal size가 있는 HUD 화면은 `NORMAL · running · cursor 0:2` 형태를 사용한다. terminal size가 없는 fallback은 legacy text를 유지할 수 있다.
+- command/search prompt는 해당 mode에서 입력 중일 때만 화면에 표시한다. succeeded/failed floating modal에서는 이전 command/search 입력을 `Command: ...`로 다시 노출하지 않고, 재현 evidence는 `app_state.command`로 유지한다.
 
 ### 5. FocusPanel / Floating Feedback Modal
 

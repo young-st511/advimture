@@ -44,7 +44,7 @@ steps:
   - send: "!"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "Command: :q!"
+  - wait_screen_contains: ":q!는 저장하지 않는다는 판단"
   - send: "enter"
 
   - wait_screen_contains: "변경을 남긴 채 세션을 닫아야 하니 저장 후 종료하세요"
