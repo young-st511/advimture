@@ -1,0 +1,166 @@
+id: playable_bracket_pair_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: text-object-quote-pair-008
+steps:
+  - wait_screen_contains: "임시 인자 DELETE"
+  - send: "d"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "("
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "handler 인자 old"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "("
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "source 인자 alpha"
+  - send: "y"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "("
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "cache block의 DELETE"
+  - send: "d"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "{"
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "state block의 old"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "{"
+  - wait_ms: 50
+  - send: "n"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "w"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+
+  - wait_screen_contains: "source block의 alpha"
+  - send: "y"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "{"
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
+  - wait_screen_contains: "다음 runbook: enter"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Mid Tutorial: Bracket pair text object"
+    - "Exercise: 6/6"
+    - "다음 runbook: enter"
+    - "좋습니다. brace 내부 값만 register로 담아 target block에 재사용했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"text-object-quote-pair-008\""
+    - "\"text-object-quote-pair-009\""
+    - "\"text-object-quote-pair-010\""
+    - "\"text-object-quote-pair-011\""
+    - "\"text-object-quote-pair-012\""
+    - "\"text-object-quote-pair-013\""
+  key_trace:
+    - "d"
+    - "i"
+    - "("
+    - "enter"
+    - "c"
+    - "i"
+    - "("
+    - "n"
+    - "e"
+    - "w"
+    - "esc"
+    - "enter"
+    - "y"
+    - "i"
+    - "("
+    - "j"
+    - "$"
+    - "P"
+    - "enter"
+    - "d"
+    - "i"
+    - "{"
+    - "enter"
+    - "c"
+    - "i"
+    - "{"
+    - "n"
+    - "e"
+    - "w"
+    - "esc"
+    - "enter"
+    - "y"
+    - "i"
+    - "{"
+    - "j"
+    - "$"
+    - "P"
+    - "q"
+  app_state:
+    buffer: ["source{alpha}", "target{alpha}"]
+    cursor:
+      row: 1
+      col: 11
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "text-object-quote-pair-013"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

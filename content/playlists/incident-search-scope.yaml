@@ -1,0 +1,15 @@
+playlists:
+  - id: incident-008-search-scope
+    status: approved
+    category: incident
+    order: 8
+    title: "릴레이 기지 008: 표식 기반 격리"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-008-001
+        role: search_then_isolate_scope
+        command_cluster: visual-line-basic
+        exercise_id: incident-search-scope-001
+        scenario_id: incident-search-scope-001-scenario
+        engine_support: implemented

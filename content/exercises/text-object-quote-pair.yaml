@@ -340,3 +340,295 @@ exercises:
         col: 12
       mode: normal
       status: succeeded
+
+  - id: text-object-quote-pair-008
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["di("]
+    reviewed_commands: ["di\"", "di'"]
+    mistake_focus: ["parenthesis 문자는 유지해야 하는데 함수 호출 구조까지 지우려고 한다."]
+    replay_status: pass
+    title: "paren 인자 비우기"
+    goal_for_player: "DELETE 인자 중간에서 di(로 parenthesis 내부 값만 비우세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 8
+      buffer: |
+        call(DELETE)
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 5
+      buffer: |
+        call()
+    optimal_keys: ["d", "i", "("]
+    allowed_keys: ["d", "i", "(", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "i", "("]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "c", "y", "x", "r", "a", "A", ":", "\"", "'", "{", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "삭제 대상은 함수 호출 전체가 아니라 parenthesis 내부 값입니다."
+      - after_keys: 2
+        text: "di(는 괄호 문자는 남기고 내부 값만 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["call()"]
+      cursor:
+        row: 0
+        col: 5
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-009
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci("]
+    reviewed_commands: ["ci\"", "ci'"]
+    mistake_focus: ["paren 내부 값인데 단어 단위 ciw나 quote text object로 처리하려고 한다."]
+    replay_status: pass
+    title: "paren 인자 교체"
+    goal_for_player: "old 인자 중간에서 ci(로 parenthesis 내부 값 전체를 new로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        handler(old)
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 11
+      buffer: |
+        handler(new)
+    optimal_keys: ["c", "i", "(", "n", "e", "w", "esc"]
+    allowed_keys: ["c", "i", "(", "n", "e", "w", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 7
+      required_keys: ["c", "i", "(", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "0", "$", "d", "y", "x", "r", "a", "A", ":", "\"", "'", "{", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번 대상은 parenthesis 내부 text object입니다. operator 뒤 i는 inner prefix입니다."
+      - after_keys: 3
+        text: "ci(는 괄호 내부 값을 비우고 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 7
+    e2e_assertions:
+      buffer: ["handler(new)"]
+      cursor:
+        row: 0
+        col: 11
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-010
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["yi("]
+    reviewed_commands: ["yi\"", "yi'", "P", "j", "$"]
+    mistake_focus: ["paren 인자를 다시 입력하거나 괄호까지 register에 담으려고 한다."]
+    replay_status: pass
+    title: "paren 인자 미러링"
+    goal_for_player: "alpha 인자 중간에서 yi(로 내부 값만 복사해 target parenthesis 안에 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        source(alpha)
+        target()
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 11
+      buffer: |
+        source(alpha)
+        target(alpha)
+    optimal_keys: ["y", "i", "(", "j", "$", "P"]
+    allowed_keys: ["y", "i", "(", "j", "$", "P", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "(", "P"]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", ":", "\"", "'", "{", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "y도 parenthesis 내부 text object를 대상으로 삼을 수 있습니다."
+      - after_keys: 3
+        text: "yi(로 값만 담은 뒤 target의 닫는 괄호 앞에 P로 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["source(alpha)", "target(alpha)"]
+      cursor:
+        row: 1
+        col: 11
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-011
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["di{"]
+    reviewed_commands: ["di\"", "di'"]
+    mistake_focus: ["brace 문자는 유지해야 하는데 block 구조까지 지우려고 한다."]
+    replay_status: pass
+    title: "brace 값 비우기"
+    goal_for_player: "DELETE 값 중간에서 di{로 brace 내부 값만 비우세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 8
+      buffer: |
+        cache{DELETE}
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 6
+      buffer: |
+        cache{}
+    optimal_keys: ["d", "i", "{"]
+    allowed_keys: ["d", "i", "{", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["d", "i", "{"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "e", "0", "$", "c", "y", "x", "r", "a", "A", ":", "\"", "'", "(", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "삭제 대상은 block 전체가 아니라 brace 내부 값입니다."
+      - after_keys: 2
+        text: "di{는 brace 문자는 남기고 내부 값만 삭제합니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["cache{}"]
+      cursor:
+        row: 0
+        col: 6
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-012
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["ci{"]
+    reviewed_commands: ["ci\"", "ci'"]
+    mistake_focus: ["brace 내부 값인데 단어 단위 ciw나 paren object로 처리하려고 한다."]
+    replay_status: pass
+    title: "brace 값 교체"
+    goal_for_player: "old 값 중간에서 ci{로 brace 내부 값 전체를 new로 교체하고 Normal mode로 돌아오세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        state{old}
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        state{new}
+    optimal_keys: ["c", "i", "{", "n", "e", "w", "esc"]
+    allowed_keys: ["c", "i", "{", "n", "e", "w", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 7
+      required_keys: ["c", "i", "{", "esc"]
+      forbidden_keys: ["h", "j", "k", "l", "b", "0", "$", "d", "y", "x", "r", "a", "A", ":", "\"", "'", "(", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번 대상은 brace 내부 text object입니다. block 기호는 보존해야 합니다."
+      - after_keys: 3
+        text: "ci{는 brace 내부 값을 비우고 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 7
+    e2e_assertions:
+      buffer: ["state{new}"]
+      cursor:
+        row: 0
+        col: 9
+      mode: normal
+      status: succeeded
+
+  - id: text-object-quote-pair-013
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: ["yi{"]
+    reviewed_commands: ["yi\"", "yi'", "P", "j", "$"]
+    mistake_focus: ["brace 내부 값을 다시 입력하거나 brace까지 register에 담으려고 한다."]
+    replay_status: pass
+    title: "brace 값 미러링"
+    goal_for_player: "alpha 값 중간에서 yi{로 내부 값만 복사해 target brace 안에 붙이세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 9
+      buffer: |
+        source{alpha}
+        target{}
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 11
+      buffer: |
+        source{alpha}
+        target{alpha}
+    optimal_keys: ["y", "i", "{", "j", "$", "P"]
+    allowed_keys: ["y", "i", "{", "j", "$", "P", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "{", "P"]
+      forbidden_keys: ["h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", ":", "\"", "'", "(", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "y도 brace 내부 text object를 대상으로 삼을 수 있습니다."
+      - after_keys: 3
+        text: "yi{로 값만 담은 뒤 target의 닫는 brace 앞에 P로 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["source{alpha}", "target{alpha}"]
+      cursor:
+        row: 1
+        col: 11
+      mode: normal
+      status: succeeded

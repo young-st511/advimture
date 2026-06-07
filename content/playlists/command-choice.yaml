@@ -43,3 +43,9 @@ playlists:
         exercise_id: command-choice-line-reuse-001
         scenario_id: command-choice-line-reuse-001-scenario
         engine_support: implemented
+      - id: incident-005-007
+        role: choose_bracket_pair_scope
+        command_cluster: text-object-quote-pair
+        exercise_id: command-choice-bracket-scope-001
+        scenario_id: command-choice-bracket-scope-001-scenario
+        engine_support: implemented

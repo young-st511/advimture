@@ -1,0 +1,54 @@
+exercises:
+  - id: incident-search-scope-001
+    status: approved
+    command_cluster: visual-line-basic
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["/", "V", "j", "d"]
+    mistake_focus: ["표식을 먼저 찾지 않고 줄을 훑거나, 찾은 뒤에도 단어/문자 단위로 일부만 지운다."]
+    replay_status: pass
+    title: "표식 기반 줄 묶음 격리"
+    goal_for_player: "먼저 /breach로 격리 표식을 찾고, 그 위치에서 V와 j, d로 breach 줄 묶음 전체를 제거하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        route=live
+        probe=ok
+        breach start
+        breach shadow
+        route=backup
+    target_state:
+      mode: normal
+      cursor:
+        row: 2
+        col: 0
+      buffer: |
+        route=live
+        probe=ok
+        route=backup
+    optimal_keys: ["/", "b", "r", "e", "a", "c", "h", "enter", "V", "j", "d"]
+    allowed_keys: ["/", "b", "r", "e", "a", "c", "h", "enter", "V", "j", "d", "esc"]
+    forbidden_keys: ["v", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 11
+      required_keys: ["/", "enter", "V", "d"]
+      forbidden_keys: ["v", "k", "l", "w", "0", "$", "?", ":", "x", "y", "p", "P", "i", "A", "o", "O", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "먼저 /breach로 격리 표식을 찾습니다. 표식을 찾기 전에는 scope를 판단할 위치가 없습니다."
+      - after_keys: 8
+        text: "표식에 도착했다면 이번 대상은 줄 내부 값이 아니라 breach 줄 묶음입니다. V로 linewise 범위를 여세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 11
+    e2e_assertions:
+      buffer: ["route=live", "probe=ok", "route=backup"]
+      cursor:
+        row: 2
+        col: 0
+      mode: normal
+      status: succeeded

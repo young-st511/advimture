@@ -1,0 +1,45 @@
+playlists:
+  - id: tutorial-95-bracket-pair
+    status: approved
+    category: tutorial
+    order: 15
+    title: "Mid Tutorial: Bracket pair text object"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: tutorial-95-001
+        role: delete_inner_paren_value
+        command_cluster: text-object-quote-pair
+        exercise_id: text-object-quote-pair-008
+        scenario_id: text-object-quote-pair-008-scenario
+        engine_support: implemented
+      - id: tutorial-95-002
+        role: change_inner_paren_value
+        command_cluster: text-object-quote-pair
+        exercise_id: text-object-quote-pair-009
+        scenario_id: text-object-quote-pair-009-scenario
+        engine_support: implemented
+      - id: tutorial-95-003
+        role: yank_inner_paren_value
+        command_cluster: text-object-quote-pair
+        exercise_id: text-object-quote-pair-010
+        scenario_id: text-object-quote-pair-010-scenario
+        engine_support: implemented
+      - id: tutorial-95-004
+        role: delete_inner_brace_value
+        command_cluster: text-object-quote-pair
+        exercise_id: text-object-quote-pair-011
+        scenario_id: text-object-quote-pair-011-scenario
+        engine_support: implemented
+      - id: tutorial-95-005
+        role: change_inner_brace_value
+        command_cluster: text-object-quote-pair
+        exercise_id: text-object-quote-pair-012
+        scenario_id: text-object-quote-pair-012-scenario
+        engine_support: implemented
+      - id: tutorial-95-006
+        role: yank_inner_brace_value
+        command_cluster: text-object-quote-pair
+        exercise_id: text-object-quote-pair-013
+        scenario_id: text-object-quote-pair-013-scenario
+        engine_support: implemented

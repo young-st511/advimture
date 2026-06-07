@@ -4,9 +4,9 @@
 
 ## 현재 상태
 
-Status: post-polish review / line reuse applied completed
+Status: post-breadth review completed / user decision checkpoint
 
-현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001` 보강이 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001` 보강이 완료됐다. 다음은 구현 slice가 아니라 user decision checkpoint이며, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 ## 현재 중기 플랜
 
@@ -18,8 +18,14 @@ Status: post-polish review / line reuse applied completed
 | 4 | UI-CONSOLE-POLISH-001 | completed | action line 화면 label과 machine-readable action id 분리 |
 | 5 | POST-POLISH-PLAYTEST-001 | completed | fresh evidence review로 다음 병목을 line reuse applied drill로 판정 |
 | 6 | LINE-REUSE-APPLIED-001 | completed | command-choice에 검증된 줄 전체 재사용 판단 beat 추가 |
-| 7 | SEARCH-THEN-SCOPE-APPLIED-001 | next candidate | marker를 먼저 찾고 줄 묶음 scope를 판단하는 applied drill 검토 |
-| 8 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
+| 7 | SEARCH-THEN-SCOPE-APPLIED-001 | completed | marker를 먼저 찾고 줄 묶음 scope를 판단하는 applied drill 추가 |
+| 8 | BRACKET-PAIR-HARDEN-001 | completed | parenthesis/brace 내부 text object hardening |
+| 9 | NEXT-PLAYTEST-REVIEW-001 | completed | fresh evidence review로 다음 병목을 review-loop motivation으로 판정 |
+| 10 | REVIEW-LOOP-MOTIVATION-001 | completed | success debrief, 잔류 리스크, 오늘의 복구 루트, 다음 출격 언어 polish |
+| 11 | COMMAND-CHOICE-BREADTH-002 | completed | 기존 engine만 사용해 command-choice 판단 breadth 확장 |
+| 12 | POST-BREADTH-PLAYTEST-REVIEW-001 | completed | 7-beat command-choice와 review loop evidence로 deeper hardening 필요성 판정 |
+| 13 | USER-DECISION-CHECKPOINT | recommended decision | 현재 변경을 커밋할지, 새 방향을 열지, 나중의 RC 준비로 갈지 선택 |
+| 14 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
 
 권장은 release candidate 포장이 아니라 quality baseline 이후의 후속 보강을 필요할 때 좁게 여는 것이다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
 
@@ -52,6 +58,12 @@ Status: post-polish review / line reuse applied completed
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| POST-BREADTH-PLAYTEST-REVIEW-001 | 2026-06-07 | command-choice 7-beat와 review motivation evidence를 확인. P0/P1 blocker 없음, deeper hardening은 현재 evidence가 요구하지 않음 |
+| COMMAND-CHOICE-BREADTH-002 | 2026-06-07 | command-choice seventh beat로 `command-choice-bracket-scope-001` 추가. hyphenated 괄호 인자 전체를 `ci(`로 교체하는 scope 판단 검증 |
+| REVIEW-LOOP-MOTIVATION-001 | 2026-06-07 | tutorial success는 `재점검 메모`/`나중에 다시 풀기`, incident success는 `잔류 리스크`/`다음 출격 후보`로 분리. action id와 progress 저장 포맷은 유지 |
+| NEXT-PLAYTEST-REVIEW-001 | 2026-06-07 | first tour, bracket tutorial, first dispatch, judgment drill, incident 008, review loop evidence를 읽고 다음 후보를 `REVIEW-LOOP-MOTIVATION-001`로 판정 |
+| BRACKET-PAIR-HARDEN-001 | 2026-06-07 | `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{`를 같은 줄의 비중첩 pair 내부 object로 engine/content/E2E까지 연결 |
+| SEARCH-THEN-SCOPE-APPLIED-001 | 2026-06-07 | `incident-008-search-scope`로 /marker 검색 후 linewise scope 판단을 검증하는 1-beat applied incident 추가 |
 | LINE-REUSE-APPLIED-001 | 2026-06-06 | command-choice sixth beat로 검증된 route 줄 전체를 linewise yank/put으로 재사용하는 판단 추가 |
 | POST-POLISH-PLAYTEST-001 | 2026-06-06 | fresh evidence review로 다음 최선 후보를 line reuse applied drill로 판정 |
 | CONTENT-ARC-POLISH-001 | 2026-06-06 | incident 001~003 copy/framing을 첫 Runbook Dispatch arc로 정리. 새 YAML/schema 없음 |

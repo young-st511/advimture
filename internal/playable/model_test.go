@@ -191,11 +191,42 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 	if !strings.Contains(view, "Runbook: 1/4 복구 완료") {
 		t.Fatalf("view = %q, want playlist completion count", view)
 	}
-	if !strings.Contains(view, "잔류 리스크: 경고 지점으로 이동하기: 미복구") {
-		t.Fatalf("view = %q, want residual risk recommendation", view)
+	lines := model.State().UI.FocusPanel.Lines
+	if !containsLineWith(lines, "재점검 메모: 경고 지점으로 이동하기: 미복구") {
+		t.Fatalf("focus panel lines = %v, want tutorial review note", lines)
 	}
-	if !strings.Contains(view, "다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
-		t.Fatalf("view = %q, want next dispatch after success", view)
+	if !containsLineWith(lines, "나중에 다시 풀기: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
+		t.Fatalf("focus panel lines = %v, want tutorial review motivation", lines)
+	}
+	if strings.Contains(view, "다음 출격: 경고 지점으로 이동하기") {
+		t.Fatalf("view = %q, should not present tutorial review note as primary dispatch action", view)
+	}
+}
+
+func TestPlayableShowsIncidentReviewMotivationAsDispatchCandidate(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "incident-hotfix-001"),
+		SaveProgress: func(*progress.Progress) error {
+			return nil
+		},
+	})
+
+	for _, key := range []string{"/", "e", "r", "r", "o", "r"} {
+		model, _ = updateWithKey(t, model, key)
+	}
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	view := model.View()
+	lines := model.State().UI.FocusPanel.Lines
+	if !containsLineWith(lines, "잔류 리스크: 다음 timeout 신호 추적: 미복구") {
+		t.Fatalf("focus panel lines = %v, want incident residual risk", lines)
+	}
+	if !containsLineWith(lines, "다음 출격 후보: 다음 timeout 신호 추적(미복구) 외 2건 대기") {
+		t.Fatalf("focus panel lines = %v, want incident dispatch candidate", lines)
+	}
+	if !strings.Contains(view, "다음 단계: enter") {
+		t.Fatalf("view = %q, want primary next-step action unchanged", view)
 	}
 }
 
@@ -436,13 +467,16 @@ func TestPlayableReviewDispatchReopensPrimaryReviewCandidateAfterFinalIncident(t
 		SaveProgress: func(*progress.Progress) error { return nil },
 	})
 
-	if got := model.currentExerciseID(); got != "incident-mixed-recovery-005" {
+	if got := model.currentExerciseID(); got != "incident-search-scope-001" {
 		t.Fatalf("current exercise = %q, want final incident", got)
 	}
-	for _, key := range []string{":", "%", "s", "/", "h", "o", "l", "d", "/", "l", "i", "v", "e", "/", "g"} {
+	for _, key := range []string{"/", "b", "r", "e", "a", "c", "h"} {
 		model, _ = updateWithKey(t, model, key)
 	}
 	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+	for _, key := range []string{"V", "j", "d"} {
+		model, _ = updateWithKey(t, model, key)
+	}
 
 	if model.State().Status != "succeeded" {
 		t.Fatalf("status = %q, want succeeded", model.State().Status)

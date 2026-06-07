@@ -103,3 +103,89 @@ scenarios:
     story_constraints:
       - "복사 대상이 single quote 내부 값이라는 점을 강조한다."
       - "P를 쓰는 위치는 닫는 quote 앞이다."
+
+  - id: text-object-quote-pair-008-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-008
+    engine_support: implemented
+    learning_reinforcement: "di(는 parenthesis 내부 값만 삭제하고 Normal mode를 유지한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "paren 인자 비우기"
+    briefing: "임시 인자 DELETE가 parenthesis 안에 남아 있습니다. 괄호는 남기고 내부 값만 di(로 비우세요."
+    context_role: "비워야 하는 함수 인자"
+    mentor_success: "좋습니다. parenthesis 구조는 유지한 채 내부 인자만 비웠습니다."
+    mentor_failure: "괄호까지 없애면 호출 구조가 깨집니다. di(로 내부만 제거하세요."
+    story_constraints:
+      - "삭제 범위가 parenthesis 내부라는 점을 강화한다."
+
+  - id: text-object-quote-pair-009-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-009
+    engine_support: implemented
+    learning_reinforcement: "ci(는 parenthesis 문자는 남기고 내부 값 전체를 교체한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "paren 인자 교체"
+    briefing: "handler 인자 old를 new로 바꿔야 합니다. parenthesis 내부 어디에 있든 ci(로 인자 전체를 교체하세요."
+    context_role: "교체해야 하는 함수 인자"
+    mentor_success: "좋습니다. parenthesis 구조는 유지하고 내부 인자만 교체했습니다."
+    mentor_failure: "단어 일부만 바꾸는 문제가 아닙니다. ci(로 parenthesis 내부 전체를 잡으세요."
+    story_constraints:
+      - "paren 내부 text object 선택을 강조한다."
+
+  - id: text-object-quote-pair-010-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-010
+    engine_support: implemented
+    learning_reinforcement: "yi(는 parenthesis 내부 값만 register에 담아 재사용한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "paren 인자 미러링"
+    briefing: "source 인자 alpha를 target에도 넣어야 합니다. yi(로 내부 값만 복사해 닫는 괄호 앞에 붙이세요."
+    context_role: "동기화가 필요한 함수 인자"
+    mentor_success: "좋습니다. parenthesis 내부 값만 register로 담아 target 인자에 재사용했습니다."
+    mentor_failure: "수동 입력하지 마세요. yi(로 내부 값만 담아 target의 닫는 괄호 앞에 P로 넣습니다."
+    story_constraints:
+      - "복사 대상이 parenthesis 내부 값이라는 점을 강조한다."
+      - "P를 쓰는 위치는 닫는 괄호 앞이다."
+
+  - id: text-object-quote-pair-011-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-011
+    engine_support: implemented
+    learning_reinforcement: "di{는 brace 내부 값만 삭제하고 Normal mode를 유지한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "brace 값 비우기"
+    briefing: "cache block의 DELETE 값이 남아 있습니다. brace는 남기고 내부 값만 di{로 비우세요."
+    context_role: "비워야 하는 block 값"
+    mentor_success: "좋습니다. brace 구조는 유지한 채 내부 값만 비웠습니다."
+    mentor_failure: "brace까지 없애면 block 구조가 깨집니다. di{로 내부만 제거하세요."
+    story_constraints:
+      - "삭제 범위가 brace 내부라는 점을 강화한다."
+
+  - id: text-object-quote-pair-012-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-012
+    engine_support: implemented
+    learning_reinforcement: "ci{는 brace 문자는 남기고 내부 값 전체를 교체한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "brace 값 교체"
+    briefing: "state block의 old 값을 new로 바꿔야 합니다. brace 내부 어디에 있든 ci{로 값 전체를 교체하세요."
+    context_role: "교체해야 하는 block 값"
+    mentor_success: "좋습니다. brace 구조는 유지하고 내부 값만 교체했습니다."
+    mentor_failure: "단어 일부만 바꾸는 문제가 아닙니다. ci{로 brace 내부 전체를 잡으세요."
+    story_constraints:
+      - "brace 내부 text object 선택을 강조한다."
+
+  - id: text-object-quote-pair-013-scenario
+    status: approved
+    exercise_id: text-object-quote-pair-013
+    engine_support: implemented
+    learning_reinforcement: "yi{는 brace 내부 값만 register에 담아 재사용한다."
+    does_not_change: ["target_state", "optimal_keys", "allowed_keys", "constraints"]
+    mission_title: "brace 값 미러링"
+    briefing: "source block의 alpha 값을 target에도 넣어야 합니다. yi{로 내부 값만 복사해 닫는 brace 앞에 붙이세요."
+    context_role: "동기화가 필요한 block 값"
+    mentor_success: "좋습니다. brace 내부 값만 register로 담아 target block에 재사용했습니다."
+    mentor_failure: "수동 입력하지 마세요. yi{로 내부 값만 담아 target의 닫는 brace 앞에 P로 넣습니다."
+    story_constraints:
+      - "복사 대상이 brace 내부 값이라는 점을 강조한다."
+      - "P를 쓰는 위치는 닫는 brace 앞이다."

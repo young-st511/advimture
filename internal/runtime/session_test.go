@@ -774,6 +774,36 @@ func TestSessionReplaysSingleQuoteTextObjectTrace(t *testing.T) {
 	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyI, "'", "u", "p", vimengine.KeyEsc})
 }
 
+func TestSessionReplaysParenTextObjectTrace(t *testing.T) {
+	initial := vimengine.NewState([]string{"handler(old)"})
+	initial.Cursor.Col = 9
+	initial.Cursor.DesiredCol = 9
+	session := NewSession(Exercise{
+		ID:      "change-inner-paren",
+		Initial: initial,
+		Goal: Goal{
+			Lines:  []string{"handler(new)"},
+			Cursor: CursorGoal(0, 11),
+			Mode:   ModeGoal(vimengine.ModeNormal),
+		},
+		Constraints: Constraints{
+			RequiredKeys: []string{vimengine.KeyC, vimengine.KeyI, "(", vimengine.KeyEsc},
+		},
+	})
+
+	for _, key := range []string{vimengine.KeyC, vimengine.KeyI, "(", "n", "e", "w"} {
+		result := session.ApplyKey(key)
+		if result.State.Status != StatusRunning {
+			t.Fatalf("status after %q = %q, want running", key, result.State.Status)
+		}
+	}
+	result := session.ApplyKey(vimengine.KeyEsc)
+	if result.State.Status != StatusSucceeded {
+		t.Fatalf("status after esc = %q, want succeeded", result.State.Status)
+	}
+	assertTrace(t, result.State.KeyTrace, []string{vimengine.KeyC, vimengine.KeyI, "(", "n", "e", "w", vimengine.KeyEsc})
+}
+
 func TestSessionDoesNotStartSucceededWhenRequiredKeysAreMissing(t *testing.T) {
 	initial := vimengine.NewState([]string{"api"})
 	initial.Cursor.Col = 1

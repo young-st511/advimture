@@ -93,9 +93,11 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - insert/search/command/visual mode cue는 한국어 action label로 표현하고, 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed: floating modal에 실패 이유, 남은 입력, attempts, retry
-- succeeded: floating modal에 복구 기록, best record, runbook completion, residual risk, next action
+- succeeded: floating modal에 복구 기록, best record, runbook completion, context별 review motivation, next action
 - failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
-- failed/succeeded floating modal 주변에는 detailed review/daily line을 다시 올리지 않는다. review/daily 의미는 modal 내부의 residual risk/next action과 `app_state.review`로 유지한다.
+- failed/succeeded floating modal 주변에는 detailed review/daily line을 다시 올리지 않는다. review/daily 의미는 modal 내부의 review motivation과 `app_state.review`로 유지한다.
+- tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`로 표시해 실제 primary action처럼 읽히지 않게 한다.
+- incident success의 review motivation은 `잔류 리스크`/`다음 출격 후보`로 표시해 Runbook Dispatch 후보성을 유지한다.
 
 구조:
 
@@ -131,7 +133,7 @@ Action label 계약:
 |------|----------|----------|
 | 목적 | 새 Vim command 학습 | 배운 command 선택/조합 |
 | 키 노출 | 직접 노출 허용, `기억할 명령` 표시 | 기본 화면에서는 숨기고 hint/failure에서 `참고 명령`으로 점진 공개 |
-| 문구 | `훈련 키`, `연습`, `다음 튜토리얼` | `판단`, `복구 단계`, `잔류 리스크`, `다음 runbook`, `출격 완료` |
+| 문구 | `훈련 키`, `연습`, `재점검 메모`, `나중에 다시 풀기`, `다음 튜토리얼` | `판단`, `복구 단계`, `잔류 리스크`, `다음 출격 후보`, `다음 runbook`, `출격 완료` |
 | review/daily | 보조 정보 | 세계관 메타 정보로 활용 |
 
 ## 검증 기준

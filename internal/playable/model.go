@@ -351,16 +351,24 @@ func (m Model) nextDispatchSummary() string {
 		return ""
 	}
 	primary := m.reviewQueue[0].DailyRouteLabel()
-	if len(m.reviewQueue) == 1 {
-		return "다음 출격: " + primary
+	label := "다음 출격 후보"
+	if m.currentEntryIsTutorial() {
+		label = "나중에 다시 풀기"
 	}
-	return fmt.Sprintf("다음 출격: %s 외 %d건 대기", primary, len(m.reviewQueue)-1)
+	if len(m.reviewQueue) == 1 {
+		return label + ": " + primary
+	}
+	return fmt.Sprintf("%s: %s 외 %d건 대기", label, primary, len(m.reviewQueue)-1)
 }
 
 func (m Model) residualRiskSummary() string {
+	label := "잔류 리스크"
+	if m.currentEntryIsTutorial() {
+		label = "재점검 메모"
+	}
 	for _, candidate := range m.reviewQueue {
 		if candidate.ExerciseID != m.currentExerciseID() {
-			return "잔류 리스크: " + candidate.Summary()
+			return label + ": " + candidate.Summary()
 		}
 	}
 	return ""
@@ -741,6 +749,14 @@ func (m Model) currentEntryIsIncident() bool {
 		return false
 	}
 	return entry.PlaylistCategory == "incident"
+}
+
+func (m Model) currentEntryIsTutorial() bool {
+	entry, ok := m.currentEntry()
+	if !ok {
+		return false
+	}
+	return entry.PlaylistCategory == "tutorial"
 }
 
 func e2eSelection(selection *vimengine.Selection) *e2estate.Selection {

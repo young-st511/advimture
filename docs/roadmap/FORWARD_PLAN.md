@@ -1,6 +1,6 @@
 # Forward Plan — Foundation to Release Quality
 
-Last reviewed: 2026-06-06
+Last reviewed: 2026-06-07
 Status: current rolling plan
 
 ## 목적
@@ -20,12 +20,12 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 현재 상태:
 
 - Vim engine: tutorial/incident를 만들 수 있을 만큼 충분히 닫힘
-- Content: tutorial coverage와 incident 001~007이 있음
+- Content: tutorial coverage와 incident 001~008이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
 - 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline은 한 차례 닫혔다. 하지만 바로 출시할 계획은 없으므로 다음 병목은 release candidate 문서가 아니라 후속 world/UX/content polish를 필요한 순간에 좁게 여는 것이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001`로 세계관/UX/UI/콘텐츠 기획/엔진 모듈화 기준을 닫은 뒤, 2026-06-06에는 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001`까지 완료했다. 따라서 다음 순서는 **search-then-scope 같은 좁은 applied content 후보를 검토하고, release candidate prep은 나중으로 둔다**로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001`로 세계관/UX/UI/콘텐츠 기획/엔진 모듈화 기준을 닫은 뒤, `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001`까지 완료했다. 따라서 다음 순서는 **review loop motivation polish를 좁게 열어 반복 플레이 동기를 다듬는다**로 간다.
 
 ## 0. 운영 원칙
 
@@ -103,7 +103,7 @@ ExecPlan: `docs/exec-plans/completed/quote-pair-harden-001-single-quote.md`
 
 - `di'`, `ci'`, `yi'` single quote 내부 object를 engine/runtime/content/E2E까지 연결했다.
 - `tutorial-91-text-object-quote-pair`는 7문항으로 확장됐고 8문항 제한을 유지한다.
-- `i(`, `i{`, nested/escaped/around/count/register는 후속 hardening으로 남긴다.
+- 당시 `i(`, `i{`는 후속 hardening으로 남겼고, 이후 `BRACKET-PAIR-HARDEN-001`에서 같은 줄의 비중첩 scope를 완료했다.
 
 검증:
 
@@ -191,6 +191,153 @@ ExecPlan: `docs/exec-plans/completed/line-reuse-applied-001-line-reuse-drill.md`
 - `go test ./internal/content ./internal/playable`: pass
 - `go test ./...`: pass
 - `make release-check`: pass
+
+### 0.2. SEARCH-THEN-SCOPE-APPLIED-001 — Search Then Scope Drill
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/search-then-scope-applied-001.md`
+
+결과:
+
+- `incident-008-search-scope` 1-beat applied incident를 추가했다.
+- `/breach`로 marker를 찾은 뒤 linewise `V`, `j`, `d`로 줄 묶음을 격리하는 판단을 검증한다.
+- focused E2E는 final/timeline/app_state/key trace evidence를 남긴다.
+
+검증:
+
+- `go test ./internal/content`: pass
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_incident_008_full.yaml`: pass
+
+### 0.3. BRACKET-PAIR-HARDEN-001 — Parenthesis/Brace Inner Text Object
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/bracket-pair-harden-001.md`
+
+결과:
+
+- `text-object-quote-pair` cluster를 같은 줄의 비중첩 parenthesis/brace 내부 object까지 확장했다.
+- `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{` 6문항을 `tutorial-95-bracket-pair`로 분리했다.
+- `playable_bracket_pair_full` E2E는 final/timeline/app_state/key trace evidence를 남긴다.
+
+검증:
+
+- `go test ./internal/vimengine ./internal/runtime ./internal/content`: pass
+- `go run ./cmd/e2e-runner --scenario test/e2e/playable_bracket_pair_full.yaml`: pass
+
+### 0.4. NEXT-PLAYTEST-REVIEW-001 — Fresh Direction Review
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/next-playtest-review-001-fresh-direction.md`
+Review: `docs/roadmap/NEXT_PLAYTEST_REVIEW_2026-06-07.md`
+
+결과:
+
+- first tour, bracket pair tutorial, first dispatch, judgment drill, incident 008, review loop evidence를 spot review했다.
+- P0/P1 blocker는 확인되지 않았다.
+- 다음 최선 후보는 `REVIEW-LOOP-MOTIVATION-001`로 판정했다.
+
+검증:
+
+- `git diff --check`: pass
+- `go test ./...`: pass
+
+### 0.5. REVIEW-LOOP-MOTIVATION-001 — Review Loop Motivation Polish
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/review-loop-motivation-001.md`
+
+목표:
+
+- success debrief, 잔류 리스크, 오늘의 복구 루트, 다음 출격 언어를 더 자연스럽게 만든다.
+- tutorial success의 review 안내가 실제 primary action처럼 읽히지 않게 한다.
+- incident success의 Runbook Dispatch 톤과 app_state action id 계약은 유지한다.
+
+결과:
+
+- tutorial success는 `재점검 메모`/`나중에 다시 풀기`로 review 후보를 보조 동기로 표시한다.
+- incident success는 `잔류 리스크`/`다음 출격 후보`로 review 후보를 Runbook Dispatch 톤에 맞춰 표시한다.
+- `next`, `next_dispatch` 등 action id/label 계약과 progress 저장 포맷은 변경하지 않았다.
+
+제외:
+
+- progress schema 변경
+- content schema 변경
+- 새 Vim command/engine capability
+- 새 dependency
+- release candidate/tag 작업
+
+검증:
+
+- `go test ./internal/playable ./internal/playableview ./internal/e2estate`: pass
+- `playable_review_queue`, `playable_debrief_success`, `playable_ftue_first_five_route`, `playable_viewport_success_modal_80x24`: pass
+
+### 0.6. COMMAND-CHOICE-BREADTH-002 — Command Choice Breadth
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/command-choice-breadth-002.md`
+
+목표:
+
+- 새 Vim command를 열기보다 기존 engine command만 사용해 command-choice 판단 breadth를 늘린다.
+- 후보는 line/search/scope/reuse 판단이 겹치지 않도록, `docs/gameplay/command-choice-drills.md`의 판단 질문을 기준으로 고른다.
+
+결과:
+
+- `incident-005-command-choice`를 일곱 beat route로 확장했다.
+- `command-choice-bracket-scope-001`은 `old-value`처럼 단어 단위로는 충분하지 않은 괄호 내부 인자 전체를 `ci(`로 교체하는 scope 판단을 검증한다.
+- 새 command, 새 schema, progress 저장 포맷, dependency는 추가하지 않았다.
+
+제외:
+
+- progress schema 변경
+- content schema 변경
+- 새 Vim command/engine capability
+- 새 dependency
+- release candidate/tag 작업
+
+검증:
+
+- `go test ./internal/content ./internal/playable`: pass
+- `playable_command_choice_scope`: pass
+
+### 0.7. POST-BREADTH-PLAYTEST-REVIEW-001 — Post Breadth Playtest Review
+
+Status: completed
+ExecPlan: `docs/exec-plans/completed/post-breadth-playtest-review-001.md`
+Review: `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
+
+목표:
+
+- command-choice 7-beat route와 review motivation evidence를 읽고, deeper hardening이 실제로 필요한지 판정한다.
+- P0/P1 blocker가 없으면 새 hardening 구현을 열지 않고 현 상태를 중기 목표 완료 후보로 본다.
+
+결과:
+
+- `playable_command_choice_scope` final/app_state evidence는 7번째 bracket scope beat를 안정적으로 설명한다.
+- `playable_review_queue` evidence는 tutorial success의 review motivation과 실제 `next` action이 분리되어 있음을 보여준다.
+- `make release-check`는 exit code 0으로 통과했다.
+- deeper hardening은 현재 evidence가 요구하지 않는다.
+
+제외:
+
+- progress schema 변경
+- content schema 변경
+- 새 Vim command/engine capability
+- 새 dependency
+- release candidate/tag 작업
+
+### 0.8. USER-DECISION-CHECKPOINT — Commit or New Direction
+
+Status: recommended decision
+
+목표:
+
+- 현재 완료된 중기 목표 묶음을 커밋할지, 새 방향을 열지, 나중의 release candidate 준비로 갈지 선택한다.
+
+제외:
+
+- 사용자 요청 없는 commit
+- 바로 release/tag 작업
 
 ### 1. PLAYABLE-QUALITY-BASELINE-001 — Release-Quality Playable Baseline
 
@@ -368,31 +515,31 @@ Status: completed
 
 - repeat-change choice를 fifth beat로 추가했다.
 - line reuse choice는 `LINE-REUSE-APPLIED-001`로 추가했다.
-- 남은 후보인 search-then-act, mixed incident 008은 release 전 content polish 후보로 유지한다.
+- search-then-scope는 `SEARCH-THEN-SCOPE-APPLIED-001`로 별도 incident에 승격했다. 이후 fresh review 결과, 새 route를 바로 늘리기보다 `REVIEW-LOOP-MOTIVATION-001`을 먼저 여는 것으로 판정했다.
 
 ### 4. QUOTE-PAIR-HARDEN-001 — Quote/Pair Text Object Hardening
 
 Status: completed
 
-목표: 기존 `i"` text object를 `i'`, `i(`, `i{`로 확장한다.
+목표: 기존 `i"` text object를 단계적으로 `i'`, `i(`, `i{`로 확장한다.
 
 포함:
 
 - `ci'`, `di'`, `yi'`
+- `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{`
 - config/JSON/function-argument style exercise
 
 제외:
 
-- `ci(`, `ci{`
 - nested pair
-- escaped quote
+- escaped delimiter
 - around object
 - count/register prefix
 
 완료 결과:
 
 - 첫 hardening scope는 `i'`로 닫았다.
-- `i(`, `i{`는 bracket pair hardening 후보로 유지한다.
+- 두 번째 hardening scope는 같은 줄의 비중첩 `i(`, `i{`로 닫았다.
 
 ### 5. UI-POLISH-002 — Release UI Polish
 

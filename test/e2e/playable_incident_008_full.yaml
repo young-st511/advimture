@@ -1,0 +1,78 @@
+id: playable_incident_008_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-search-scope-001
+steps:
+  - wait_screen_contains: "breach 표식 아래"
+  - send: "/"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "c"
+  - wait_ms: 50
+  - send: "h"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_screen_contains: "breach start"
+  - send: "V"
+  - wait_screen_contains: "Selection: linewise 2,0 -> 2,11"
+  - send: "j"
+  - wait_screen_contains: "Selection: linewise 2,0 -> 3,12"
+  - send: "d"
+  - wait_screen_contains: "출격 완료"
+  - send: "q"
+assert:
+  screen_contains:
+    - "릴레이 기지 008: 표식 기반 격리"
+    - "Exercise: 1/1"
+    - "출격 완료"
+    - "검색으로 표식을 찾은 뒤 줄 묶음 범위를 판단해 격리했습니다."
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"incident-search-scope-001\""
+  key_trace:
+    - "/"
+    - "b"
+    - "r"
+    - "e"
+    - "a"
+    - "c"
+    - "h"
+    - "enter"
+    - "V"
+    - "j"
+    - "d"
+    - "q"
+  app_state:
+    buffer: ["route=live", "probe=ok", "route=backup"]
+    cursor:
+      row: 2
+      col: 0
+    mode: "normal"
+    status: "succeeded"
+    score:
+      grade: "S"
+      passed: true
+    progress:
+      mission_id: "incident-search-scope-001"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

@@ -4,16 +4,17 @@ command_clusters:
     compatibility_tier: pedagogical
     engine_support: implemented
     curriculum_area: chapter-3-operator-grammar
-    title: "Text object: quote 내부 대상 편집"
-    commands: ["i\"", "di\"", "ci\"", "yi\"", "i'", "di'", "ci'", "yi'"]
-    coverage_required: ["di\"", "ci\"", "yi\"", "di'", "ci'", "yi'"]
+    title: "Text object: quote/pair 내부 대상 편집"
+    commands: ["i\"", "di\"", "ci\"", "yi\"", "i'", "di'", "ci'", "yi'", "i(", "di(", "ci(", "yi(", "i{", "di{", "ci{", "yi{"]
+    coverage_required: ["di\"", "ci\"", "yi\"", "di'", "ci'", "yi'", "di(", "ci(", "yi(", "di{", "ci{", "yi{"]
     oracle: optional
-    purpose: "커서가 따옴표 내부 어디에 있든 값 내부를 삭제, 변경, 복사한다."
+    purpose: "커서가 quote/pair 내부 어디에 있든 delimiter를 보존하며 내부 값을 삭제, 변경, 복사한다."
     prerequisite: ["text-object-inner-word", "yank-put-basic", "change-with-motion"]
     difficulty: intermediate
     useful_when:
       - "JSON, env, config의 quoted value를 구조 기준으로 바꿀 때"
-      - "값 시작으로 이동하지 않고 quote 내부 전체를 잡을 때"
+      - "함수 인자나 brace block 내부 값을 구조 기준으로 바꿀 때"
+      - "값 시작으로 이동하지 않고 quote/pair 내부 전체를 잡을 때"
       - "복사/붙여넣기와 operator grammar를 문자열 값 단위로 확장할 때"
     combo_paths:
       - ["ci\"", "esc"]
@@ -23,12 +24,13 @@ command_clusters:
     common_mistakes:
       - "커서를 값 시작으로 옮긴 뒤 cw/dw/yw로 처리하려고 한다."
       - "operator 뒤의 i를 Insert mode로 착각한다."
-      - "quote 문자까지 지워야 한다고 착각한다."
+      - "quote/pair delimiter까지 지워야 한다고 착각한다."
     compatibility_notes:
-      - "현재 구현은 double quote와 single quote 내부 object를 다룬다."
-      - "quote 문자는 대상에 포함하지 않는다."
-      - "nested pair, escaped quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 미룬다."
+      - "현재 구현은 double quote, single quote, parenthesis, brace 내부 object를 다룬다."
+      - "quote/pair delimiter는 대상에 포함하지 않는다."
+      - "nested pair, escaped delimiter, around object, count prefix, visual selection, multi-line pair object는 후속 hardening으로 미룬다."
     design_notes:
       - "VIM-026은 engine/runtime support만 닫고 content/E2E는 PLAYPACK-009로 분리한다."
       - "QUOTE-PAIR-HARDEN-001은 single quote 내부 object를 같은 semantics로 추가한다."
+      - "BRACKET-PAIR-HARDEN-001은 같은 줄의 비중첩 parenthesis/brace 내부 object를 같은 semantics로 추가한다."
       - "첫 playpack은 JSON/env/config 값 수정 문항을 우선한다."

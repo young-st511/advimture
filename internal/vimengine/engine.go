@@ -56,6 +56,8 @@ const (
 	KeyCtrlR       = "ctrl+r"
 	KeyDoubleQuote = "\""
 	KeySingleQuote = "'"
+	KeyLeftParen   = "("
+	KeyLeftBrace   = "{"
 )
 
 const (
@@ -594,13 +596,13 @@ func applyPendingKey(state State, key string) Result {
 	if pending == pendingYankInner && key == KeyW {
 		return yankInnerWord(next, key)
 	}
-	if pending == pendingDeleteInner && isSymmetricQuoteKey(key) {
+	if pending == pendingDeleteInner && isInnerDelimitedKey(key) {
 		return deleteInnerQuote(next, key)
 	}
-	if pending == pendingChangeInner && isSymmetricQuoteKey(key) {
+	if pending == pendingChangeInner && isInnerDelimitedKey(key) {
 		return changeInnerQuote(next, key)
 	}
-	if pending == pendingYankInner && isSymmetricQuoteKey(key) {
+	if pending == pendingYankInner && isInnerDelimitedKey(key) {
 		return yankInnerQuote(next, key)
 	}
 	if pending == pendingDeleteFind {
@@ -1230,11 +1232,17 @@ func innerQuoteRangeForKey(line []rune, cursorCol int, key string) (int, int, bo
 	if key == KeySingleQuote {
 		return innerDelimitedRange(line, cursorCol, '\'')
 	}
+	if key == KeyLeftParen {
+		return innerPairRange(line, cursorCol, '(', ')')
+	}
+	if key == KeyLeftBrace {
+		return innerPairRange(line, cursorCol, '{', '}')
+	}
 	return 0, 0, false
 }
 
-func isSymmetricQuoteKey(key string) bool {
-	return key == KeyDoubleQuote || key == KeySingleQuote
+func isInnerDelimitedKey(key string) bool {
+	return key == KeyDoubleQuote || key == KeySingleQuote || key == KeyLeftParen || key == KeyLeftBrace
 }
 
 func innerDelimitedRange(line []rune, cursorCol int, delimiter rune) (int, int, bool) {
@@ -1265,6 +1273,44 @@ func innerDelimitedRange(line []rune, cursorCol int, delimiter rune) (int, int, 
 	right := -1
 	for index := cursorCol + 1; index < len(line); index++ {
 		if line[index] == delimiter {
+			right = index
+			break
+		}
+	}
+	if right < 0 || right <= left+1 {
+		return 0, 0, false
+	}
+	return left + 1, right, true
+}
+
+func innerPairRange(line []rune, cursorCol int, open rune, close rune) (int, int, bool) {
+	if len(line) == 0 {
+		return 0, 0, false
+	}
+	if cursorCol < 0 {
+		cursorCol = 0
+	}
+	if cursorCol >= len(line) {
+		cursorCol = len(line) - 1
+	}
+	if line[cursorCol] == open || line[cursorCol] == close {
+		return 0, 0, false
+	}
+
+	left := -1
+	for index := cursorCol - 1; index >= 0; index-- {
+		if line[index] == open {
+			left = index
+			break
+		}
+	}
+	if left < 0 {
+		return 0, 0, false
+	}
+
+	right := -1
+	for index := cursorCol + 1; index < len(line); index++ {
+		if line[index] == close {
 			right = index
 			break
 		}

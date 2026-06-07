@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강 3단계(`CONTENT-ARC-POLISH-001`, `JUDGMENT-DRILL-REVIEW-001`, `UI-CONSOLE-POLISH-001`)와 fresh review/line reuse 적용(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`)도 완료됐고, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`도 완료됐다. 다음은 구현 slice가 아니라 user decision checkpoint다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
@@ -19,27 +19,79 @@ Completed Midterm Polish:
 - `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
 - `docs/exec-plans/completed/post-polish-playtest-001-fresh-product-loop-review.md`
 - `docs/exec-plans/completed/line-reuse-applied-001-line-reuse-drill.md`
+- `docs/exec-plans/completed/search-then-scope-applied-001.md`
+- `docs/exec-plans/completed/bracket-pair-harden-001.md`
+- `docs/exec-plans/completed/next-playtest-review-001-fresh-direction.md`
+- `docs/exec-plans/completed/review-loop-motivation-001.md`
+- `docs/exec-plans/completed/command-choice-breadth-002.md`
+- `docs/exec-plans/completed/post-breadth-playtest-review-001.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
 Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
+Latest Review: `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### SEARCH-THEN-SCOPE-APPLIED-001. Search Then Scope Drill
+### USER-DECISION-CHECKPOINT. Commit or New Direction
 
-- 상태: next candidate
-- 목표: `incident-005-command-choice` 또는 별도 applied run에서 먼저 marker를 찾고, 그 주변 줄 묶음을 판단해 처리하는 search-then-scope 문제를 검토한다.
-- 입력 문서:
-  - `docs/gameplay/command-choice-drills.md`
-  - `docs/gameplay/spec.md`
-  - `docs/roadmap/POST_POLISH_PLAYTEST_2026-06-06.md`
+- 상태: recommended decision
+- 목표: 현재 완료된 중기 목표 묶음을 커밋할지, 새 방향을 열지, 나중의 release candidate 준비로 갈지 결정한다.
+- 근거:
+  - `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
+- 제외:
+  - 사용자 요청 없는 commit
+  - 바로 release/tag 작업
+- 결론: evidence상 추가 hardening은 지금 열 필요가 없다.
+
+### POST-BREADTH-PLAYTEST-REVIEW-001. Post Breadth Playtest Review
+
+- 상태: completed
+- 목표: command-choice 7-beat route와 최근 review motivation polish evidence를 읽고, deeper hardening이 실제로 필요한지 판정한다.
+- 완료: P0/P1 blocker는 보이지 않으며, deeper hardening은 현재 evidence가 요구하지 않는다고 판정했다.
+- Review: `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
+- ExecPlan: `docs/exec-plans/completed/post-breadth-playtest-review-001.md`
+
+### COMMAND-CHOICE-BREADTH-002. Command Choice Breadth
+
+- 상태: completed
+- 목표: command-choice를 더 넓은 상황 판단 훈련으로 확장하되, 이미 구현된 engine command만 사용한다.
+- 완료: `incident-005-command-choice`에 `command-choice-bracket-scope-001`을 seventh beat로 추가했다. hyphenated 괄호 인자 전체를 `ci(`로 교체하는 scope 판단을 검증한다.
+- ExecPlan: `docs/exec-plans/completed/command-choice-breadth-002.md`
+
+### REVIEW-LOOP-MOTIVATION-001. Review Loop Motivation Polish
+
+- 상태: completed
+- 목표: success debrief, 잔류 리스크, 오늘의 복구 루트, 다음 출격 언어를 다듬어 반복 플레이 동기를 더 자연스럽게 만든다.
+- 완료: tutorial success는 `재점검 메모`/`나중에 다시 풀기`, incident success는 `잔류 리스크`/`다음 출격 후보`를 표시한다. action id/label 계약과 progress 저장 포맷은 유지했다.
+- ExecPlan: `docs/exec-plans/completed/review-loop-motivation-001.md`
+
+### NEXT-PLAYTEST-REVIEW-001. Fresh Direction Review
+
+- 상태: completed
+- 목표: `SEARCH-THEN-SCOPE-APPLIED-001`과 `BRACKET-PAIR-HARDEN-001` 완료 후 fresh evidence를 보고 다음 보강 축을 고른다.
+- 완료: 다음 후보를 `REVIEW-LOOP-MOTIVATION-001`로 판정했다.
+- Review: `docs/roadmap/NEXT_PLAYTEST_REVIEW_2026-06-07.md`
+- ExecPlan: `docs/exec-plans/completed/next-playtest-review-001-fresh-direction.md`
+
+### BRACKET-PAIR-HARDEN-001. Parenthesis/Brace Inner Text Object
+
+- 상태: completed
+- 목표: `text-object-quote-pair`를 같은 줄의 비중첩 parenthesis/brace 내부 object `i(`, `i{`까지 확장한다.
+- 완료: `tutorial-95-bracket-pair` 6문항과 `playable_bracket_pair_full` E2E를 추가했다.
+- ExecPlan: `docs/exec-plans/completed/bracket-pair-harden-001.md`
 - 제외:
   - 바로 출시하거나 tag를 찍는 작업
-  - 신규 대형 tutorial/incident 구현
+  - nested pair, escaped delimiter, around object, multi-line pair
   - 사용자 확인 없는 저장 포맷/content schema/의존성 변경
-- 결론: line reuse 다음의 가장 작은 content-quality 후보지만, command-choice route 길이와 incident 분리 여부를 먼저 판단한다.
+
+### SEARCH-THEN-SCOPE-APPLIED-001. Search Then Scope Drill
+
+- 상태: completed
+- 목표: marker를 먼저 찾고 그 주변 줄 묶음을 판단해 처리하는 applied run을 추가한다.
+- 완료: `incident-008-search-scope`를 별도 1-beat incident로 추가했다.
+- 제외: 새 command, 새 schema, progress 저장 포맷 변경
 
 ### POST-POLISH-PLAYTEST-001. Fresh Product Loop Review
 
@@ -66,7 +118,7 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 - 상태: completed
 - 목표: `incident-005-command-choice`의 기존 beat가 scope/range/inline/reuse/repeat-change 판단 질문을 설명하게 한다.
-- 완료: success/failure copy와 `docs/gameplay/command-choice-drills.md`의 mapping을 선택 이유 중심으로 최신화했다. 이후 `LINE-REUSE-APPLIED-001`로 line reuse 판단이 추가되어 현재 route는 여섯 beat다.
+- 완료: success/failure copy와 `docs/gameplay/command-choice-drills.md`의 mapping을 선택 이유 중심으로 최신화했다. 이후 `LINE-REUSE-APPLIED-001`와 `COMMAND-CHOICE-BREADTH-002`가 추가되어 현재 route는 일곱 beat다.
 - 제외: 새 command, 새 schema, 새 exercise
 
 ### UI-CONSOLE-POLISH-001. Runbook Console Product Feel
@@ -146,7 +198,7 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - 상태: completed
 - ExecPlan: `docs/exec-plans/completed/quote-pair-harden-001-single-quote.md`
 - 완료일: 2026-05-30
-- 결론: `di'`, `ci'`, `yi'` single quote 내부 object를 engine/runtime/content/E2E까지 연결했다. `i(`, `i{`는 후속 hardening으로 남긴다.
+- 결론: `di'`, `ci'`, `yi'` single quote 내부 object를 engine/runtime/content/E2E까지 연결했다. 이후 `BRACKET-PAIR-HARDEN-001`에서 같은 줄의 비중첩 `i(`, `i{` scope도 완료했다.
 
 ### CONTENT-BREADTH-002. Repeat Change Choice
 

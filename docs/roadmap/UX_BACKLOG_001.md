@@ -2,13 +2,13 @@
 
 Created: 2026-05-26
 Status: current
-Last reviewed: 2026-06-02
+Last reviewed: 2026-06-07
 
 ## 판단
 
 Content breadth로 넘어가기 전에 막는 P0 UX 리스크는 없다.
 
-현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. `PLAYABLE-QUALITY-BASELINE-001` 이후에도 P0/P1 UX blocker는 없다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
+현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. `PLAYABLE-QUALITY-BASELINE-001` 이후에도 P0/P1 UX blocker는 없다. `REVIEW-LOOP-MOTIVATION-001`로 tutorial success와 incident success의 review motivation 언어도 분리했다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
 
 ## P0
 
@@ -68,6 +68,13 @@ P0로 승격하는 조건:
 - 완료 내용: 화면 표시 label은 `다시 시도`, `다음 단계`, `다음 runbook`, `출격 완료`처럼 제품 톤에 맞췄고, E2E는 `app_state.ui.focus_panel.actions[].id`로 action 의미를 검증한다.
 - 검증: `playable_viewport_success_modal_80x24`, `playable_viewport_failure_modal_80x24`, `playable_incident_hint_affordance`, `playable_command_mismatch_feedback`.
 
+### UI-REVIEW-MOTIVATION-001 — Success Review Motivation Language
+
+- 상태: completed by `REVIEW-LOOP-MOTIVATION-001` on 2026-06-07.
+- 왜 중요했는가: tutorial success에서도 `잔류 리스크`/`다음 출격`이 반복되어 review 후보 안내가 실제 primary action처럼 읽혔다.
+- 완료 내용: tutorial success는 `재점검 메모`/`나중에 다시 풀기`, incident success는 `잔류 리스크`/`다음 출격 후보`를 표시한다. action id/label 계약과 progress 저장 포맷은 변경하지 않았다.
+- 검증: `playable_review_queue`, `playable_debrief_success`, `playable_ftue_first_five_route`, `playable_viewport_success_modal_80x24`.
+
 ## Content Breadth Readiness
 
 다음 content breadth slice는 진행 가능하다.
@@ -88,3 +95,4 @@ P0로 승격하는 조건:
 - `UI-EVIDENCE-003 — Final Frame Evidence`: `UI-EVIDENCE-002`에서 runner의 `screen_final.txt` 저장을 구현했고, `E2E-EVIDENCE-008`에서 long incident route가 final/timeline evidence를 남기도록 고정했다.
 - `UI-COMMAND-MEMORY-001 — Learned Command Memory`: `UI-POLISH-002`에서 tutorial/hint/failure command memory cue를 구현했다.
 - `UI-ACTION-LANGUAGE-001 — Action Line Language Contract`: `UI-CONSOLE-POLISH-001`에서 screen label과 action id를 분리했다.
+- `UI-REVIEW-MOTIVATION-001 — Success Review Motivation Language`: `REVIEW-LOOP-MOTIVATION-001`에서 tutorial/incident success review motivation 언어를 분리했다.

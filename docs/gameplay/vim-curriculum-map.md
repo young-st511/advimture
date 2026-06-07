@@ -228,7 +228,8 @@ Scenario 방향:
 3. Visual selection: completed, 같은 줄 charwise `v` + `d/y` tutorial과 full E2E까지 연결
 4. Linewise visual: completed, `V` linewise selection과 applied incident까지 연결
 5. Inline target motions: completed, `f/t`, `df/dt/cf/ct` tutorial과 command-choice 적용까지 연결
-6. Applied mastery runs: completed, `incident-006`, quote reuse choice, `incident-007` mixed run까지 연결
+6. Applied mastery runs: completed, `incident-006`, quote reuse choice, `incident-007`, `incident-008` search-then-scope run까지 연결
+7. Bracket pair text object: completed, 같은 줄의 비중첩 `i(`, `i{` 내부 object를 tutorial/E2E까지 연결
 
 이 순서는 “첫 투어 -> 안전감 -> 효율 체감 -> 작은 수정 -> Vim 문법 -> 복사/재사용 -> 구조 대상 편집 -> 중반 고급 명령”으로 이어진다.
 
@@ -250,7 +251,7 @@ Scenario 방향:
 |------|------|--------------|
 | foundation | 이미 playable path에 연결되어 다음 콘텐츠의 선행 조건이 됨 | `survival-save-quit`, `normal-motion-basic`, `word-motion-basic`, `whole-file-navigation`, `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`, `vim-ex-command-substitute`, `delete-with-motion`, `change-with-motion`, `yank-put-basic`, `text-object-inner-word`, `open-line-edit`, `repeat-last-change`, `search-basic`, `text-object-quote-pair`, `visual-char-line`, `visual-line-basic`, `char-find-line` |
 | decision | 다음 계획에서 먼저 결정할 것 | `UI-POLISH-002` release UI polish |
-| soon | 다음 milestone 후보이나 review 후 선택 | release readiness, bracket pair hardening, 추가 command-choice breadth |
+| soon | 다음 milestone 후보이나 review 후 선택 | release readiness, 추가 command-choice breadth, fresh UI/content playtest |
 | later | 중반 이후 어드벤처나 고급 튜토리얼에서 다룸 | visual block, macro/register/count, buffer/window/navigation-at-scale 계열 |
 
 ### Current Planning Candidate
@@ -282,11 +283,12 @@ ID: `ui-polish-release`
 - `inline-target-choice`: comma/quote/delimiter 보존 여부를 보고 `ct,`와 `cf,` 중 적절한 범위를 고른다.
 - `quote-value-reuse`: retype 대신 `yi"` + `P`로 검증된 quote 내부 값을 재사용한다.
 - `repeat-change-reuse`: 같은 단어 교체가 이어질 때 두 번째 변경을 `.`으로 반복한다.
+- `line-reuse`: 검증된 줄 전체를 직접 재입력하지 않고 `V` + `y` + `p`로 재사용한다.
+- `search-then-scope`: `/`로 marker를 먼저 찾은 뒤 linewise scope를 판단한다.
 
 후속 후보:
 
-- line reuse: 검증된 줄 전체를 `V` + `y` + `p`로 재사용한다.
-- search-then-act: `/`, `n`, `N`으로 위치를 찾은 뒤 적절한 편집 command를 고른다.
+- search-then-act variants: `/`, `n`, `N`으로 위치를 찾은 뒤 substitute, quote/pair object, linewise operation 중 적절한 편집 command를 고른다.
 
 권장 문항 수:
 
@@ -306,10 +308,10 @@ ID: `ui-polish-release`
 - `repeat-last-change`: PLAYPACK-007에서 `.` 반복 기본 흐름을 다뤘다. delete/yank/put/search/macro/register/count prefix는 후속 hardening이다.
 - `search-basic`: SEARCH-GAP-001에서 `/`, `n`, `N` literal search로 첫 scope를 고정했고, VIM-025/PLAYPACK-008에서 engine과 tutorial을 연결했다. `?`, regex, highlight, search history는 후속 hardening으로 남는다.
 - `platform-review-loop`: mastery, spaced review, daily run은 progress schema 변경 가능성이 있어 RFC와 사용자 승인이 필요하다.
-- `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했고, QUOTE-PAIR-HARDEN-001에서 single quote 내부 object를 연결했다. parenthesis, brace, nested pair, escaped quote, around object, count prefix, visual selection은 후속 hardening이다.
+- `text-object-quote-pair`: PLAYPACK-009에서 double quote 내부 object를 연결했고, QUOTE-PAIR-HARDEN-001에서 single quote 내부 object를 연결했다. BRACKET-PAIR-HARDEN-001에서 같은 줄의 비중첩 parenthesis/brace 내부 object를 연결했다. nested pair, escaped delimiter, around object, count prefix, visual selection, multi-line pair object는 후속 hardening이다.
 - `visual-char-line`: PLAYPACK-010에서 같은 줄 charwise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
 - `visual-line-basic`: PLAYPACK-011에서 linewise selection delete/yank tutorial까지 연결했다. multi-line charwise visual, visual block, count/register prefix는 후속 hardening이다.
-- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse, repeat-change reuse, line reuse beat를 playable로 연결했다. 후속 후보는 search-then-act다.
+- `command-choice-drill`: COMMAND-CHOICE-001에서 docs-only 설계를 완료했고, incident-005에서 linewise scope, range-choice, inline-target-choice, quote value reuse, repeat-change reuse, line reuse beat를 playable로 연결했다. search-then-scope는 `incident-008-search-scope`로 applied run에 승격했다.
 - `char-find-line`: CHAR-FIND-GAP-001에서 forward same-line `f/t`와 `df/dt/cf/ct` 첫 scope를 고정했고, VIM-030/PLAYPACK-012에서 engine과 tutorial을 연결했다. `F/T`, `;`, `,`, count prefix, visual mode, yank 결합은 후속 hardening이다.
 
 ## Long-Run Platform Direction
@@ -320,8 +322,8 @@ Advimture는 단기 데모보다 장기 반복 학습 플랫폼을 목표로 한
 
 1. `ui-polish-release`: release 전 TUI polish와 command memory를 보강한다.
 2. `release-readiness`: 설치/실행/터미널 크기/known limitations/release build gate를 정리한다.
-3. `bracket-pair-hardening`: `i(`, `i{`는 single quote 이후 별도 engine hardening으로 연다.
-4. `command-choice-breadth`: 이미 배운 command를 섞어 검색/줄 재사용/범위 판단을 더 훈련한다.
+3. `command-choice-breadth`: 이미 배운 command를 섞어 검색/줄 재사용/범위 판단을 더 훈련한다.
+4. `pair-hardening-later`: nested pair, escaped delimiter, around object, count/register prefix는 실제 콘텐츠 병목이 확인될 때 별도 engine slice로 연다.
 5. `progress-schema-v2`: mastery/spaced review/daily run 저장은 실제 병목이 evidence로 확인된 뒤 사용자 승인으로만 연다.
 
 세계관은 `원격 시설 복구국 / Runbook Dispatch`를 유지하되, lore 확장보다 runbook 작전감과 잔류 리스크/재점검 언어를 활용한다. briefing은 `상황 1문장 + Vim 조작 목표 1문장`을 기본으로 유지한다.

@@ -19,14 +19,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 19 {
 		t.Fatalf("command clusters = %d, want 19", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 107 {
-		t.Fatalf("exercises = %d, want 107", len(lib.Exercises))
+	if len(lib.Exercises) != 115 {
+		t.Fatalf("exercises = %d, want 115", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 107 {
-		t.Fatalf("scenarios = %d, want 107", len(lib.Scenarios))
+	if len(lib.Scenarios) != 115 {
+		t.Fatalf("scenarios = %d, want 115", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 23 {
-		t.Fatalf("playlists = %d, want 23", len(lib.Playlists))
+	if len(lib.Playlists) != 25 {
+		t.Fatalf("playlists = %d, want 25", len(lib.Playlists))
 	}
 }
 
@@ -37,8 +37,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 107 {
-		t.Fatalf("playable exercises = %d, want 107: %+v", len(playable), playable)
+	if len(playable) != 115 {
+		t.Fatalf("playable exercises = %d, want 115: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -53,6 +53,7 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"char-find-line-004",
 		"char-find-line-005",
 		"char-find-line-006",
+		"command-choice-bracket-scope-001",
 		"command-choice-inline-target-001",
 		"command-choice-line-reuse-001",
 		"command-choice-quote-reuse-001",
@@ -80,6 +81,7 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"incident-mixed-recovery-003",
 		"incident-mixed-recovery-004",
 		"incident-mixed-recovery-005",
+		"incident-search-scope-001",
 		"incident-structure-001",
 		"incident-structure-002",
 		"incident-structure-003",
@@ -128,6 +130,12 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"text-object-quote-pair-005",
 		"text-object-quote-pair-006",
 		"text-object-quote-pair-007",
+		"text-object-quote-pair-008",
+		"text-object-quote-pair-009",
+		"text-object-quote-pair-010",
+		"text-object-quote-pair-011",
+		"text-object-quote-pair-012",
+		"text-object-quote-pair-013",
 		"undo-redo-basic-001",
 		"undo-redo-basic-002",
 		"vim-ex-command-substitute-001",
@@ -189,6 +197,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"tutorial-92-visual-selection",
 		"tutorial-93-visual-line",
 		"tutorial-94-char-find-line",
+		"tutorial-95-bracket-pair",
 		"incident-001-hotfix",
 		"incident-002-structure-recovery",
 		"incident-003-visual-recovery",
@@ -196,6 +205,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"incident-005-command-choice",
 		"incident-006-inline-target-repair",
 		"incident-007-mixed-recovery",
+		"incident-008-search-scope",
 	})
 }
 

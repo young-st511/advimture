@@ -110,13 +110,13 @@ steps:
   - send: "g"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "출격 완료"
+  - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 007: 혼합 복구 작전"
     - "Exercise: 5/5"
-    - "출격 완료"
+    - "다음 runbook: enter"
     - "검색, 구조 편집, 줄 묶음 제거, inline 수리, 전체 치환"
   exit_code: 0
   progress_file_exists: true

@@ -46,7 +46,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `vim-ex-command-substitute`는 `:s`, `:%s`, `:2,3s` 각각이 approved + implemented exercise coverage와 replay gate를 통과한다.
 - substitute command는 EXCMD-001에서 literal match만 지원하며, scenario success는 buffer target으로 검증한다.
 - playable은 approved/implemented playlist를 `category`, `order`, `id` 순서로 실행한다. `tutorial` category는 `incident` category보다 먼저 실행한다.
-- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`, `tutorial-94-char-find-line`다.
+- 현재 playable tutorial 순서는 `tutorial-0-movement`, `tutorial-1-survival`, `tutorial-2-fast-navigation`, `tutorial-3-small-edits`, `tutorial-4-ex-command`, `tutorial-5-operator-grammar`, `tutorial-6-yank-put`, `tutorial-7-text-object-inner-word`, `tutorial-8-open-line-edit`, `tutorial-9-repeat-last-change`, `tutorial-90-search-basic`, `tutorial-91-text-object-quote-pair`, `tutorial-92-visual-selection`, `tutorial-93-visual-line`, `tutorial-94-char-find-line`, `tutorial-95-bracket-pair`다.
 - `first-5-minute`는 legacy vertical slice로 retired 상태이며 default playable path에서 실행하지 않는다.
 - 첫 5분 canonical route는 `docs/gameplay/first-five-minute-route.md`를 따른다. 현재 기준은 `tutorial-0-movement` 전체, `tutorial-1-survival` 전체, `tutorial-2-fast-navigation` 전체, `tutorial-3-small-edits` 첫 문항까지이며, 새 command/schema/progress 변경 없이 현재 playable route를 제품 첫 루프로 고정한다.
 - 화면은 현재 tutorial title과 episode-local exercise count를 표시한다.
@@ -64,14 +64,14 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시할 수 있다.
 - tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다. `기억할 명령`이 같은 required key를 이미 설명하면 `Coach: 훈련 키 ...`를 중복 표시하지 않는다.
 - incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청 또는 실패 후에만 `참고 명령: ...`으로 current exercise의 command memory를 점진 공개한다.
-- success/failure floating modal이 표시되는 화면은 상단 detailed review/daily line을 숨기고, modal 내부의 `잔류 리스크`/`다음 출격`/`다시 시도`/`다음 단계` action을 primary 안내로 둔다.
+- success/failure floating modal이 표시되는 화면은 상단 detailed review/daily line을 숨기고, modal 내부의 review motivation과 `다시 시도`/`다음 단계` action을 primary 안내로 둔다. Tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`, incident success의 review motivation은 `잔류 리스크`/`다음 출격 후보`로 표현한다.
 - `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `Hint: ...`로 표시하며, command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `다음 튜토리얼: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - 다음 playlist가 incident이면 tutorial/incident 어디에서 왔든 `다음 runbook: enter`를 표시한다.
 - 마지막 incident 성공 화면은 review queue 후보가 없으면 `출격 완료`를 표시한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
-- 성공 FocusPanel은 `이번 복구`, 기존 progress 기반 `최단 복구`, `목표 입력`, 현재 Runbook 복구 완료 수, 잔류 리스크, 다음 출격 후보를 순서대로 표시한다.
+- 성공 FocusPanel은 `이번 복구`, 기존 progress 기반 `최단 복구`, `목표 입력`, 현재 Runbook 복구 완료 수, context별 review motivation, 다음 review 후보를 순서대로 표시한다.
 - 마지막 playable entry에서 성공했고 review queue 후보가 남아 있으면 `다음 출격: enter`를 표시하고, `enter` 입력은 primary review exercise로 재진입한다.
 - 마지막 playable entry에서 review queue 후보가 없으면 기존처럼 incident는 `출격 완료`, tutorial은 `플레이리스트 완료`를 표시한다.
 - 마지막 tutorial playlist 성공 화면은 별도 저장 포맷 변경 없이 같은 debrief와 `플레이리스트 완료` 안내를 표시한다.
@@ -100,8 +100,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-7-text-object-inner-word`는 `diw`, `ciw`, `yiw`를 각각 두 문항씩 다루는 6문항 text object tutorial이다.
 - `text-object-inner-word`는 approved + implemented tutorial cluster이며 `diw`, `ciw`, `yiw` coverage와 replay gate, E2E assertion gate를 통과한다.
 - 첫 text object 구현은 `iw`만 다루며 quote/pair object, around object, visual selection, count prefix는 후속 루프로 분리한다.
-- `text-object-quote-pair`는 approved + engine implemented command cluster다. 현재 scope는 double quote 내부 object `di"`, `ci"`, `yi"`와 single quote 내부 object `di'`, `ci'`, `yi'`이며, nested pair, escaped quote, parenthesis, brace, around object, count prefix, visual selection은 후속 hardening으로 분리한다.
+- `text-object-quote-pair`는 approved + engine implemented command cluster다. 현재 scope는 double quote 내부 object `di"`, `ci"`, `yi"`, single quote 내부 object `di'`, `ci'`, `yi'`, 같은 줄의 비중첩 parenthesis/brace 내부 object `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{`다. nested pair, escaped delimiter, around object, count prefix, visual selection, multi-line pair object는 후속 hardening으로 분리한다.
 - `tutorial-91-text-object-quote-pair`는 `ci"`, `di"`, `yi"`, `ci"` + `.` 반복, `ci'`, `di'`, `yi'`를 다루는 7문항 quote text object tutorial이며 replay gate와 full playlist E2E를 통과한다.
+- `tutorial-95-bracket-pair`는 `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{`를 다루는 6문항 bracket pair text object tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - `open-line-edit`은 approved + engine implemented command cluster이며 `o`, `O`는 현재 줄 아래/위에 빈 줄을 삽입하고 Insert mode로 진입한다.
 - `tutorial-8-open-line-edit`은 `o` 3문항, `O` 2문항으로 구성된 5문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 첫 `o/O` 구현은 indentation, auto-comment, count prefix, insert-mode Enter, dot repeat 연계를 제외한다.
@@ -112,7 +113,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-90-search-basic`은 `/`, `n`, `N`, wrap-around literal search를 다루는 4문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`를 기준으로 검토한다. mastery, spaced review, daily run은 후보이며, progress 저장 포맷 변경은 별도 승인 전까지 구현하지 않는다.
 - 2026-05-25 기준 progress schema v2는 보류한다. FTUE, command-choice, no-schema daily route는 progress v1과 runtime 계산만으로 충분하며, 실패 attempt 지속 저장, mastery, review due date, daily streak이 실제 제품 문제로 확인될 때 다시 연다.
-- review queue는 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재점검 대상`, 성공 debrief에서는 `잔류 리스크`로 표현한다. candidate reason은 `미복구`, `복구 등급 <grade>`, `복구 입력 <best>/<optimal> keys`로 표시한다.
+- review queue는 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재점검 대상`, tutorial 성공 debrief에서는 `재점검 메모`/`나중에 다시 풀기`, incident 성공 debrief에서는 `잔류 리스크`/`다음 출격 후보`로 표현한다. candidate reason은 `미복구`, `복구 등급 <grade>`, `복구 입력 <best>/<optimal> keys`로 표시한다.
 - 오늘의 복구 루트는 저장하지 않는 daily motivation layer다. 현재 review queue의 primary 대상과 이유를 읽어 `오늘의 복구 루트: 목표 문자까지 이동하기(미복구) 외 2건 대기`처럼 표시한다.
 - E2E state summary는 저장 포맷과 별개로 review queue count, primary exercise, primary reason, daily route 문구를 노출한다.
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
@@ -122,6 +123,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-003-visual-recovery`는 “릴레이 기지 003: 오염 구간 격리”로 표시하며 `/contam`, visual `d`, visual `y` + `p`, backward visual `d`, `:%s`를 조합하는 세 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - `incident-004-linewise-block-recovery`는 “릴레이 기지 004: config block 복구”로 표시하며 `/block`, linewise `Vd`, linewise `Vy` + `p`, linewise `VGd`, `:%s`를 조합하는 네 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - `incident-006-inline-target-repair`는 “릴레이 기지 006: inline target 복구”로 표시하며 `/target`, `n`, `ct,`를 조합해 comma 뒤 정상 route를 보존하며 손상 값을 교체한다. replay gate와 full playlist E2E를 통과한다.
+- `incident-008-search-scope`는 “릴레이 기지 008: 표식 기반 격리”로 표시하며 `/breach` 검색으로 marker를 찾은 뒤 linewise `V`, `j`, `d`로 breach 줄 묶음을 격리한다. replay gate와 full playlist E2E를 통과한다.
 - command choice drill은 새 command cluster가 아니라 이미 배운 command 중 적절한 도구를 고르는 적용 레이어다. 첫 설계 기준은 `docs/gameplay/command-choice-drills.md`를 따른다.
 - command choice playable은 새 schema 승인 전까지 기존 `constraints.required_keys`와 `constraints.forbidden_keys`로 의도한 선택을 고정한다.
 - command choice scenario는 정답 key sequence보다 선택 이유를 성공/실패 피드백에서 강화한다.
@@ -131,6 +133,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-005-command-choice`는 네 번째 beat로 `choice-006-quote-value-reuse`를 포함한다. 검증된 quote 내부 값을 직접 재입력하지 않고 `yi"` + `P`로 빈 quote에 재사용하는 판단을 검증한다.
 - `incident-005-command-choice`는 다섯 번째 beat로 `choice-008-repeat-change-reuse`를 포함한다. 같은 단어 교체가 이어지는 상황에서 두 번째 변경을 직접 재입력하지 않고 `.`으로 마지막 변경을 반복하는 판단을 검증한다.
 - `incident-005-command-choice`는 여섯 번째 beat로 `choice-007-line-reuse`를 포함한다. 검증된 route 줄 전체를 직접 재입력하지 않고 linewise `V` + `y` + `p`로 backup 아래에 재사용하는 판단을 검증한다.
+- `incident-005-command-choice`는 일곱 번째 beat로 `choice-010-bracket-pair-scope`를 포함한다. `old-value`처럼 단어 단위로는 충분하지 않은 괄호 내부 인자 전체를 `ci(`로 교체하는 판단을 검증한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `incident-007-mixed-recovery`는 “릴레이 기지 007: 혼합 복구 작전”으로 표시하며 `/breach`, `ci"`, linewise `Vd`, `ct,`, `:%s`를 조합한다. replay gate와 full playlist E2E를 통과한다.
 - `visual-char-line`은 approved + implemented command cluster다. 첫 playable tutorial은 같은 줄 charwise `v` selection과 `d/y` 적용을 다룬다.

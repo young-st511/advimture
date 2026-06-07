@@ -2,6 +2,66 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-07 — Post breadth playtest review 완료
+
+이전 가정: `COMMAND-CHOICE-BREADTH-002` 이후에는 command-choice 7-beat route와 review motivation evidence를 읽고 deeper hardening 필요성을 판정해야 했다.
+
+새 가정: P0/P1 blocker는 보이지 않는다. command-choice seventh beat는 final/app_state evidence에서 안정적이고, review motivation wording도 실제 action과 분리되어 있다. Deeper hardening은 현재 evidence가 요구하지 않는다.
+
+이유: `make release-check`가 exit code 0으로 통과했고, nested pair/escaped delimiter/around object 같은 후보는 현재 route의 학습 품질을 막는 결함으로 드러나지 않았다.
+
+영향: `POST-BREADTH-PLAYTEST-REVIEW-001`은 completed로 이동한다. 다음은 구현 slice가 아니라 user decision checkpoint다. 바로 release candidate/tag 작업은 여전히 열지 않는다.
+
+## 2026-06-07 — Command choice breadth 완료
+
+이전 가정: `REVIEW-LOOP-MOTIVATION-001` 이후에는 새 command보다 기존 engine capability로 command-choice 판단 폭을 넓히는 것이 다음 최선이었다.
+
+새 가정: `incident-005-command-choice`는 일곱 beat route다. seventh beat `command-choice-bracket-scope-001`은 hyphenated 괄호 내부 인자 전체를 `ci(`로 교체하는 scope 판단을 검증한다.
+
+이유: `BRACKET-PAIR-HARDEN-001` 이후 bracket pair text object는 이미 구현된 engine capability가 되었고, `old-value` 같은 인자는 `ciw`로는 충분하지 않아 “단어 일부가 아니라 구조 내부 전체”라는 판단을 훈련하기 좋다.
+
+영향: `COMMAND-CHOICE-BREADTH-002`는 completed로 이동한다. 다음 recommended slice는 `POST-BREADTH-PLAYTEST-REVIEW-001`이며, deeper hardening은 evidence가 요구할 때만 연다.
+
+## 2026-06-07 — Review loop motivation polish 완료
+
+이전 가정: fresh direction review 이후 다음 최선 후보는 `REVIEW-LOOP-MOTIVATION-001`이며, tutorial success에서도 반복되던 `잔류 리스크`/`다음 출격` 언어를 먼저 다듬어야 했다.
+
+새 가정: tutorial success는 `재점검 메모`/`나중에 다시 풀기`, incident success는 `잔류 리스크`/`다음 출격 후보`로 review motivation을 분리한다. 실제 action id/label 계약과 progress 저장 포맷은 유지한다.
+
+이유: 성공 화면에서 review 후보 안내가 실제 primary action처럼 읽히면 다음 행동이 흐려진다. 문구만 context-aware하게 분리하면 schema, engine, dependency 변경 없이 반복 플레이 동기를 더 자연스럽게 만들 수 있다.
+
+영향: `REVIEW-LOOP-MOTIVATION-001`은 completed로 이동한다. 다음 recommended slice는 `COMMAND-CHOICE-BREADTH-002`이며, 바로 release candidate/tag 작업은 열지 않는다.
+
+## 2026-06-07 — Fresh direction review 완료
+
+이전 가정: `SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001` 완료 후에는 fresh evidence review로 다음 병목을 다시 골라야 했다.
+
+새 가정: P0/P1 blocker는 보이지 않는다. first tour, bracket pair tutorial, first dispatch, command-choice, incident 008 evidence는 안정적이며, 다음 최선 후보는 새 command나 release candidate prep이 아니라 `REVIEW-LOOP-MOTIVATION-001`이다.
+
+이유: success modal과 app_state action 계약은 안정적이지만, tutorial 중에도 반복되는 `잔류 리스크`/`다음 출격` 언어가 약간 기계적으로 읽힌다. progress schema나 content schema를 건드리지 않고 반복 플레이 동기를 더 선명하게 만들 수 있다.
+
+영향: `NEXT-PLAYTEST-REVIEW-001`은 completed로 이동한다. 다음 recommended slice는 `REVIEW-LOOP-MOTIVATION-001`이며, RC/tag 작업은 여전히 열지 않는다.
+
+## 2026-06-07 — Bracket pair text object hardening 완료
+
+이전 가정: `text-object-quote-pair`는 double/single quote 내부 object를 지원했고, parenthesis/brace 내부 object는 pair matching 리스크 때문에 후속 hardening 후보였다.
+
+새 가정: 같은 줄의 비중첩 parenthesis/brace 내부 object는 `text-object-quote-pair` scope 안에서 지원한다. `tutorial-95-bracket-pair`는 `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{` 6문항으로 분리되어 replay gate와 full playlist E2E를 통과한다.
+
+이유: function argument와 brace block 내부 값을 delimiter를 보존한 채 처리하는 상황은 Advimture의 구조 편집 감각을 강화한다. nested pair, escaped delimiter, around object, count/register prefix는 추가 risk가 있으므로 이번 slice 밖에 둔다.
+
+영향: `BRACKET-PAIR-HARDEN-001`은 completed로 이동한다. `SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001` 순서는 완료됐고, 다음은 release candidate 포장이 아니라 fresh evidence review로 새 병목을 고른다.
+
+## 2026-06-07 — Search-then-scope applied incident 완료
+
+이전 가정: line reuse 이후 다음 후보는 `SEARCH-THEN-SCOPE-APPLIED-001`로, `incident-005`에 더 붙일지 별도 applied run으로 열지 판정해야 했다.
+
+새 가정: command-choice route는 이미 6 beat라 더 늘리지 않는다. search-then-scope는 `incident-008-search-scope`라는 별도 1-beat incident로 승격해, `/breach` 검색 후 linewise scope 판단을 한 문제 안에서 검증한다.
+
+이유: marker를 먼저 찾고 나서야 줄 묶음 scope를 판단할 수 있다는 흐름이 Advimture의 Runbook Dispatch 감각과 잘 맞고, 새 engine/schema/progress/dependency 없이 구현 가능하다.
+
+영향: `SEARCH-THEN-SCOPE-APPLIED-001`은 completed로 이동한다. 사용자가 요청한 1 -> 2 순서에 따라 다음 active slice는 `BRACKET-PAIR-HARDEN-001`이다.
+
 ## 2026-06-06 — Post-polish review와 line reuse judgment drill 완료
 
 이전 가정: First Dispatch/Judgment/UI console 보강 후 다음 후보는 fresh evidence review로 결정해야 했다.

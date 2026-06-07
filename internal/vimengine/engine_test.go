@@ -1327,6 +1327,81 @@ func TestYankInnerSingleQuoteStoresValueWithoutMutating(t *testing.T) {
 	assertEvent(t, result, EventYanked)
 }
 
+func TestChangeInnerParenEntersInsertModeInsidePair(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"call(old)"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        6,
+			DesiredCol: 6,
+		},
+	})
+
+	assertApply(t, engine, KeyC, 0, 6, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 6, EventPendingKey)
+	result := engine.Apply("(")
+
+	assertStrings(t, result.State.Lines, []string{"call()"})
+	if result.State.Mode != ModeInsert {
+		t.Fatalf("mode = %q, want insert", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 5 {
+		t.Fatalf("cursor col = %d, want 5", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventInsertMode)
+}
+
+func TestDeleteInnerBraceDeletesValue(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"cache{DELETE}"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        8,
+			DesiredCol: 8,
+		},
+	})
+
+	assertApply(t, engine, KeyD, 0, 8, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 8, EventPendingKey)
+	result := engine.Apply("{")
+
+	assertStrings(t, result.State.Lines, []string{"cache{}"})
+	if result.State.Mode != ModeNormal {
+		t.Fatalf("mode = %q, want normal", result.State.Mode)
+	}
+	if result.State.Cursor.Col != 6 {
+		t.Fatalf("cursor col = %d, want 6", result.State.Cursor.Col)
+	}
+	assertEvent(t, result, EventChanged)
+}
+
+func TestYankInnerBraceStoresValueWithoutMutating(t *testing.T) {
+	engine := NewWithState(State{
+		Mode:  ModeNormal,
+		Lines: []string{"node{stable}"},
+		Cursor: Cursor{
+			Row:        0,
+			Col:        7,
+			DesiredCol: 7,
+		},
+	})
+
+	assertApply(t, engine, KeyY, 0, 7, EventPendingKey)
+	assertApply(t, engine, KeyI, 0, 7, EventPendingKey)
+	result := engine.Apply("{")
+
+	assertStrings(t, result.State.Lines, []string{"node{stable}"})
+	if result.State.Register.Text != "stable" {
+		t.Fatalf("register text = %q, want stable", result.State.Register.Text)
+	}
+	if result.State.Register.Linewise {
+		t.Fatal("register linewise = true, want false")
+	}
+	assertEvent(t, result, EventYanked)
+}
+
 func TestInnerQuoteWithoutPairDoesNotMutate(t *testing.T) {
 	engine := NewWithState(State{
 		Mode:  ModeNormal,
@@ -1460,6 +1535,39 @@ func TestInnerQuoteRangeSelectsDoubleQuotedContent(t *testing.T) {
 	} {
 		t.Run(tt.name, func(t *testing.T) {
 			start, end, ok := innerQuoteRange([]rune(tt.line), tt.col)
+			if ok != tt.ok {
+				t.Fatalf("ok = %v, want %v", ok, tt.ok)
+			}
+			if !ok {
+				return
+			}
+			if start != tt.start || end != tt.end {
+				t.Fatalf("range = (%d,%d), want (%d,%d)", start, end, tt.start, tt.end)
+			}
+		})
+	}
+}
+
+func TestInnerPairRangeSelectsParenthesizedContent(t *testing.T) {
+	for _, tt := range []struct {
+		name  string
+		line  string
+		col   int
+		open  rune
+		close rune
+		start int
+		end   int
+		ok    bool
+	}{
+		{name: "paren middle", line: "call(stable)", col: 6, open: '(', close: ')', start: 5, end: 11, ok: true},
+		{name: "brace middle", line: "cache{stable}", col: 8, open: '{', close: '}', start: 6, end: 12, ok: true},
+		{name: "on opener", line: "call(stable)", col: 4, open: '(', close: ')', ok: false},
+		{name: "on closer", line: "call(stable)", col: 11, open: '(', close: ')', ok: false},
+		{name: "outside", line: "call(stable)", col: 1, open: '(', close: ')', ok: false},
+		{name: "missing close", line: "call(stable", col: 6, open: '(', close: ')', ok: false},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			start, end, ok := innerPairRange([]rune(tt.line), tt.col, tt.open, tt.close)
 			if ok != tt.ok {
 				t.Fatalf("ok = %v, want %v", ok, tt.ok)
 			}

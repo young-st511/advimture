@@ -88,3 +88,18 @@ scenarios:
     story_constraints:
       - "새 command 소개가 아니라 직접 재입력과 linewise reuse의 선택 이유를 강조한다."
       - "성공/실패 피드백은 줄 전체가 재사용 단위인 이유를 설명한다."
+
+  - id: command-choice-bracket-scope-001-scenario
+    status: approved
+    exercise_id: command-choice-bracket-scope-001
+    engine_support: implemented
+    learning_reinforcement: "hyphenated 괄호 인자는 단어 일부가 아니라 bracket pair 내부 전체를 교체 단위로 판단한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "괄호 인자 범위 판별"
+    briefing: "probe 인자는 old-value 전체가 손상됐고 guard 줄은 정상입니다. 단어 일부가 아니라 괄호 내부 인자 전체를 교체 단위로 판단하세요."
+    context_role: "bracket pair scope choice drill"
+    mentor_success: "괄호 내부 인자 전체가 교체 단위라는 판단으로 구조는 보존하고 old-value 전체만 up으로 교체했습니다."
+    mentor_failure: "이번 대상은 단어 하나나 quote 값이 아닙니다. hyphenated 인자 전체를 바꾸려면 괄호 내부 범위를 선택하세요."
+    story_constraints:
+      - "새 command 소개가 아니라 이미 배운 bracket pair text object의 범위 판단을 강화한다."
+      - "성공/실패 피드백은 단어 일부가 아니라 괄호 내부 인자 전체가 교체 단위인 이유를 설명한다."

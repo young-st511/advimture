@@ -71,12 +71,12 @@ choice_drill_draft:
 | `choice-006-quote-value-reuse` | `reuse-choice` | `yi"` + `P` | 검증된 quote 내부 token을 빈 quote 위치에 그대로 복제해야 한다. 직접 재입력은 token 길이/오타 리스크가 크다. Playable: `incident-005-command-choice` / `command-choice-quote-reuse-001`. |
 | `choice-007-line-reuse` | `reuse-choice` | `V` + `y` + `p` | 검증된 route 줄 전체를 다음 위치에 복제해야 한다. 단어/quote 값이 아니라 줄 전체 재사용 문제다. Playable: `incident-005-command-choice` / `command-choice-line-reuse-001`. |
 | `choice-008-repeat-change-reuse` | `reuse-choice` | `.` | 같은 값 변경이 여러 줄에 반복된다. 재입력보다 last change repeat가 적합하다. Playable: `incident-005-command-choice` / `command-choice-repeat-change-001`. |
-| `choice-009-search-then-scope` | `search-then-act` + `scope-choice` | `/marker` + linewise visual delete | marker를 먼저 찾은 뒤 그 아래/주변의 줄 묶음을 지우는 문제다. 후속 후보이며 이번 scope에서는 구현하지 않는다. |
-| `choice-010-bracket-pair-hardening` | `scope-choice` | `ci(` 또는 `ci{` | quote pair와 같은 구조 편집 판단을 bracket pair로 확장한다. 새 engine capability가 필요하므로 이번 scope에서는 구현하지 않는다. |
+| `choice-009-search-then-scope` | `search-then-act` + `scope-choice` | `/marker` + linewise visual delete | marker를 먼저 찾은 뒤 그 아래/주변의 줄 묶음을 지우는 문제다. Playable: `incident-008-search-scope` / `incident-search-scope-001`. |
+| `choice-010-bracket-pair-scope` | `scope-choice` | `ci(` | quote pair와 같은 구조 편집 판단을 bracket pair로 확장한다. Playable: `incident-005-command-choice` / `command-choice-bracket-scope-001`. |
 
 ## Current Playable Mapping
 
-`incident-005-command-choice`는 현재 Advimture의 핵심 차별점인 "상황에 맞는 Vim 도구 선택"을 여섯 beat로 검증한다.
+`incident-005-command-choice`는 현재 Advimture의 핵심 차별점인 "상황에 맞는 Vim 도구 선택"을 일곱 beat로 검증한다.
 
 | Playable beat | 판단 질문 | 의도 선택 | 성공 copy 기준 |
 |---------------|-----------|-----------|----------------|
@@ -86,10 +86,11 @@ choice_drill_draft:
 | `command-choice-quote-reuse-001` | reuse choice: 검증된 값을 다시 치지 않고 재사용할 수 있는가? | `yi"` + `P` | token 오타 리스크를 줄이고 mirror 구조를 보존한 이유를 설명한다. |
 | `command-choice-repeat-change-001` | repeat-change reuse: 같은 변경을 다시 입력하지 않아도 되는가? | `.` | 같은 단어 교체 패턴이 이어져 마지막 변경 반복이 맞는 이유를 설명한다. |
 | `command-choice-line-reuse-001` | reuse choice: 검증된 줄 전체를 다시 치지 않고 재사용할 수 있는가? | linewise `V` + `y` + `p` | 단어/quote 값이 아니라 줄 전체가 재사용 단위인 이유를 설명한다. |
+| `command-choice-bracket-scope-001` | scope choice: 단어 일부가 아니라 괄호 내부 인자 전체인가? | `ci(` | hyphenated 인자 전체가 교체 단위라 괄호 내부 범위를 고른 이유를 설명한다. |
 
-대표 evidence는 `playable_command_choice_scope`다. 이 route는 final buffer, key trace, app_state를 모두 남기며, 여섯 beat가 새 command 소개 없이 이미 배운 command 선택 판단으로 닫히는지 확인한다.
+대표 evidence는 `playable_command_choice_scope`다. 이 route는 final buffer, key trace, app_state를 모두 남기며, 일곱 beat가 새 command 소개 없이 이미 배운 command 선택 판단으로 닫히는지 확인한다.
 
-후속 후보는 현재 문서 상태로만 둔다. 우선순위는 `search-then-scope`, `bracket-pair hardening` 순서가 자연스럽지만, bracket pair는 새 engine capability가 필요하므로 별도 ExecPlan과 사용자 승인이 있어야 한다.
+후속 후보는 현재 문서 상태로만 둔다. `search-then-scope`는 `incident-008-search-scope`로 승격했고, bracket pair scope choice는 `command-choice-bracket-scope-001`로 승격했다. 다음 hardening은 fresh evidence review에서 실제 필요가 확인될 때만 연다.
 
 ## Inline Target Application Decision
 
@@ -136,6 +137,18 @@ choice_drill_draft:
 - quote value reuse가 quote 내부 token 단위 재사용을 다룬다면, line reuse는 줄 전체가 재사용 단위인 상황을 보완한다.
 
 첫 playable 구현은 `incident-005-command-choice`에 sixth beat로 붙인다. 우회 방지는 직접 입력, charwise visual, delete/change, Ex command route를 막고 `V`, `y`, `p`를 required key로 고정한다.
+
+## Bracket Pair Scope Decision
+
+`COMMAND-CHOICE-BREADTH-002`의 적용 후보는 `choice-010-bracket-pair-scope`로 한다.
+
+이유:
+
+- `BRACKET-PAIR-HARDEN-001` 이후 같은 줄의 비중첩 parenthesis/brace 내부 object는 이미 구현된 engine capability다.
+- command-choice에서는 새 command 소개가 아니라, `old-value`처럼 단어 단위로는 충분하지 않은 인자 전체를 보고 bracket pair scope를 고르는 판단을 훈련할 수 있다.
+- quote 값 재사용과 line reuse가 재사용 단위를 다뤘다면, bracket scope는 구조 내부 전체가 편집 범위인 상황을 보완한다.
+
+첫 playable 구현은 `incident-005-command-choice`에 seventh beat로 붙인다. 우회 방지는 `ciw`, quote object, linewise/visual/substitute route를 막고 `c`, `i`, `(`, `esc`를 required key로 고정한다.
 
 ## Playable Gate
 

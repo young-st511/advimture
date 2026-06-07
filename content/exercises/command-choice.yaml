@@ -307,3 +307,53 @@ exercises:
         col: 0
       mode: normal
       status: succeeded
+
+  - id: command-choice-bracket-scope-001
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["ci(", "ciw", "ci\"", "ct"]
+    mistake_focus: ["괄호 내부 인자 전체가 교체 단위인데 단어 단위나 quote text object로 일부만 고치려고 한다."]
+    replay_status: pass
+    title: "괄호 인자 범위 판별"
+    goal_for_player: "probe 인자는 old-value 전체가 손상됐습니다. 단어 일부가 아니라 괄호 내부 인자 전체를 up으로 교체하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 7
+      buffer: |
+        probe(old-value)
+        guard=on
+    target_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 8
+      buffer: |
+        probe(up)
+        guard=on
+    optimal_keys: ["c", "i", "(", "u", "p", "esc"]
+    allowed_keys: ["c", "i", "(", "u", "p", "esc"]
+    forbidden_keys: ["\"", "'", "{", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["c", "i", "(", "esc"]
+      forbidden_keys: ["\"", "'", "{", "w", "b", "e", "0", "$", "d", "y", "x", "r", "a", "A", "o", "O", ":", "/", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "old-value는 hyphenated 인자라 단어 하나가 아닙니다. 교체 단위는 괄호 내부 전체입니다."
+      - after_keys: 3
+        text: "ci(는 괄호 문자는 보존하고 내부 인자 전체만 비운 뒤 Insert mode로 들어갑니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["probe(up)", "guard=on"]
+      cursor:
+        row: 0
+        col: 8
+      mode: normal
+      status: succeeded

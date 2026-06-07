@@ -30,7 +30,7 @@ Foundation UI pass 이후 화면 정보 계층은 Mission HUD, Runbook Console, 
 - 첫 화면에서 현재 목표와 편집 대상 buffer가 바로 보인다.
 - tutorial은 새 command를 숨기지 않고, incident는 정답 sequence를 hint/failure 전까지 과하게 노출하지 않는다.
 - 실패 화면은 실패 이유와 `다시 시도` action을 유지한다.
-- 성공 화면은 복구 기록, 잔류 리스크, 다음 행동을 유지한다.
+- 성공 화면은 복구 기록, context별 review motivation, 다음 행동을 유지한다.
 - review/daily 정보는 현재 mission보다 높은 시각 계층으로 올라오지 않는다.
 - 80x24/80x30 계열 viewport에서 action/hint line이 clipping으로 사라지지 않는다.
 - style/color pass를 하더라도 color 없는 evidence와 app_state 계약은 유지한다.
@@ -96,7 +96,8 @@ Incident focus panel의 첫 줄은 `훈련 키`보다 `판단:`을 우선한다.
 
 - `복구 기록`: 이번 grade/key count
 - `최단 복구 기록`: progress 기반 best record
-- `잔류 리스크`: 다음 review candidate
+- Tutorial success: `재점검 메모`와 `나중에 다시 풀기`로 다음 review candidate를 보조 동기로 보여준다.
+- Incident success: `잔류 리스크`와 `다음 출격 후보`로 다음 review candidate를 Runbook Dispatch 톤에 맞게 보여준다.
 - `오늘의 복구 루트`: primary review 대상, 이유, 남은 review count
 - `다음 단계`, `다음 튜토리얼`, `다음 runbook`, `다음 출격`, `출격 완료`: 다음 입력/완료 상태
 - E2E 의미 검증은 화면 label 문자열이 아니라 `app_state.ui.focus_panel.actions[].id`를 우선한다.

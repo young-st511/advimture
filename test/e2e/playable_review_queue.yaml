@@ -12,15 +12,15 @@ steps:
   - wait_ms: 50
   - send: "l"
   - wait_ms: 50
-  - wait_screen_contains: "잔류 리스크: 경고 지점으로 이동하기: 미복구"
+  - wait_screen_contains: "재점검 메모: 경고 지점으로 이동하기: 미복구"
   - send: "q"
 assert:
   screen_contains:
     - "Tutorial 0: 커서 감각 회상"
-    - "잔류 리스크: 경고 지점으로 이동하기: 미복구"
+    - "재점검 메모: 경고 지점으로 이동하기: 미복구"
     - "이번 복구: grade S, 2 keys"
     - "목표 입력: 2 keys"
-    - "다음 출격: 경고 지점으로 이동하기(미복구) 외 2건 대기"
+    - "나중에 다시 풀기: 경고 지점으로 이동하기(미복구) 외 2건 대기"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

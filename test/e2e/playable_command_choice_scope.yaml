@@ -120,13 +120,27 @@ steps:
   - send: "j"
   - wait_ms: 50
   - send: "p"
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+  - wait_screen_contains: "probe 인자는 old-value 전체"
+  - send: "c"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "("
+  - wait_ms: 50
+  - send: "u"
+  - wait_ms: 50
+  - send: "p"
+  - wait_ms: 50
+  - send: "esc"
   - wait_screen_contains: "다음 runbook: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Runbook Dispatch"
     - "릴레이 기지 005: 복구 범위 판별"
-    - "검증된 route 줄 전체가 재사용 단위"
+    - "괄호 내부 인자 전체가 교체 단위"
     - "다음 runbook: enter"
   exit_code: 0
   progress_file_exists: true
@@ -137,6 +151,7 @@ assert:
     - "\"command-choice-quote-reuse-001\""
     - "\"command-choice-repeat-change-001\""
     - "\"command-choice-line-reuse-001\""
+    - "\"command-choice-bracket-scope-001\""
   key_trace:
     - "V"
     - "j"
@@ -194,19 +209,26 @@ assert:
     - "y"
     - "j"
     - "p"
+    - "enter"
+    - "c"
+    - "i"
+    - "("
+    - "u"
+    - "p"
+    - "esc"
     - "q"
   app_state:
-    buffer: ["route=stable", "backup=", "route=stable", "guard=on"]
+    buffer: ["probe(up)", "guard=on"]
     cursor:
-      row: 2
-      col: 0
+      row: 0
+      col: 8
     mode: "normal"
     status: "succeeded"
     score:
       grade: "S"
       passed: true
     progress:
-      mission_id: "command-choice-line-reuse-001"
+      mission_id: "command-choice-bracket-scope-001"
       completed: true
 evidence:
   save_raw_ansi: true

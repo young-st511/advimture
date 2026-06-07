@@ -40,7 +40,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - `playable_ftue_first_five_route` scenario는 FTUE-001 canonical route를 `tutorial-0-movement`부터 `tutorial-3-small-edits` 첫 문항까지 검증하고, screen timeline/final screen/app_state/progress evidence를 남긴다.
 - 긴 incident full route, command-choice applied route, 대표 mid tutorial full route는 route 전체 흐름과 마지막 화면을 재검토할 수 있도록 screen timeline/final screen/app_state evidence를 함께 남긴다.
 - command-choice applied route는 final/timeline evidence와 app_state evidence를 함께 남긴다.
-- `make e2e-playable`은 첫 문제 smoke, constraint/coaching UX, 80x24 success/failure viewport smoke, 80x30 incident hint wrapping smoke, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute, first-cut tutorial flow, operator/yank/text-object/open-line/repeat/search/quote text object 7-beat full playpack, incident 001~004, command-choice 6-beat route, incident 006/007 run 경로를 모두 검증한다.
+- `make e2e-playable`은 첫 문제 smoke, constraint/coaching UX, 80x24 success/failure viewport smoke, 80x30 incident hint wrapping smoke, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute, first-cut tutorial flow, operator/yank/text-object/open-line/repeat/search/quote text object 7-beat full playpack, bracket pair text object 6-beat full playpack, incident 001~004, command-choice 7-beat route, incident 006/007/008 run 경로를 모두 검증한다.
 - E2E runner의 `wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 대상으로 삼아, 반복되는 `Next: enter` 같은 문자열이 과거 화면 로그 때문에 오탐하지 않게 한다.
 
 ## 미확인 사항
