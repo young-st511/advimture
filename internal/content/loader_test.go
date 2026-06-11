@@ -30,6 +30,23 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	}
 }
 
+func TestLoadLibraryFSLoadsRootContent(t *testing.T) {
+	lib, err := LoadLibraryFS(os.DirFS(filepath.Join("..", "..")), "content")
+	if err != nil {
+		t.Fatalf("LoadLibraryFS returned error: %v", err)
+	}
+
+	if len(lib.PlayableExercises()) != 115 {
+		t.Fatalf("playable exercises = %d, want 115", len(lib.PlayableExercises()))
+	}
+	if len(lib.Playlists) != 25 {
+		t.Fatalf("playlists = %d, want 25", len(lib.Playlists))
+	}
+	if len(lib.PlayablePlaylists()) != 24 {
+		t.Fatalf("playable playlists = %d, want 24", len(lib.PlayablePlaylists()))
+	}
+}
+
 func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
 	if err != nil {

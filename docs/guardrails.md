@@ -13,10 +13,12 @@
 - Full playable E2E: `make e2e-playable`
 - Makefile: `make run`, `make build`, `make test`, `make release-check`, `make e2e-smoke`, `make e2e-playable`
 - `.gitignore`: 바이너리, IDE 파일, OS 파일, `coverage.out`, `artifacts/`
+- CI: `.github/workflows/ci.yml`에서 `go test ./...`, `go vet ./...`, `make e2e-smoke`
+- Release automation: `.github/workflows/release.yml`에서 tag `vX.Y.Z` push 시 `make release-check`, GitHub Release 생성, Homebrew tap formula 갱신
+- Version bump/deploy: `make release-patch`, `make release-minor`, `make release-major`
 
 ## 현재 비어 있는 부분
 
-- CI 설정 없음
 - 전용 lint 설정 없음
 - pre-commit hook 없음
 - 검증 evidence stage 차단 규칙 없음
@@ -32,6 +34,12 @@
 3. `make e2e-smoke`
 
 로컬 공개 전 검증은 `make release-check`를 사용한다. 이 target은 `make test`, `make build`, `make e2e-playable`을 순서대로 실행한다.
+
+### Release Automation
+
+- 자세한 기준은 `docs/release.md`를 따른다.
+- ExecPlan 완료 후에는 관련 변경을 커밋한 뒤 major/minor/patch 중 하나를 선택해 release target을 실행한다.
+- tag push release는 `HOMEBREW_TAP_SSH_KEY` secret이 없으면 tap 갱신 전에 실패한다.
 
 ### TUI E2E QA Loop
 

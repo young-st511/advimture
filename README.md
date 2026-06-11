@@ -29,6 +29,20 @@ Vim을 실제로 유용하게 쓰기 위한 Go + Bubble Tea 기반 터미널 어
 
 ## 실행
 
+Homebrew tap으로 개발 중인 최신 `main`을 source build 설치할 수 있습니다.
+
+```sh
+brew install --HEAD young-st511/tap/advimture
+```
+
+stable tag 배포 후에는 아래 명령으로 설치할 수 있습니다.
+
+```sh
+brew install young-st511/tap/advimture
+```
+
+소스 체크아웃에서 바로 실행할 수도 있습니다.
+
 ```sh
 go run .
 ```
@@ -97,7 +111,7 @@ make build
 - Ex substitute는 literal `:s`, `:%s`, `:2,3s` 중심이며 Vim regex 전체를 지원하지 않습니다.
 - named register, macro, count prefix, visual block, 복잡한 indentation/auto-comment는 아직 범위 밖입니다.
 - progress v1은 완료/최고 기록 중심입니다. spaced review, mastery, streak 저장은 후속 설계 대상입니다.
-- CI는 아직 없습니다. 로컬 release gate는 `make release-check`입니다.
+- CI와 tag 기반 release workflow가 있습니다. 로컬 공개 전 release gate는 `make release-check`입니다.
 
 ## 문서와 개발 워크플로우
 
@@ -109,5 +123,6 @@ make build
 - 실행 계획: `docs/exec-plans/`
 - Gameplay spec: `docs/gameplay/spec.md`
 - Verification spec: `docs/verification/spec.md`
+- Release workflow: `docs/release.md`
 
 비사소한 변경은 `docs/exec-plans/active/`에 ExecPlan을 만든 뒤 진행합니다.

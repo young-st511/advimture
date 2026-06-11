@@ -1,0 +1,115 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+
+      - name: Validate release tag
+        id: version
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          if [[ ! "$tag" =~ ^v[0-9]+[.][0-9]+[.][0-9]+$ ]]; then
+            echo "::error::release tag must look like vX.Y.Z"
+            exit 1
+          fi
+          version="${tag#v}"
+          file_version="$(tr -d '[:space:]' < VERSION)"
+          if [ "$version" != "$file_version" ]; then
+            echo "::error::tag $tag does not match VERSION $file_version"
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check Homebrew tap deploy key
+        env:
+          HOMEBREW_TAP_SSH_KEY: ${{ secrets.HOMEBREW_TAP_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${HOMEBREW_TAP_SSH_KEY}" ]; then
+            echo "::error::HOMEBREW_TAP_SSH_KEY secret is required to update young-st511/homebrew-tap"
+            exit 1
+          fi
+
+      - name: Release gate
+        run: make release-check
+
+      - name: Check built version
+        run: |
+          set -euo pipefail
+          output="$(./advimture --version)"
+          expected="advimture ${{ steps.version.outputs.version }}"
+          if [ "$output" != "$expected" ]; then
+            echo "::error::version output '$output' did not match '$expected'"
+            exit 1
+          fi
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release create "${{ steps.version.outputs.tag }}" \
+            --verify-tag \
+            --title "Advimture ${{ steps.version.outputs.tag }}" \
+            --generate-notes
+
+      - name: Compute source archive checksum
+        id: archive
+        run: |
+          set -euo pipefail
+          archive_url="https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${{ steps.version.outputs.tag }}.tar.gz"
+          curl -fsSL "$archive_url" -o /tmp/advimture-source.tar.gz
+          sha256="$(shasum -a 256 /tmp/advimture-source.tar.gz | awk '{print $1}')"
+          echo "url=$archive_url" >> "$GITHUB_OUTPUT"
+          echo "sha256=$sha256" >> "$GITHUB_OUTPUT"
+
+      - name: Update Homebrew tap
+        env:
+          HOMEBREW_TAP_SSH_KEY: ${{ secrets.HOMEBREW_TAP_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf "%s\n" "$HOMEBREW_TAP_SSH_KEY" > ~/.ssh/homebrew_tap
+          chmod 600 ~/.ssh/homebrew_tap
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/homebrew_tap -o IdentitiesOnly=yes"
+          git clone git@github.com:young-st511/homebrew-tap.git homebrew-tap
+
+          mkdir -p homebrew-tap/Formula
+          sed \
+            -e "s|{{URL}}|${{ steps.archive.outputs.url }}|g" \
+            -e "s|{{SHA256}}|${{ steps.archive.outputs.sha256 }}|g" \
+            .github/homebrew/advimture.rb.template > homebrew-tap/Formula/advimture.rb
+
+          cd homebrew-tap
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/advimture.rb
+          if git diff --cached --quiet; then
+            echo "Homebrew formula already up to date."
+            exit 0
+          fi
+          git commit -m "Update advimture to ${{ steps.version.outputs.tag }}"
+          git push origin main

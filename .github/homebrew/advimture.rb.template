@@ -1,0 +1,18 @@
+class Advimture < Formula
+  desc "Terminal adventure game for learning practical Vim commands"
+  homepage "https://github.com/young-st511/advimture"
+  url "{{URL}}"
+  sha256 "{{SHA256}}"
+  license "MIT"
+  head "https://github.com/young-st511/advimture.git", branch: "main"
+
+  depends_on "go" => :build
+
+  def install
+    system "go", "build", *std_go_args(ldflags: "-s -w -X main.version=#{version}")
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{bin}/advimture --version")
+  end
+end

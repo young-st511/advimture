@@ -2,6 +2,7 @@ package playable
 
 import (
 	"fmt"
+	"io/fs"
 	"strings"
 	"time"
 
@@ -23,6 +24,7 @@ type Options struct {
 	SaveProgress func(*progress.Progress) error
 	E2EStatePath string
 	ContentRoot  string
+	ContentFS    fs.FS
 	Now          func() time.Time
 }
 
@@ -31,6 +33,7 @@ type Model struct {
 	entries      []gameEntry
 	current      int
 	contentRoot  string
+	contentFS    fs.FS
 	progress     *progress.Progress
 	saveProgress func(*progress.Progress) error
 	e2eStatePath string
@@ -67,12 +70,13 @@ func New(options Options) Model {
 	}
 
 	root := contentRoot(options.ContentRoot)
-	entries, current, run, err := newGameFromContent(root, p)
+	entries, current, run, err := newGameFromContent(root, options.ContentFS, p)
 	model := Model{
 		run:          run,
 		entries:      entries,
 		current:      current,
 		contentRoot:  root,
+		contentFS:    options.ContentFS,
 		progress:     p,
 		saveProgress: options.SaveProgress,
 		e2eStatePath: options.E2EStatePath,
@@ -256,7 +260,7 @@ func (m *Model) jumpToEntry(index int) {
 	if index < 0 || index >= len(m.entries) {
 		return
 	}
-	run, err := runForEntry(m.contentRoot, m.entries[index])
+	run, err := runForEntry(m.contentRoot, m.contentFS, m.entries[index])
 	if err != nil {
 		m.err = err
 		return
@@ -305,7 +309,7 @@ func (m *Model) refreshReviewQueue() {
 		m.reviewQueue = nil
 		return
 	}
-	library, err := content.LoadLibrary(m.contentRoot)
+	library, err := loadLibrary(m.contentRoot, m.contentFS)
 	if err != nil {
 		m.reviewQueue = nil
 		return
@@ -451,8 +455,8 @@ func actionLabels(actions []playableview.ActionLine) []string {
 	return labels
 }
 
-func newGameFromContent(root string, progressState *progress.Progress) ([]gameEntry, int, *scenario.Run, error) {
-	library, err := content.LoadLibrary(root)
+func newGameFromContent(root string, files fs.FS, progressState *progress.Progress) ([]gameEntry, int, *scenario.Run, error) {
+	library, err := loadLibrary(root, files)
 	if err != nil {
 		return nil, 0, nil, err
 	}
@@ -464,15 +468,15 @@ func newGameFromContent(root string, progressState *progress.Progress) ([]gameEn
 		return nil, 0, nil, fmt.Errorf("no playable exercises in %s", root)
 	}
 	current := firstIncompleteIndex(entries, progressState)
-	run, err := runForEntry(root, entries[current])
+	run, err := runForEntry(root, files, entries[current])
 	if err != nil {
 		return nil, 0, nil, err
 	}
 	return entries, current, run, nil
 }
 
-func runForEntry(root string, entry gameEntry) (*scenario.Run, error) {
-	library, err := content.LoadLibrary(root)
+func runForEntry(root string, files fs.FS, entry gameEntry) (*scenario.Run, error) {
+	library, err := loadLibrary(root, files)
 	if err != nil {
 		return nil, err
 	}
@@ -489,6 +493,13 @@ func runForEntry(root string, entry gameEntry) (*scenario.Run, error) {
 		FailureText: scenarioDoc.MentorFailure,
 		Exercise:    compiled,
 	})
+}
+
+func loadLibrary(root string, files fs.FS) (content.Library, error) {
+	if files != nil {
+		return content.LoadLibraryFS(files, root)
+	}
+	return content.LoadLibrary(root)
 }
 
 func playlistEntries(library content.Library) ([]gameEntry, error) {

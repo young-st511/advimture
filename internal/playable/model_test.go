@@ -733,6 +733,17 @@ func TestPlayableReportsContentLoadError(t *testing.T) {
 	}
 }
 
+func TestPlayableLoadsFromContentFS(t *testing.T) {
+	model := New(Options{
+		ContentRoot: "content",
+		ContentFS:   os.DirFS(filepath.Join("..", "..")),
+	})
+
+	if strings.Contains(model.View(), "Playable error:") {
+		t.Fatalf("view = %q, should load content from fs", model.View())
+	}
+}
+
 func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	model := New(Options{ContentRoot: contentRootForTest()})
 

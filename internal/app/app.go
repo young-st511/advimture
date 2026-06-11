@@ -1,6 +1,7 @@
 package app
 
 import (
+	"io/fs"
 	"os"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,7 +14,15 @@ type Model struct {
 	playable playable.Model
 }
 
+type Options struct {
+	ContentFS fs.FS
+}
+
 func New() Model {
+	return NewWithOptions(Options{})
+}
+
+func NewWithOptions(options Options) Model {
 	p, _ := progress.Load()
 	return Model{
 		playable: playable.New(playable.Options{
@@ -21,6 +30,7 @@ func New() Model {
 			SaveProgress: progress.Save,
 			E2EStatePath: e2eStatePath(),
 			ContentRoot:  "content",
+			ContentFS:    options.ContentFS,
 		}),
 	}
 }

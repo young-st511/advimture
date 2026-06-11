@@ -1,17 +1,28 @@
-.PHONY: run build test release-check e2e-smoke e2e-playable
+.PHONY: run build test release-check release-major release-minor release-patch e2e-smoke e2e-playable
 
 E2E_GOCACHE ?= $(CURDIR)/artifacts/go-build-cache
+VERSION ?= $(shell cat VERSION 2>/dev/null || printf dev)
+LDFLAGS ?= -s -w -X main.version=$(VERSION)
 
 run:
 	go run .
 
 build:
-	GOCACHE=$(E2E_GOCACHE) go build .
+	GOCACHE=$(E2E_GOCACHE) go build -ldflags "$(LDFLAGS)" .
 
 test:
 	GOCACHE=$(E2E_GOCACHE) go test ./...
 
 release-check: test build e2e-playable
+
+release-major:
+	scripts/release.sh major
+
+release-minor:
+	scripts/release.sh minor
+
+release-patch:
+	scripts/release.sh patch
 
 e2e-smoke:
 	GOCACHE=$(E2E_GOCACHE) go run ./cmd/e2e-runner --scenario test/e2e/playable_hjkl_success.yaml

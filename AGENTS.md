@@ -16,6 +16,7 @@
 - Test progress: `go test ./internal/progress/...`
 - E2E smoke: `make e2e-smoke`
 - Makefile: `make run`, `make e2e-smoke`, `make e2e-playable`
+- Release bump/deploy: `make release-patch`, `make release-minor`, `make release-major`
 - Lint: 전용 린터 설정 없음. 필요 시 `go vet ./...`를 수동 실행한다.
 
 ## Project Structure
@@ -50,6 +51,14 @@
 - 커밋은 사용자가 요청했을 때만 만든다.
 - PR에는 spec/ExecPlan 변경과 코드 변경을 함께 포함한다.
 - 리뷰어는 `docs/` diff를 먼저 확인한 뒤 코드를 리뷰한다.
+
+## Release Workflow
+- release 기준과 절차는 `docs/release.md`를 따른다.
+- 배포 대상 ExecPlan은 완료 시 `docs/exec-plans/completed/`로 이동하고, 관련 변경을 먼저 커밋한다.
+- 커밋 후 변경 성격에 따라 `make release-patch`, `make release-minor`, `make release-major` 중 하나를 실행한다.
+- 첫 공개 Brew 배포나 새 콘텐츠/새 기능은 보통 minor, 안정화/문서/CI/formula 수정은 patch, progress 비호환/핵심 루프 재정의는 major다.
+- release script는 `VERSION`을 올리고 `make release-check`를 통과한 뒤 release commit과 `vX.Y.Z` tag를 push한다. tag push가 GitHub Release와 Homebrew tap stable formula 갱신을 트리거한다.
+- 자동 tap 갱신에는 GitHub Actions secret `HOMEBREW_TAP_SSH_KEY`가 필요하며, 이 값은 `young-st511/homebrew-tap`에만 write 가능한 deploy key private key여야 한다.
 
 ## Work Start Protocol
 작업을 시작하기 전에 반드시 다음 순서로 확인할 것:

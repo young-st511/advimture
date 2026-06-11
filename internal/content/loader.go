@@ -2,7 +2,9 @@ package content
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -183,6 +185,16 @@ type playlistFile struct {
 }
 
 func LoadLibrary(root string) (Library, error) {
+	return loadLibrary(root, loadYAMLDir)
+}
+
+func LoadLibraryFS(files fs.FS, root string) (Library, error) {
+	return loadLibrary(root, func(dir string, visit func(path string, raw []byte) error) error {
+		return loadYAMLFSDir(files, dir, visit)
+	})
+}
+
+func loadLibrary(root string, loadDir func(dir string, visit func(path string, raw []byte) error) error) (Library, error) {
 	lib := Library{
 		CommandClusters: make(map[string]CommandCluster),
 		Exercises:       make(map[string]ExerciseDocument),
@@ -190,7 +202,7 @@ func LoadLibrary(root string) (Library, error) {
 		Playlists:       make(map[string]PlaylistDocument),
 	}
 
-	if err := loadYAMLDir(filepath.Join(root, "command_clusters"), func(path string, raw []byte) error {
+	if err := loadDir(joinContentPath(root, "command_clusters"), func(path string, raw []byte) error {
 		var file commandClusterFile
 		if err := yaml.Unmarshal(raw, &file); err != nil {
 			return err
@@ -205,7 +217,7 @@ func LoadLibrary(root string) (Library, error) {
 		return Library{}, err
 	}
 
-	if err := loadYAMLDir(filepath.Join(root, "exercises"), func(path string, raw []byte) error {
+	if err := loadDir(joinContentPath(root, "exercises"), func(path string, raw []byte) error {
 		var file exerciseFile
 		if err := yaml.Unmarshal(raw, &file); err != nil {
 			return err
@@ -220,7 +232,7 @@ func LoadLibrary(root string) (Library, error) {
 		return Library{}, err
 	}
 
-	if err := loadYAMLDir(filepath.Join(root, "scenarios"), func(path string, raw []byte) error {
+	if err := loadDir(joinContentPath(root, "scenarios"), func(path string, raw []byte) error {
 		var file scenarioFile
 		if err := yaml.Unmarshal(raw, &file); err != nil {
 			return err
@@ -235,7 +247,7 @@ func LoadLibrary(root string) (Library, error) {
 		return Library{}, err
 	}
 
-	if err := loadYAMLDir(filepath.Join(root, "playlists"), func(path string, raw []byte) error {
+	if err := loadDir(joinContentPath(root, "playlists"), func(path string, raw []byte) error {
 		var file playlistFile
 		if err := yaml.Unmarshal(raw, &file); err != nil {
 			return err
@@ -672,6 +684,34 @@ func loadYAMLDir(dir string, visit func(path string, raw []byte) error) error {
 		}
 	}
 	return nil
+}
+
+func loadYAMLFSDir(files fs.FS, dir string, visit func(path string, raw []byte) error) error {
+	entries, err := fs.ReadDir(files, dir)
+	if err != nil {
+		return fmt.Errorf("read %s: %w", dir, err)
+	}
+	for _, entry := range entries {
+		if entry.IsDir() || !isYAML(entry.Name()) {
+			continue
+		}
+		filePath := path.Join(dir, entry.Name())
+		raw, err := fs.ReadFile(files, filePath)
+		if err != nil {
+			return fmt.Errorf("read %s: %w", filePath, err)
+		}
+		if err := visit(filePath, raw); err != nil {
+			return fmt.Errorf("load %s: %w", filePath, err)
+		}
+	}
+	return nil
+}
+
+func joinContentPath(root string, elem string) string {
+	if strings.Contains(root, "\\") {
+		return filepath.Join(root, elem)
+	}
+	return path.Join(root, elem)
 }
 
 func addUnique[T any](values map[string]T, id string, value T, kind string, path string) error {
