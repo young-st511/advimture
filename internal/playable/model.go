@@ -464,6 +464,7 @@ func (m Model) successActions() []playableview.ActionLine {
 func failureActions() []playableview.ActionLine {
 	return []playableview.ActionLine{
 		focusAction("retry", "다시 시도: r 또는 enter"),
+		focusAction("hint", "힌트: ?"),
 		focusAction("quit", "종료: q"),
 	}
 }
@@ -692,9 +693,8 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 			lines = append(lines, memory)
 		}
 		if m.hintMessage != "" {
-			lines = append(lines, "Hint: "+m.hintMessage)
+			lines = append(lines, revealedHintLine(m.hintMessage))
 		}
-		lines = append(lines, "힌트: ?")
 	default:
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
@@ -709,10 +709,14 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 			lines = append(lines, memory)
 		}
 		if m.hintMessage != "" {
-			lines = append(lines, "Hint: "+m.hintMessage)
+			lines = append(lines, revealedHintLine(m.hintMessage))
 		}
 	}
 	return lines
+}
+
+func revealedHintLine(message string) string {
+	return "힌트 내용  " + message + " · 등급에 영향"
 }
 
 func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel) []playableview.ActionLine {

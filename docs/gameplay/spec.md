@@ -66,7 +66,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다. `기억할 명령`이 같은 required key를 이미 설명하면 `Coach: 훈련 키 ...`를 중복 표시하지 않는다.
 - incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청 또는 실패 후에만 `참고 명령: ...`으로 current exercise의 command memory를 점진 공개한다.
 - success/failure floating modal이 표시되는 화면은 상단 detailed review/daily line을 숨기고, modal 내부의 review motivation과 `다음 행동` footer를 primary 안내로 둔다. Tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`, incident success의 review motivation은 `잔류 리스크`/`다음 출격 후보`로 표현한다.
-- `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `Hint: ...`로 표시하며, command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
+- `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `힌트 내용  ... · 등급에 영향`으로 표시하며, command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.
 - 한 tutorial 마지막 exercise 성공 시 다음 tutorial이 있으면 `다음 튜토리얼: enter`를 표시하고, `enter`로 다음 tutorial에 진입한다.
 - 다음 playlist가 incident이면 tutorial/incident 어디에서 왔든 `다음 runbook: enter`를 표시한다.
@@ -194,4 +194,4 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - failed/succeeded 상태는 Vim mode-specific cue보다 우선하며, `ui.focus_panel.actions`는 retry/next/quit 의미를 유지해야 한다.
 - running 상태의 hint/quit affordance는 현재 목표/판단 cue보다 낮은 위계의 utility action으로 보여야 한다.
 - running utility action은 `ui.focus_panel.actions`의 `hint`와 `quit` action id로 검증하며, progress 저장 포맷에는 반영하지 않는다.
-- hint revealed 상태는 hint 내용과 `?` 호출 action을 구분해야 한다. Hint 사용이 grade에 영향을 줄 수 있으면 짧은 비용 affordance를 표시할 수 있다.
+- hint revealed 상태는 `힌트 내용  ... · 등급에 영향`으로 hint 본문과 비용 affordance를 함께 표시하고, `?` 호출 action은 `hint` action id/`힌트: ?` label로 분리한다.

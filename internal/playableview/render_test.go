@@ -415,7 +415,7 @@ func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
 			Lines: []string{
 				"Inputs left: 9/9",
 				"참고 명령: /",
-				"Hint: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.",
+				"힌트 내용  복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다. · 등급에 영향",
 			},
 			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
@@ -427,7 +427,7 @@ func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
 		}
 	}
 	for _, line := range strings.Split(view, "\n") {
-		if strings.Contains(line, "OPERATOR JUDGMENT") || strings.Contains(line, "Hint:") || strings.Contains(line, "잡습니다.") {
+		if strings.Contains(line, "OPERATOR JUDGMENT") || strings.Contains(line, "힌트 내용") || strings.Contains(line, "잡습니다.") {
 			if displayWidth(line) > 80 {
 				t.Fatalf("cue line width = %d, want <= 80: %q\nfull view = %q", displayWidth(line), line, view)
 			}
@@ -677,10 +677,10 @@ func TestRenderFocusPanelOverlayPrioritizesRetryOverQuitWhenFailureOverflows(t *
 				"Inputs left: 0/2",
 				"Attempts: 1/unlimited",
 				"Coach: 훈련 키 w",
-				"힌트: ?",
 			},
 			Actions: []ActionLine{
 				{ID: "retry", Label: "다시 시도: r 또는 enter"},
+				{ID: "hint", Label: "힌트: ?"},
 				{ID: "quit", Label: "종료: q"},
 			},
 		},

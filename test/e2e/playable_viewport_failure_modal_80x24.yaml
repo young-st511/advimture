@@ -16,12 +16,14 @@ assert:
     - "RECOVERY CHECK"
     - "RECOVERY REQUIRED"
     - "다음 행동  다시 시도: r 또는 enter"
+    - "보조 행동  힌트: ?"
     - "보조 행동  종료: q"
   final_screen_contains:
     - "RUNBOOK CONSOLE"
     - "RECOVERY CHECK"
     - "RECOVERY REQUIRED"
     - "다음 행동  다시 시도: r 또는 enter"
+    - "보조 행동  힌트: ?"
     - "보조 행동  종료: q"
   final_screen_not_contains:
     - "NORMAL · running"
@@ -54,6 +56,8 @@ assert:
         actions:
           - id: "retry"
             label: "다시 시도: r 또는 enter"
+          - id: "hint"
+            label: "힌트: ?"
           - id: "quit"
             label: "종료: q"
 evidence:

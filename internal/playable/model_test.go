@@ -736,7 +736,7 @@ func TestPlayableShowsRequestedHintInActionPanel(t *testing.T) {
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "Hint: 오른쪽으로 한 칸 더 이동해야 합니다.") {
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  오른쪽으로 한 칸 더 이동해야 합니다. · 등급에 영향") {
 		t.Fatalf("view = %q, want requested hint", model.View())
 	}
 	if got, want := focusActionIDs(model.State().UI.FocusPanel.Actions), []string{"hint", "quit"}; !sameStrings(got, want) {
@@ -758,7 +758,7 @@ func TestPlayableShowsIncidentHintWithoutTrainingKeySpoiler(t *testing.T) {
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "Hint: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다. · 등급에 영향") {
 		t.Fatalf("view = %q, want incident hint", model.View())
 	}
 	if strings.Contains(model.View(), "Coach: 훈련 키") {
