@@ -15,17 +15,18 @@ assert:
   screen_contains:
     - "RECOVERY CHECK"
     - "RECOVERY REQUIRED"
-    - "다시 시도: r 또는 enter"
-    - "Grade: F"
+    - "다음 행동  다시 시도: r 또는 enter"
+    - "보조 행동  종료: q"
   final_screen_contains:
     - "RUNBOOK CONSOLE"
     - "RECOVERY CHECK"
     - "RECOVERY REQUIRED"
-    - "다시 시도: r 또는 enter"
-    - "종료: q"
-    - "Grade: F"
+    - "다음 행동  다시 시도: r 또는 enter"
+    - "보조 행동  종료: q"
   final_screen_not_contains:
     - "NORMAL · running"
+    - "NORMAL · failed"
+    - "Grade: F"
     - "TRAINING BRIEF"
   final_screen_max_lines: 24
   exit_code: 0

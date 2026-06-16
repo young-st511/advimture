@@ -96,12 +96,16 @@ Allowed-Paths:
 
 ## Todo 3: Modal Overlay + Action Footer
 
-- 상태: pending
+- 상태: completed
 - 목표: failed/succeeded/debrief 화면을 viewport 기준 modal decision surface로 렌더링하고 primary action을 강조한다.
 - 변경 파일:
-  - `internal/playableview/**`
-  - `internal/playable/**`
-  - `test/e2e/**`
+  - `internal/playableview/render.go`
+  - `internal/playableview/render_test.go`
+  - `test/e2e/playable_viewport_failure_modal_80x24.yaml`
+  - `test/e2e/playable_viewport_success_modal_80x24.yaml`
+  - `docs/gameplay/spec.md`
+  - `docs/gameplay/tui-screen-contract.md`
+  - `docs/gameplay/tui-ux-direction.md`
 - 테스트 파일:
   - `internal/playableview/render_test.go`
   - `internal/playable/model_test.go`
@@ -215,6 +219,7 @@ Allowed-Paths:
 - 2026-06-17: 사용자는 추천안 전체를 승인했다. Release/tag/push는 보류하고, overlay + action footer + running action 구조화 + evidence hardening을 Todo별 커밋으로 수행한다.
 - 2026-06-17: Todo 1 완료. Active UX hardening plan을 만들고, release plan을 paused로 전환했으며, roadmap/backlog/spec/verification 문서가 P1 modal/action blocker를 가리키도록 정리했다.
 - 2026-06-17: Todo 2 완료. E2E runner가 terminal cell grid 기준 `screen_final.txt`를 만들고, 80x24 success/failure scenarios가 final screen contains/not-contains/max-lines로 modal action footer와 clipping을 검증한다.
+- 2026-06-17: Todo 3 완료. failed/succeeded FocusPanel을 terminal viewport 위에 overlay하고, action footer를 `다음 행동`/`보조 행동`으로 body와 분리했다. 80x24 final evidence에서 `NORMAL · failed/succeeded`와 `Grade` 줄은 decision focus 밖으로 내려간다.
 
 ## 미해결 질문
 

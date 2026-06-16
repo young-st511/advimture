@@ -123,7 +123,7 @@ func renderLegacy(screen Screen) string {
 
 func renderHUD(screen Screen) string {
 	var b strings.Builder
-	b.WriteString(renderHeader(screen))
+	b.WriteString(renderHeaderLine(screen, screen.Width))
 	b.WriteString("\n\n")
 	b.WriteString("MISSION\n")
 	b.WriteString(screen.Title + "\n")
@@ -140,11 +140,6 @@ func renderHUD(screen Screen) string {
 	b.WriteString("RUNBOOK CONSOLE\n")
 	for row, line := range screen.BufferLines {
 		b.WriteString(RenderLine(line, row, screen.CursorRow, screen.CursorCol, screen.Selection))
-		b.WriteString("\n")
-	}
-	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
-		b.WriteString("\n")
-		b.WriteString(RenderFloatingModal(*screen.FocusPanel, screen.Width))
 		b.WriteString("\n")
 	}
 	b.WriteString("\n")
@@ -165,7 +160,11 @@ func renderHUD(screen Screen) string {
 	if screen.ShowLastCommand && screen.LastCommand != "" {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
 	}
-	return b.String()
+	view := b.String()
+	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
+		return overlayFloatingModal(view, *screen.FocusPanel, screen.Width, screen.Height, len(screen.BufferLines))
+	}
+	return view
 }
 
 func renderHUDStatusLine(screen Screen) string {
@@ -302,13 +301,32 @@ func runeLen(text string) int {
 func displayWidth(text string) int {
 	width := 0
 	for _, r := range text {
-		if r <= 127 {
-			width++
-		} else {
-			width += 2
-		}
+		width += runeDisplayWidth(r)
 	}
 	return width
+}
+
+func runeDisplayWidth(r rune) int {
+	switch {
+	case r >= 0x1100 && r <= 0x115f:
+		return 2
+	case r >= 0x2e80 && r <= 0xa4cf:
+		return 2
+	case r >= 0xac00 && r <= 0xd7a3:
+		return 2
+	case r >= 0xf900 && r <= 0xfaff:
+		return 2
+	case r >= 0xfe10 && r <= 0xfe19:
+		return 2
+	case r >= 0xfe30 && r <= 0xfe6f:
+		return 2
+	case r >= 0xff00 && r <= 0xff60:
+		return 2
+	case r >= 0xffe0 && r <= 0xffe6:
+		return 2
+	default:
+		return 1
+	}
 }
 
 func trimDisplayWidth(text string, limit int) string {
@@ -318,10 +336,7 @@ func trimDisplayWidth(text string, limit int) string {
 	width := 0
 	var b strings.Builder
 	for _, r := range text {
-		cellWidth := 1
-		if r > 127 {
-			cellWidth = 2
-		}
+		cellWidth := runeDisplayWidth(r)
 		if width+cellWidth > limit {
 			break
 		}
@@ -436,6 +451,23 @@ func renderHeader(screen Screen) string {
 	return strings.Join(parts, " | ")
 }
 
+func renderHeaderLine(screen Screen, screenWidth int) string {
+	header := renderHeader(screen)
+	if screenWidth <= 0 || displayWidth(header) <= screenWidth {
+		return header
+	}
+	if screen.Status == "" {
+		return ellipsize(header, screenWidth)
+	}
+	statusSuffix := " | Status: " + screen.Status
+	prefix := strings.TrimSuffix(header, statusSuffix)
+	prefixWidth := screenWidth - displayWidth(statusSuffix)
+	if prefixWidth <= 3 {
+		return trimDisplayWidth(header, screenWidth)
+	}
+	return ellipsize(prefix, prefixWidth) + statusSuffix
+}
+
 func trackLabel(category string) string {
 	switch category {
 	case "tutorial":
@@ -477,6 +509,69 @@ func RenderFloatingModal(panel FocusPanel, screenWidth int) string {
 	return lipgloss.PlaceHorizontal(screenWidth, lipgloss.Center, rendered)
 }
 
+func overlayFloatingModal(base string, panel FocusPanel, screenWidth int, screenHeight int, bufferLineCount int) string {
+	if screenWidth <= 0 || screenHeight <= 0 {
+		return base
+	}
+	lines := strings.Split(strings.TrimRight(base, "\n"), "\n")
+	if len(lines) > screenHeight {
+		lines = lines[:screenHeight]
+	}
+	for len(lines) < screenHeight {
+		lines = append(lines, "")
+	}
+	modal := strings.Split(RenderFloatingModal(panel, screenWidth), "\n")
+	if len(modal) > screenHeight {
+		modal = fitFocusPanelLines(modal, screenHeight, focusPanelActionLabels(panel))
+	}
+	top := floatingModalTop(lines, len(modal), screenHeight, bufferLineCount)
+	for i, line := range modal {
+		target := top + i
+		if target < 0 || target >= len(lines) {
+			continue
+		}
+		lines[target] = fitViewportLine(line, screenWidth)
+	}
+	return strings.Join(lines, "\n")
+}
+
+func floatingModalTop(lines []string, modalHeight int, screenHeight int, bufferLineCount int) int {
+	top := (screenHeight - modalHeight) / 2
+	if consoleIndex := lineIndexInLines(lines, "RUNBOOK CONSOLE"); consoleIndex >= 0 {
+		afterBuffer := consoleIndex + 1 + bufferLineCount
+		if afterBuffer > top {
+			top = afterBuffer
+		}
+	}
+	maxTop := screenHeight - modalHeight
+	if maxTop < 0 {
+		maxTop = 0
+	}
+	if top > maxTop {
+		return maxTop
+	}
+	if top < 0 {
+		return 0
+	}
+	return top
+}
+
+func lineIndexInLines(lines []string, needle string) int {
+	for i, line := range lines {
+		if strings.Contains(line, needle) {
+			return i
+		}
+	}
+	return -1
+}
+
+func fitViewportLine(line string, screenWidth int) string {
+	if screenWidth <= 0 || displayWidth(line) <= screenWidth {
+		return line
+	}
+	return trimDisplayWidth(line, screenWidth)
+}
+
 func floatingModalLines(panel FocusPanel) []string {
 	var lines []string
 	switch panel.Kind {
@@ -490,7 +585,7 @@ func floatingModalLines(panel FocusPanel) []string {
 		lines = []string{floatingModalTitle(panel), panel.Title}
 		lines = append(lines, panel.Lines...)
 	}
-	return append(lines, focusPanelActionLabels(panel)...)
+	return append(lines, focusPanelActionFooterLines(panel)...)
 }
 
 func floatingModalTitle(panel FocusPanel) string {
@@ -538,6 +633,34 @@ func successModalLines(lines []string) []string {
 		}
 	}
 	return out
+}
+
+func focusPanelActionFooterLines(panel FocusPanel) []string {
+	if len(panel.Actions) == 0 {
+		return nil
+	}
+	lines := []string{""}
+	for i, action := range panel.Actions {
+		if action.Label == "" {
+			continue
+		}
+		prefix := "보조 행동  "
+		if i == 0 || isPrimaryAction(action.ID) {
+			prefix = "다음 행동  "
+		}
+		lines = append(lines, prefix+action.Label)
+	}
+	if len(lines) == 1 {
+		return nil
+	}
+	return lines
+}
+
+func isPrimaryAction(id string) bool {
+	return id == "retry" ||
+		id == "next" ||
+		strings.HasPrefix(id, "next_") ||
+		strings.HasSuffix(id, "_complete")
 }
 
 func RenderFocusLayer(panel *FocusPanel, screenWidth int) string {

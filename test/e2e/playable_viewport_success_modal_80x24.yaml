@@ -16,16 +16,17 @@ steps:
 assert:
   screen_contains:
     - "RUNBOOK SEALED"
-    - "다음 단계: enter"
-    - "Grade: S"
+    - "다음 행동  다음 단계: enter"
+    - "이번 복구: grade S"
   final_screen_contains:
     - "RUNBOOK CONSOLE"
     - "RUNBOOK SEALED"
-    - "다음 단계: enter"
-    - "NORMAL · succeeded"
-    - "Grade: S"
+    - "다음 행동  다음 단계: enter"
+    - "이번 복구: grade S"
   final_screen_not_contains:
     - "NORMAL · running"
+    - "NORMAL · succeeded"
+    - "Grade: S"
     - "TRAINING BRIEF"
   final_screen_max_lines: 24
   exit_code: 0

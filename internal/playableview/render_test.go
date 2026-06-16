@@ -33,6 +33,17 @@ func TestRenderLineShowsLinewiseVisualSelection(t *testing.T) {
 	}
 }
 
+func TestDisplayWidthKeepsBoxDrawingSingleCell(t *testing.T) {
+	for _, r := range []rune{'╭', '─', '╮', '│'} {
+		if got := runeDisplayWidth(r); got != 1 {
+			t.Fatalf("runeDisplayWidth(%q) = %d, want 1", r, got)
+		}
+	}
+	if got := runeDisplayWidth('한'); got != 2 {
+		t.Fatalf("runeDisplayWidth(%q) = %d, want 2", '한', got)
+	}
+}
+
 func TestRenderScreenIncludesFocusPanelBeforeConsole(t *testing.T) {
 	view := Render(Screen{
 		PlaylistTitle: "Tutorial 0",
@@ -145,6 +156,104 @@ func TestRenderFocusPanelOverlayDoesNotMoveConsoleWhenHeightIsKnown(t *testing.T
 	}
 }
 
+func TestRenderHUDFloatingModalUsesViewportDecisionLayer(t *testing.T) {
+	base := Render(Screen{
+		Width:         80,
+		Height:        24,
+		Title:         "서비스 이름 찾기",
+		Message:       "backend로 바로 이동하세요.",
+		BufferLines:   []string{"service api backend enabled"},
+		Mode:          "normal",
+		Status:        "failed",
+		ExerciseTotal: 4,
+		Grade:         "F",
+	})
+	view := Render(Screen{
+		Width:         80,
+		Height:        24,
+		Title:         "서비스 이름 찾기",
+		Message:       "backend로 바로 이동하세요.",
+		BufferLines:   []string{"service api backend enabled"},
+		Mode:          "normal",
+		Status:        "failed",
+		ExerciseTotal: 4,
+		Grade:         "F",
+		FocusPanel: &FocusPanel{
+			Kind:  "failure",
+			Title: "RECOVERY REQUIRED",
+			Lines: []string{
+				"한 글자씩 가면 늦습니다. 다음 단어의 시작으로 이동하는 motion을 사용하세요.",
+				"Inputs left: 1/2",
+				"Attempts: 1/unlimited",
+				"Coach: 훈련 키 w",
+			},
+			Actions: []ActionLine{
+				{ID: "retry", Label: "다시 시도: r 또는 enter"},
+				{ID: "quit", Label: "종료: q"},
+			},
+		},
+	})
+
+	if renderedLineCount(view) != 24 {
+		t.Fatalf("Render output line count = %d, want viewport height: %q", renderedLineCount(view), view)
+	}
+	if lineIndex(base, "RUNBOOK CONSOLE") != lineIndex(view, "RUNBOOK CONSOLE") {
+		t.Fatalf("base = %q\nview = %q\nwant console line unchanged", base, view)
+	}
+	if lineIndex(base, "> [s]ervice") != lineIndex(view, "> [s]ervice") {
+		t.Fatalf("base = %q\nview = %q\nwant buffer line unchanged", base, view)
+	}
+	for _, unwanted := range []string{"NORMAL · failed", "Grade: F"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should move %q out of decision focus", view, unwanted)
+		}
+	}
+	for _, want := range []string{"RECOVERY CHECK", "다음 행동  다시 시도: r 또는 enter", "보조 행동  종료: q"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+}
+
+func TestRenderHUDFloatingModalDoesNotCoverMultilineBuffer(t *testing.T) {
+	view := Render(Screen{
+		Width:       100,
+		Height:      24,
+		Title:       "릴레이 오염 구간 격리",
+		Message:     "오염된 구간을 확인하세요.",
+		BufferLines: []string{"route ok", "quarantine temp", "relay hold"},
+		Mode:        "normal",
+		Status:      "failed",
+		CursorRow:   1,
+		CursorCol:   0,
+		FocusPanel: &FocusPanel{
+			Kind:  "failure",
+			Title: "RECOVERY REQUIRED",
+			Lines: []string{
+				"오염 구간을 통째로 격리해야 합니다.",
+				"Inputs left: 1/4",
+				"Attempts: 1/unlimited",
+			},
+			Actions: []ActionLine{
+				{ID: "retry", Label: "다시 시도: r 또는 enter"},
+				{ID: "quit", Label: "종료: q"},
+			},
+		},
+	})
+
+	bufferLines := []string{"  route ok", "> [q]uarantine temp", "  relay hold"}
+	for _, want := range bufferLines {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want buffer line %q preserved", view, want)
+		}
+	}
+	modalIndex := lineIndex(view, "RECOVERY CHECK")
+	lastBufferIndex := lineIndex(view, "  relay hold")
+	if modalIndex <= lastBufferIndex {
+		t.Fatalf("Render output = %q, want modal after all buffer lines", view)
+	}
+}
+
 func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	view := Render(Screen{
 		Width:            100,
@@ -199,6 +308,29 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	}
 	if !strings.Contains(view, "ADVIMTURE | Tutorial | Tutorial 2 | Exercise: 1/7 | Status: running") {
 		t.Fatalf("Render output = %q, want tutorial track in header", view)
+	}
+}
+
+func TestRenderHUDHeaderPreservesStatusWhenNarrow(t *testing.T) {
+	view := Render(Screen{
+		Width:            80,
+		Height:           24,
+		PlaylistTitle:    "Tutorial 0: 커서 감각 회상",
+		PlaylistCategory: "tutorial",
+		Title:            "커서 위치 맞추기",
+		Message:          "목표까지 이동하세요.",
+		BufferLines:      []string{"abc"},
+		Mode:             "normal",
+		Status:           "failed",
+		ExerciseTotal:    4,
+	})
+
+	firstLine := strings.Split(view, "\n")[0]
+	if !strings.Contains(firstLine, "Status: failed") {
+		t.Fatalf("header = %q, want full failed status", firstLine)
+	}
+	if displayWidth(firstLine) > 80 {
+		t.Fatalf("header width = %d, want <= 80: %q", displayWidth(firstLine), firstLine)
 	}
 }
 
@@ -367,7 +499,7 @@ func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {
 	if !(consoleIndex < bufferIndex && bufferIndex < modalIndex) {
 		t.Fatalf("Render output = %q, want floating modal after buffer inside console core", view)
 	}
-	for _, want := range []string{"RECOVERY REQUIRED", "실수", "힌트", "훈련 키 w", "다시 시도: r 또는 enter"} {
+	for _, want := range []string{"RECOVERY REQUIRED", "실수", "힌트", "훈련 키 w", "다음 행동  다시 시도: r 또는 enter"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want %q", view, want)
 		}
@@ -407,7 +539,7 @@ func TestRenderFocusPanelOverlayKeepsActionLineWhenContentOverflows(t *testing.T
 		},
 	})
 
-	if !strings.Contains(view, "다음 단계: enter") {
+	if !strings.Contains(view, "다음 행동  다음 단계: enter") {
 		t.Fatalf("Render output = %q, want action line preserved", view)
 	}
 	if strings.Contains(view, "STEP SEALED") {
@@ -458,7 +590,7 @@ func TestRenderHUDSuppressesDetailedRecoveryLineForFloatingModal(t *testing.T) {
 	if strings.Contains(view, "\n재점검 대상:") || strings.Contains(view, "\n오늘의 복구 루트:") {
 		t.Fatalf("Render output = %q, should not expose detailed recovery line above floating modal", view)
 	}
-	for _, want := range []string{"RUNBOOK SEALED", "잔류 리스크:", "다음 출격:", "다음 단계: enter"} {
+	for _, want := range []string{"RUNBOOK SEALED", "잔류 리스크:", "다음 출격:", "다음 행동  다음 단계: enter"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want %q in modal", view, want)
 		}
@@ -492,7 +624,7 @@ func TestRenderFocusPanelOverlayPrioritizesNextDispatchWhenContentOverflows(t *t
 		},
 	})
 
-	if !strings.Contains(view, "다음 출격: enter") {
+	if !strings.Contains(view, "다음 행동  다음 출격: enter") {
 		t.Fatalf("Render output = %q, want next dispatch action preserved", view)
 	}
 }
@@ -523,7 +655,7 @@ func TestRenderFocusPanelOverlayPrioritizesRetryOverQuitWhenFailureOverflows(t *
 		},
 	})
 
-	if !strings.Contains(view, "다시 시도: r 또는 enter") {
+	if !strings.Contains(view, "다음 행동  다시 시도: r 또는 enter") {
 		t.Fatalf("Render output = %q, want retry action preserved", view)
 	}
 }
@@ -577,4 +709,11 @@ func lineIndex(text string, needle string) int {
 		}
 	}
 	return -1
+}
+
+func renderedLineCount(text string) int {
+	if text == "" {
+		return 0
+	}
+	return len(strings.Split(text, "\n"))
 }

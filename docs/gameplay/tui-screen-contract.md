@@ -82,10 +82,10 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - tutorial running HUD의 review/daily는 `복구 메모: 재점검 N건 · 다음: <title>`처럼 축약한다.
 - incident running HUD의 review/daily는 `복구 현황: 재점검 N건 · 잔류: <title>`처럼 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
-- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 안에서 floating modal로 표시하되, buffer 뒤에 단순 append된 일반 본문 블록처럼 보이면 안 된다.
+- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 위에서 floating modal로 표시하되, buffer 뒤에 단순 append된 일반 본문 블록처럼 보이면 안 된다.
 - floating modal은 terminal width/height가 알려진 경우 viewport 기준으로 horizontal/vertical placement를 계산한다.
 - 좁은 화면에서는 modal width가 terminal width를 넘지 않도록 줄어든다.
-- failed/succeeded modal은 console label과 buffer 위치를 밀지 않는다.
+- failed/succeeded modal은 console label과 buffer 위치를 밀지 않고, status/grade line보다 높은 decision layer로 표시한다.
 
 상태별 규칙:
 
@@ -108,7 +108,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - `actions`: retry/next/hint/quit 같은 조작 의미. 화면에는 `label`을 action footer로 표시하고, E2E는 `id`로 검증한다.
 - failed modal은 `RECOVERY CHECK`, success modal은 `RUNBOOK SEALED` heading으로 감싸되, app_state의 원래 focus panel kind/title/lines는 유지한다.
 - floating modal이 추가하는 보조 label은 `실수`, `힌트`, `배운 점`, `기록`처럼 한국어로 표시한다.
-- action footer는 modal body의 기록/힌트/review motivation과 분리한다. `retry`/`next*`/`dispatch_complete`/`playlist_complete` 같은 primary action은 `quit`이나 `hint` 같은 secondary action보다 먼저 읽혀야 한다.
+- action footer는 modal body의 기록/힌트/review motivation과 분리한다. 화면에서는 primary action을 `다음 행동`, secondary action을 `보조 행동` prefix로 표시한다. `retry`/`next*`/`dispatch_complete`/`playlist_complete` 같은 primary action은 `quit`이나 `hint` 같은 secondary action보다 먼저 읽혀야 한다.
 
 Action label 계약:
 
