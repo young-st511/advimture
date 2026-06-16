@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active slice는 `UI-MODAL-ACTION-HIERARCHY-001`이다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`도 완료됐다. 사용자 스크린샷과 SubAgent 감사 결과, 실패/성공 modal과 action affordance는 출시 가능한 수준 기준의 P1 release-blocker로 재분류했다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`도 완료됐다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
@@ -26,8 +26,8 @@ Completed Midterm Polish:
 - `docs/exec-plans/completed/command-choice-breadth-002.md`
 - `docs/exec-plans/completed/post-breadth-playtest-review-001.md`
 - `docs/exec-plans/completed/success-statusline-cleanup-001.md`
-Active UX Hardening:
-- `docs/exec-plans/active/ui-modal-action-hierarchy-001.md`
+Completed UX Hardening:
+- `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
 Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
@@ -37,30 +37,47 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
-### UI-MODAL-ACTION-HIERARCHY-001. Modal Action Hierarchy Hardening
+### NEXT-DIRECTION-CHECKPOINT. Fresh Direction After Modal Hardening
 
-- 상태: active
-- 목표: 실패/성공/debrief 화면을 console 뒤에 붙는 안내 블록이 아니라 viewport 기준 modal decision surface로 보이게 하고, primary action footer를 분리한다.
+- 상태: next
+- 목표: modal/action hierarchy hardening 이후 fresh evidence를 보고 다음 구현 slice를 고른다.
 - 근거:
-  - 사용자 스크린샷 기반 UX 지적
-  - SubAgent UX/UI 감사
-  - `docs/exec-plans/active/ui-modal-action-hierarchy-001.md`
+  - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
+  - `docs/roadmap/UX_BACKLOG_001.md`
+  - `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
+- 우선 후보:
+  - 기존 engine 기반 applied content breadth
+  - 정보 밀도가 다시 mission을 밀어낼 때만 `UI-RAIL-001`
+  - 첫 release polish가 필요할 때만 `UI-STYLE-001`
 - 제외:
   - release/tag/push 작업
   - progress 저장 포맷 변경
   - content schema 변경
   - 새 dependency
 
+### UI-MODAL-ACTION-HIERARCHY-001. Modal Action Hierarchy Hardening
+
+- 상태: completed
+- 목표: 실패/성공/debrief 화면을 console 뒤에 붙는 안내 블록이 아니라 viewport 기준 modal decision surface로 보이게 하고, primary action footer를 분리한다.
+- 완료:
+  - failed/succeeded modal은 terminal viewport overlay로 표시된다.
+  - modal action footer는 `다음 행동`과 `보조 행동`으로 body와 분리된다.
+  - running hint/quit은 action cue로 구조화됐다.
+  - hint revealed copy는 `힌트 내용`과 `등급에 영향`을 분리한다.
+  - incident briefing은 exact command sequence보다 상황/판단 목표를 먼저 말한다.
+- ExecPlan: `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
+
 ### USER-DECISION-CHECKPOINT. Commit or New Direction
 
-- 상태: superseded by active UX hardening
+- 상태: completed, replaced by `NEXT-DIRECTION-CHECKPOINT`
 - 목표: 현재 완료된 중기 목표 묶음을 커밋할지, 새 방향을 열지, 나중의 release candidate 준비로 갈지 결정한다.
 - 근거:
   - `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
+  - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 - 제외:
   - 사용자 요청 없는 commit
   - 바로 release/tag 작업
-- 결론: 사용자 스크린샷 이후 이 checkpoint는 `UI-MODAL-ACTION-HIERARCHY-001`으로 대체됐다.
+- 결론: 사용자 스크린샷 이후 `UI-MODAL-ACTION-HIERARCHY-001`을 먼저 닫았고, 이제 다음 선택은 `NEXT-DIRECTION-CHECKPOINT`에서 다룬다.
 
 ### SUCCESS-STATUSLINE-CLEANUP-001. Success Status Line Cleanup
 
@@ -156,8 +173,8 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 - 상태: paused
 - 목표: Homebrew tap release 자동화를 마무리한다.
-- 보류 이유: 실패/성공 modal과 action affordance UX hardening이 출시 가능한 수준 기준의 선행 blocker가 되었다.
-- 재개 조건: `UI-MODAL-ACTION-HIERARCHY-001` 완료 후 사용자가 release 작업 재개를 원할 때.
+- 보류 이유: 사용자는 바로 출시가 아니라 출시 가능한 수준의 개발을 원한다.
+- 재개 조건: 사용자가 release 작업 재개를 명시적으로 원할 때.
 
 ### RELEASE-CANDIDATE-001. Release Candidate Prep
 
@@ -167,6 +184,13 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### UI-MODAL-ACTION-HIERARCHY-001. Modal Action Hierarchy Hardening
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
+- 완료일: 2026-06-17
+- 결론: failed/succeeded modal을 viewport overlay decision surface로 재배치하고, action footer, running hint/quit action, hint cost copy, incident progressive briefing, final-frame evidence를 보강했다. `go test ./...`와 `make e2e-playable` 통과.
 
 ### PLAYABLE-QUALITY-BASELINE-001. Release-Quality Playable Baseline
 

@@ -2,10 +2,10 @@
 
 Slice-ID: UI-MODAL-ACTION-HIERARCHY-001
 Created: 2026-06-17
-Status: active
+Status: completed
 Scope-Mode: normal
 Allowed-Paths:
-- `docs/exec-plans/active/ui-modal-action-hierarchy-001.md`
+- `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 - `docs/exec-plans/active/release-brew-001-homebrew-tap.md`
 - `docs/gameplay/spec.md`
 - `docs/gameplay/tui-screen-contract.md`
@@ -58,7 +58,7 @@ Allowed-Paths:
 - 상태: completed
 - 목표: 사용자 스크린샷 기반 UX blocker 판단을 current docs에 반영하고 release plan을 보류한다.
 - 변경 파일:
-  - `docs/exec-plans/active/ui-modal-action-hierarchy-001.md`
+  - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
   - `docs/exec-plans/active/release-brew-001-homebrew-tap.md`
   - `docs/gameplay/spec.md`
   - `docs/gameplay/tui-screen-contract.md`
@@ -186,12 +186,11 @@ Allowed-Paths:
 
 ## Todo 7: Evidence Refresh + Close
 
-- 상태: pending
+- 상태: completed
 - 목표: 대표 UX evidence를 현행 UI로 재생성하고 stale artifact 판단을 분리한 뒤 plan을 완료한다.
 - 변경 파일:
   - `artifacts/e2e/**`
   - `docs/roadmap/**`
-  - `docs/exec-plans/active/ui-modal-action-hierarchy-001.md`
   - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 - 충족 기준:
   - 대표 success/failure/hint/incident/review evidence가 legacy `ACTION`/English action label에 오염되지 않는다.
@@ -239,6 +238,7 @@ Allowed-Paths:
 - 2026-06-17: Todo 4 완료. running FocusPanel은 `hint`/`quit` actions를 app_state에 내보내고, HUD cue는 현재 목표/판단 line과 분리된 `보조 행동  힌트: ? · 종료: q`로 렌더링한다.
 - 2026-06-17: Todo 5 완료. hint revealed line은 `힌트 내용  ... · 등급에 영향`으로 표시하고, failure modal의 `hint`도 secondary action footer로 이동했다.
 - 2026-06-17: Todo 6 완료. incident briefing은 exact command sequence 대신 상황과 판단 목표를 먼저 말하고, command memory는 hint/failure 단계로 남겼다.
+- 2026-06-17: Todo 7 완료. success/failure/hint/incident/review 대표 evidence를 현행 UI로 재생성하고, current roadmap 문서를 completed 상태와 다음 방향으로 맞춘 뒤 ExecPlan을 completed로 이동했다.
 
 ## 미해결 질문
 

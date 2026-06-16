@@ -15,17 +15,17 @@ Status: current rolling plan
 
 ## 현재 판단
 
-Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새 Vim command 수나 release candidate 포장이 아니라, 현재 playable loop가 "출시 가능한 품질"처럼 느껴지게 만드는 기준선이다.
+Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 release candidate 포장이 아니라, 현재 playable loop가 더 풍부한 Runbook Dispatch 게임으로 읽히는지 fresh evidence로 고르는 일이다.
 
 현재 상태:
 
 - Vim engine: tutorial/incident를 만들 수 있을 만큼 충분히 닫힘
 - Content: tutorial coverage와 incident 001~008이 있음
 - E2E: long route final/timeline evidence까지 보강됨
-- UI/UX: Mission HUD, Runbook Console, floating modal 기반은 있음
-- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline은 한 차례 닫혔다. 하지만 사용자 스크린샷 이후 실패/성공 modal과 action affordance가 첫인상 기준으로 약하다는 점이 확인됐다. 다음 병목은 release candidate 문서나 Homebrew tag가 아니라 `UI-MODAL-ACTION-HIERARCHY-001`이다.
+- UI/UX: Mission HUD, Runbook Console, viewport overlay modal, action footer, running hint/quit action, final-frame evidence가 있음
+- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline, modal/action hierarchy hardening은 한 차례 닫혔다. 다음 병목은 Homebrew tag가 아니라 fresh evidence 기반의 다음 content/UX 후보 선택이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001` 이후 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001`까지 완료했다. 이제 다음 순서는 **modal/action hierarchy hardening을 좁게 열어 첫 실패/성공 decision surface를 다듬는다**로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001` 이후 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> UI-MODAL-ACTION-HIERARCHY-001`까지 완료했다. 이제 다음 순서는 **fresh evidence를 보고 기존 engine 기반 applied content breadth를 우선 검토하고, UI 정보 밀도 문제가 다시 드러날 때만 UI rail/style slice를 연다**로 간다.
 
 ## 0. 운영 원칙
 
@@ -37,19 +37,26 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 새
 - failed/succeeded/debrief modal은 문자열 존재만으로 통과시키지 않고, final viewport에서 primary action이 보이는지 확인한다.
 - 문서가 stale해질 수 있는 변경을 하면 `PROGRAM.md`, `MIDTERM_TODO.md`, 이 문서를 함께 확인한다.
 
-## 0.5. Active UX Hardening
+## 0.5. Completed UX Hardening
 
 ### UI-MODAL-ACTION-HIERARCHY-001 — Modal Action Hierarchy Hardening
 
-Status: active
-ExecPlan: `docs/exec-plans/active/ui-modal-action-hierarchy-001.md`
+Status: completed
+ExecPlan: `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 
-목표:
+결과:
 
 - 실패/성공/debrief 화면을 console 뒤에 붙은 블록이 아니라 viewport 기준 modal decision surface로 보이게 한다.
 - `다시 시도`, `다음 단계`, `힌트`, `종료`를 action footer로 분리한다.
 - running 상태의 hint/quit affordance도 일반 문구가 아니라 utility action으로 읽히게 한다.
 - final-frame/viewport QA를 보강해 이 문제가 다시 문자열 존재만으로 통과하지 않게 한다.
+- incident briefing은 exact command sequence보다 상황과 판단 목표를 먼저 말한다.
+
+검증:
+
+- `go test ./internal/content ./internal/playable ./internal/playableview`: pass
+- `go test ./...`: pass
+- `make e2e-playable`: pass
 
 제외:
 
@@ -350,12 +357,12 @@ Review: `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
 
 ### 0.8. USER-DECISION-CHECKPOINT — Commit or New Direction
 
-Status: superseded by `UI-MODAL-ACTION-HIERARCHY-001`
+Status: completed, followed by `NEXT-DIRECTION-CHECKPOINT`
 
 목표:
 
 - 현재 완료된 중기 목표 묶음을 커밋할지, 새 방향을 열지, 나중의 release candidate 준비로 갈지 선택한다.
-- 사용자 스크린샷 이후에는 modal/action hierarchy hardening이 먼저 열렸다.
+- 사용자 스크린샷 이후에는 modal/action hierarchy hardening을 먼저 열었고, 지금은 완료됐다.
 
 제외:
 
@@ -432,9 +439,9 @@ ExecPlan: `docs/exec-plans/completed/judgment-drill-review-001-command-choice.md
 
 완료 결과:
 
-- `incident-005-command-choice`의 6 beat는 scope/range/inline/reuse/repeat-change/line-reuse 판단 질문에 매핑된다.
+- `incident-005-command-choice`는 후속 breadth까지 포함해 7 beat route이며 scope/range/inline/reuse/repeat-change/line-reuse/bracket-pair scope 판단 질문에 매핑된다.
 - success/failure copy는 command 이름보다 선택 이유를 먼저 설명한다.
-- 후속 후보는 search-then-scope, bracket-pair hardening으로 문서에 남겼고, line reuse는 `LINE-REUSE-APPLIED-001`로 승격했다.
+- 후속 후보였던 line reuse와 bracket-pair scope는 각각 `LINE-REUSE-APPLIED-001`, `COMMAND-CHOICE-BREADTH-002`로 승격했다. search-then-scope는 별도 `incident-008-search-scope`로 완료됐다.
 
 ### 5. UI-CONSOLE-POLISH-001 — Runbook Console Product Feel
 
@@ -451,7 +458,7 @@ ExecPlan: `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
 
 ### 6. RELEASE-CANDIDATE-001 — Release Candidate Prep
 
-Status: later, blocked until `UI-MODAL-ACTION-HIERARCHY-001` completes
+Status: later
 
 목표: 실제로 공개 후보를 묶기로 결정했을 때 release note, known limitations, final evidence bundle, tag 후보 기준을 정리한다.
 
@@ -607,7 +614,7 @@ Status: completed
 - long incident evidence가 남는다.
 - progress schema 변경 없이 저장/재개가 안전하다.
 
-현재 release readiness, first-run polish, pre-RC hardening은 닫혔다. 다만 공개 후보 설명과 evidence를 묶기 전에 `UI-MODAL-ACTION-HIERARCHY-001`로 실패/성공 modal과 action affordance를 먼저 닫는다.
+현재 release readiness, first-run polish, pre-RC hardening, modal/action hierarchy hardening은 닫혔다. 다만 공개 후보 설명과 evidence 묶기는 사용자가 release candidate 준비를 원할 때만 연다.
 
 ## 7. Long-Run Candidates
 

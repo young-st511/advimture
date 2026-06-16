@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-17 — Modal/action hierarchy hardening 완료
+
+이전 가정: 실패/성공 modal과 action affordance는 출시 가능한 수준 기준의 P1 release-blocker였고, release/tag/push 작업은 hardening 완료 전까지 보류했다.
+
+새 가정: `UI-MODAL-ACTION-HIERARCHY-001`은 완료됐다. failed/succeeded modal은 viewport overlay decision surface로 보이고, action footer는 `다음 행동`/`보조 행동`으로 분리되며, running hint/quit과 hint revealed copy도 action/도움말/비용을 구분한다. incident briefing은 exact command sequence보다 상황과 판단 목표를 먼저 말한다.
+
+이유: `playable_viewport_success_modal_80x24`, `playable_viewport_failure_modal_80x24`, `playable_incident_hint_affordance`, `playable_command_mismatch_feedback`, `make e2e-playable`, `go test ./...`가 current UI 계약을 통과했다.
+
+영향: `UI-MODAL-ACTION-HIERARCHY-001`은 completed로 이동한다. 다음은 release candidate 포장이 아니라 fresh evidence로 다음 content/UX 후보를 고르는 `NEXT-DIRECTION-CHECKPOINT`다. `RELEASE-BREW-001`은 사용자가 명시적으로 release 재개를 원할 때까지 paused로 남긴다.
+
 ## 2026-06-17 — Modal/action hierarchy hardening 시작
 
 이전 가정: `POST-BREADTH-PLAYTEST-REVIEW-001` 이후에는 P0/P1 blocker가 없고 다음은 user decision checkpoint였다.

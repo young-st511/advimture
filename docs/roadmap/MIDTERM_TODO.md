@@ -4,9 +4,9 @@
 
 ## 현재 상태
 
-Status: modal/action hierarchy hardening active
+Status: modal/action hierarchy hardening completed; next direction checkpoint
 
-현재 active slice는 `UI-MODAL-ACTION-HIERARCHY-001`이다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001` 보강이 완료됐다. 이후 사용자 스크린샷과 SubAgent 감사로 실패/성공 modal과 action affordance가 출시 가능한 수준 기준의 P1 release-blocker로 재분류됐다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> SUCCESS-STATUSLINE-CLEANUP-001 -> UI-MODAL-ACTION-HIERARCHY-001` 보강이 완료됐다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 ## 현재 중기 플랜
 
@@ -24,12 +24,12 @@ Status: modal/action hierarchy hardening active
 | 10 | REVIEW-LOOP-MOTIVATION-001 | completed | success debrief, 잔류 리스크, 오늘의 복구 루트, 다음 출격 언어 polish |
 | 11 | COMMAND-CHOICE-BREADTH-002 | completed | 기존 engine만 사용해 command-choice 판단 breadth 확장 |
 | 12 | POST-BREADTH-PLAYTEST-REVIEW-001 | completed | 7-beat command-choice와 review loop evidence로 deeper hardening 필요성 판정 |
-| 13 | UI-MODAL-ACTION-HIERARCHY-001 | active | 실패/성공 modal을 true decision surface로 보이게 하고 action footer/QA evidence를 보강 |
-| 14 | USER-DECISION-CHECKPOINT | superseded | UX hardening 이후 다음 방향을 다시 선택 |
-| 15 | RELEASE-BREW-001 | paused | Homebrew release 자동화는 UX hardening 완료 후 재개 |
+| 13 | UI-MODAL-ACTION-HIERARCHY-001 | completed | 실패/성공 modal을 true decision surface로 보이게 하고 action footer/QA evidence를 보강 |
+| 14 | NEXT-DIRECTION-CHECKPOINT | next | modal/action hierarchy 이후 fresh evidence로 다음 구현 slice 선택 |
+| 15 | RELEASE-BREW-001 | paused | Homebrew release 자동화는 사용자가 release 재개를 원할 때만 재개 |
 | 16 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
 
-현재 권장은 release candidate 포장이 아니라 `UI-MODAL-ACTION-HIERARCHY-001`을 먼저 완료하는 것이다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
+현재 권장은 release candidate 포장이 아니라 fresh evidence로 다음 개발 후보를 고르는 것이다. 1순위 후보는 기존 engine 기반 applied content breadth이며, UI 정보 밀도가 다시 문제로 드러날 때만 `UI-RAIL-001` 또는 `UI-STYLE-001`을 연다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
 
 ## PLAYABLE-QUALITY-BASELINE-001 출구 조건
 
@@ -61,6 +61,7 @@ Status: modal/action hierarchy hardening active
 
 | ID | 완료일 | 요약 |
 |----|--------|------|
+| UI-MODAL-ACTION-HIERARCHY-001 | 2026-06-17 | 실패/성공 modal을 viewport overlay decision surface로 재배치하고, action footer/running hint/quit/hint cost/progressive briefing/final-frame evidence를 보강 |
 | POST-BREADTH-PLAYTEST-REVIEW-001 | 2026-06-07 | command-choice 7-beat와 review motivation evidence를 확인. P0/P1 blocker 없음, deeper hardening은 현재 evidence가 요구하지 않음 |
 | COMMAND-CHOICE-BREADTH-002 | 2026-06-07 | command-choice seventh beat로 `command-choice-bracket-scope-001` 추가. hyphenated 괄호 인자 전체를 `ci(`로 교체하는 scope 판단 검증 |
 | REVIEW-LOOP-MOTIVATION-001 | 2026-06-07 | tutorial success는 `재점검 메모`/`나중에 다시 풀기`, incident success는 `잔류 리스크`/`다음 출격 후보`로 분리. action id와 progress 저장 포맷은 유지 |

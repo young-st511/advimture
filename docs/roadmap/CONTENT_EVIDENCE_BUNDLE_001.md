@@ -19,8 +19,11 @@ Created: 2026-06-06
 | `playable_incident_001_full` | 원인 신호 추적, 상태값 복구, guard 추가, route 재사용, 문제 구간 range 정리로 첫 hotfix runbook이 닫히는가? | required |
 | `playable_incident_002_full` | quote 구조를 보존하며 secret/mirror/temp/반복 quote 값을 재동기화하는가? | required |
 | `playable_incident_003_full` | contam 표식 검색, visual 격리, 정상 신호 재사용, 잔류 off 전체 승격이 오염 구간 격리로 읽히는가? | required |
-| `playable_command_choice_scope` | scope/range/inline/reuse/repeat-change/line-reuse 판단이 command 이름보다 선택 이유로 설명되는가? | required |
+| `playable_command_choice_scope` | scope/range/inline/reuse/repeat-change/line-reuse/bracket-pair-scope 판단이 command 이름보다 선택 이유로 설명되는가? | required |
 | `playable_review_queue` | 성공 후 residual risk와 next dispatch가 반복 동기로 이어지는가? | supporting |
+| `playable_viewport_success_modal_80x24` | 성공 modal이 80x24 final viewport에서 다음 행동을 action footer로 보여주는가? | supporting |
+| `playable_viewport_failure_modal_80x24` | 실패 modal이 80x24 final viewport에서 재시도/힌트/종료를 body와 분리해 보여주는가? | supporting |
+| `playable_incident_hint_affordance` | incident running hint/quit과 hint revealed 상태가 command memory, 비용, utility action을 구분하는가? | supporting |
 
 ## First Dispatch Reading
 
@@ -34,7 +37,7 @@ Created: 2026-06-06
 
 ## Judgment Drill Reading
 
-`incident-005-command-choice`는 아래 여섯 판단 질문을 한 route에서 검증한다.
+`incident-005-command-choice`는 아래 일곱 판단 질문을 한 route에서 검증한다.
 
 | Beat | 질문 |
 |------|------|
@@ -44,8 +47,18 @@ Created: 2026-06-06
 | reuse choice | 검증된 값을 다시 입력하지 않고 재사용할 수 있는가? |
 | repeat-change reuse | 같은 변경을 다시 입력하지 않고 반복할 수 있는가? |
 | line reuse choice | 검증된 줄 전체를 다시 입력하지 않고 재사용할 수 있는가? |
+| bracket-pair scope choice | 단어 일부가 아니라 괄호 내부 구조 전체가 대상인가? |
 
 성공/실패 copy는 command 이름보다 선택 이유를 먼저 설명해야 한다. 이 원칙은 `docs/gameplay/command-choice-drills.md`의 Current Playable Mapping과 `content/scenarios/command-choice.yaml`의 scenario copy를 기준으로 검토한다.
+
+## Modal/Action Reading
+
+`UI-MODAL-ACTION-HIERARCHY-001` 이후 대표 UI evidence는 아래 기준으로 읽는다.
+
+- failed/succeeded modal은 console buffer 뒤에 붙은 본문 블록이 아니라 final viewport의 decision surface로 보인다.
+- primary action은 `다음 행동`, secondary action은 `보조 행동` footer로 분리된다.
+- running hint/quit은 일반 설명 문구가 아니라 utility action으로 읽힌다.
+- incident briefing은 exact command sequence보다 상황과 판단 목표를 먼저 말한다.
 
 ## Bundle Exit Criteria
 
