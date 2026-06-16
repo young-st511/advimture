@@ -59,7 +59,7 @@ func TestCleanTerminal(t *testing.T) {
 func TestCleanFinalScreenKeepsLastAdvimtureFrame(t *testing.T) {
 	raw := []byte("ADVIMTURE | Tutorial | Exercise: 1/4\nold frame\nADVIMTURE | Tutorial | Exercise: 2/4\nnew frame\n")
 
-	final := cleanFinalScreen(raw)
+	final := cleanFinalScreen(raw, 100, 30)
 
 	if strings.Contains(final, "old frame") {
 		t.Fatalf("cleanFinalScreen = %q, should not include earlier frame", final)
@@ -72,10 +72,135 @@ func TestCleanFinalScreenKeepsLastAdvimtureFrame(t *testing.T) {
 func TestCleanFinalScreenKeepsPlayableErrorFrame(t *testing.T) {
 	raw := []byte("boot\nPlayable error: content missing\nq: quit\n")
 
-	final := cleanFinalScreen(raw)
+	final := cleanFinalScreen(raw, 100, 30)
 
 	if final != "Playable error: content missing\nq: quit" {
 		t.Fatalf("cleanFinalScreen = %q, want playable error frame", final)
+	}
+}
+
+func TestCleanFinalScreenUsesTerminalViewport(t *testing.T) {
+	raw := []byte(
+		"ADVIMTURE | Tutorial | Exercise: 1/4\r\n" +
+			"MISSION\r\n" +
+			"old running frame\r\n" +
+			"\x1b[2J\x1b[H" +
+			"ADVIMTURE | Tutorial | Exercise: 1/4 | Status: failed\r\n" +
+			"RUNBOOK CONSOLE\r\n" +
+			"RECOVERY CHECK\r\n" +
+			"다시 시도: r 또는 enter\r\n",
+	)
+
+	final := cleanFinalScreen(raw, 80, 5)
+
+	if strings.Contains(final, "old running frame") {
+		t.Fatalf("cleanFinalScreen = %q, should not include stale frame", final)
+	}
+	if !strings.Contains(final, "RECOVERY CHECK") || !strings.Contains(final, "다시 시도: r 또는 enter") {
+		t.Fatalf("cleanFinalScreen = %q, want final modal action", final)
+	}
+	if lines := strings.Split(final, "\n"); len(lines) > 5 {
+		t.Fatalf("cleanFinalScreen returned %d lines, want <= terminal height: %q", len(lines), final)
+	}
+}
+
+func TestCleanFinalScreenTracksCursorPositionedUpdates(t *testing.T) {
+	raw := []byte(
+		"ADVIMTURE | Tutorial | Exercise: 1/4\r\n" +
+			"old status\r\n" +
+			"old action\r\n" +
+			"\x1b[1;1HADVIMTURE | Tutorial | Exercise: 1/4 | Status: failed" +
+			"\x1b[2;1HRECOVERY CHECK" +
+			"\x1b[3;1H다시 시도: r 또는 enter",
+	)
+
+	final := cleanFinalScreen(raw, 80, 4)
+
+	if strings.Contains(final, "old status") || strings.Contains(final, "old action") {
+		t.Fatalf("cleanFinalScreen = %q, should apply cursor-positioned updates", final)
+	}
+	for _, want := range []string{"Status: failed", "RECOVERY CHECK", "다시 시도: r 또는 enter"} {
+		if !strings.Contains(final, want) {
+			t.Fatalf("cleanFinalScreen = %q, want %q", final, want)
+		}
+	}
+}
+
+func TestRenderTerminalViewportClearsBeforeCursor(t *testing.T) {
+	raw := []byte("abcdef\r\n123456\r\nxyz\x1b[2;4H\x1b[1J")
+
+	final := renderTerminalViewport(raw, 10, 3)
+
+	if strings.Contains(final, "abcdef") || strings.Contains(final, "1234") {
+		t.Fatalf("renderTerminalViewport = %q, should clear before cursor", final)
+	}
+	if !strings.Contains(final, "    56") || !strings.Contains(final, "xyz") {
+		t.Fatalf("renderTerminalViewport = %q, should preserve text after cursor", final)
+	}
+}
+
+func TestDisplayWidthKeepsBoxDrawingSingleCell(t *testing.T) {
+	for _, r := range []rune{'╭', '─', '╮', '│'} {
+		if got := displayWidth(r); got != 1 {
+			t.Fatalf("displayWidth(%q) = %d, want 1", r, got)
+		}
+	}
+	if got := displayWidth('한'); got != 2 {
+		t.Fatalf("displayWidth(%q) = %d, want 2", '한', got)
+	}
+}
+
+func TestTerminalGridOverwritesWideRuneCleanly(t *testing.T) {
+	grid := newTerminalGrid(10, 2)
+	grid.writeRune('한')
+	grid.moveTo(0, 1)
+	grid.writeRune('x')
+
+	if got := grid.String(); got != " x" {
+		t.Fatalf("grid.String() = %q, want %q", got, " x")
+	}
+
+	grid.moveTo(0, 1)
+	grid.writeRune('글')
+	grid.moveTo(0, 1)
+	grid.writeRune('y')
+
+	if got := grid.String(); got != " y" {
+		t.Fatalf("grid.String() = %q, want %q", got, " y")
+	}
+}
+
+func TestAssertScenarioChecksFinalScreenAssertions(t *testing.T) {
+	maxLines := 2
+	sc := scenario{
+		Assert: assertionConfig{
+			FinalScreenContains:    []string{"RECOVERY CHECK"},
+			FinalScreenNotContains: []string{"NORMAL · running"},
+			FinalScreenMaxLines:    &maxLines,
+		},
+	}
+	result := runResult{finalScreen: "RECOVERY CHECK\n다시 시도: r 또는 enter"}
+
+	if err := assertScenario(sc, result); err != nil {
+		t.Fatalf("assertScenario error = %v, want nil", err)
+	}
+
+	sc.Assert.FinalScreenContains = []string{"RUNBOOK SEALED"}
+	if err := assertScenario(sc, result); err == nil || !strings.Contains(err.Error(), "final screen does not contain") {
+		t.Fatalf("assertScenario error = %v, want missing final screen contains", err)
+	}
+
+	sc.Assert.FinalScreenContains = []string{"RECOVERY CHECK"}
+	sc.Assert.FinalScreenNotContains = []string{"다시 시도"}
+	if err := assertScenario(sc, result); err == nil || !strings.Contains(err.Error(), "final screen contains unwanted") {
+		t.Fatalf("assertScenario error = %v, want unwanted final screen contains", err)
+	}
+
+	oneLine := 1
+	sc.Assert.FinalScreenNotContains = nil
+	sc.Assert.FinalScreenMaxLines = &oneLine
+	if err := assertScenario(sc, result); err == nil || !strings.Contains(err.Error(), "final screen lines") {
+		t.Fatalf("assertScenario error = %v, want final screen max lines failure", err)
 	}
 }
 
@@ -644,7 +769,8 @@ func TestWriteEvidenceWritesScreenFinal(t *testing.T) {
 		homeDir:  t.TempDir(),
 	}
 	sc := scenario{
-		ID: "final",
+		ID:       "final",
+		Terminal: terminalConfig{Width: 80, Height: 5},
 		Evidence: evidenceConfig{
 			SaveScreenFinal: true,
 		},

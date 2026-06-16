@@ -11,10 +11,12 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"syscall"
 	"time"
+	"unicode/utf8"
 
 	"github.com/creack/pty"
 	"github.com/young-st511/advimture/internal/content"
@@ -53,12 +55,15 @@ type step struct {
 }
 
 type assertionConfig struct {
-	ScreenContains       []string          `yaml:"screen_contains"`
-	ExitCode             *int              `yaml:"exit_code"`
-	ProgressFileExists   *bool             `yaml:"progress_file_exists"`
-	ProgressFileContains []string          `yaml:"progress_file_contains"`
-	KeyTrace             []string          `yaml:"key_trace"`
-	AppState             appStateAssertion `yaml:"app_state"`
+	ScreenContains         []string          `yaml:"screen_contains"`
+	FinalScreenContains    []string          `yaml:"final_screen_contains"`
+	FinalScreenNotContains []string          `yaml:"final_screen_not_contains"`
+	FinalScreenMaxLines    *int              `yaml:"final_screen_max_lines"`
+	ExitCode               *int              `yaml:"exit_code"`
+	ProgressFileExists     *bool             `yaml:"progress_file_exists"`
+	ProgressFileContains   []string          `yaml:"progress_file_contains"`
+	KeyTrace               []string          `yaml:"key_trace"`
+	AppState               appStateAssertion `yaml:"app_state"`
 }
 
 type appStateAssertion struct {
@@ -198,6 +203,7 @@ type evidenceConfig struct {
 type runResult struct {
 	raw                []byte
 	clean              string
+	finalScreen        string
 	exitCode           int
 	homeDir            string
 	trace              []string
@@ -582,6 +588,21 @@ func assertScenario(sc scenario, result runResult) error {
 			return fmt.Errorf("screen does not contain %q", want)
 		}
 	}
+	for _, want := range sc.Assert.FinalScreenContains {
+		if !screenContains(result.finalScreen, want) {
+			return fmt.Errorf("final screen does not contain %q", want)
+		}
+	}
+	for _, unwanted := range sc.Assert.FinalScreenNotContains {
+		if screenContains(result.finalScreen, unwanted) {
+			return fmt.Errorf("final screen contains unwanted %q", unwanted)
+		}
+	}
+	if sc.Assert.FinalScreenMaxLines != nil {
+		if lines := lineCount(result.finalScreen); lines > *sc.Assert.FinalScreenMaxLines {
+			return fmt.Errorf("final screen lines: got %d, want <= %d", lines, *sc.Assert.FinalScreenMaxLines)
+		}
+	}
 	if sc.Assert.ExitCode != nil && result.exitCode != *sc.Assert.ExitCode {
 		return fmt.Errorf("exit code: got %d, want %d", result.exitCode, *sc.Assert.ExitCode)
 	}
@@ -626,6 +647,7 @@ func collectResult(sc scenario, mu *sync.Mutex, raw *bytes.Buffer, homeDir strin
 	return runResult{
 		raw:                rawBytes,
 		clean:              cleanTerminal(rawBytes),
+		finalScreen:        cleanFinalScreen(rawBytes, int(sc.Terminal.Width), int(sc.Terminal.Height)),
 		exitCode:           code,
 		homeDir:            homeDir,
 		trace:              trace,
@@ -660,7 +682,11 @@ func writeEvidence(root string, sc scenario, result runResult, runErr error) err
 		}
 	}
 	if sc.Evidence.SaveScreenFinal {
-		if err := os.WriteFile(filepath.Join(dir, "screen_final.txt"), []byte(cleanFinalScreen(result.raw)), 0o644); err != nil {
+		finalScreen := result.finalScreen
+		if finalScreen == "" {
+			finalScreen = cleanFinalScreen(result.raw, int(sc.Terminal.Width), int(sc.Terminal.Height))
+		}
+		if err := os.WriteFile(filepath.Join(dir, "screen_final.txt"), []byte(finalScreen), 0o644); err != nil {
 			return err
 		}
 	}
@@ -999,14 +1025,369 @@ func cleanTerminal(raw []byte) string {
 	return b.String()
 }
 
-func cleanFinalScreen(raw []byte) string {
-	clean := strings.TrimSpace(cleanTerminal(raw))
-	for _, marker := range []string{"ADVIMTURE |", "Playable error:"} {
-		if idx := strings.LastIndex(clean, marker); idx >= 0 {
-			return strings.TrimSpace(clean[idx:])
+func cleanFinalScreen(raw []byte, width int, height int) string {
+	cleaned := extractFinalFrameText(cleanTerminal(raw))
+	if strings.HasPrefix(cleaned, "Playable error:") {
+		return trimFinalLines(cleaned, height)
+	}
+	if width > 0 && height > 0 {
+		rendered := strings.TrimSpace(renderTerminalViewport(raw, width, height))
+		if rendered != "" {
+			return extractFinalFrameText(rendered)
 		}
 	}
+	return trimFinalLines(cleaned, height)
+}
+
+func extractFinalFrameText(text string) string {
+	clean := strings.TrimSpace(text)
+	finalIndex := -1
+	for _, marker := range []string{"ADVIMTURE |", "Playable error:"} {
+		if idx := strings.LastIndex(clean, marker); idx >= 0 {
+			if idx > finalIndex {
+				finalIndex = idx
+			}
+		}
+	}
+	if finalIndex >= 0 {
+		return strings.TrimSpace(clean[finalIndex:])
+	}
 	return clean
+}
+
+func trimFinalLines(text string, maxLines int) string {
+	text = strings.TrimSpace(text)
+	if maxLines <= 0 || text == "" {
+		return text
+	}
+	lines := strings.Split(text, "\n")
+	if len(lines) <= maxLines {
+		return text
+	}
+	return strings.TrimSpace(strings.Join(lines[len(lines)-maxLines:], "\n"))
+}
+
+func lineCount(text string) int {
+	text = strings.TrimRight(text, "\n")
+	if text == "" {
+		return 0
+	}
+	return len(strings.Split(text, "\n"))
+}
+
+func renderTerminalViewport(raw []byte, width int, height int) string {
+	if width <= 0 || height <= 0 {
+		return ""
+	}
+	grid := newTerminalGrid(width, height)
+	for i := 0; i < len(raw); {
+		b := raw[i]
+		if b == 0x1b {
+			next := skipEscape(raw, i, grid)
+			if next <= i {
+				i++
+			} else {
+				i = next
+			}
+			continue
+		}
+		r, size := utf8.DecodeRune(raw[i:])
+		if r == utf8.RuneError && size == 1 {
+			i++
+			continue
+		}
+		grid.writeRune(r)
+		i += size
+	}
+	return grid.String()
+}
+
+func skipEscape(raw []byte, i int, grid *terminalGrid) int {
+	if i+1 >= len(raw) {
+		return i + 1
+	}
+	switch raw[i+1] {
+	case '[':
+		j := i + 2
+		for j < len(raw) {
+			if raw[j] >= 0x40 && raw[j] <= 0x7e {
+				handleCSI(string(raw[i+2:j]), raw[j], grid)
+				return j + 1
+			}
+			j++
+		}
+		return len(raw)
+	case ']':
+		j := i + 2
+		for j < len(raw) {
+			if raw[j] == 0x07 {
+				return j + 1
+			}
+			if raw[j] == 0x1b && j+1 < len(raw) && raw[j+1] == '\\' {
+				return j + 2
+			}
+			j++
+		}
+		return len(raw)
+	default:
+		return i + 2
+	}
+}
+
+func handleCSI(seq string, final byte, grid *terminalGrid) {
+	private := strings.HasPrefix(seq, "?")
+	params := parseCSIParams(strings.TrimPrefix(seq, "?"))
+	switch final {
+	case 'H', 'f':
+		row := csiParam(params, 0, 1)
+		col := csiParam(params, 1, 1)
+		grid.moveTo(row-1, col-1)
+	case 'A':
+		grid.moveBy(-csiParam(params, 0, 1), 0)
+	case 'B':
+		grid.moveBy(csiParam(params, 0, 1), 0)
+	case 'C':
+		grid.moveBy(0, csiParam(params, 0, 1))
+	case 'D':
+		grid.moveBy(0, -csiParam(params, 0, 1))
+	case 'G':
+		col := csiParam(params, 0, 1)
+		grid.moveTo(grid.row, col-1)
+	case 'J':
+		grid.clearScreen(csiParam(params, 0, 0))
+	case 'K':
+		grid.clearLine(csiParam(params, 0, 0))
+	case 'h':
+		if private && len(params) > 0 && params[0] == 1049 {
+			grid.clearAll()
+			grid.moveTo(0, 0)
+		}
+	}
+}
+
+func parseCSIParams(seq string) []int {
+	if seq == "" {
+		return nil
+	}
+	parts := strings.Split(seq, ";")
+	params := make([]int, len(parts))
+	for i, part := range parts {
+		if part == "" {
+			continue
+		}
+		value, err := strconv.Atoi(part)
+		if err == nil {
+			params[i] = value
+		}
+	}
+	return params
+}
+
+func csiParam(params []int, index int, fallback int) int {
+	if index >= len(params) || params[index] == 0 {
+		return fallback
+	}
+	return params[index]
+}
+
+type terminalGrid struct {
+	width  int
+	height int
+	row    int
+	col    int
+	cells  [][]string
+}
+
+func newTerminalGrid(width int, height int) *terminalGrid {
+	grid := &terminalGrid{width: width, height: height}
+	grid.cells = make([][]string, height)
+	for row := range grid.cells {
+		grid.cells[row] = make([]string, width)
+		for col := range grid.cells[row] {
+			grid.cells[row][col] = " "
+		}
+	}
+	return grid
+}
+
+func (g *terminalGrid) writeRune(r rune) {
+	switch r {
+	case '\r':
+		g.col = 0
+		return
+	case '\n':
+		g.newline()
+		return
+	case '\t':
+		for i := 0; i < 4; i++ {
+			g.writeRune(' ')
+		}
+		return
+	}
+	if r < 0x20 {
+		return
+	}
+	cellWidth := displayWidth(r)
+	if g.col >= g.width || (cellWidth == 2 && g.col == g.width-1) {
+		g.newline()
+	}
+	if g.row < 0 || g.row >= g.height || g.col < 0 || g.col >= g.width {
+		return
+	}
+	g.prepareWrite(cellWidth)
+	g.cells[g.row][g.col] = string(r)
+	if cellWidth == 2 && g.col+1 < g.width {
+		g.cells[g.row][g.col+1] = ""
+	}
+	g.col += cellWidth
+	if g.col > g.width {
+		g.col = g.width
+	}
+}
+
+func (g *terminalGrid) prepareWrite(cellWidth int) {
+	if g.cells[g.row][g.col] == "" && g.col > 0 {
+		g.cells[g.row][g.col-1] = " "
+	}
+	if cellWidth == 1 && g.col+1 < g.width && g.cells[g.row][g.col+1] == "" {
+		g.cells[g.row][g.col+1] = " "
+	}
+}
+
+func (g *terminalGrid) newline() {
+	g.row++
+	if g.row >= g.height {
+		copy(g.cells[0:], g.cells[1:])
+		g.cells[g.height-1] = make([]string, g.width)
+		for col := range g.cells[g.height-1] {
+			g.cells[g.height-1][col] = " "
+		}
+		g.row = g.height - 1
+	}
+}
+
+func (g *terminalGrid) moveTo(row int, col int) {
+	if row < 0 {
+		row = 0
+	}
+	if col < 0 {
+		col = 0
+	}
+	if row >= g.height {
+		row = g.height - 1
+	}
+	if col >= g.width {
+		col = g.width - 1
+	}
+	g.row = row
+	g.col = col
+}
+
+func (g *terminalGrid) moveBy(rowDelta int, colDelta int) {
+	g.moveTo(g.row+rowDelta, g.col+colDelta)
+}
+
+func (g *terminalGrid) clearAll() {
+	for row := range g.cells {
+		for col := range g.cells[row] {
+			g.clearCell(row, col)
+		}
+	}
+}
+
+func (g *terminalGrid) clearScreen(mode int) {
+	switch mode {
+	case 1:
+		for row := 0; row <= g.row && row < g.height; row++ {
+			end := g.width - 1
+			if row == g.row {
+				end = g.col
+			}
+			for col := 0; col <= end && col < g.width; col++ {
+				g.clearCell(row, col)
+			}
+		}
+	case 2, 3:
+		g.clearAll()
+	default:
+		for row := g.row; row < g.height; row++ {
+			start := 0
+			if row == g.row {
+				start = g.col
+			}
+			for col := start; col < g.width; col++ {
+				g.clearCell(row, col)
+			}
+		}
+	}
+}
+
+func (g *terminalGrid) clearLine(mode int) {
+	switch mode {
+	case 1:
+		for col := 0; col <= g.col && col < g.width; col++ {
+			g.clearCell(g.row, col)
+		}
+	case 2:
+		for col := 0; col < g.width; col++ {
+			g.clearCell(g.row, col)
+		}
+	default:
+		for col := g.col; col < g.width; col++ {
+			g.clearCell(g.row, col)
+		}
+	}
+}
+
+func (g *terminalGrid) clearCell(row int, col int) {
+	if row < 0 || row >= g.height || col < 0 || col >= g.width {
+		return
+	}
+	if g.cells[row][col] == "" && col > 0 {
+		g.cells[row][col-1] = " "
+	}
+	g.cells[row][col] = " "
+	if col+1 < g.width && g.cells[row][col+1] == "" {
+		g.cells[row][col+1] = " "
+	}
+}
+
+func (g *terminalGrid) String() string {
+	lines := make([]string, len(g.cells))
+	for row, cells := range g.cells {
+		var b strings.Builder
+		for _, cell := range cells {
+			b.WriteString(cell)
+		}
+		lines[row] = strings.TrimRight(b.String(), " ")
+	}
+	for len(lines) > 0 && strings.TrimSpace(lines[len(lines)-1]) == "" {
+		lines = lines[:len(lines)-1]
+	}
+	return strings.Join(lines, "\n")
+}
+
+func displayWidth(r rune) int {
+	switch {
+	case r >= 0x1100 && r <= 0x115f:
+		return 2
+	case r >= 0x2e80 && r <= 0xa4cf:
+		return 2
+	case r >= 0xac00 && r <= 0xd7a3:
+		return 2
+	case r >= 0xf900 && r <= 0xfaff:
+		return 2
+	case r >= 0xfe10 && r <= 0xfe19:
+		return 2
+	case r >= 0xfe30 && r <= 0xfe6f:
+		return 2
+	case r >= 0xff00 && r <= 0xff60:
+		return 2
+	case r >= 0xffe0 && r <= 0xffe6:
+		return 2
+	default:
+		return 1
+	}
 }
 
 func exitCode(cmd *exec.Cmd) int {

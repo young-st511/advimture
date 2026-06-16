@@ -28,12 +28,14 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - runner는 `setup.complete_before: <exercise-id>`로 현재 content의 playable 순서를 읽고 지정 exercise 직전까지 completed progress를 생성할 수 있다. `setup.progress_file`과 `setup.complete_before`는 동시에 사용할 수 없다.
 - runner는 pseudo terminal로 앱을 실행하기 위해 `github.com/creack/pty`를 사용한다.
 - runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence/content, key trace exact match, app state summary를 검증한다.
+- runner는 terminal width/height가 있는 scenario에서 raw ANSI stream을 terminal cell grid로 재구성해 `screen_final.txt`를 terminal height 이하의 final viewport evidence로 저장한다.
+- runner는 `final_screen_contains`, `final_screen_not_contains`, `final_screen_max_lines` assertion으로 누적 stream이 아니라 final viewport 자체를 검증할 수 있다.
 - visual mode selection assertion은 `docs/verification/selection-app-state-contract.md`의 `selection` object를 기준으로 한다. `internal/e2estate.State`, runner `assert.app_state.selection`, content `e2e_assertions.selection`은 같은 shape를 사용한다.
 - review/daily route assertion은 `assert.app_state.review`로 검증한다. `queue_count`, `primary_exercise_id`, `primary_reason`, `daily_route`는 화면 문구 이동과 별개로 stable state로 본다.
 - focus panel assertion은 `assert.app_state.ui.focus_panel`로 검증한다. `kind`, `title`, `lines`는 화면 배치가 바뀌어도 현재 UI intent를 stable state로 본다.
 - mission/review loop E2E는 success debrief의 `이번 복구`, `최단 복구`, `목표 입력`, `다음 출격` 문구와 `ui.focus_panel.kind/title`을 함께 검증한다.
 - command memory UI E2E는 tutorial `기억할 명령`, duplicate coach suppression, incident hint/failure 후 `참고 명령`, 긴 incident hint cue wrapping을 화면과 app_state evidence로 검증한다.
-- viewport smoke E2E는 80x24 success/failure floating modal에서 action line과 `ui.focus_panel`이 유지되는지 검증한다.
+- viewport smoke E2E는 80x24 success/failure floating modal에서 action line, final viewport clipping, stale running frame 부재, `ui.focus_panel`이 유지되는지 검증한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
 - runner는 `summary.json`, raw ANSI log, cleaned screen stream, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.
@@ -47,7 +49,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 
 - [ ] Bubble Tea model-level integration test와 pty-level E2E의 경계를 정해야 한다.
 - [ ] full E2E를 CI에 포함할지, 로컬/Agent 전용으로 둘지 결정해야 한다.
-- [ ] ANSI strip 기반 text assertion에서 정교한 terminal screen parser로 승격할 시점을 결정해야 한다.
+- [x] final frame evidence는 terminal size가 있는 scenario에서 terminal cell grid 기준으로 생성한다.
 - [x] E2E runner는 app state summary 기반 buffer/cursor/mode/status/score/progress assertion을 지원한다.
 - [x] 첫 playable slice에서 실제 앱이 `ADVIMTURE_E2E=1`일 때 app state summary를 쓴다.
 - [x] progress fixture 기반 resume E2E와 command-mode E2E를 지원한다.

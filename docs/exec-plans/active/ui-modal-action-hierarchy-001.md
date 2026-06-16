@@ -76,12 +76,16 @@ Allowed-Paths:
 
 ## Todo 2: Final Frame QA
 
-- 상태: pending
+- 상태: completed
 - 목표: modal 위치와 action footer가 실제 final viewport에서 보이는지 검증할 수 있게 한다.
 - 변경 파일:
-  - `cmd/e2e-runner/**`
-  - `test/e2e/**`
-  - `docs/verification/**`
+  - `cmd/e2e-runner/main.go`
+  - `cmd/e2e-runner/main_test.go`
+  - `test/e2e/playable_viewport_failure_modal_80x24.yaml`
+  - `test/e2e/playable_viewport_success_modal_80x24.yaml`
+  - `docs/verification/spec.md`
+  - `docs/verification/tui-e2e-loop.md`
+  - `docs/verification/tui-ui-qa-contract.md`
 - 테스트 파일:
   - `cmd/e2e-runner/main_test.go`
   - focused viewport E2E scenarios
@@ -210,6 +214,7 @@ Allowed-Paths:
 - 2026-06-17: SubAgent 감사와 별도 세션 감사 결과를 종합해 진행 불가 P0는 아니지만 출시 가능한 수준 기준의 P1 release-blocker로 판정했다.
 - 2026-06-17: 사용자는 추천안 전체를 승인했다. Release/tag/push는 보류하고, overlay + action footer + running action 구조화 + evidence hardening을 Todo별 커밋으로 수행한다.
 - 2026-06-17: Todo 1 완료. Active UX hardening plan을 만들고, release plan을 paused로 전환했으며, roadmap/backlog/spec/verification 문서가 P1 modal/action blocker를 가리키도록 정리했다.
+- 2026-06-17: Todo 2 완료. E2E runner가 terminal cell grid 기준 `screen_final.txt`를 만들고, 80x24 success/failure scenarios가 final screen contains/not-contains/max-lines로 modal action footer와 clipping을 검증한다.
 
 ## 미해결 질문
 

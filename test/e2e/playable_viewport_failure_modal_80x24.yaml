@@ -17,6 +17,17 @@ assert:
     - "RECOVERY REQUIRED"
     - "다시 시도: r 또는 enter"
     - "Grade: F"
+  final_screen_contains:
+    - "RUNBOOK CONSOLE"
+    - "RECOVERY CHECK"
+    - "RECOVERY REQUIRED"
+    - "다시 시도: r 또는 enter"
+    - "종료: q"
+    - "Grade: F"
+  final_screen_not_contains:
+    - "NORMAL · running"
+    - "TRAINING BRIEF"
+  final_screen_max_lines: 24
   exit_code: 0
   progress_file_exists: false
   key_trace:
