@@ -6,7 +6,7 @@ scenarios:
     learning_reinforcement: "mixed run에서는 먼저 검색으로 손상 지점을 고정한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
     mission_title: "breach 표식 찾기"
-    briefing: "릴레이 기지 007의 복구 로그에 breach 표식이 남았습니다. /breach 검색으로 손상 token 줄을 찾으세요."
+    briefing: "릴레이 기지 007의 복구 로그에 breach 표식이 남았습니다. 손상 token을 고치기 전에 표식 줄을 먼저 찾으세요."
     context_role: "mixed recovery 진입점"
     mentor_success: "좋습니다. 손상 지점을 찾았습니다. 다음 단계에서 quote 내부 값만 바꿉니다."
     mentor_failure: "한 줄씩 훑지 말고 /breach로 손상 표식을 바로 찾으세요."
@@ -62,7 +62,7 @@ scenarios:
     learning_reinforcement: "여러 줄에 남은 같은 token은 전체 범위 substitute로 마감한다."
     does_not_change: ["target_state", "optimal_keys", "constraints"]
     mission_title: "잔류 hold 전체 승격"
-    briefing: "마지막 잔류 hold 상태가 두 줄에 남았습니다. 전체 파일 치환으로 모두 live로 승격해 runbook을 닫으세요."
+    briefing: "마지막 잔류 hold 상태가 두 줄에 남았습니다. 현재 줄만 보지 말고 전체 파일 범위를 live로 승격해 runbook을 닫으세요."
     context_role: "mixed recovery 마감 조치"
     mentor_success: "좋습니다. 검색, 구조 편집, 줄 묶음 제거, inline 수리, 전체 치환까지 이어서 릴레이 기지 007 복구를 닫았습니다."
     mentor_failure: "현재 줄만 바꾸면 잔류 리스크가 남습니다. % range로 전체 hold를 live로 승격하세요."

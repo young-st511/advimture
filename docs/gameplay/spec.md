@@ -65,6 +65,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시할 수 있다.
 - tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다. `기억할 명령`이 같은 required key를 이미 설명하면 `Coach: 훈련 키 ...`를 중복 표시하지 않는다.
 - incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청 또는 실패 후에만 `참고 명령: ...`으로 current exercise의 command memory를 점진 공개한다.
+- incident scenario briefing은 상황 1문장과 판단 목표 1문장을 우선하며, exact command sequence는 기본 briefing보다 hint/failure/command memory에서 공개한다.
 - success/failure floating modal이 표시되는 화면은 상단 detailed review/daily line을 숨기고, modal 내부의 review motivation과 `다음 행동` footer를 primary 안내로 둔다. Tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`, incident success의 review motivation은 `잔류 리스크`/`다음 출격 후보`로 표현한다.
 - `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `힌트 내용  ... · 등급에 영향`으로 표시하며, command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed/succeeded 상태의 scenario feedback은 briefing 영역이 아니라 `FocusPanel` 안에 표시하며, briefing 영역은 원래 미션 설명을 유지한다.

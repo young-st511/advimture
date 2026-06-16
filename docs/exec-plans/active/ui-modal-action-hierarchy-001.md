@@ -164,12 +164,18 @@ Allowed-Paths:
 
 ## Todo 6: Incident Progressive Briefing
 
-- 상태: pending
+- 상태: completed
 - 목표: incident briefing에서 exact command 과노출을 줄이고 판단 목표를 먼저 보이게 한다.
 - 변경 파일:
-  - `content/scenarios/**`
-  - `docs/gameplay/**`
-  - focused E2E scenarios
+  - `content/scenarios/incident-run.yaml`
+  - `content/scenarios/incident-structure.yaml`
+  - `content/scenarios/incident-visual.yaml`
+  - `content/scenarios/incident-inline-target.yaml`
+  - `content/scenarios/incident-search-scope.yaml`
+  - `content/scenarios/incident-mixed-recovery.yaml`
+  - `content/scenarios/incident-linewise.yaml`
+  - `docs/gameplay/spec.md`
+  - `docs/gameplay/tui-ux-direction.md`
 - 테스트 파일:
   - `internal/content/**`
   - affected focused E2E
@@ -232,6 +238,7 @@ Allowed-Paths:
 - 2026-06-17: Todo 3 완료. failed/succeeded FocusPanel을 terminal viewport 위에 overlay하고, action footer를 `다음 행동`/`보조 행동`으로 body와 분리했다. 80x24 final evidence에서 `NORMAL · failed/succeeded`와 `Grade` 줄은 decision focus 밖으로 내려간다.
 - 2026-06-17: Todo 4 완료. running FocusPanel은 `hint`/`quit` actions를 app_state에 내보내고, HUD cue는 현재 목표/판단 line과 분리된 `보조 행동  힌트: ? · 종료: q`로 렌더링한다.
 - 2026-06-17: Todo 5 완료. hint revealed line은 `힌트 내용  ... · 등급에 영향`으로 표시하고, failure modal의 `hint`도 secondary action footer로 이동했다.
+- 2026-06-17: Todo 6 완료. incident briefing은 exact command sequence 대신 상황과 판단 목표를 먼저 말하고, command memory는 hint/failure 단계로 남겼다.
 
 ## 미해결 질문
 
