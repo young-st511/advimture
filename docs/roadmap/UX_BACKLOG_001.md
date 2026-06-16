@@ -2,13 +2,13 @@
 
 Created: 2026-05-26
 Status: current
-Last reviewed: 2026-06-07
+Last reviewed: 2026-06-17
 
 ## 판단
 
-Content breadth로 넘어가기 전에 막는 P0 UX 리스크는 없다.
+Content breadth나 release packaging으로 넘어가기 전에 `UI-MODAL-ACTION-HIERARCHY-001`을 먼저 닫는다.
 
-현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. `PLAYABLE-QUALITY-BASELINE-001` 이후에도 P0/P1 UX blocker는 없다. `REVIEW-LOOP-MOTIVATION-001`로 tutorial success와 incident success의 review motivation 언어도 분리했다. 다음 단계의 UX 작업은 콘텐츠 확장을 막는 선행 조건이 아니라, 콘텐츠가 늘면서 반복 플레이 품질을 높이는 후속 backlog로 관리한다.
+현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 다만 사용자 스크린샷과 SubAgent 감사 결과, 실패/성공 modal이 실제 overlay보다 console 뒤 삽입 블록처럼 보이고 action line이 CTA처럼 보이지 않는 문제가 확인됐다. 이는 진행 불가 P0는 아니지만 출시 가능한 수준 기준의 P1 release-blocker다.
 
 ## P0
 
@@ -27,6 +27,12 @@ P0로 승격하는 조건:
 - 왜 중요한가: 콘텐츠가 길어질수록 review/daily, command memory, route progress를 한 줄 HUD에 계속 압축하기 어렵다.
 - 언제 열 것인가: incident가 6개 이상으로 늘거나 daily/review 표시가 현재 mission briefing을 다시 밀어낼 때.
 - 어떻게 검증할 것인가: desktop width에서 console line index가 고정되고, mobile/narrow width에서는 기존 vertical HUD로 fallback하는 renderer tests와 E2E screenshot/text evidence를 추가한다.
+
+### UI-MODAL-ACTION-HIERARCHY-001 — Modal Decision Surface
+
+- 상태: active
+- 왜 중요한가: 실패/성공 직후 플레이어는 다음에 누를 키를 즉시 알아야 한다. 현재 modal은 console 뒤 삽입 블록처럼 보이고 action line은 본문과 같은 위계라 첫 실패 경험이 흐려진다.
+- 어떻게 검증할 것인가: 80x24 success/failure final frame에서 primary action footer가 보이고, renderer test가 buffer append형 modal을 고정하지 않으며, app_state action id와 화면 action footer가 함께 검증된다.
 
 ### UI-COMMAND-MEMORY-001 — Learned Command Memory
 
@@ -77,11 +83,11 @@ P0로 승격하는 조건:
 
 ## Content Breadth Readiness
 
-다음 content breadth slice는 진행 가능하다.
+다음 content breadth slice는 `UI-MODAL-ACTION-HIERARCHY-001` 완료 후 진행한다.
 
 - HUD/help/choice/success polish가 full E2E를 통과했다.
 - progress 저장 포맷 변경이 필요하지 않다.
-- P0 UX blocker가 없다.
+- 진행 불가 P0 UX blocker는 없지만, P1 modal/action hierarchy blocker가 active다.
 - 새 콘텐츠는 기존 engine command만 사용하고, 필요한 경우 command-choice/applied incident layer로 추가한다.
 
 추천 다음 콘텐츠:

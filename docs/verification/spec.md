@@ -62,3 +62,10 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 ### TUI E2E Loop 도입 준비
 
 구현 완료. 현재 동작으로 이동했다.
+
+### TUI Final Frame/Modal Evidence
+
+- modal/action hierarchy E2E는 80x24 success/failure final frame에서 primary action footer가 viewport 안에 보이는지 검증해야 한다.
+- modal/action hierarchy E2E는 modal이 이전 running frame이나 buffer append artifact로만 검증되지 않게 해야 한다.
+- final frame evidence는 가능한 경우 terminal height 기준의 단일 최종 viewport를 대표해야 한다.
+- 누적 stream에 포함된 과거 frame 문자열만으로 success/failure modal을 통과시키면 안 된다.

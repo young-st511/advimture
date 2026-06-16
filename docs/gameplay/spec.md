@@ -184,3 +184,13 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - playable playlist 목록은 approved/implemented playlist만 반환하며 ID 순서로 정렬된다.
 - approved/implemented tutorial playlist는 8문항을 초과하면 load에 실패한다.
 - `constraints.max_inputs`와 `constraints.attempt_limit`는 0 이상이어야 한다. 0은 제한 없음이다.
+
+### TUI Modal/Action Hierarchy
+
+- failed/succeeded/debrief 화면은 `FocusPanel`을 viewport 기준 modal decision surface로 렌더링해야 한다.
+- failed modal의 primary action은 `retry`, success modal의 primary action은 현재 흐름에 맞는 `next*` 또는 완료 action이며, secondary action과 시각적으로 구분되어야 한다.
+- modal body의 기록, 힌트, review motivation은 action footer와 섞이지 않아야 한다.
+- failed/succeeded 상태는 Vim mode-specific cue보다 우선하며, `ui.focus_panel.actions`는 retry/next/quit 의미를 유지해야 한다.
+- running 상태의 hint/quit affordance는 현재 목표/판단 cue보다 낮은 위계의 utility action으로 보여야 한다.
+- running utility action을 app_state로 검증해야 한다면 `hint`와 `quit` 같은 action id를 사용하되, progress 저장 포맷에는 반영하지 않는다.
+- hint revealed 상태는 hint 내용과 `?` 호출 action을 구분해야 한다. Hint 사용이 grade에 영향을 줄 수 있으면 짧은 비용 affordance를 표시할 수 있다.

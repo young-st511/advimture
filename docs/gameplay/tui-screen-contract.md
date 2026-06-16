@@ -82,8 +82,8 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - tutorial running HUD의 review/daily는 `복구 메모: 재점검 N건 · 다음: <title>`처럼 축약한다.
 - incident running HUD의 review/daily는 `복구 현황: 재점검 N건 · 잔류: <title>`처럼 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
-- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 안에서 floating modal로 표시한다.
-- floating modal은 terminal width가 알려진 경우 horizontal center 정렬을 사용한다.
+- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 안에서 floating modal로 표시하되, buffer 뒤에 단순 append된 일반 본문 블록처럼 보이면 안 된다.
+- floating modal은 terminal width/height가 알려진 경우 viewport 기준으로 horizontal/vertical placement를 계산한다.
 - 좁은 화면에서는 modal width가 terminal width를 넘지 않도록 줄어든다.
 - failed/succeeded modal은 console label과 buffer 위치를 밀지 않는다.
 
@@ -93,8 +93,8 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - running incident: `MISSION` HUD cue에 판단 cue, hint, quit. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - insert/search/command/visual mode cue는 한국어 action label로 표현하고, 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
-- failed: floating modal에 실패 이유, 남은 입력, attempts, retry
-- succeeded: floating modal에 복구 기록, best record, runbook completion, context별 review motivation, next action
+- failed: floating modal에 실패 이유, 남은 입력, attempts, recovery hint, primary retry action footer
+- succeeded: floating modal에 복구 기록, best record, runbook completion, context별 review motivation, primary next/complete action footer
 - failed/succeeded feedback은 briefing이 아니라 panel 본문에 둔다.
 - failed/succeeded floating modal 주변에는 detailed review/daily line을 다시 올리지 않는다. review/daily 의미는 modal 내부의 review motivation과 `app_state.review`로 유지한다.
 - tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`로 표시해 실제 primary action처럼 읽히지 않게 한다.
@@ -105,9 +105,10 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - `kind`: `training`, `incident`, `failure`, `success`, `mode`
 - `title`: `TRAINING BRIEF`, `OPERATOR JUDGMENT`, `RECOVERY REQUIRED`, `STEP SEALED`, `명령 모드` 등
 - `lines`: 사용자에게 보일 안내 문구
-- `actions`: retry/next/quit 같은 조작 의미. 화면에는 `label`을 표시하고, E2E는 `id`로 검증한다.
+- `actions`: retry/next/hint/quit 같은 조작 의미. 화면에는 `label`을 action footer로 표시하고, E2E는 `id`로 검증한다.
 - failed modal은 `RECOVERY CHECK`, success modal은 `RUNBOOK SEALED` heading으로 감싸되, app_state의 원래 focus panel kind/title/lines는 유지한다.
 - floating modal이 추가하는 보조 label은 `실수`, `힌트`, `배운 점`, `기록`처럼 한국어로 표시한다.
+- action footer는 modal body의 기록/힌트/review motivation과 분리한다. `retry`/`next*`/`dispatch_complete`/`playlist_complete` 같은 primary action은 `quit`이나 `hint` 같은 secondary action보다 먼저 읽혀야 한다.
 
 Action label 계약:
 
@@ -120,6 +121,7 @@ Action label 계약:
 | `next_dispatch` | `다음 출격: enter` | review queue primary exercise로 재출격 |
 | `dispatch_complete` | `출격 완료` | incident path 완료 |
 | `playlist_complete` | `플레이리스트 완료` | tutorial path 완료 |
+| `hint` | `힌트: ?` | 현재 exercise hint 열기 |
 | `quit` | `종료: q` | 현재 화면 종료 |
 
 금지:

@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-17 — Modal/action hierarchy hardening 시작
+
+이전 가정: `POST-BREADTH-PLAYTEST-REVIEW-001` 이후에는 P0/P1 blocker가 없고 다음은 user decision checkpoint였다.
+
+새 가정: 실패/성공 안내가 true modal이 아니라 console 뒤에 붙은 삽입형 패널처럼 보이고, `다시 시도`, `힌트`, `종료`, `다음 단계`가 CTA처럼 보이지 않는 문제는 출시 가능한 수준 기준의 P1 release-blocker다.
+
+이유: 사용자가 첫 실패 화면 스크린샷에서 "무엇을 눌러야 하는지 모르겠다"는 UX 문제를 제기했고, SubAgent 감사와 별도 세션 감사가 같은 결론을 냈다. 문자열 존재 중심 E2E도 이 문제를 잡지 못한다.
+
+영향: `UI-MODAL-ACTION-HIERARCHY-001`을 active로 열고, `RELEASE-BREW-001`은 UI hardening 완료 전까지 paused로 둔다. Release/tag/push는 이번 자동 수행 범위 밖이다.
+
 ## 2026-06-08 — Success status line cleanup 완료
 
 이전 가정: fresh playtest 후에는 구현 slice를 새로 열지 않는 것이 기본이었지만, incident success 화면에서 이전 command/search 입력이 `Command: ...`로 남는 작은 UI 결함이 보였다.

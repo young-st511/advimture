@@ -4,9 +4,9 @@
 
 ## 현재 상태
 
-Status: post-breadth review completed / user decision checkpoint
+Status: modal/action hierarchy hardening active
 
-현재 active slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001` 보강이 완료됐다. 다음은 구현 slice가 아니라 user decision checkpoint이며, 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active slice는 `UI-MODAL-ACTION-HIERARCHY-001`이다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001` 보강이 완료됐다. 이후 사용자 스크린샷과 SubAgent 감사로 실패/성공 modal과 action affordance가 출시 가능한 수준 기준의 P1 release-blocker로 재분류됐다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
 
 ## 현재 중기 플랜
 
@@ -24,10 +24,12 @@ Status: post-breadth review completed / user decision checkpoint
 | 10 | REVIEW-LOOP-MOTIVATION-001 | completed | success debrief, 잔류 리스크, 오늘의 복구 루트, 다음 출격 언어 polish |
 | 11 | COMMAND-CHOICE-BREADTH-002 | completed | 기존 engine만 사용해 command-choice 판단 breadth 확장 |
 | 12 | POST-BREADTH-PLAYTEST-REVIEW-001 | completed | 7-beat command-choice와 review loop evidence로 deeper hardening 필요성 판정 |
-| 13 | USER-DECISION-CHECKPOINT | recommended decision | 현재 변경을 커밋할지, 새 방향을 열지, 나중의 RC 준비로 갈지 선택 |
-| 14 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
+| 13 | UI-MODAL-ACTION-HIERARCHY-001 | active | 실패/성공 modal을 true decision surface로 보이게 하고 action footer/QA evidence를 보강 |
+| 14 | USER-DECISION-CHECKPOINT | superseded | UX hardening 이후 다음 방향을 다시 선택 |
+| 15 | RELEASE-BREW-001 | paused | Homebrew release 자동화는 UX hardening 완료 후 재개 |
+| 16 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
 
-권장은 release candidate 포장이 아니라 quality baseline 이후의 후속 보강을 필요할 때 좁게 여는 것이다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
+현재 권장은 release candidate 포장이 아니라 `UI-MODAL-ACTION-HIERARCHY-001`을 먼저 완료하는 것이다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
 
 ## PLAYABLE-QUALITY-BASELINE-001 출구 조건
 
@@ -45,6 +47,7 @@ Status: post-breadth review completed / user decision checkpoint
 | incident 감각 | incident 3개 이상이 “복구 작전”처럼 읽히는가? | incident full route final/timeline |
 | 진행/복습 | debrief, review queue, next dispatch가 반복 동기를 주는가? | review/debrief E2E, app_state |
 | terminal UI | modal, HUD, 긴 한국어 문구가 터미널 크기에서 무너지지 않는가? | screen_final, 필요 시 viewport smoke |
+| modal/action hierarchy | 실패/성공 후 사용자가 primary action을 즉시 인식하는가? | 80x24 final frame, focus panel action footer, app_state |
 | 세계관 정합성 | tutorial, incident, review language가 Runbook Dispatch 프레임 안에서 이어지는가? | world-frame, scenario-tone, incident final/timeline |
 | 엔진/모듈화 | 품질 개선을 좁은 slice로 열 수 있는 분리가 되어 있는가? | ENGINE_TODO, package boundaries, 관련 tests |
 
