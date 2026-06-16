@@ -47,6 +47,53 @@ func TestLoadLibraryFSLoadsRootContent(t *testing.T) {
 	}
 }
 
+func TestLoadLibraryRejectsUnknownYAMLField(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "command_clusters", "clusters.yaml"), `
+command_clusters:
+  - id: normal-motion-basic
+    status: approved
+    compatibility_tier: exact
+    engine_support: implemented
+    title: Basic motion
+    commands: ["h", "j", "k", "l"]
+    coverage_required: ["h", "j", "k", "l"]
+    oracle: optional
+    purpose: Move cursor
+    prerequisite: []
+    difficulty: beginner
+    unknown_field: true
+`)
+
+	tests := []struct {
+		name string
+		load func() error
+	}{
+		{
+			name: "filesystem path",
+			load: func() error {
+				_, err := LoadLibrary(root)
+				return err
+			},
+		},
+		{
+			name: "fs",
+			load: func() error {
+				_, err := LoadLibraryFS(os.DirFS(root), ".")
+				return err
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.load()
+			if err == nil || !strings.Contains(err.Error(), "unknown_field") {
+				t.Fatalf("LoadLibrary error = %v, want unknown_field", err)
+			}
+		})
+	}
+}
+
 func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	lib, err := LoadLibrary(filepath.Join("..", "..", "content"))
 	if err != nil {
@@ -194,7 +241,7 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 	got := make([]string, 0, len(playlists))
 	for _, playlist := range playlists {
 		got = append(got, playlist.ID)
-		if len(playlist.Beats) > maxTutorialPlaylistBeats {
+		if playlist.Category == "tutorial" && len(playlist.Beats) > maxTutorialPlaylistBeats {
 			t.Fatalf("playlist %q has %d beats, want at most %d", playlist.ID, len(playlist.Beats), maxTutorialPlaylistBeats)
 		}
 	}
@@ -930,6 +977,8 @@ func TestLoadLibraryRejectsApprovedPlaylistOverTutorialLimit(t *testing.T) {
 playlists:
   - id: too-long
     status: approved
+    category: tutorial
+    order: 1
     title: Too long
     beats:
       - id: beat-1
@@ -982,6 +1031,159 @@ playlists:
 	_, err := LoadLibrary(root)
 	if err == nil || !strings.Contains(err.Error(), "want at most 8") {
 		t.Fatalf("LoadLibrary error = %v, want tutorial limit", err)
+	}
+}
+
+func TestLoadLibraryAllowsApprovedIncidentPlaylistLongerThanTutorialLimit(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
+playlists:
+  - id: incident-long
+    status: approved
+    category: incident
+    order: 1
+    title: Long incident
+    beats:
+      - id: beat-1
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-2
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-3
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-4
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-5
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-6
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-7
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-8
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+      - id: beat-9
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+`)
+
+	if _, err := LoadLibrary(root); err != nil {
+		t.Fatalf("LoadLibrary returned error: %v", err)
+	}
+}
+
+func TestLoadLibraryRejectsApprovedPlaylistWithNonPlayableExercise(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "exercises", "exercises.yaml"), `
+exercises:
+  - id: normal-motion-basic-001
+    status: draft
+    command_cluster: normal-motion-basic
+    engine_support: implemented
+    replay_status: pass
+    title: Move right
+    initial_state:
+      mode: normal
+      buffer: "abc\n"
+    target_state:
+      mode: normal
+      cursor: {row: 0, col: 1}
+    optimal_keys: ["l"]
+    allowed_keys: ["l"]
+    grading:
+      pass_condition: "cursor.row == 0 && cursor.col == 1"
+      optimal_key_count: 1
+    e2e_assertions:
+      buffer: ["abc"]
+      cursor: {row: 0, col: 1}
+      mode: normal
+      status: succeeded
+`)
+	writeYAML(t, filepath.Join(root, "scenarios", "scenarios.yaml"), `
+scenarios:
+  - id: normal-motion-basic-001-scenario
+    status: draft
+    exercise_id: normal-motion-basic-001
+    engine_support: implemented
+    mission_title: Move right
+    briefing: Move right
+    mentor_success: Done
+`)
+	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
+playlists:
+  - id: approved
+    status: approved
+    category: tutorial
+    order: 1
+    title: Approved
+    beats:
+      - id: beat-1
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "non-playable exercise") {
+		t.Fatalf("LoadLibrary error = %v, want non-playable exercise", err)
+	}
+}
+
+func TestLoadLibraryRejectsApprovedPlaylistWithNonPlayableScenario(t *testing.T) {
+	root := validLibraryFixture(t)
+	writeYAML(t, filepath.Join(root, "scenarios", "scenarios.yaml"), `
+scenarios:
+  - id: normal-motion-basic-001-scenario
+    status: draft
+    exercise_id: normal-motion-basic-001
+    engine_support: implemented
+    mission_title: Move right
+    briefing: Move right
+    mentor_success: Done
+`)
+	writeYAML(t, filepath.Join(root, "playlists", "playlists.yaml"), `
+playlists:
+  - id: approved
+    status: approved
+    category: tutorial
+    order: 1
+    title: Approved
+    beats:
+      - id: beat-1
+        command_cluster: normal-motion-basic
+        exercise_id: normal-motion-basic-001
+        scenario_id: normal-motion-basic-001-scenario
+        engine_support: implemented
+`)
+
+	_, err := LoadLibrary(root)
+	if err == nil || !strings.Contains(err.Error(), "non-playable scenario") {
+		t.Fatalf("LoadLibrary error = %v, want non-playable scenario", err)
 	}
 }
 

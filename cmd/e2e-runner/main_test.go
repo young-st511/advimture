@@ -32,6 +32,18 @@ func TestKeyBytes(t *testing.T) {
 	}
 }
 
+func TestLoadScenarioRejectsUnknownFields(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "scenario.yaml")
+	if err := os.WriteFile(path, []byte("id: typo\nunknown_field: true\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err := loadScenario(path)
+	if err == nil || !strings.Contains(err.Error(), "unknown_field") {
+		t.Fatalf("loadScenario error = %v, want unknown_field", err)
+	}
+}
+
 func TestCleanTerminal(t *testing.T) {
 	raw := []byte("\x1b]11;?\x1b\\\x1b[?1049h\x1b[1;1Hhello\r\n\x1b[31mworld\x1b[0m\x07")
 	clean := cleanTerminal(raw)

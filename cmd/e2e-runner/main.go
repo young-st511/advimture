@@ -262,7 +262,9 @@ func loadScenario(path string) (scenario, error) {
 	}
 
 	var sc scenario
-	if err := yaml.Unmarshal(raw, &sc); err != nil {
+	decoder := yaml.NewDecoder(bytes.NewReader(raw))
+	decoder.KnownFields(true)
+	if err := decoder.Decode(&sc); err != nil {
 		return scenario{}, err
 	}
 	if sc.ID == "" {

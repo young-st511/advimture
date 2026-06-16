@@ -23,7 +23,10 @@ func New() Model {
 }
 
 func NewWithOptions(options Options) Model {
-	p, _ := progress.Load()
+	p, loadErr := progress.Load()
+	if p == nil {
+		p = progress.NewProgress()
+	}
 	return Model{
 		playable: playable.New(playable.Options{
 			Progress:     p,
@@ -31,6 +34,7 @@ func NewWithOptions(options Options) Model {
 			E2EStatePath: e2eStatePath(),
 			ContentRoot:  "content",
 			ContentFS:    options.ContentFS,
+			StartupError: loadErr,
 		}),
 	}
 }

@@ -35,55 +35,13 @@ func progressPath() (string, error) {
 func Load() (*Progress, error) {
 	path, err := progressPath()
 	if err != nil {
-		return NewProgress(), nil
+		return nil, err
 	}
-
-	data, err := os.ReadFile(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return NewProgress(), nil
-		}
-		// Try backup
-		return loadBackup(path)
-	}
-
-	var p Progress
-	if err := json.Unmarshal(data, &p); err != nil {
-		// JSON parse failure: try backup
-		return loadBackup(path)
-	}
-
-	// Ensure maps are initialized
-	if p.Tutorials == nil {
-		p.Tutorials = make(map[string]TutorialProgress)
-	}
-	if p.Missions == nil {
-		p.Missions = make(map[string]MissionProgress)
-	}
-
-	return &p, nil
+	return loadFromPath(path)
 }
 
 func loadBackup(mainPath string) (*Progress, error) {
-	backupPath := mainPath + backupSuffix
-	data, err := os.ReadFile(backupPath)
-	if err != nil {
-		return NewProgress(), nil
-	}
-
-	var p Progress
-	if err := json.Unmarshal(data, &p); err != nil {
-		return NewProgress(), nil
-	}
-
-	if p.Tutorials == nil {
-		p.Tutorials = make(map[string]TutorialProgress)
-	}
-	if p.Missions == nil {
-		p.Missions = make(map[string]MissionProgress)
-	}
-
-	return &p, nil
+	return readProgressFile(mainPath + backupSuffix)
 }
 
 // Save writes progress to disk using atomic write (temp file + rename).
@@ -148,24 +106,34 @@ func SaveToPath(p *Progress, path string) error {
 
 // LoadFromPath reads progress from a specific path (for testing).
 func LoadFromPath(path string) (*Progress, error) {
+	return loadFromPath(path)
+}
+
+func loadFromPath(path string) (*Progress, error) {
+	p, err := readProgressFile(path)
+	if err == nil {
+		return p, nil
+	}
+	if os.IsNotExist(err) {
+		return NewProgress(), nil
+	}
+
+	backup, backupErr := loadBackup(path)
+	if backupErr == nil {
+		return backup, nil
+	}
+	return nil, fmt.Errorf("[진행도 로드 실패] %s: %w; backup: %v", path, err, backupErr)
+}
+
+func readProgressFile(path string) (*Progress, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return NewProgress(), nil
-		}
-		return NewProgress(), nil
+		return nil, err
 	}
 
 	var p Progress
 	if err := json.Unmarshal(data, &p); err != nil {
-		// Try backup
-		backupData, berr := os.ReadFile(path + backupSuffix)
-		if berr != nil {
-			return NewProgress(), nil
-		}
-		if err := json.Unmarshal(backupData, &p); err != nil {
-			return NewProgress(), nil
-		}
+		return nil, fmt.Errorf("parse %s: %w", path, err)
 	}
 
 	if p.Tutorials == nil {

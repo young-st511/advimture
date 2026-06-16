@@ -3,6 +3,7 @@ package progress
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -64,7 +65,10 @@ func TestLoad_CorruptedFallbackToBackup(t *testing.T) {
 	// Rewrite backup directly
 	os.WriteFile(backupPath, []byte(`{"player_name":"from-backup","created_at":"2024-01-01T00:00:00Z","updated_at":"2024-01-01T00:00:00Z","tutorials":{},"missions":{},"total_keystrokes":0}`), 0o644)
 
-	loaded, _ := LoadFromPath(path)
+	loaded, err := LoadFromPath(path)
+	if err != nil {
+		t.Fatalf("LoadFromPath returned error: %v", err)
+	}
 	if loaded.PlayerName != "from-backup" {
 		t.Errorf("expected 'from-backup', got '%s'", loaded.PlayerName)
 	}
@@ -77,10 +81,12 @@ func TestLoad_BothCorrupted(t *testing.T) {
 	os.WriteFile(path, []byte("bad"), 0o644)
 	os.WriteFile(path+".bak", []byte("also bad"), 0o644)
 
-	p, _ := LoadFromPath(path)
-	// Should return fresh progress
-	if p.CompletedTutorialCount() != 0 {
-		t.Error("corrupted files should yield fresh progress")
+	p, err := LoadFromPath(path)
+	if err == nil {
+		t.Fatalf("LoadFromPath returned nil error and progress %+v, want corruption error", p)
+	}
+	if !strings.Contains(err.Error(), "진행도 로드 실패") {
+		t.Fatalf("LoadFromPath error = %v, want progress load failure", err)
 	}
 }
 

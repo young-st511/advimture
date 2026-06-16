@@ -25,6 +25,7 @@ type Options struct {
 	E2EStatePath string
 	ContentRoot  string
 	ContentFS    fs.FS
+	StartupError error
 	Now          func() time.Time
 }
 
@@ -40,6 +41,7 @@ type Model struct {
 	now          func() time.Time
 	startedAt    time.Time
 	saved        bool
+	saveErr      error
 	err          error
 	reviewQueue  []review.Candidate
 	hintMessage  string
@@ -71,6 +73,13 @@ func New(options Options) Model {
 
 	root := contentRoot(options.ContentRoot)
 	entries, current, run, err := newGameFromContent(root, options.ContentFS, p)
+	if options.StartupError != nil {
+		if err != nil {
+			err = fmt.Errorf("%v; %w", options.StartupError, err)
+		} else {
+			err = options.StartupError
+		}
+	}
 	model := Model{
 		run:          run,
 		entries:      entries,
@@ -231,12 +240,16 @@ func (m *Model) applyProgressIfSucceeded() {
 		return
 	}
 	updated := progressadapter.ApplyMissionCompletion(*m.progress, completion)
-	m.progress = &updated
 	if m.saveProgress != nil {
-		_ = m.saveProgress(m.progress)
+		if err := m.saveProgress(&updated); err != nil {
+			m.saveErr = err
+			return
+		}
 	}
+	m.progress = &updated
 	m.refreshReviewQueue()
 	m.saved = true
+	m.saveErr = nil
 }
 
 func (m *Model) advanceToNext() {
@@ -247,6 +260,12 @@ func (m *Model) advanceToNext() {
 }
 
 func (m *Model) advanceAfterSuccess() {
+	if !m.saved {
+		m.applyProgressIfSucceeded()
+	}
+	if !m.saved {
+		return
+	}
 	if m.current+1 < len(m.entries) {
 		m.advanceToNext()
 		return
@@ -268,6 +287,7 @@ func (m *Model) jumpToEntry(index int) {
 	m.current = index
 	m.run = run
 	m.saved = false
+	m.saveErr = nil
 	m.hintMessage = ""
 	m.startedAt = m.now()
 }
@@ -275,6 +295,7 @@ func (m *Model) jumpToEntry(index int) {
 func (m *Model) retryCurrent() {
 	m.run.Retry()
 	m.saved = false
+	m.saveErr = nil
 	m.hintMessage = ""
 	m.startedAt = m.now()
 }
@@ -403,6 +424,12 @@ func (m Model) successActionLines() []string {
 }
 
 func (m Model) successActions() []playableview.ActionLine {
+	if m.saveErr != nil {
+		return []playableview.ActionLine{
+			focusAction("save_retry", "저장 재시도: enter"),
+			focusAction("quit", "종료: q"),
+		}
+	}
 	if m.current+1 < len(m.entries) {
 		if !m.nextEntryStartsNewPlaylist() {
 			return []playableview.ActionLine{focusAction("next", "다음 단계: enter")}
@@ -513,12 +540,18 @@ func playlistEntries(library content.Library) ([]gameEntry, error) {
 		var playlistEntries []gameEntry
 		for _, beat := range playlist.Beats {
 			exercise, ok := library.Exercises[beat.ExerciseID]
-			if !ok || !isPlayableExercise(exercise) {
-				continue
+			if !ok {
+				return nil, fmt.Errorf("playlist %q beat %q references missing exercise %q", playlist.ID, beat.ID, beat.ExerciseID)
+			}
+			if !isPlayableExercise(exercise) {
+				return nil, fmt.Errorf("playlist %q beat %q references non-playable exercise %q", playlist.ID, beat.ID, beat.ExerciseID)
 			}
 			scenarioDoc, ok := library.Scenarios[beat.ScenarioID]
-			if !ok || !isPlayableScenario(scenarioDoc) {
-				continue
+			if !ok {
+				return nil, fmt.Errorf("playlist %q beat %q references missing scenario %q", playlist.ID, beat.ID, beat.ScenarioID)
+			}
+			if !isPlayableScenario(scenarioDoc) {
+				return nil, fmt.Errorf("playlist %q beat %q references non-playable scenario %q", playlist.ID, beat.ID, beat.ScenarioID)
 			}
 			playlistEntries = append(playlistEntries, gameEntry{
 				PlaylistID:       playlist.ID,
@@ -637,6 +670,10 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 	case state.Status == exerciseruntime.StatusSucceeded:
 		if feedback := scenarioFeedbackLine(state); feedback != "" {
 			lines = append(lines, feedback)
+		}
+		if m.saveErr != nil {
+			lines = append(lines, fmt.Sprintf("진행도 저장 실패: %v", m.saveErr))
+			lines = append(lines, "저장 후 계속하려면 enter")
 		}
 		lines = append(lines, m.successDebriefLines(state)...)
 	case state.Status == exerciseruntime.StatusFailed:

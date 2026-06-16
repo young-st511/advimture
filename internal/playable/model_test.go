@@ -1,6 +1,7 @@
 package playable
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -154,6 +155,52 @@ func TestPlayableSucceedsAndUpdatesProgress(t *testing.T) {
 	}
 	if saveCalls != 1 {
 		t.Fatalf("saveCalls = %d, want 1", saveCalls)
+	}
+}
+
+func TestPlayableSaveFailureBlocksAdvanceAndShowsRetry(t *testing.T) {
+	saveCalls := 0
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progress.NewProgress(),
+		SaveProgress: func(*progress.Progress) error {
+			saveCalls++
+			return fmt.Errorf("disk full")
+		},
+	})
+
+	model, _ = updateWithKey(t, model, "l")
+	model, _ = updateWithKey(t, model, "l")
+
+	if model.State().Status != "succeeded" {
+		t.Fatalf("status = %q, want succeeded", model.State().Status)
+	}
+	if saveCalls != 1 {
+		t.Fatalf("saveCalls = %d, want 1", saveCalls)
+	}
+	if model.saved {
+		t.Fatal("model.saved = true, want false after save failure")
+	}
+	if model.progress.Missions["normal-motion-basic-001"].Completed {
+		t.Fatal("progress mission completed = true, want false until save succeeds")
+	}
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "진행도 저장 실패: disk full") {
+		t.Fatalf("focus panel lines = %v, want save failure", model.State().UI.FocusPanel.Lines)
+	}
+	if !strings.Contains(model.View(), "저장 재시도: enter") {
+		t.Fatalf("view = %q, want save retry action", model.View())
+	}
+
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	if model.State().Status != "succeeded" {
+		t.Fatalf("status after enter = %q, want succeeded", model.State().Status)
+	}
+	if got := model.currentExerciseID(); got != "normal-motion-basic-001" {
+		t.Fatalf("current exercise after enter = %q, want same exercise", got)
+	}
+	if saveCalls != 2 {
+		t.Fatalf("saveCalls after enter = %d, want retry", saveCalls)
 	}
 }
 

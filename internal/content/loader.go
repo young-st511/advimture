@@ -1,6 +1,7 @@
 package content
 
 import (
+	"bytes"
 	"fmt"
 	"io/fs"
 	"os"
@@ -204,7 +205,7 @@ func loadLibrary(root string, loadDir func(dir string, visit func(path string, r
 
 	if err := loadDir(joinContentPath(root, "command_clusters"), func(path string, raw []byte) error {
 		var file commandClusterFile
-		if err := yaml.Unmarshal(raw, &file); err != nil {
+		if err := decodeYAML(raw, &file); err != nil {
 			return err
 		}
 		for _, cluster := range file.CommandClusters {
@@ -219,7 +220,7 @@ func loadLibrary(root string, loadDir func(dir string, visit func(path string, r
 
 	if err := loadDir(joinContentPath(root, "exercises"), func(path string, raw []byte) error {
 		var file exerciseFile
-		if err := yaml.Unmarshal(raw, &file); err != nil {
+		if err := decodeYAML(raw, &file); err != nil {
 			return err
 		}
 		for _, exercise := range file.Exercises {
@@ -234,7 +235,7 @@ func loadLibrary(root string, loadDir func(dir string, visit func(path string, r
 
 	if err := loadDir(joinContentPath(root, "scenarios"), func(path string, raw []byte) error {
 		var file scenarioFile
-		if err := yaml.Unmarshal(raw, &file); err != nil {
+		if err := decodeYAML(raw, &file); err != nil {
 			return err
 		}
 		for _, scenario := range file.Scenarios {
@@ -249,7 +250,7 @@ func loadLibrary(root string, loadDir func(dir string, visit func(path string, r
 
 	if err := loadDir(joinContentPath(root, "playlists"), func(path string, raw []byte) error {
 		var file playlistFile
-		if err := yaml.Unmarshal(raw, &file); err != nil {
+		if err := decodeYAML(raw, &file); err != nil {
 			return err
 		}
 		for _, playlist := range file.Playlists {
@@ -307,10 +308,8 @@ func (l Library) Validate() error {
 func (l Library) PlayableExercises() []ExerciseDocument {
 	exercises := make([]ExerciseDocument, 0)
 	for _, exercise := range l.Exercises {
-		if exercise.Status == StatusApproved || exercise.Status == StatusImplemented {
-			if exercise.EngineSupport == EngineSupportImplemented && exercise.ReplayStatus == ReplayStatusPass {
-				exercises = append(exercises, exercise)
-			}
+		if isPlayableExerciseDocument(exercise) {
+			exercises = append(exercises, exercise)
 		}
 	}
 	sort.Slice(exercises, func(i, j int) bool {
@@ -507,7 +506,7 @@ func (l Library) validatePlaylistDocument(playlist PlaylistDocument) error {
 	if !validStatus(playlist.Status) {
 		return fmt.Errorf("playlist %q has invalid status %q", playlist.ID, playlist.Status)
 	}
-	if isApprovedLike(playlist.Status) && len(playlist.Beats) > maxTutorialPlaylistBeats {
+	if isApprovedLike(playlist.Status) && playlist.Category == "tutorial" && len(playlist.Beats) > maxTutorialPlaylistBeats {
 		return fmt.Errorf("playlist %q has %d beats, want at most %d", playlist.ID, len(playlist.Beats), maxTutorialPlaylistBeats)
 	}
 	if isApprovedLike(playlist.Status) {
@@ -528,14 +527,38 @@ func (l Library) validatePlaylistDocument(playlist PlaylistDocument) error {
 		if _, ok := l.CommandClusters[beat.CommandCluster]; !ok {
 			return fmt.Errorf("playlist %q beat %q references missing command cluster %q", playlist.ID, beat.ID, beat.CommandCluster)
 		}
-		if _, ok := l.Exercises[beat.ExerciseID]; !ok {
+		exercise, ok := l.Exercises[beat.ExerciseID]
+		if !ok {
 			return fmt.Errorf("playlist %q beat %q references missing exercise %q", playlist.ID, beat.ID, beat.ExerciseID)
 		}
-		if _, ok := l.Scenarios[beat.ScenarioID]; !ok {
+		scenario, ok := l.Scenarios[beat.ScenarioID]
+		if !ok {
 			return fmt.Errorf("playlist %q beat %q references missing scenario %q", playlist.ID, beat.ID, beat.ScenarioID)
+		}
+		if isApprovedLike(playlist.Status) {
+			if beat.EngineSupport != EngineSupportImplemented {
+				return fmt.Errorf("approved playlist %q beat %q engine_support = %q, want %q", playlist.ID, beat.ID, beat.EngineSupport, EngineSupportImplemented)
+			}
+			if !isPlayableExerciseDocument(exercise) {
+				return fmt.Errorf("approved playlist %q beat %q references non-playable exercise %q", playlist.ID, beat.ID, beat.ExerciseID)
+			}
+			if !isPlayableScenarioDocument(scenario) {
+				return fmt.Errorf("approved playlist %q beat %q references non-playable scenario %q", playlist.ID, beat.ID, beat.ScenarioID)
+			}
 		}
 	}
 	return nil
+}
+
+func isPlayableExerciseDocument(exercise ExerciseDocument) bool {
+	return isApprovedLike(exercise.Status) &&
+		exercise.EngineSupport == EngineSupportImplemented &&
+		exercise.ReplayStatus == ReplayStatusPass
+}
+
+func isPlayableScenarioDocument(scenario ScenarioDocument) bool {
+	return isApprovedLike(scenario.Status) &&
+		scenario.EngineSupport == EngineSupportImplemented
 }
 
 func playlistOrder(playlist PlaylistDocument) int {
@@ -684,6 +707,12 @@ func loadYAMLDir(dir string, visit func(path string, raw []byte) error) error {
 		}
 	}
 	return nil
+}
+
+func decodeYAML(raw []byte, out any) error {
+	decoder := yaml.NewDecoder(bytes.NewReader(raw))
+	decoder.KnownFields(true)
+	return decoder.Decode(out)
 }
 
 func loadYAMLFSDir(files fs.FS, dir string, visit func(path string, raw []byte) error) error {
