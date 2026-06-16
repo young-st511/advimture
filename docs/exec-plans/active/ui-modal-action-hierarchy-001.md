@@ -119,13 +119,17 @@ Allowed-Paths:
 
 ## Todo 4: Running Action Cue
 
-- 상태: pending
+- 상태: completed
 - 목표: running 상태의 `힌트: ?`, `종료: q`를 조작 가능한 affordance로 구조화한다.
 - 변경 파일:
-  - `internal/playable/**`
-  - `internal/playableview/**`
-  - `internal/e2estate/**` (필요 시 internal DTO만)
-  - `test/e2e/**`
+  - `internal/playable/model.go`
+  - `internal/playable/model_test.go`
+  - `internal/playableview/render.go`
+  - `internal/playableview/render_test.go`
+  - `test/e2e/playable_incident_hint_affordance.yaml`
+  - `test/e2e/playable_coaching_panel.yaml`
+  - `docs/gameplay/spec.md`
+  - `docs/gameplay/tui-screen-contract.md`
 - 테스트 파일:
   - `internal/playable/model_test.go`
   - `internal/playableview/render_test.go`
@@ -220,6 +224,7 @@ Allowed-Paths:
 - 2026-06-17: Todo 1 완료. Active UX hardening plan을 만들고, release plan을 paused로 전환했으며, roadmap/backlog/spec/verification 문서가 P1 modal/action blocker를 가리키도록 정리했다.
 - 2026-06-17: Todo 2 완료. E2E runner가 terminal cell grid 기준 `screen_final.txt`를 만들고, 80x24 success/failure scenarios가 final screen contains/not-contains/max-lines로 modal action footer와 clipping을 검증한다.
 - 2026-06-17: Todo 3 완료. failed/succeeded FocusPanel을 terminal viewport 위에 overlay하고, action footer를 `다음 행동`/`보조 행동`으로 body와 분리했다. 80x24 final evidence에서 `NORMAL · failed/succeeded`와 `Grade` 줄은 decision focus 밖으로 내려간다.
+- 2026-06-17: Todo 4 완료. running FocusPanel은 `hint`/`quit` actions를 app_state에 내보내고, HUD cue는 현재 목표/판단 line과 분리된 `보조 행동  힌트: ? · 종료: q`로 렌더링한다.
 
 ## 미해결 질문
 

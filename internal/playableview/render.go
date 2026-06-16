@@ -350,7 +350,7 @@ func renderMissionCue(panel *FocusPanel, screenWidth int) string {
 	if panel == nil || isFloatingPanel(*panel) {
 		return ""
 	}
-	lines := focusPanelDisplayLines(*panel)
+	lines := missionCueDisplayLines(*panel)
 	return strings.Join(wrapMissionCueLines(lines, hudTextWidth(screenWidth)), "\n") + "\n"
 }
 
@@ -730,7 +730,23 @@ func containsLine(lines []string, target string) bool {
 
 func focusPanelDisplayLines(panel FocusPanel) []string {
 	lines := append([]string{panel.Title}, panel.Lines...)
-	return append(lines, focusPanelActionLabels(panel)...)
+	return append(lines, focusPanelUtilityActionLines(panel)...)
+}
+
+func missionCueDisplayLines(panel FocusPanel) []string {
+	lines := append([]string{panel.Title}, panel.Lines...)
+	return append(lines, focusPanelUtilityActionLines(panel)...)
+}
+
+func focusPanelUtilityActionLines(panel FocusPanel) []string {
+	if len(panel.Actions) == 0 {
+		return nil
+	}
+	labels := focusPanelActionLabels(panel)
+	if len(labels) == 0 {
+		return nil
+	}
+	return []string{"보조 행동  " + strings.Join(labels, " · ")}
 }
 
 func focusPanelActionLabels(panel FocusPanel) []string {

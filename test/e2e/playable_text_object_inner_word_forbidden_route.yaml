@@ -12,7 +12,7 @@ steps:
   - send: "b"
   - wait_screen_contains: "다시 시도: r 또는 enter"
   - send: "enter"
-  - wait_screen_contains: "mode 값 중간에 커서가 멈췄습니다"
+  - wait_screen_contains: "Inputs left: 3/3"
   - send: "d"
   - wait_ms: 50
   - send: "i"
@@ -23,9 +23,9 @@ steps:
   - send: "q"
 assert:
   screen_contains:
-    - "Grade: F"
-    - "Grade: A"
-    - "다시 시도: r 또는 enter"
+    - "RECOVERY CHECK"
+    - "다음 행동  다시 시도: r 또는 enter"
+    - "이번 복구: grade A"
     - "좋습니다. diw로 현재 단어 전체를 바로 제거했습니다."
   exit_code: 0
   progress_file_exists: true

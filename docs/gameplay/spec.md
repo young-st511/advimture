@@ -54,10 +54,11 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 진행/재시도/명령 입력 안내는 일반 하단 텍스트가 아니라 structured `FocusPanel` 모델로 관리한다.
 - `FocusPanel`은 `kind`, `title`, `lines`, `actions`를 가진다. tutorial running은 `training`/`TRAINING BRIEF`, incident running은 `incident`/`OPERATOR JUDGMENT`, failed는 `failure`/`RECOVERY REQUIRED`, succeeded는 `success`/`STEP SEALED`, mode-specific 안내는 `mode` kind를 사용한다.
 - running/mode-specific `FocusPanel`은 `MISSION` HUD 안의 짧은 cue로 접어 현재 목표와 함께 보인다. 긴 hint나 command memory가 있을 때는 terminal width 기준으로 여러 줄에 감싸며, hint/action 문구를 잘라내지 않는다.
+- running `FocusPanel`은 `hint`/`quit` actions를 유지하고, 화면에서는 현재 목표/판단 cue와 분리된 `보조 행동  힌트: ? · 종료: q` utility line으로 표시한다.
 - failed/succeeded `FocusPanel`은 `RUNBOOK CONSOLE` 위에서 Zellij floating pane처럼 보이는 viewport modal로 렌더링한다.
 - floating modal은 `tea.WindowSizeMsg`로 전달된 terminal width/height가 있으면 console/buffer line을 밀지 않는 overlay로 배치하고, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
 - floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action label(`다시 시도: r 또는 enter`, `다음 단계: enter`, `다음 튜토리얼: enter`, `다음 runbook: enter`, `다음 출격: enter`, `출격 완료`, `플레이리스트 완료`)이 잘리지 않아야 한다. 성공 floating modal은 내부 성공 상태명 `STEP SEALED`를 별도 heading으로 중복 표시하지 않는다.
-- `actions`는 내부 QA DTO이며 progress 저장 포맷에 반영하지 않는다. E2E는 `action.id`(`retry`, `next`, `next_tutorial`, `next_runbook`, `next_dispatch`, `dispatch_complete`, `playlist_complete`, `quit`)로 의미를 검증하고, 화면은 `action.label`을 표시한다.
+- `actions`는 내부 QA DTO이며 progress 저장 포맷에 반영하지 않는다. E2E는 `action.id`(`hint`, `retry`, `next`, `next_tutorial`, `next_runbook`, `next_dispatch`, `dispatch_complete`, `playlist_complete`, `quit`)로 의미를 검증하고, 화면은 `action.label`을 표시한다.
 - `복구 현황`은 terminal size가 있는 화면에서 별도 큰 pre-console section이 아니라 `MISSION` HUD 내부의 보조 line으로 표시한다.
 - running HUD의 review/daily line은 상세 문구를 그대로 노출하지 않고 tutorial에서는 `복구 메모: 재점검 N건 · 다음: <title>`, incident에서는 `복구 현황: 재점검 N건 · 잔류: <title>`로 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
@@ -192,5 +193,5 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - modal body의 기록, 힌트, review motivation은 `다음 행동`/`보조 행동` action footer와 섞이지 않아야 한다.
 - failed/succeeded 상태는 Vim mode-specific cue보다 우선하며, `ui.focus_panel.actions`는 retry/next/quit 의미를 유지해야 한다.
 - running 상태의 hint/quit affordance는 현재 목표/판단 cue보다 낮은 위계의 utility action으로 보여야 한다.
-- running utility action을 app_state로 검증해야 한다면 `hint`와 `quit` 같은 action id를 사용하되, progress 저장 포맷에는 반영하지 않는다.
+- running utility action은 `ui.focus_panel.actions`의 `hint`와 `quit` action id로 검증하며, progress 저장 포맷에는 반영하지 않는다.
 - hint revealed 상태는 hint 내용과 `?` 호출 action을 구분해야 한다. Hint 사용이 grade에 영향을 줄 수 있으면 짧은 비용 affordance를 표시할 수 있다.

@@ -89,8 +89,8 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 
 상태별 규칙:
 
-- running tutorial: `MISSION` HUD cue에 command memory, 필요한 경우 훈련 키, hint, quit. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
-- running incident: `MISSION` HUD cue에 판단 cue, hint, quit. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
+- running tutorial: `MISSION` HUD cue에 command memory, 필요한 경우 훈련 키를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 분리한다. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
+- running incident: `MISSION` HUD cue에 판단 cue를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 분리한다. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - insert/search/command/visual mode cue는 한국어 action label로 표현하고, 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed: floating modal에 실패 이유, 남은 입력, attempts, recovery hint, primary retry action footer

@@ -55,9 +55,10 @@ func TestRenderScreenIncludesFocusPanelBeforeConsole(t *testing.T) {
 		CursorCol:     1,
 		ExerciseTotal: 4,
 		FocusPanel: &FocusPanel{
-			Kind:  "training",
-			Title: "TRAINING BRIEF",
-			Lines: []string{"Coach: 훈련 키 l", "힌트: ?  종료: q"},
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Lines:   []string{"Coach: 훈련 키 l"},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
@@ -82,9 +83,9 @@ func TestRenderCentersFocusPanelWhenWidthIsKnown(t *testing.T) {
 		Mode:        "normal",
 		Status:      "running",
 		FocusPanel: &FocusPanel{
-			Kind:  "training",
-			Title: "TRAINING BRIEF",
-			Lines: []string{"힌트: ?  종료: q"},
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
@@ -108,9 +109,9 @@ func TestRenderShrinksFocusPanelForNarrowWidth(t *testing.T) {
 		Mode:        "normal",
 		Status:      "running",
 		FocusPanel: &FocusPanel{
-			Kind:  "training",
-			Title: "TRAINING BRIEF",
-			Lines: []string{"힌트: ?  종료: q"},
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
@@ -271,9 +272,10 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 		Status:           "running",
 		ExerciseTotal:    7,
 		FocusPanel: &FocusPanel{
-			Kind:  "training",
-			Title: "TRAINING BRIEF",
-			Lines: []string{"Coach: 훈련 키 w", "힌트: ?  종료: q"},
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Lines:   []string{"Coach: 훈련 키 w"},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
@@ -308,6 +310,33 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	}
 	if !strings.Contains(view, "ADVIMTURE | Tutorial | Tutorial 2 | Exercise: 1/7 | Status: running") {
 		t.Fatalf("Render output = %q, want tutorial track in header", view)
+	}
+}
+
+func TestRenderHUDShowsRunningActionsAsUtilityCue(t *testing.T) {
+	view := Render(Screen{
+		Width:       80,
+		Height:      24,
+		Title:       "커서 위치 맞추기",
+		Message:     "목표까지 이동하세요.",
+		BufferLines: []string{"abc"},
+		Mode:        "normal",
+		Status:      "running",
+		FocusPanel: &FocusPanel{
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Lines:   []string{"Inputs left: 2/2", "기억할 명령: l"},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
+		},
+	})
+
+	for _, want := range []string{"TRAINING BRIEF", "기억할 명령: l", "보조 행동  힌트: ? · 종료: q"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+	if strings.Contains(view, "기억할 명령: l · 힌트: ?") {
+		t.Fatalf("Render output = %q, should not mix utility actions with command memory", view)
 	}
 }
 
@@ -350,9 +379,10 @@ func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
 		Mode:             "normal",
 		Status:           "running",
 		FocusPanel: &FocusPanel{
-			Kind:  "incident",
-			Title: "OPERATOR JUDGMENT",
-			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "힌트: ?  종료: q"},
+			Kind:    "incident",
+			Title:   "OPERATOR JUDGMENT",
+			Lines:   []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
@@ -386,12 +416,12 @@ func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
 				"Inputs left: 9/9",
 				"참고 명령: /",
 				"Hint: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.",
-				"힌트: ?  종료: q",
 			},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
-	for _, want := range []string{"OPERATOR JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "힌트: ?  종료: q"} {
+	for _, want := range []string{"OPERATOR JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "보조 행동  힌트: ? · 종료: q"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want wrapped cue to preserve %q", view, want)
 		}
@@ -419,9 +449,10 @@ func TestRenderHUDWrapsLongBriefingBeforeConsole(t *testing.T) {
 		Mode:             "normal",
 		Status:           "running",
 		FocusPanel: &FocusPanel{
-			Kind:  "incident",
-			Title: "OPERATOR JUDGMENT",
-			Lines: []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "힌트: ?  종료: q"},
+			Kind:    "incident",
+			Title:   "OPERATOR JUDGMENT",
+			Lines:   []string{"판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 
@@ -672,9 +703,9 @@ func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 		Status:        "running",
 		ExerciseTotal: 4,
 		FocusPanel: &FocusPanel{
-			Kind:  "training",
-			Title: "TRAINING BRIEF",
-			Lines: []string{"힌트: ?  종료: q"},
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
 		},
 	})
 

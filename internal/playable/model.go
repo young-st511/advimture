@@ -711,7 +711,6 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		if m.hintMessage != "" {
 			lines = append(lines, "Hint: "+m.hintMessage)
 		}
-		lines = append(lines, "힌트: ?  종료: q")
 	}
 	return lines
 }
@@ -728,7 +727,14 @@ func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel
 	case state.Status == exerciseruntime.StatusFailed:
 		return failureActions()
 	default:
-		return nil
+		return runningActions()
+	}
+}
+
+func runningActions() []playableview.ActionLine {
+	return []playableview.ActionLine{
+		focusAction("hint", "힌트: ?"),
+		focusAction("quit", "종료: q"),
 	}
 }
 

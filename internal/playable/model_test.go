@@ -10,6 +10,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/young-st511/advimture/internal/content"
+	"github.com/young-st511/advimture/internal/e2estate"
 	"github.com/young-st511/advimture/internal/progress"
 	"github.com/young-st511/advimture/internal/review"
 	"github.com/young-st511/advimture/internal/scoring"
@@ -59,6 +60,12 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	}
 	if containsLineWith(model.State().UI.FocusPanel.Lines, "Coach: 훈련 키 l") {
 		t.Fatalf("focus panel lines = %v, should not duplicate command memory with coach key", model.State().UI.FocusPanel.Lines)
+	}
+	if containsLineWith(model.State().UI.FocusPanel.Lines, "힌트: ?") {
+		t.Fatalf("focus panel lines = %v, should keep hint prompt in actions", model.State().UI.FocusPanel.Lines)
+	}
+	if got, want := focusActionIDs(model.State().UI.FocusPanel.Actions), []string{"hint", "quit"}; !sameStrings(got, want) {
+		t.Fatalf("focus panel actions = %v, want %v", got, want)
 	}
 }
 
@@ -211,6 +218,26 @@ func containsLineWith(lines []string, want string) bool {
 		}
 	}
 	return false
+}
+
+func focusActionIDs(actions []e2estate.ActionLine) []string {
+	out := make([]string, 0, len(actions))
+	for _, action := range actions {
+		out = append(out, action.ID)
+	}
+	return out
+}
+
+func sameStrings(left []string, right []string) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for i := range left {
+		if left[i] != right[i] {
+			return false
+		}
+	}
+	return true
 }
 
 func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
@@ -712,6 +739,9 @@ func TestPlayableShowsRequestedHintInActionPanel(t *testing.T) {
 	if !containsLineWith(model.State().UI.FocusPanel.Lines, "Hint: 오른쪽으로 한 칸 더 이동해야 합니다.") {
 		t.Fatalf("view = %q, want requested hint", model.View())
 	}
+	if got, want := focusActionIDs(model.State().UI.FocusPanel.Actions), []string{"hint", "quit"}; !sameStrings(got, want) {
+		t.Fatalf("focus panel actions = %v, want %v", got, want)
+	}
 	if model.State().Progress.Completed {
 		t.Fatal("progress completed = true, want false")
 	}
@@ -733,6 +763,9 @@ func TestPlayableShowsIncidentHintWithoutTrainingKeySpoiler(t *testing.T) {
 	}
 	if strings.Contains(model.View(), "Coach: 훈련 키") {
 		t.Fatalf("view = %q, should not reveal training key spoiler", model.View())
+	}
+	if got, want := focusActionIDs(model.State().UI.FocusPanel.Actions), []string{"hint", "quit"}; !sameStrings(got, want) {
+		t.Fatalf("focus panel actions = %v, want %v", got, want)
 	}
 }
 

@@ -19,7 +19,8 @@ assert:
     - "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
     - "Tutorial 0: 커서 감각 회상"
     - "Exercise: 1/4"
-    - "Grade: S"
+    - "이번 복구: grade S"
+    - "다음 행동  다음 단계: enter"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

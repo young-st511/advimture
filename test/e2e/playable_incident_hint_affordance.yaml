@@ -20,6 +20,7 @@ assert:
     - "원인 신호를"
     - "잡습니다."
     - "참고 명령: /"
+    - "보조 행동  힌트: ? · 종료: q"
   exit_code: 0
   progress_file_exists: true
   key_trace:
@@ -35,6 +36,11 @@ assert:
       focus_panel:
         kind: "incident"
         title: "OPERATOR JUDGMENT"
+        actions:
+          - id: "hint"
+            label: "힌트: ?"
+          - id: "quit"
+            label: "종료: q"
     contains:
       command_memory: "참고 명령: /"
 evidence:

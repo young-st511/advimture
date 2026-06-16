@@ -37,7 +37,7 @@ assert:
     - "터미널에서 당황했을 때 첫 수습은 esc"
     - "Tutorial 1: Vim 생존 키트"
     - "Exercise: 1/3"
-    - "Grade: S"
+    - "이번 복구: grade S"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

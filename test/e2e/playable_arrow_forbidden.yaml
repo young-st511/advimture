@@ -9,14 +9,13 @@ setup:
 steps:
   - wait_screen_contains: "터미널 지도에서 목표 문자까지 커서를 이동하세요."
   - send: "right"
-  - wait_screen_contains: "Grade: F"
+  - wait_screen_contains: "RECOVERY REQUIRED"
   - send: "q"
 assert:
   screen_contains:
     - "RECOVERY REQUIRED"
-    - "Grade: F"
     - "Inputs left: 1/2"
-    - "다시 시도: r 또는 enter"
+    - "다음 행동  다시 시도: r 또는 enter"
   exit_code: 0
   progress_file_exists: false
   key_trace:
