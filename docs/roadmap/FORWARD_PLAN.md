@@ -23,7 +23,7 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 rel
 - Content: tutorial coverage와 incident 001~008이 있음
 - E2E: long route final/timeline evidence까지 보강됨
 - UI/UX: Mission HUD, Runbook Console, viewport overlay modal, action footer, running hint/quit action, final-frame evidence가 있음
-- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline, modal/action hierarchy hardening은 한 차례 닫혔다. 다음 병목은 Homebrew tag가 아니라 fresh evidence 기반의 다음 content/UX 후보 선택이다.
+- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline, modal/action hierarchy hardening, Homebrew `v0.2.0` 배포는 한 차례 닫혔다. 다음 병목은 fresh evidence 기반의 다음 content/UX 후보 선택이다.
 
 `FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001` 이후 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> UI-MODAL-ACTION-HIERARCHY-001`까지 완료했다. 이제 다음 순서는 **fresh evidence를 보고 기존 engine 기반 applied content breadth를 우선 검토하고, UI 정보 밀도 문제가 다시 드러날 때만 UI rail/style slice를 연다**로 간다.
 

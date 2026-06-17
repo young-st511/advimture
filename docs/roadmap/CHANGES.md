@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-17 — v0.2.0 배포 완료
+
+이전 가정: `RELEASE-BREW-001`은 Homebrew tap release 자동화 준비 상태였고, 사용자가 release 재개를 명시하기 전까지 paused였다.
+
+새 가정: `v0.2.0`은 공개 배포됐다. `VERSION=0.2.0`, release commit `cd95c8d`, git tag `v0.2.0`, GitHub Release, Homebrew tap stable formula 갱신이 완료됐다.
+
+이유: 사용자가 `0.2.0 배포`를 명시했고, `scripts/release.sh minor`가 `make release-check`, release commit/tag push를 완료했다. GitHub Actions Release run `27656189915`도 성공했다.
+
+영향: `RELEASE-BREW-001`은 completed로 이동한다. 다음 작업은 release packaging이 아니라 fresh evidence 기반의 다음 content/UX 후보 선택이다.
+
 ## 2026-06-17 — Modal/action hierarchy hardening 완료
 
 이전 가정: 실패/성공 modal과 action affordance는 출시 가능한 수준 기준의 P1 release-blocker였고, release/tag/push 작업은 hardening 완료 전까지 보류했다.

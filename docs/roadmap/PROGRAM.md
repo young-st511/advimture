@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`도 완료됐다. 바로 출시 후보를 포장하지 않는다는 방향은 유지한다.
+현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`도 완료됐다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
@@ -28,6 +28,8 @@ Completed Midterm Polish:
 - `docs/exec-plans/completed/success-statusline-cleanup-001.md`
 Completed UX Hardening:
 - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
+Completed Release:
+- `docs/exec-plans/completed/release-brew-001-homebrew-tap.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
 Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
@@ -171,10 +173,10 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ### RELEASE-BREW-001. Homebrew Tap Release
 
-- 상태: paused
+- 상태: completed
 - 목표: Homebrew tap release 자동화를 마무리한다.
-- 보류 이유: 사용자는 바로 출시가 아니라 출시 가능한 수준의 개발을 원한다.
-- 재개 조건: 사용자가 release 작업 재개를 명시적으로 원할 때.
+- 완료: `v0.2.0` tag push가 GitHub Release와 Homebrew tap formula 갱신을 완료했다.
+- ExecPlan: `docs/exec-plans/completed/release-brew-001-homebrew-tap.md`
 
 ### RELEASE-CANDIDATE-001. Release Candidate Prep
 
@@ -184,6 +186,13 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### RELEASE-BREW-001. Homebrew Tap Release
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/release-brew-001-homebrew-tap.md`
+- 완료일: 2026-06-17
+- 결론: `VERSION=0.2.0`, release commit `cd95c8d`, tag `v0.2.0`을 push했다. GitHub Release와 Homebrew tap formula 갱신 workflow가 성공했다.
 
 ### UI-MODAL-ACTION-HIERARCHY-001. Modal Action Hierarchy Hardening
 
