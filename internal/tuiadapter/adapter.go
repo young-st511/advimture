@@ -2,6 +2,7 @@ package tuiadapter
 
 import (
 	"strings"
+	"unicode"
 
 	"github.com/young-st511/advimture/internal/scenario"
 	"github.com/young-st511/advimture/internal/vimengine"
@@ -20,6 +21,7 @@ const (
 type Action struct {
 	Type ActionType
 	Key  string
+	Keys []string
 }
 
 type ViewModel struct {
@@ -74,8 +76,14 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		if normalized == "space" {
 			return Action{Type: ActionKey, Key: " "}
 		}
+		if normalized == "enter" {
+			return Action{Type: ActionIgnored}
+		}
 		if len([]rune(input)) == 1 {
 			return Action{Type: ActionKey, Key: input}
+		}
+		if action, ok := keySequenceFromText(input); ok {
+			return action
 		}
 		return Action{Type: ActionIgnored}
 	}
@@ -108,6 +116,9 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 			if len([]rune(input)) == 1 {
 				return Action{Type: ActionKey, Key: input}
 			}
+			if action, ok := keySequenceFromText(input); ok {
+				return action
+			}
 			return Action{Type: ActionIgnored}
 		}
 	}
@@ -122,6 +133,13 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		default:
 			if len([]rune(trimmed)) == 1 {
 				return Action{Type: ActionKey, Key: trimmed}
+			}
+			text := input
+			if strings.HasPrefix(text, vimengine.KeyColon) {
+				text = strings.TrimPrefix(text, vimengine.KeyColon)
+			}
+			if action, ok := keySequenceFromText(text); ok {
+				return action
 			}
 			return Action{Type: ActionIgnored}
 		}
@@ -214,8 +232,35 @@ func MapInputForMode(input string, mode vimengine.Mode) Action {
 		if len([]rune(trimmed)) == 1 {
 			return Action{Type: ActionKey, Key: trimmed}
 		}
+		if strings.HasPrefix(trimmed, vimengine.KeyColon) || strings.HasPrefix(trimmed, vimengine.KeySlash) {
+			if action, ok := keySequenceFromText(trimmed); ok {
+				return action
+			}
+		}
 		return Action{Type: ActionIgnored}
 	}
+}
+
+func keySequenceFromText(input string) (Action, bool) {
+	keys := make([]string, 0, len(input))
+	for _, r := range input {
+		switch r {
+		case '\r', '\n':
+			keys = append(keys, vimengine.KeyEnter)
+		default:
+			if unicode.IsControl(r) {
+				return Action{}, false
+			}
+			keys = append(keys, string(r))
+		}
+	}
+	if len(keys) == 0 {
+		return Action{}, false
+	}
+	if len(keys) == 1 {
+		return Action{Type: ActionKey, Key: keys[0]}, true
+	}
+	return Action{Type: ActionKey, Key: keys[0], Keys: keys}, true
 }
 
 func RenderState(state scenario.State) ViewModel {

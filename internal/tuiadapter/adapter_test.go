@@ -181,6 +181,24 @@ func TestMapInputInCommandModePassesSubstituteCharacters(t *testing.T) {
 	}
 }
 
+func TestMapInputInCommandModePreservesPastedCommandText(t *testing.T) {
+	action := MapInputForMode("%s/TODO/DONE/g", vimengine.ModeCommand)
+
+	if action.Type != ActionKey {
+		t.Fatalf("action = %+v, want key action", action)
+	}
+	assertActionKeys(t, action, []string{"%", "s", "/", "T", "O", "D", "O", "/", "D", "O", "N", "E", "/", "g"})
+}
+
+func TestMapInputInNormalModePreservesPastedExCommandText(t *testing.T) {
+	action := MapInput(":%s/TODO/DONE/g")
+
+	if action.Type != ActionKey {
+		t.Fatalf("action = %+v, want key action", action)
+	}
+	assertActionKeys(t, action, []string{":", "%", "s", "/", "T", "O", "D", "O", "/", "D", "O", "N", "E", "/", "g"})
+}
+
 func TestMapInputInSearchModePassesSearchCharacters(t *testing.T) {
 	for _, input := range []string{"t", "E", "/", "=", " "} {
 		action := MapInputForMode(input, vimengine.ModeSearch)
@@ -338,5 +356,17 @@ func TestRenderStateCopiesSlices(t *testing.T) {
 	}
 	if view.KeyTrace[0] != vimengine.KeyL {
 		t.Fatalf("KeyTrace[0] = %q, want %q", view.KeyTrace[0], vimengine.KeyL)
+	}
+}
+
+func assertActionKeys(t *testing.T, action Action, want []string) {
+	t.Helper()
+	if len(action.Keys) != len(want) {
+		t.Fatalf("action.Keys = %v, want %v", action.Keys, want)
+	}
+	for i, wantKey := range want {
+		if action.Keys[i] != wantKey {
+			t.Fatalf("action.Keys = %v, want %v", action.Keys, want)
+		}
 	}
 }

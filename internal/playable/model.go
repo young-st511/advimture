@@ -118,17 +118,23 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		switch action.Type {
 		case tuiadapter.ActionKey:
-			if m.run.State().Status == exerciseruntime.StatusFailed && (action.Key == vimengine.KeyEnter || action.Key == vimengine.KeyR) {
-				m.retryCurrent()
-				break
+			for _, key := range actionKeySequence(action) {
+				status := m.run.State().Status
+				if status == exerciseruntime.StatusFailed && (key == vimengine.KeyEnter || key == vimengine.KeyR) {
+					m.retryCurrent()
+					continue
+				}
+				if status == exerciseruntime.StatusSucceeded && key == vimengine.KeyEnter {
+					m.advanceAfterSuccess()
+					continue
+				}
+				if status != exerciseruntime.StatusRunning {
+					break
+				}
+				m.hintMessage = ""
+				m.run.ApplyKey(key)
+				m.applyProgressIfSucceeded()
 			}
-			if m.run.State().Status == exerciseruntime.StatusSucceeded && action.Key == vimengine.KeyEnter {
-				m.advanceAfterSuccess()
-				break
-			}
-			m.hintMessage = ""
-			m.run.ApplyKey(action.Key)
-			m.applyProgressIfSucceeded()
 		case tuiadapter.ActionHint:
 			if hint, ok := m.run.RequestHint(); ok {
 				m.hintMessage = hint
@@ -147,6 +153,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	_ = m.writeE2EState()
 	return m, nil
+}
+
+func actionKeySequence(action tuiadapter.Action) []string {
+	if len(action.Keys) > 0 {
+		return action.Keys
+	}
+	if action.Key == "" {
+		return nil
+	}
+	return []string{action.Key}
 }
 
 func (m Model) View() string {

@@ -910,6 +910,27 @@ func TestPlayableHidesLastCommandAfterSuccess(t *testing.T) {
 	}
 }
 
+func TestPlayableAcceptsPastedWholeFileSubstituteCommand(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "vim-ex-command-substitute-002"),
+	})
+
+	model, _ = updateWithKey(t, model, ":%s/TODO/DONE/g")
+	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
+
+	state := model.State()
+	if state.Status != "succeeded" {
+		t.Fatalf("status = %q, want succeeded; view = %q", state.Status, model.View())
+	}
+	if !sameStrings(state.Buffer, []string{"DONE api", "DONE worker"}) {
+		t.Fatalf("buffer = %v, want DONE lines", state.Buffer)
+	}
+	if state.Command != ":%s/TODO/DONE/g" {
+		t.Fatalf("state command = %q, want pasted substitute command evidence", state.Command)
+	}
+}
+
 func TestPlayableShowsVisualHelpInsteadOfGenericHintQuit(t *testing.T) {
 	model := New(Options{ContentRoot: contentRootForTest()})
 
