@@ -6,9 +6,9 @@ Last reviewed: 2026-06-20
 
 ## 판단
 
-`UI-MODAL-ACTION-HIERARCHY-001`은 완료됐고, `v0.2.0`도 배포됐다. 다만 배포 후 동일 기준으로 UX 재검토한 결과 modal placement, running hint/quit utility wrapping, 한글 final-frame evidence, action language/evidence metadata의 follow-up이 확인되어 `UI-MODAL-ACTION-HIERARCHY-002`를 active로 연다.
+`UI-MODAL-ACTION-HIERARCHY-001`은 완료됐고, `v0.2.0`도 배포됐다. 배포 후 동일 기준으로 UX 재검토한 결과 확인된 modal placement, running hint/quit utility wrapping, 한글 final-frame evidence, action language/evidence metadata follow-up은 `UI-MODAL-ACTION-HIERARCHY-002`로 닫았다.
 
-현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 사용자 스크린샷과 SubAgent 감사로 확인된 modal/action hierarchy P1 blocker는 1차로 닫혔지만, 실제 final viewport에서 더 엄격한 decision focus와 evidence readability를 요구한다.
+현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 사용자 스크린샷과 SubAgent 감사로 확인된 modal/action hierarchy P1 blocker와 post-release follow-up은 현재 닫힌 상태다.
 
 ## P0
 
@@ -24,10 +24,10 @@ P0로 승격하는 조건:
 
 ### UI-MODAL-ACTION-HIERARCHY-002 — Modal/Hint Post-release Hardening
 
-- 상태: active
+- 상태: completed
 - 왜 중요한가: `001` 이후에도 modal이 buffer/status 뒤에 붙은 블록처럼 읽히는 final viewport가 있고, hint utility action과 한글 evidence reconstruction도 사람이 보는 품질 기준에서 blind spot이 남았다.
-- 언제 닫을 것인가: 80x24 success/failure/hint evidence가 modal placement, action footer, hint utility line, 한글 readability를 모두 검증할 때.
-- 어떻게 검증할 것인가: `go test ./internal/playableview ./internal/playable ./cmd/e2e-runner`, focused E2E, `go test ./...`, `make e2e-playable`, `git diff --check`.
+- 완료 내용: 80x24 success/failure/hint evidence가 modal placement, action footer, hint utility line, 한글 readability를 검증한다.
+- 검증: `go test ./...`, `make e2e-playable`, `git diff --check`.
 
 ### UI-RAIL-001 — Wide Layout Side Rail
 
@@ -84,7 +84,7 @@ P0로 승격하는 조건:
 
 ## Content Breadth Readiness
 
-다음 content breadth slice는 `UI-MODAL-ACTION-HIERARCHY-002` 완료 후 진행 가능하다.
+다음 content breadth slice는 진행 가능하다.
 
 - HUD/help/choice/success polish가 full E2E를 통과했다.
 - progress 저장 포맷 변경이 필요하지 않다.
@@ -100,6 +100,7 @@ P0로 승격하는 조건:
 ## Completed / Retired
 
 - `UI-MODAL-ACTION-HIERARCHY-001 — Modal Decision Surface`: failed/succeeded modal을 viewport overlay decision surface로 재배치하고, primary/secondary action footer, running hint/quit action, hint cost copy, incident progressive briefing, final-frame E2E evidence를 보강했다.
+- `UI-MODAL-ACTION-HIERARCHY-002 — Modal/Hint Post-release Hardening`: modal을 console surface 위 decision layer로 고정하고, running hint utility action 분리, 한글 final-frame evidence, `다음 런북` action label, summary evidence metadata를 보강했다.
 - `UI-EVIDENCE-003 — Final Frame Evidence`: `UI-EVIDENCE-002`에서 runner의 `screen_final.txt` 저장을 구현했고, `E2E-EVIDENCE-008`에서 long incident route가 final/timeline evidence를 남기도록 고정했다.
 - `UI-COMMAND-MEMORY-001 — Learned Command Memory`: `UI-POLISH-002`에서 tutorial/hint/failure command memory cue를 구현했다.
 - `UI-ACTION-LANGUAGE-001 — Action Line Language Contract`: `UI-CONSOLE-POLISH-001`에서 screen label과 action id를 분리했다.

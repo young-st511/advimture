@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-20 — Modal/hint post-release hardening 완료
+
+이전 가정: `UI-MODAL-ACTION-HIERARCHY-002`는 v0.2.0 배포 후 확인된 modal placement, running hint/quit utility action wrapping, 한글 final-frame evidence, action language/evidence metadata follow-up을 닫기 위한 active slice였다.
+
+새 가정: `UI-MODAL-ACTION-HIERARCHY-002`는 완료됐다. failed/succeeded modal은 `RUNBOOK CONSOLE` 직후 console surface 위 decision layer로 올라오고, running hint utility action은 hint body와 물리적으로 분리되며, `screen_final.txt`는 한글 wide-width continuation cell을 사람이 읽는 공백으로 남기지 않는다. `next_runbook` user-facing label은 `다음 런북: enter`이고, summary evidence는 raw capture 여부와 artifact 저장 여부를 구분한다.
+
+이유: `go test ./...`, `make e2e-playable`, `git diff --check`가 통과했고, 80x24 success/failure/hint final viewport evidence가 새 계약을 검증한다.
+
+영향: `UI-MODAL-ACTION-HIERARCHY-002`는 completed로 이동한다. 다음은 release candidate 포장이 아니라 fresh evidence로 다음 content/UX 후보를 고르는 `NEXT-DIRECTION-CHECKPOINT`다.
+
 ## 2026-06-20 — Modal/hint post-release hardening 시작
 
 이전 가정: `v0.2.0` 배포 후 다음 병목은 fresh evidence로 content/UX 후보를 고르는 `NEXT-DIRECTION-CHECKPOINT`였다.
