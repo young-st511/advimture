@@ -1195,19 +1195,29 @@ type terminalGrid struct {
 	height int
 	row    int
 	col    int
-	cells  [][]string
+	cells  [][]terminalCell
+}
+
+type terminalCell struct {
+	text           string
+	continuingWide bool
 }
 
 func newTerminalGrid(width int, height int) *terminalGrid {
 	grid := &terminalGrid{width: width, height: height}
-	grid.cells = make([][]string, height)
+	grid.cells = make([][]terminalCell, height)
 	for row := range grid.cells {
-		grid.cells[row] = make([]string, width)
-		for col := range grid.cells[row] {
-			grid.cells[row][col] = " "
-		}
+		grid.cells[row] = newTerminalRow(width)
 	}
 	return grid
+}
+
+func newTerminalRow(width int) []terminalCell {
+	row := make([]terminalCell, width)
+	for col := range row {
+		row[col] = terminalCell{text: " "}
+	}
+	return row
 }
 
 func (g *terminalGrid) writeRune(r rune) {
@@ -1235,9 +1245,9 @@ func (g *terminalGrid) writeRune(r rune) {
 		return
 	}
 	g.prepareWrite(cellWidth)
-	g.cells[g.row][g.col] = string(r)
+	g.cells[g.row][g.col] = terminalCell{text: string(r)}
 	if cellWidth == 2 && g.col+1 < g.width {
-		g.cells[g.row][g.col+1] = ""
+		g.cells[g.row][g.col+1] = terminalCell{text: " ", continuingWide: true}
 	}
 	g.col += cellWidth
 	if g.col > g.width {
@@ -1246,11 +1256,9 @@ func (g *terminalGrid) writeRune(r rune) {
 }
 
 func (g *terminalGrid) prepareWrite(cellWidth int) {
-	if g.cells[g.row][g.col] == "" && g.col > 0 {
-		g.cells[g.row][g.col-1] = " "
-	}
-	if cellWidth == 1 && g.col+1 < g.width && g.cells[g.row][g.col+1] == "" {
-		g.cells[g.row][g.col+1] = " "
+	g.clearCell(g.row, g.col)
+	if cellWidth == 2 && g.col+1 < g.width {
+		g.clearCell(g.row, g.col+1)
 	}
 }
 
@@ -1258,10 +1266,7 @@ func (g *terminalGrid) newline() {
 	g.row++
 	if g.row >= g.height {
 		copy(g.cells[0:], g.cells[1:])
-		g.cells[g.height-1] = make([]string, g.width)
-		for col := range g.cells[g.height-1] {
-			g.cells[g.height-1][col] = " "
-		}
+		g.cells[g.height-1] = newTerminalRow(g.width)
 		g.row = g.height - 1
 	}
 }
@@ -1343,12 +1348,12 @@ func (g *terminalGrid) clearCell(row int, col int) {
 	if row < 0 || row >= g.height || col < 0 || col >= g.width {
 		return
 	}
-	if g.cells[row][col] == "" && col > 0 {
-		g.cells[row][col-1] = " "
+	if g.cells[row][col].continuingWide && col > 0 {
+		g.cells[row][col-1] = terminalCell{text: " "}
 	}
-	g.cells[row][col] = " "
-	if col+1 < g.width && g.cells[row][col+1] == "" {
-		g.cells[row][col+1] = " "
+	g.cells[row][col] = terminalCell{text: " "}
+	if col+1 < g.width && g.cells[row][col+1].continuingWide {
+		g.cells[row][col+1] = terminalCell{text: " "}
 	}
 }
 
@@ -1357,7 +1362,10 @@ func (g *terminalGrid) String() string {
 	for row, cells := range g.cells {
 		var b strings.Builder
 		for _, cell := range cells {
-			b.WriteString(cell)
+			if cell.continuingWide {
+				continue
+			}
+			b.WriteString(cell.text)
 		}
 		lines[row] = strings.TrimRight(b.String(), " ")
 	}

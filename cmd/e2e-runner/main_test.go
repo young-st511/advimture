@@ -170,6 +170,31 @@ func TestTerminalGridOverwritesWideRuneCleanly(t *testing.T) {
 	}
 }
 
+func TestRenderTerminalViewportKeepsWideRunesReadableAfterClearLine(t *testing.T) {
+	raw := []byte(
+		"힌트 내용 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를\x1b[K\r\n" +
+			"잡습니다. · 등급에 영향\x1b[K\r\n" +
+			"보조 행동  힌트: ? · 종료: q\x1b[K\r\n",
+	)
+
+	final := renderTerminalViewport(raw, 80, 5)
+
+	for _, want := range []string{
+		"힌트 내용 복구 작전에서는",
+		"잡습니다. · 등급에 영향",
+		"보조 행동  힌트: ? · 종료: q",
+	} {
+		if !strings.Contains(final, want) {
+			t.Fatalf("renderTerminalViewport = %q, want %q", final, want)
+		}
+	}
+	for _, unwanted := range []string{"힌트 내 용", "복 구", "종료 : q"} {
+		if strings.Contains(final, unwanted) {
+			t.Fatalf("renderTerminalViewport = %q, should not contain %q", final, unwanted)
+		}
+	}
+}
+
 func TestAssertScenarioChecksFinalScreenAssertions(t *testing.T) {
 	maxLines := 2
 	sc := scenario{
