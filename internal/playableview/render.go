@@ -535,13 +535,10 @@ func overlayFloatingModal(base string, panel FocusPanel, screenWidth int, screen
 	return strings.Join(lines, "\n")
 }
 
-func floatingModalTop(lines []string, modalHeight int, screenHeight int, bufferLineCount int) int {
+func floatingModalTop(lines []string, modalHeight int, screenHeight int, _ int) int {
 	top := (screenHeight - modalHeight) / 2
 	if consoleIndex := lineIndexInLines(lines, "RUNBOOK CONSOLE"); consoleIndex >= 0 {
-		afterBuffer := consoleIndex + 1 + bufferLineCount
-		if afterBuffer > top {
-			top = afterBuffer
-		}
+		top = consoleIndex + 1
 	}
 	maxTop := screenHeight - modalHeight
 	if maxTop < 0 {

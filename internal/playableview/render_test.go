@@ -201,8 +201,14 @@ func TestRenderHUDFloatingModalUsesViewportDecisionLayer(t *testing.T) {
 	if lineIndex(base, "RUNBOOK CONSOLE") != lineIndex(view, "RUNBOOK CONSOLE") {
 		t.Fatalf("base = %q\nview = %q\nwant console line unchanged", base, view)
 	}
-	if lineIndex(base, "> [s]ervice") != lineIndex(view, "> [s]ervice") {
-		t.Fatalf("base = %q\nview = %q\nwant buffer line unchanged", base, view)
+	consoleLine := lineIndex(view, "RUNBOOK CONSOLE")
+	modalLine := lineIndex(view, "╭")
+	headingLine := lineIndex(view, "RECOVERY CHECK")
+	if modalLine != consoleLine+1 || headingLine != modalLine+1 {
+		t.Fatalf("Render output = %q, want modal to start on console surface after RUNBOOK CONSOLE", view)
+	}
+	if strings.Contains(view, "> [s]ervice") {
+		t.Fatalf("Render output = %q, should put buffer behind modal decision layer", view)
 	}
 	for _, unwanted := range []string{"NORMAL · failed", "Grade: F"} {
 		if strings.Contains(view, unwanted) {
@@ -216,7 +222,7 @@ func TestRenderHUDFloatingModalUsesViewportDecisionLayer(t *testing.T) {
 	}
 }
 
-func TestRenderHUDFloatingModalDoesNotCoverMultilineBuffer(t *testing.T) {
+func TestRenderHUDFloatingModalCoversMultilineBufferDecisionLayer(t *testing.T) {
 	view := Render(Screen{
 		Width:       100,
 		Height:      24,
@@ -243,15 +249,16 @@ func TestRenderHUDFloatingModalDoesNotCoverMultilineBuffer(t *testing.T) {
 	})
 
 	bufferLines := []string{"  route ok", "> [q]uarantine temp", "  relay hold"}
-	for _, want := range bufferLines {
-		if !strings.Contains(view, want) {
-			t.Fatalf("Render output = %q, want buffer line %q preserved", view, want)
+	for _, unwanted := range bufferLines {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should put buffer line %q behind modal decision layer", view, unwanted)
 		}
 	}
-	modalIndex := lineIndex(view, "RECOVERY CHECK")
-	lastBufferIndex := lineIndex(view, "  relay hold")
-	if modalIndex <= lastBufferIndex {
-		t.Fatalf("Render output = %q, want modal after all buffer lines", view)
+	consoleIndex := lineIndex(view, "RUNBOOK CONSOLE")
+	modalIndex := lineIndex(view, "╭")
+	headingIndex := lineIndex(view, "RECOVERY CHECK")
+	if modalIndex != consoleIndex+1 || headingIndex != modalIndex+1 {
+		t.Fatalf("Render output = %q, want modal to start on console surface after RUNBOOK CONSOLE", view)
 	}
 }
 
@@ -499,7 +506,7 @@ func TestRenderHUDKeepsCompactRecoverySummaryInModePanel(t *testing.T) {
 	}
 }
 
-func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {
+func TestRenderHUDFailureModalAppearsOnConsoleSurface(t *testing.T) {
 	view := Render(Screen{
 		Width:       100,
 		Height:      30,
@@ -521,14 +528,17 @@ func TestRenderHUDFailureModalAppearsInsideConsoleAfterBuffer(t *testing.T) {
 		},
 	})
 
-	consoleIndex := strings.Index(view, "RUNBOOK CONSOLE")
-	bufferIndex := strings.Index(view, "> [s]ervice")
-	modalIndex := strings.Index(view, "RECOVERY CHECK")
-	if consoleIndex == -1 || bufferIndex == -1 || modalIndex == -1 {
-		t.Fatalf("Render output = %q, want console buffer and floating modal", view)
+	consoleIndex := lineIndex(view, "RUNBOOK CONSOLE")
+	modalIndex := lineIndex(view, "╭")
+	headingIndex := lineIndex(view, "RECOVERY CHECK")
+	if consoleIndex == -1 || modalIndex == -1 || headingIndex == -1 {
+		t.Fatalf("Render output = %q, want console and floating modal", view)
 	}
-	if !(consoleIndex < bufferIndex && bufferIndex < modalIndex) {
-		t.Fatalf("Render output = %q, want floating modal after buffer inside console core", view)
+	if modalIndex != consoleIndex+1 || headingIndex != modalIndex+1 {
+		t.Fatalf("Render output = %q, want floating modal on console surface", view)
+	}
+	if strings.Contains(view, "> [s]ervice") {
+		t.Fatalf("Render output = %q, should put buffer behind modal decision layer", view)
 	}
 	for _, want := range []string{"RECOVERY REQUIRED", "실수", "힌트", "훈련 키 w", "다음 행동  다시 시도: r 또는 enter"} {
 		if !strings.Contains(view, want) {
