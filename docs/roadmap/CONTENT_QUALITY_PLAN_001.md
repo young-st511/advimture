@@ -92,7 +92,7 @@ Updated: 2026-06-06
 
 완료 기준:
 
-- 첫 dispatch 진입 직전 success modal이 `다음 runbook`을 단순 다음 문제 이동이 아니라 첫 복구 작전 진입으로 읽히게 한다.
+- 첫 dispatch 진입 직전 success modal이 `다음 런북`을 단순 다음 문제 이동이 아니라 첫 복구 작전 진입으로 읽히게 한다.
 - Incident 001 첫 화면은 새 command 소개가 아니라 "배운 command 조합"이라는 태도를 유지한다.
 - 이 전환은 `playable_ftue_first_five_route`와 `playable_incident_001_full` evidence로 spot review한다.
 

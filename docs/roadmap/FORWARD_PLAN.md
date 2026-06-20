@@ -475,7 +475,7 @@ ExecPlan: `docs/exec-plans/completed/ui-console-polish-001-action-identity.md`
 완료 결과:
 
 - `FocusPanel.actions` internal DTO와 `app_state.ui.focus_panel.actions`를 추가했다.
-- 사용자 화면 label은 `다음 단계`, `다시 시도`, `다음 runbook`, `출격 완료` 같은 제품 톤을 사용한다.
+- 사용자 화면 label은 `다음 단계`, `다시 시도`, `다음 런북`, `출격 완료` 같은 제품 톤을 사용한다.
 - progress schema, content schema, dependency 변경은 없다.
 
 ### 6. RELEASE-CANDIDATE-001 — Release Candidate Prep

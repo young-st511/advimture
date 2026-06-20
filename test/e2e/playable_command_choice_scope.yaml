@@ -134,14 +134,14 @@ steps:
   - send: "p"
   - wait_ms: 50
   - send: "esc"
-  - wait_screen_contains: "다음 runbook: enter"
+  - wait_screen_contains: "다음 런북: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Runbook Dispatch"
     - "릴레이 기지 005: 복구 범위 판별"
     - "괄호 내부 인자 전체가 교체 단위"
-    - "다음 runbook: enter"
+    - "다음 런북: enter"
   exit_code: 0
   progress_file_exists: true
   progress_file_contains:

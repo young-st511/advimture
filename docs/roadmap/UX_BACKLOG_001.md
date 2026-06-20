@@ -72,7 +72,7 @@ P0로 승격하는 조건:
 
 - 상태: completed by `UI-CONSOLE-POLISH-001` on 2026-06-06.
 - 왜 중요했는가: success/failure modal의 action line은 한때 화면 표시와 E2E priority marker를 겸했다.
-- 완료 내용: 화면 표시 label은 `다시 시도`, `다음 단계`, `다음 runbook`, `출격 완료`처럼 제품 톤에 맞췄고, E2E는 `app_state.ui.focus_panel.actions[].id`로 action 의미를 검증한다.
+- 완료 내용: 화면 표시 label은 `다시 시도`, `다음 단계`, `다음 런북`, `출격 완료`처럼 제품 톤에 맞췄고, E2E는 `app_state.ui.focus_panel.actions[].id`로 action 의미를 검증한다.
 - 검증: `playable_viewport_success_modal_80x24`, `playable_viewport_failure_modal_80x24`, `playable_incident_hint_affordance`, `playable_command_mismatch_feedback`.
 
 ### UI-REVIEW-MOTIVATION-001 — Success Review Motivation Language

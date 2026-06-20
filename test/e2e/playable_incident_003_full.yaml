@@ -92,13 +92,13 @@ steps:
   - send: "g"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "다음 runbook: enter"
+  - wait_screen_contains: "다음 런북: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 003: 오염 구간 격리"
     - "Exercise: 5/5"
-    - "다음 runbook: enter"
+    - "다음 런북: enter"
     - ":%s로 남은 off 상태를 전체 범위에서 on으로 승격해 오염 구간 격리 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true

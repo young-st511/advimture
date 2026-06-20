@@ -715,8 +715,7 @@ func fitFocusPanelLines(rendered []string, maxHeight int, priorityLabels []strin
 
 func focusPanelPriorityLine(lines []string, priorityLabels []string) string {
 	markers := append([]string(nil), priorityLabels...)
-	markers = append(markers, "다시 시도:", "다음 단계:", "다음 튜토리얼:", "다음 runbook:", "다음 출격:", "플레이리스트 완료", "출격 완료", "종료: q")
-	markers = append(markers, "Retry:", "Next:", "Next tutorial:", "Next runbook:", "Next dispatch:", "Playlist complete", "Dispatch complete", "q: quit")
+	markers = append(markers, "다시 시도:", "다음 단계:", "다음 튜토리얼:", "다음 런북:", "다음 출격:", "플레이리스트 완료", "출격 완료", "종료: q")
 	for _, marker := range markers {
 		for i := len(lines) - 1; i >= 0; i-- {
 			line := lines[i]

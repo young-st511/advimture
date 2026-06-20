@@ -225,9 +225,11 @@ type summaryEvidence struct {
 	ScreenFinal        bool     `json:"screen_final_evidence"`
 	ProgressFileExists bool     `json:"progress_file_exists"`
 	ProgressEvidence   bool     `json:"progress_evidence"`
+	ProgressSaved      bool     `json:"progress_evidence_saved"`
 	AppStatePath       string   `json:"app_state_path,omitempty"`
 	AppStateExists     bool     `json:"app_state_exists"`
 	AppStateEvidence   bool     `json:"app_state_evidence"`
+	AppStateSaved      bool     `json:"app_state_evidence_saved"`
 }
 
 func main() {
@@ -734,9 +736,11 @@ func buildSummary(sc scenario, result runResult, runErr error) summaryEvidence {
 		ScreenFinal:        sc.Evidence.SaveScreenFinal,
 		ProgressFileExists: result.progressFileExists || progressFileExists(result.homeDir),
 		ProgressEvidence:   len(result.progressRaw) > 0,
+		ProgressSaved:      sc.Evidence.SaveProgress && len(result.progressRaw) > 0,
 		AppStatePath:       appStatePath(result.homeDir, sc.Assert.AppState.Path),
 		AppStateExists:     result.appStateExists || appStateExists(result.homeDir, sc.Assert.AppState.Path),
 		AppStateEvidence:   len(result.appStateRaw) > 0,
+		AppStateSaved:      sc.Evidence.SaveAppState && len(result.appStateRaw) > 0,
 	}
 	if runErr != nil {
 		summary.Error = runErr.Error()

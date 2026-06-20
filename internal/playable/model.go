@@ -438,7 +438,7 @@ func (m Model) successActions() []playableview.ActionLine {
 		case "tutorial":
 			return []playableview.ActionLine{focusAction("next_tutorial", "다음 튜토리얼: enter")}
 		case "incident":
-			return []playableview.ActionLine{focusAction("next_runbook", "다음 runbook: enter")}
+			return []playableview.ActionLine{focusAction("next_runbook", "다음 런북: enter")}
 		default:
 			return []playableview.ActionLine{focusAction("next_playlist", "다음 플레이리스트: enter")}
 		}

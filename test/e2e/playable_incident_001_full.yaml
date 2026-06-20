@@ -127,7 +127,7 @@ steps:
   - send: "/"
   - wait_ms: 30
   - send: "enter"
-  - wait_screen_contains: "다음 runbook: enter"
+  - wait_screen_contains: "다음 런북: enter"
   - send: "q"
 assert:
   screen_contains:
@@ -135,7 +135,7 @@ assert:
     - "릴레이 기지 001: 야간 핫픽스 복구"
     - "Exercise: 6/6"
     - "판단:"
-    - "다음 runbook: enter"
+    - "다음 런북: enter"
     - "range를 붙여 원인 기록은 남기고 문제 relay 구간만 ok로 정리했습니다. 첫 야간 핫픽스 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true

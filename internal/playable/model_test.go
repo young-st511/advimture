@@ -489,7 +489,7 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 					{PlaylistID: "incident-001", PlaylistCategory: "incident"},
 				},
 			},
-			want: []string{"다음 runbook: enter"},
+			want: []string{"다음 런북: enter"},
 		},
 		{
 			name: "final incident",

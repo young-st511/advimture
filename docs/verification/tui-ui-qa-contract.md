@@ -33,6 +33,7 @@ E2E runner는 기존 `summary.json`, `raw.log`, `screen.txt`, `key_trace.txt`에
 - `progress.json`: test HOME의 `.advimture/progress.json` 복사본
 - `screen_timeline.txt`: cleaned terminal text의 누적 흐름 evidence. UI 위계 변경 후 Agent가 최종 문구뿐 아니라 지나온 화면 흐름을 확인할 때 사용한다.
 - `screen_final.txt`: terminal size가 있는 scenario에서는 terminal cell grid 기준의 final app viewport evidence. fallback으로 마지막 `ADVIMTURE |` 또는 playable error frame 중심의 cleaned final screen을 사용한다. modal 위치/최종 안내/상태 줄을 빠르게 검토할 때 사용한다. double-width 문자 continuation cell은 사람이 읽는 문자열에 공백처럼 끼어들면 안 된다.
+- `summary.json`: `*_evidence`는 raw capture 가능 여부, `*_evidence_saved`는 실제 artifact file 저장 여부를 뜻한다.
 
 이 snapshot은 temp HOME이 삭제된 뒤에도 실패 원인을 확인하기 위한 evidence다.
 

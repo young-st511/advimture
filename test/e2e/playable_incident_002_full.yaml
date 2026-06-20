@@ -118,13 +118,13 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "."
-  - wait_screen_contains: "다음 runbook: enter"
+  - wait_screen_contains: "다음 런북: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 002: 구조 설정 재동기화"
     - "Exercise: 5/5"
-    - "다음 runbook: enter"
+    - "다음 런북: enter"
     - ".으로 같은 quote 교체를 반복해 구조 재동기화 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true

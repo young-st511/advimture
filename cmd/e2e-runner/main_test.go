@@ -746,6 +746,35 @@ func TestWriteEvidenceCopiesAppStateAndProgressSnapshots(t *testing.T) {
 			t.Fatalf("%s was not written: %v", name, err)
 		}
 	}
+	raw, err := os.ReadFile(filepath.Join(root, "snapshots", "summary.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var summary summaryEvidence
+	if err := json.Unmarshal(raw, &summary); err != nil {
+		t.Fatal(err)
+	}
+	if !summary.AppStateEvidence || !summary.AppStateSaved {
+		t.Fatalf("app state evidence flags = raw:%v saved:%v, want both true", summary.AppStateEvidence, summary.AppStateSaved)
+	}
+	if !summary.ProgressEvidence || !summary.ProgressSaved {
+		t.Fatalf("progress evidence flags = raw:%v saved:%v, want both true", summary.ProgressEvidence, summary.ProgressSaved)
+	}
+}
+
+func TestBuildSummarySeparatesRawEvidenceFromSavedArtifacts(t *testing.T) {
+	summary := buildSummary(scenario{ID: "raw-only"}, runResult{
+		homeDir:     t.TempDir(),
+		appStateRaw: []byte(`{"mode":"normal"}`),
+		progressRaw: []byte(`{"missions":{}}`),
+	}, nil)
+
+	if !summary.AppStateEvidence || summary.AppStateSaved {
+		t.Fatalf("app state evidence flags = raw:%v saved:%v, want raw true saved false", summary.AppStateEvidence, summary.AppStateSaved)
+	}
+	if !summary.ProgressEvidence || summary.ProgressSaved {
+		t.Fatalf("progress evidence flags = raw:%v saved:%v, want raw true saved false", summary.ProgressEvidence, summary.ProgressSaved)
+	}
 }
 
 func TestWriteEvidenceWritesScreenTimeline(t *testing.T) {

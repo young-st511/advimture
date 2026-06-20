@@ -15,7 +15,7 @@ P0/P1 blocker는 보이지 않는다. `SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-
 | First tour | `artifacts/e2e/playable_ftue_first_five_route/screen_final.txt` | 첫 이동/생존/빠른 이동/작은 수정 흐름은 통과한다. 성공 modal은 grade, 목표 입력, 다음 단계, 잔류 리스크를 안정적으로 보여준다. |
 | Bracket pair tutorial | `artifacts/e2e/playable_bracket_pair_full/screen_final.txt` | `di(`, `ci(`, `yi(`, `di{`, `ci{`, `yi{` 6문항이 한 playlist로 닫힌다. 최종 success copy는 delimiter 보존과 register 재사용 이유를 설명한다. |
 | First dispatch arc | `artifacts/e2e/playable_incident_001_full/screen_final.txt`, `playable_incident_002_full`, `playable_incident_003_full` | 001 원인 신호 추적, 002 구조 재동기화, 003 오염 구간 격리 흐름이 final evidence에서 읽힌다. |
-| Judgment drill | `artifacts/e2e/playable_command_choice_scope/screen_final.txt` | command-choice 6 beat는 scope/range/inline/reuse/repeat/line reuse 판단을 설명한다. 다음 runbook action도 안정적이다. |
+| Judgment drill | `artifacts/e2e/playable_command_choice_scope/screen_final.txt` | command-choice 6 beat는 scope/range/inline/reuse/repeat/line reuse 판단을 설명한다. 다음 런북 action도 안정적이다. |
 | Search then scope | `artifacts/e2e/playable_incident_008_full/screen_final.txt` | `/breach`로 marker를 찾고 linewise scope를 판단하는 1-beat incident가 명확하다. 마지막 incident로 `출격 완료`를 표시한다. |
 | Review loop | `artifacts/e2e/playable_review_queue/app_state.json` | review queue, primary exercise, daily route, focus panel action id는 안정적이다. 다만 success modal의 `잔류 리스크`와 `다음 출격` 언어가 tutorial 중에도 반복되어 약간 기계적으로 읽힌다. |
 

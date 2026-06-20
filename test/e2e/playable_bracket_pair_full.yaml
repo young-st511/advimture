@@ -87,13 +87,13 @@ steps:
   - send: "$"
   - wait_ms: 50
   - send: "P"
-  - wait_screen_contains: "다음 runbook: enter"
+  - wait_screen_contains: "다음 런북: enter"
   - send: "q"
 assert:
   screen_contains:
     - "Mid Tutorial: Bracket pair text object"
     - "Exercise: 6/6"
-    - "다음 runbook: enter"
+    - "다음 런북: enter"
     - "좋습니다. brace 내부 값만 register로 담아 target block에 재사용했습니다."
   exit_code: 0
   progress_file_exists: true

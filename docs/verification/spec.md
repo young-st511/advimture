@@ -38,7 +38,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - viewport smoke E2E는 80x24 success/failure floating modal에서 action line, final viewport clipping, stale running frame 부재, buffer/status 뒤 append처럼 보이지 않는 modal placement, `ui.focus_panel`이 유지되는지 검증한다.
 - incident hint affordance E2E는 80x24 final viewport에서 hint body와 utility action line이 분리되어 읽히는지 검증한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
-- runner는 `summary.json`, raw ANSI log, cleaned screen stream, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
+- runner는 `summary.json`, raw ANSI log, cleaned screen stream, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다. `summary.json`의 `*_evidence`는 raw capture 가능 여부, `*_evidence_saved`는 artifact 파일 저장 여부를 의미한다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.
 - `playable_ftue_first_five_route` scenario는 FTUE-001 canonical route를 `tutorial-0-movement`부터 `tutorial-3-small-edits` 첫 문항까지 검증하고, screen timeline/final screen/app_state/progress evidence를 남긴다.
 - 긴 incident full route, command-choice applied route, 대표 mid tutorial full route는 route 전체 흐름과 마지막 화면을 재검토할 수 있도록 screen timeline/final screen/app_state evidence를 함께 남긴다.

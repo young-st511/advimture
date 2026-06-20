@@ -99,7 +99,7 @@ Incident focus panel의 첫 줄은 `훈련 키`보다 `판단:`을 우선한다.
 - Tutorial success: `재점검 메모`와 `나중에 다시 풀기`로 다음 review candidate를 보조 동기로 보여준다.
 - Incident success: `잔류 리스크`와 `다음 출격 후보`로 다음 review candidate를 Runbook Dispatch 톤에 맞게 보여준다.
 - `오늘의 복구 루트`: primary review 대상, 이유, 남은 review count
-- `다음 행동`: modal footer의 primary action prefix. 뒤에 `다음 단계`, `다음 튜토리얼`, `다음 runbook`, `다음 출격`, `출격 완료`, `다시 시도` 같은 action label을 붙인다.
+- `다음 행동`: modal footer의 primary action prefix. 뒤에 `다음 단계`, `다음 튜토리얼`, `다음 런북`, `다음 출격`, `출격 완료`, `다시 시도` 같은 action label을 붙인다.
 - `보조 행동`: modal footer의 secondary action prefix. 보통 `종료: q`를 붙인다.
 - E2E 의미 검증은 화면 label 문자열이 아니라 `app_state.ui.focus_panel.actions[].id`를 우선한다.
 - terminal size가 있는 화면에서는 `RUNBOOK CONSOLE` 안의 `RUNBOOK SEALED` floating modal로 표시한다.
