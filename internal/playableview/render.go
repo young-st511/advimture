@@ -37,6 +37,8 @@ type Screen struct {
 	CommandPrompt    string
 	ShowCommandLine  bool
 	ShowLastCommand  bool
+	AnimationFrame   int
+	InputEcho        string
 }
 
 type FocusPanel struct {
@@ -136,6 +138,9 @@ func renderHUD(screen Screen) string {
 	if status := recoveryStatusLine(screen); status != "" {
 		b.WriteString(status + "\n")
 	}
+	if signal := renderAdventureSignal(screen); signal != "" {
+		b.WriteString(signal + "\n")
+	}
 	b.WriteString("\n")
 	b.WriteString("RUNBOOK CONSOLE\n")
 	for row, line := range screen.BufferLines {
@@ -203,6 +208,56 @@ func recoveryStatusLine(screen Screen) string {
 		parts = append(parts, screen.DailyRoute)
 	}
 	return strings.Join(parts, " · ")
+}
+
+func renderAdventureSignal(screen Screen) string {
+	if strings.ToLower(screen.Status) != "running" {
+		return ""
+	}
+	width := hudTextWidth(screen.Width)
+	line := "SIGNAL " + adventureSignalRail(screen.PlaylistCategory, screen.AnimationFrame)
+	if echo := adventureInputEcho(screen); echo != "" {
+		line += "  " + echo
+	}
+	return ellipsize(line, width)
+}
+
+func adventureSignalRail(category string, frame int) string {
+	source := "relay"
+	switch category {
+	case "tutorial":
+		source = "learn"
+	case "incident":
+		source = "relay"
+	}
+	frames := []string{
+		fmt.Sprintf("[%s]*---[console]", source),
+		fmt.Sprintf("[%s]-*--[console]", source),
+		fmt.Sprintf("[%s]--*-[console]", source),
+		fmt.Sprintf("[%s]---*[console]", source),
+	}
+	if frame < 0 {
+		frame = 0
+	}
+	return frames[frame%len(frames)]
+}
+
+func adventureInputEcho(screen Screen) string {
+	if screen.InputEcho != "" {
+		return screen.InputEcho
+	}
+	switch strings.ToLower(screen.Mode) {
+	case "command":
+		return "대기: command"
+	case "search":
+		return "대기: search"
+	case "insert":
+		return "대기: insert"
+	case "visual":
+		return "대기: selection"
+	default:
+		return "대기: Vim move"
+	}
 }
 
 func wrapHUDMessage(message string, screenWidth int) []string {

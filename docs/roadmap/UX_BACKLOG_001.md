@@ -22,6 +22,15 @@ P0로 승격하는 조건:
 
 ## P1
 
+### UI-ADVENTURE-BEAT-001 — Adventure Signal Rail and Input Echo
+
+- 상태: completed
+- 왜 중요한가: modal은 나아졌지만 running 화면이 여전히 설명형 텍스트 위주라 adventure 게임의 반응성과 장면감이 약하다.
+- 범위: Mission HUD 뒤, Runbook Console 앞에 1줄 ASCII signal rail을 넣고, Bubble Tea tick animation과 마지막 입력 echo를 표시한다.
+- 제한: 새 dependency, 저장 포맷, content schema, engine capability 변경 없음. 특정 상용 게임의 UI/문구/asset 복제 없음.
+- 완료 내용: `SIGNAL [learn|relay]... [console]` rail, lightweight tick animation, 마지막 입력 echo를 running HUD에 추가했다.
+- 검증: `go test ./internal/playable ./internal/playableview`, `playable_adventure_signal_input_echo`, `go test ./...`, `git diff --check`.
+
 ### UI-MODAL-ACTION-HIERARCHY-002 — Modal/Hint Post-release Hardening
 
 - 상태: completed

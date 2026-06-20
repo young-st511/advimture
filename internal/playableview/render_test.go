@@ -100,6 +100,58 @@ func TestRenderCentersFocusPanelWhenWidthIsKnown(t *testing.T) {
 	}
 }
 
+func TestRenderHUDIncludesAdventureSignalRail(t *testing.T) {
+	view := Render(Screen{
+		Width:            80,
+		Height:           24,
+		PlaylistCategory: "tutorial",
+		Title:            "커서 위치 맞추기",
+		Message:          "목표까지 이동하세요.",
+		BufferLines:      []string{"abc"},
+		Mode:             "normal",
+		Status:           "running",
+		AnimationFrame:   1,
+		InputEcho:        "입력: l",
+	})
+
+	for _, want := range []string{"SIGNAL", "[learn]-*--[console]", "입력: l"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+	for _, line := range strings.Split(view, "\n") {
+		if strings.Contains(line, "SIGNAL") && displayWidth(line) > 80 {
+			t.Fatalf("SIGNAL line width = %d, want <= 80: %q", displayWidth(line), line)
+		}
+	}
+}
+
+func TestAdventureSignalRailAnimatesByFrame(t *testing.T) {
+	first := renderAdventureSignal(Screen{
+		Width:            80,
+		PlaylistCategory: "incident",
+		Mode:             "normal",
+		Status:           "running",
+		AnimationFrame:   0,
+	})
+	second := renderAdventureSignal(Screen{
+		Width:            80,
+		PlaylistCategory: "incident",
+		Mode:             "normal",
+		Status:           "running",
+		AnimationFrame:   2,
+	})
+
+	if first == second {
+		t.Fatalf("renderAdventureSignal frame 0 = frame 2 = %q, want animation movement", first)
+	}
+	for _, signal := range []string{first, second} {
+		if !strings.Contains(signal, "SIGNAL [relay]") {
+			t.Fatalf("signal = %q, want incident relay marker", signal)
+		}
+	}
+}
+
 func TestRenderShrinksFocusPanelForNarrowWidth(t *testing.T) {
 	view := Render(Screen{
 		Width:       36,

@@ -931,6 +931,33 @@ func TestPlayableAcceptsPastedWholeFileSubstituteCommand(t *testing.T) {
 	}
 }
 
+func TestPlayableAnimationTickAndInputEcho(t *testing.T) {
+	model := New(Options{ContentRoot: contentRootForTest()})
+	if model.Init() == nil {
+		t.Fatal("Init returned nil, want animation tick command")
+	}
+
+	updated, _ := model.Update(tea.WindowSizeMsg{Width: 80, Height: 24})
+	model = updated.(Model)
+	updated, cmd := model.Update(animationTickMsg(time.Now()))
+	model = updated.(Model)
+	if cmd == nil {
+		t.Fatal("animation tick returned nil command, want next tick")
+	}
+	if model.animationFrame != 1 {
+		t.Fatalf("animationFrame = %d, want 1", model.animationFrame)
+	}
+
+	model, _ = updateWithKey(t, model, "l")
+	view := model.View()
+	if !strings.Contains(view, "SIGNAL") {
+		t.Fatalf("view = %q, want adventure signal rail", view)
+	}
+	if !strings.Contains(view, "입력: l") {
+		t.Fatalf("view = %q, want input echo", view)
+	}
+}
+
 func TestPlayableShowsVisualHelpInsteadOfGenericHintQuit(t *testing.T) {
 	model := New(Options{ContentRoot: contentRootForTest()})
 

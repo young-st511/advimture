@@ -61,6 +61,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `actions`는 내부 QA DTO이며 progress 저장 포맷에 반영하지 않는다. E2E는 `action.id`(`hint`, `retry`, `next`, `next_tutorial`, `next_runbook`, `next_dispatch`, `dispatch_complete`, `playlist_complete`, `quit`)로 의미를 검증하고, 화면은 `action.label`을 표시한다.
 - `복구 현황`은 terminal size가 있는 화면에서 별도 큰 pre-console section이 아니라 `MISSION` HUD 내부의 보조 line으로 표시한다.
 - running HUD의 review/daily line은 상세 문구를 그대로 노출하지 않고 tutorial에서는 `복구 메모: 재점검 N건 · 다음: <title>`, incident에서는 `복구 현황: 재점검 N건 · 잔류: <title>`로 축약한다.
+- running HUD는 Mission cue 뒤, Runbook Console 앞에 1줄 `SIGNAL` rail을 표시할 수 있다. 이 rail은 ASCII animation marker와 마지막 입력 echo를 담는 화면 전용 반응이며 progress 저장 포맷, content schema, runtime key trace의 canonical source가 아니다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시할 수 있다.
 - tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다. `기억할 명령`이 같은 required key를 이미 설명하면 `Coach: 훈련 키 ...`를 중복 표시하지 않는다.

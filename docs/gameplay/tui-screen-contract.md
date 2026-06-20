@@ -52,6 +52,19 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - 현재 `[]` cursor, `{}` selection fallback을 유지할 수 있다.
 - renderer 분리 후 style 기반 cursor/selection으로 개선한다.
 
+### 3a. Adventure Signal Rail
+
+역할: running 화면에서 현재 조작이 살아 있는 adventure scene처럼 느껴지도록 1줄짜리 ASCII 신호와 입력 반응을 제공한다.
+
+규칙:
+
+- 위치는 Mission briefing/cue 뒤, Runbook Console 앞이다.
+- 현재 mission 제목과 조작 목표보다 앞서면 안 된다.
+- console 접근을 늦추지 않도록 1줄을 기본으로 한다.
+- animation marker는 `AnimationFrame` 같은 화면 전용 상태만 사용하고 progress 저장 포맷이나 runtime key trace에 반영하지 않는다.
+- input echo는 마지막 입력에 대한 짧은 화면 반응일 뿐, 성공/실패 판정이나 evidence 계약의 canonical source가 아니다.
+- color/style 없이도 `SIGNAL`, rail, input echo가 읽혀야 한다.
+
 ### 4. Status Line
 
 역할: Vim 상태를 짧게 요약한다.

@@ -1,0 +1,38 @@
+id: playable_adventure_signal_input_echo
+command: ["go", "run", "."]
+timeout_ms: 20000
+terminal:
+  width: 80
+  height: 24
+setup:
+  home: temp
+steps:
+  - wait_screen_contains: "SIGNAL"
+  - send: "l"
+  - wait_screen_contains: "입력: l"
+  - send: "q"
+assert:
+  screen_contains:
+    - "SIGNAL"
+    - "입력: l"
+    - "[learn]"
+  exit_code: 0
+  key_trace:
+    - "l"
+    - "q"
+  app_state:
+    buffer: ["abc"]
+    cursor:
+      row: 0
+      col: 1
+    mode: "normal"
+    status: "running"
+    progress:
+      mission_id: "normal-motion-basic-001"
+      completed: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_key_trace: true
+  save_summary: true
+  save_app_state: true

@@ -30,23 +30,25 @@ type Options struct {
 }
 
 type Model struct {
-	run          *scenario.Run
-	entries      []gameEntry
-	current      int
-	contentRoot  string
-	contentFS    fs.FS
-	progress     *progress.Progress
-	saveProgress func(*progress.Progress) error
-	e2eStatePath string
-	now          func() time.Time
-	startedAt    time.Time
-	saved        bool
-	saveErr      error
-	err          error
-	reviewQueue  []review.Candidate
-	hintMessage  string
-	width        int
-	height       int
+	run            *scenario.Run
+	entries        []gameEntry
+	current        int
+	contentRoot    string
+	contentFS      fs.FS
+	progress       *progress.Progress
+	saveProgress   func(*progress.Progress) error
+	e2eStatePath   string
+	now            func() time.Time
+	startedAt      time.Time
+	saved          bool
+	saveErr        error
+	err            error
+	reviewQueue    []review.Candidate
+	hintMessage    string
+	width          int
+	height         int
+	animationFrame int
+	inputEcho      string
 }
 
 type gameEntry struct {
@@ -99,7 +101,17 @@ func New(options Options) Model {
 }
 
 func (m Model) Init() tea.Cmd {
-	return nil
+	return animationTick()
+}
+
+type animationTickMsg time.Time
+
+const animationTickInterval = 700 * time.Millisecond
+
+func animationTick() tea.Cmd {
+	return tea.Tick(animationTickInterval, func(t time.Time) tea.Msg {
+		return animationTickMsg(t)
+	})
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -107,8 +119,15 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.width = msg.Width
 		m.height = msg.Height
+	case animationTickMsg:
+		m.animationFrame = (m.animationFrame + 1) % 4
+		if m.err == nil {
+			_ = m.writeE2EState()
+		}
+		return m, animationTick()
 	case tea.KeyMsg:
-		action := tuiadapter.MapInputForMode(msg.String(), m.inputMode())
+		input := msg.String()
+		action := tuiadapter.MapInputForMode(input, m.inputMode())
 		if m.err != nil {
 			if action.Type == tuiadapter.ActionQuit {
 				_ = m.writeE2EState()
@@ -116,6 +135,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, nil
 		}
+		m.inputEcho = inputEchoForAction(action, input)
 		switch action.Type {
 		case tuiadapter.ActionKey:
 			for _, key := range actionKeySequence(action) {
@@ -165,6 +185,39 @@ func actionKeySequence(action tuiadapter.Action) []string {
 	return []string{action.Key}
 }
 
+func inputEchoForAction(action tuiadapter.Action, input string) string {
+	switch action.Type {
+	case tuiadapter.ActionKey:
+		key := input
+		if key == "" {
+			key = action.Key
+		}
+		return "입력: " + compactInputEcho(key)
+	case tuiadapter.ActionHint:
+		return "입력: ?"
+	case tuiadapter.ActionRetry:
+		return "입력: retry"
+	case tuiadapter.ActionQuit:
+		return "입력: q"
+	case tuiadapter.ActionIgnored:
+		return ""
+	default:
+		return ""
+	}
+}
+
+func compactInputEcho(input string) string {
+	const maxRunes = 18
+	runes := []rune(input)
+	if len(runes) <= maxRunes {
+		return input
+	}
+	if maxRunes <= 3 {
+		return string(runes[:maxRunes])
+	}
+	return string(runes[:maxRunes-3]) + "..."
+}
+
 func (m Model) View() string {
 	if m.err != nil {
 		return fmt.Sprintf("Playable error: %v\nq: quit", m.err)
@@ -188,6 +241,8 @@ func (m Model) View() string {
 		LastCommand:     view.LastCommand,
 		FocusPanel:      m.focusPanel(state, view),
 		ShowLastCommand: state.Status == exerciseruntime.StatusRunning,
+		AnimationFrame:  m.animationFrame,
+		InputEcho:       m.inputEcho,
 	}
 	if entry, ok := m.currentEntry(); ok {
 		screen.PlaylistTitle = entry.PlaylistTitle

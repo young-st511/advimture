@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-20 — Running 화면 adventure beat 적용
+
+이전 가정: modal/action hierarchy는 개선됐지만 running 화면은 여전히 설명형 텍스트 중심이며, 입력이 화면에서 게임적으로 반응한다는 신호가 약했다.
+
+새 가정: running HUD는 Mission cue 뒤, Runbook Console 앞에 1줄 `SIGNAL` rail을 표시한다. rail은 ASCII marker animation과 마지막 입력 echo를 담는 화면 전용 반응이며, progress 저장 포맷, content schema, Vim engine capability, runtime key trace 계약을 바꾸지 않는다.
+
+이유: 사용자가 adventure 게임에 맞는 ASCII animation/text interaction을 요구했고, `go test ./...`, `playable_adventure_signal_input_echo`, `git diff --check`가 새 rail과 입력 echo를 검증했다.
+
+영향: `UI-ADVENTURE-BEAT-001`은 completed로 이동한다. 후속 UI는 signal rail을 키우기보다 pre-start scene, wide side rail, style pass 중 실제 플레이 evidence가 필요한 항목을 별도 slice로 연다.
+
 ## 2026-06-20 — Modal/hint post-release hardening 완료
 
 이전 가정: `UI-MODAL-ACTION-HIERARCHY-002`는 v0.2.0 배포 후 확인된 modal placement, running hint/quit utility action wrapping, 한글 final-frame evidence, action language/evidence metadata follow-up을 닫기 위한 active slice였다.
