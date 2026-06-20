@@ -32,7 +32,7 @@ E2E runner는 기존 `summary.json`, `raw.log`, `screen.txt`, `key_trace.txt`에
 - `app_state.json`: test HOME의 `.advimture/e2e_state.json` 복사본
 - `progress.json`: test HOME의 `.advimture/progress.json` 복사본
 - `screen_timeline.txt`: cleaned terminal text의 누적 흐름 evidence. UI 위계 변경 후 Agent가 최종 문구뿐 아니라 지나온 화면 흐름을 확인할 때 사용한다.
-- `screen_final.txt`: terminal size가 있는 scenario에서는 terminal cell grid 기준의 final viewport evidence. fallback으로 마지막 `ADVIMTURE |` 또는 playable error frame 중심의 cleaned final screen을 사용한다. modal 위치/최종 안내/상태 줄을 빠르게 검토할 때 사용한다.
+- `screen_final.txt`: terminal size가 있는 scenario에서는 terminal cell grid 기준의 final app viewport evidence. fallback으로 마지막 `ADVIMTURE |` 또는 playable error frame 중심의 cleaned final screen을 사용한다. modal 위치/최종 안내/상태 줄을 빠르게 검토할 때 사용한다. double-width 문자 continuation cell은 사람이 읽는 문자열에 공백처럼 끼어들면 안 된다.
 
 이 snapshot은 temp HOME이 삭제된 뒤에도 실패 원인을 확인하기 위한 evidence다.
 
@@ -40,7 +40,7 @@ E2E runner는 기존 `summary.json`, `raw.log`, `screen.txt`, `key_trace.txt`에
 
 - `residual_risk` typed state: 성공 후 다음 재점검 대상의 exercise id/reason 검증
 - `frames/*.txt`: wait/send 단위 세분화 frame timeline
-- richer viewport parser: scroll region, alternate-screen restore, wide-width edge case까지 더 정밀하게 검증
+- richer viewport parser: scroll region, alternate-screen restore, final app viewport와 post-exit terminal 구분, wide-width edge case까지 더 정밀하게 검증
 
 ## Backlog 승격 기준
 

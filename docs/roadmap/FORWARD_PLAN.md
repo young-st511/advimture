@@ -1,6 +1,6 @@
 # Forward Plan — Foundation to Release Quality
 
-Last reviewed: 2026-06-17
+Last reviewed: 2026-06-20
 Status: current rolling plan
 
 ## 목적
@@ -15,17 +15,17 @@ Status: current rolling plan
 
 ## 현재 판단
 
-Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 release candidate 포장이 아니라, 현재 playable loop가 더 풍부한 Runbook Dispatch 게임으로 읽히는지 fresh evidence로 고르는 일이다.
+Foundation engine과 E2E loop는 충분히 튼튼해졌다. v0.2.0 배포 후 다음 병목은 release candidate 포장이 아니라, UX 재검토에서 발견된 modal/hint/final evidence blind spot을 닫고 fresh evidence로 다음 구현 후보를 고르는 일이다.
 
 현재 상태:
 
 - Vim engine: tutorial/incident를 만들 수 있을 만큼 충분히 닫힘
 - Content: tutorial coverage와 incident 001~008이 있음
 - E2E: long route final/timeline evidence까지 보강됨
-- UI/UX: Mission HUD, Runbook Console, viewport overlay modal, action footer, running hint/quit action, final-frame evidence가 있음
-- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline, modal/action hierarchy hardening, Homebrew `v0.2.0` 배포는 한 차례 닫혔다. 다음 병목은 fresh evidence 기반의 다음 content/UX 후보 선택이다.
+- UI/UX: Mission HUD, Runbook Console, viewport overlay modal, action footer, running hint/quit action, final-frame evidence가 있으며, modal placement/hint wrapping/wide-char evidence 후속 보강이 active
+- 출시감: mission/review loop, content breadth, quote/pair hardening, UI polish, release readiness, fresh playtest, first-run polish, pre-RC hardening, playable quality baseline, modal/action hierarchy hardening, Homebrew `v0.2.0` 배포는 한 차례 닫혔다. 다음 병목은 `UI-MODAL-ACTION-HIERARCHY-002`를 닫은 뒤 fresh evidence 기반으로 다음 content/UX 후보를 선택하는 것이다.
 
-`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001` 이후 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> UI-MODAL-ACTION-HIERARCHY-001`까지 완료했다. 이제 다음 순서는 **fresh evidence를 보고 기존 engine 기반 applied content breadth를 우선 검토하고, UI 정보 밀도 문제가 다시 드러날 때만 UI rail/style slice를 연다**로 간다.
+`FOUNDATION-EXIT-001` review 결과 Foundation은 조건부 통과했고, `PLAYTEST-GATE-001`에서 P0/P1 blocker는 확인되지 않았다. `FIRST-RUN-POLISH-001`로 첫 실행 cue와 viewport smoke를 닫았고, `PRE-RC-HARDENING-001`로 첫 5분/대표 incident evidence도 한 번 더 보강했다. `PLAYABLE-QUALITY-BASELINE-001` 이후 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> UI-MODAL-ACTION-HIERARCHY-001`까지 완료했다. v0.2.0 배포 후에는 **`UI-MODAL-ACTION-HIERARCHY-002`로 modal placement, hint utility line, final-frame evidence를 닫고 나서 기존 engine 기반 applied content breadth를 검토한다**로 간다.
 
 ## 0. 운영 원칙
 
@@ -35,7 +35,29 @@ Foundation engine과 E2E loop는 충분히 튼튼해졌다. 다음 병목은 rel
 - progress 저장 포맷은 사용자 승인 전까지 변경하지 않는다.
 - long route E2E는 `screen_timeline.txt`와 `screen_final.txt`를 남긴다.
 - failed/succeeded/debrief modal은 문자열 존재만으로 통과시키지 않고, final viewport에서 primary action이 보이는지 확인한다.
+- final viewport evidence는 한글 wide-width continuation cell 때문에 사람이 읽는 문구가 깨져 보이지 않아야 한다.
 - 문서가 stale해질 수 있는 변경을 하면 `PROGRAM.md`, `MIDTERM_TODO.md`, 이 문서를 함께 확인한다.
+
+## 0.4. Active Post-release Hardening
+
+### UI-MODAL-ACTION-HIERARCHY-002 — Modal/Hint Post-release Hardening
+
+Status: active
+ExecPlan: `docs/exec-plans/active/ui-modal-action-hierarchy-002-post-release.md`
+
+목표:
+
+- failed/succeeded modal이 buffer/status/grade 뒤에 append된 것처럼 보이지 않게 console surface 위 overlay placement를 고정한다.
+- running hint/quit utility action이 cue/hint body와 같은 wrapping group에 섞이지 않게 한다.
+- `screen_final.txt`의 한글 wide-width evidence가 사람이 읽을 수 있게 유지된다.
+- action label과 summary evidence 의미를 정리한다.
+
+제외:
+
+- release/tag/push
+- progress 저장 포맷 변경
+- content schema 변경
+- 새 dependency
 
 ## 0.5. Completed UX Hardening
 

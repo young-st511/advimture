@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`도 완료됐다.
+현재 active implementation slice는 `UI-MODAL-ACTION-HIERARCHY-002`다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`도 완료됐다. v0.2.0 배포 후 UX 재검토에서 발견된 modal placement/hint evidence blind spot을 후속 hardening으로 닫는다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
@@ -28,6 +28,8 @@ Completed Midterm Polish:
 - `docs/exec-plans/completed/success-statusline-cleanup-001.md`
 Completed UX Hardening:
 - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
+Active UX Hardening:
+- `docs/exec-plans/active/ui-modal-action-hierarchy-002-post-release.md`
 Completed Release:
 - `docs/exec-plans/completed/release-brew-001-homebrew-tap.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
@@ -39,9 +41,23 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
+### UI-MODAL-ACTION-HIERARCHY-002. Modal/Hint Post-release Hardening
+
+- 상태: active
+- 목표: v0.2.0 배포 후 UX 재검토에서 확인된 modal placement, running hint/quit action wrapping, 한글 final-frame evidence, action language blind spot을 닫는다.
+- 근거:
+  - `docs/exec-plans/active/ui-modal-action-hierarchy-002-post-release.md`
+  - `docs/roadmap/UX_BACKLOG_001.md`
+  - `docs/gameplay/tui-screen-contract.md`
+- 제외:
+  - release/tag/push 작업
+  - progress 저장 포맷 변경
+  - content schema 변경
+  - 새 dependency
+
 ### NEXT-DIRECTION-CHECKPOINT. Fresh Direction After Modal Hardening
 
-- 상태: next
+- 상태: next, blocked until `UI-MODAL-ACTION-HIERARCHY-002` closes
 - 목표: modal/action hierarchy hardening 이후 fresh evidence를 보고 다음 구현 slice를 고른다.
 - 근거:
   - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`

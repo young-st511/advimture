@@ -6,7 +6,7 @@
 
 현재 TUI는 Vim 훈련 도구로는 기능한다. mode, cursor, input limit, required key coaching, success grade, key count, progress 저장이 모두 노출되어 있어 Agent와 플레이어가 같은 상태를 볼 수 있다.
 
-Foundation UI pass 이후 화면 정보 계층은 Mission HUD, Runbook Console, floating modal, status line으로 정리됐다. 다만 사용자 스크린샷 이후 실패/성공 modal이 실제 overlay보다 console 뒤 삽입 블록처럼 보이고 action line이 CTA처럼 보이지 않는 P1 UX blocker가 확인됐다.
+Foundation UI pass 이후 화면 정보 계층은 Mission HUD, Runbook Console, floating modal, status line으로 정리됐다. v0.2.0 배포 후 UX 재검토에서는 진행 불가 P0는 없었지만, 실패/성공 modal이 여전히 buffer/status 흐름 뒤에 붙은 블록처럼 읽히는 placement blind spot과 running hint/quit action line의 wrapping blind spot이 확인됐다.
 
 - 현재 조작 목표는 Mission HUD에서 먼저 보이며, review/daily 정보는 보조 line으로 내려갔다.
 - tutorial과 incident가 같은 하단 안내 언어를 사용하던 문제는 `TRAINING BRIEF`와 `OPERATOR JUDGMENT` FocusPanel 분리로 개선했다.
@@ -32,7 +32,7 @@ Foundation UI pass 이후 화면 정보 계층은 Mission HUD, Runbook Console, 
 - 실패 화면은 실패 이유와 `다시 시도` primary action footer를 유지한다.
 - 성공 화면은 복구 기록, context별 review motivation, 다음 행동 primary action footer를 유지한다.
 - review/daily 정보는 현재 mission보다 높은 시각 계층으로 올라오지 않는다.
-- 80x24/80x30 계열 viewport에서 action/hint line이 clipping으로 사라지지 않는다.
+- 80x24/80x30 계열 viewport에서 action/hint line이 clipping으로 사라지지 않고, failed/succeeded modal은 buffer/status/grade 뒤에 append된 것처럼 보이지 않는다.
 - style/color pass를 하더라도 color 없는 evidence와 app_state 계약은 유지한다.
 
 현재 판정은 `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`를 따른다.
@@ -51,7 +51,7 @@ Mission HUD
 
 Runbook Console
   runbook buffer with cursor and selection
-  failed/succeeded floating modal with primary action footer
+  failed/succeeded floating modal with primary action footer as overlay
 
 Status Line
   mode / status / cursor / inputs left / command or search line

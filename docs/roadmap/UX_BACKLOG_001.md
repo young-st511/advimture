@@ -2,13 +2,13 @@
 
 Created: 2026-05-26
 Status: current
-Last reviewed: 2026-06-17
+Last reviewed: 2026-06-20
 
 ## 판단
 
-`UI-MODAL-ACTION-HIERARCHY-001`은 완료됐다. 다음 content breadth나 release packaging 판단으로 넘어갈 수 있지만, 실제 release/tag 작업은 사용자가 명시적으로 원할 때만 연다.
+`UI-MODAL-ACTION-HIERARCHY-001`은 완료됐고, `v0.2.0`도 배포됐다. 다만 배포 후 동일 기준으로 UX 재검토한 결과 modal placement, running hint/quit utility wrapping, 한글 final-frame evidence, action language/evidence metadata의 follow-up이 확인되어 `UI-MODAL-ACTION-HIERARCHY-002`를 active로 연다.
 
-현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 사용자 스크린샷과 SubAgent 감사로 확인된 modal/action hierarchy P1 blocker는 overlay modal, action footer, running utility action, hint affordance, incident progressive briefing, final-frame evidence 보강으로 닫았다.
+현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 사용자 스크린샷과 SubAgent 감사로 확인된 modal/action hierarchy P1 blocker는 1차로 닫혔지만, 실제 final viewport에서 더 엄격한 decision focus와 evidence readability를 요구한다.
 
 ## P0
 
@@ -21,6 +21,13 @@ P0로 승격하는 조건:
 - 새 콘텐츠가 `app_state` 없이 화면 문자열만으로만 검증되어 E2E가 불안정해진다.
 
 ## P1
+
+### UI-MODAL-ACTION-HIERARCHY-002 — Modal/Hint Post-release Hardening
+
+- 상태: active
+- 왜 중요한가: `001` 이후에도 modal이 buffer/status 뒤에 붙은 블록처럼 읽히는 final viewport가 있고, hint utility action과 한글 evidence reconstruction도 사람이 보는 품질 기준에서 blind spot이 남았다.
+- 언제 닫을 것인가: 80x24 success/failure/hint evidence가 modal placement, action footer, hint utility line, 한글 readability를 모두 검증할 때.
+- 어떻게 검증할 것인가: `go test ./internal/playableview ./internal/playable ./cmd/e2e-runner`, focused E2E, `go test ./...`, `make e2e-playable`, `git diff --check`.
 
 ### UI-RAIL-001 — Wide Layout Side Rail
 
@@ -77,7 +84,7 @@ P0로 승격하는 조건:
 
 ## Content Breadth Readiness
 
-다음 content breadth slice는 진행 가능하다.
+다음 content breadth slice는 `UI-MODAL-ACTION-HIERARCHY-002` 완료 후 진행 가능하다.
 
 - HUD/help/choice/success polish가 full E2E를 통과했다.
 - progress 저장 포맷 변경이 필요하지 않다.

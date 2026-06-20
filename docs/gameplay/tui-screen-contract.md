@@ -82,15 +82,15 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - tutorial running HUD의 review/daily는 `복구 메모: 재점검 N건 · 다음: <title>`처럼 축약한다.
 - incident running HUD의 review/daily는 `복구 현황: 재점검 N건 · 잔류: <title>`처럼 축약한다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
-- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 위에서 floating modal로 표시하되, buffer 뒤에 단순 append된 일반 본문 블록처럼 보이면 안 된다.
-- floating modal은 terminal width/height가 알려진 경우 viewport 기준으로 horizontal/vertical placement를 계산한다.
+- failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 위에서 floating modal로 표시하되, buffer/status/grade 뒤에 단순 append된 일반 본문 블록처럼 보이면 안 된다.
+- floating modal은 terminal width/height가 알려진 경우 viewport 기준으로 horizontal/vertical placement를 계산하고, console surface 위에서 buffer/status/grade를 decision layer 뒤로 보낸다.
 - 좁은 화면에서는 modal width가 terminal width를 넘지 않도록 줄어든다.
 - failed/succeeded modal은 console label과 buffer 위치를 밀지 않고, status/grade line보다 높은 decision layer로 표시한다.
 
 상태별 규칙:
 
-- running tutorial: `MISSION` HUD cue에 command memory, 필요한 경우 훈련 키를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 분리한다. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
-- running incident: `MISSION` HUD cue에 판단 cue를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 분리한다. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
+- running tutorial: `MISSION` HUD cue에 command memory, 필요한 경우 훈련 키를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 물리적으로 분리한다. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
+- running incident: `MISSION` HUD cue에 판단 cue를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 물리적으로 분리한다. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - insert/search/command/visual mode cue는 한국어 action label로 표현하고, 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed: floating modal에 실패 이유, 남은 입력, attempts, recovery hint, primary retry action footer
@@ -118,7 +118,7 @@ Action label 계약:
 | `retry` | `다시 시도: r 또는 enter` | 실패한 exercise 재시도 |
 | `next` | `다음 단계: enter` | 같은 playlist의 다음 exercise |
 | `next_tutorial` | `다음 튜토리얼: enter` | 다음 tutorial playlist |
-| `next_runbook` | `다음 runbook: enter` | 다음 incident/runbook |
+| `next_runbook` | `다음 런북: enter` | 다음 incident/runbook |
 | `next_dispatch` | `다음 출격: enter` | review queue primary exercise로 재출격 |
 | `dispatch_complete` | `출격 완료` | incident path 완료 |
 | `playlist_complete` | `플레이리스트 완료` | tutorial path 완료 |
@@ -137,7 +137,7 @@ Action label 계약:
 |------|----------|----------|
 | 목적 | 새 Vim command 학습 | 배운 command 선택/조합 |
 | 키 노출 | 직접 노출 허용, `기억할 명령` 표시 | 기본 화면에서는 숨기고 hint/failure에서 `참고 명령`으로 점진 공개 |
-| 문구 | `훈련 키`, `연습`, `재점검 메모`, `나중에 다시 풀기`, `다음 튜토리얼` | `판단`, `복구 단계`, `잔류 리스크`, `다음 출격 후보`, `다음 runbook`, `출격 완료` |
+| 문구 | `훈련 키`, `연습`, `재점검 메모`, `나중에 다시 풀기`, `다음 튜토리얼` | `판단`, `복구 단계`, `잔류 리스크`, `다음 출격 후보`, `다음 런북`, `출격 완료` |
 | review/daily | 보조 정보 | 세계관 메타 정보로 활용 |
 
 ## 검증 기준

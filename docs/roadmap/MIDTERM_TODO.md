@@ -4,9 +4,9 @@
 
 ## 현재 상태
 
-Status: v0.2.0 released; next direction checkpoint
+Status: v0.2.0 released; modal/hint post-release hardening active
 
-현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> SUCCESS-STATUSLINE-CLEANUP-001 -> UI-MODAL-ACTION-HIERARCHY-001 -> RELEASE-BREW-001` 보강과 배포가 완료됐다.
+현재 active implementation slice는 `UI-MODAL-ACTION-HIERARCHY-002`다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> SUCCESS-STATUSLINE-CLEANUP-001 -> UI-MODAL-ACTION-HIERARCHY-001 -> RELEASE-BREW-001` 보강과 배포가 완료됐다.
 
 ## 현재 중기 플랜
 
@@ -25,11 +25,12 @@ Status: v0.2.0 released; next direction checkpoint
 | 11 | COMMAND-CHOICE-BREADTH-002 | completed | 기존 engine만 사용해 command-choice 판단 breadth 확장 |
 | 12 | POST-BREADTH-PLAYTEST-REVIEW-001 | completed | 7-beat command-choice와 review loop evidence로 deeper hardening 필요성 판정 |
 | 13 | UI-MODAL-ACTION-HIERARCHY-001 | completed | 실패/성공 modal을 true decision surface로 보이게 하고 action footer/QA evidence를 보강 |
-| 14 | NEXT-DIRECTION-CHECKPOINT | next | modal/action hierarchy 이후 fresh evidence로 다음 구현 slice 선택 |
-| 15 | RELEASE-BREW-001 | completed | `v0.2.0` GitHub Release와 Homebrew tap formula 갱신 완료 |
-| 16 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
+| 14 | RELEASE-BREW-001 | completed | `v0.2.0` GitHub Release와 Homebrew tap formula 갱신 완료 |
+| 15 | UI-MODAL-ACTION-HIERARCHY-002 | active | 배포 후 UX 재검토에서 확인된 modal placement, hint affordance, final-frame evidence blind spot 보강 |
+| 16 | NEXT-DIRECTION-CHECKPOINT | next | modal/hint post-release hardening 이후 fresh evidence로 다음 구현 slice 선택 |
+| 17 | RELEASE-CANDIDATE-001 | later | 실제 공개 후보를 묶기로 결정했을 때 release note/evidence/tag 후보 정리 |
 
-현재 권장은 release candidate 포장이 아니라 fresh evidence로 다음 개발 후보를 고르는 것이다. 1순위 후보는 기존 engine 기반 applied content breadth이며, UI 정보 밀도가 다시 문제로 드러날 때만 `UI-RAIL-001` 또는 `UI-STYLE-001`을 연다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
+현재 권장은 release candidate 포장이 아니라 `UI-MODAL-ACTION-HIERARCHY-002`를 먼저 닫고 fresh evidence로 다음 개발 후보를 고르는 것이다. 이후 1순위 후보는 기존 engine 기반 applied content breadth이며, UI 정보 밀도가 다시 문제로 드러날 때만 `UI-RAIL-001` 또는 `UI-STYLE-001`을 연다. 큰 구조 변경은 허용하지만, progress 저장 포맷/content schema/새 의존성은 별도 확인 전까지 열지 않는다.
 
 ## PLAYABLE-QUALITY-BASELINE-001 출구 조건
 

@@ -28,14 +28,15 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - runner는 `setup.complete_before: <exercise-id>`로 현재 content의 playable 순서를 읽고 지정 exercise 직전까지 completed progress를 생성할 수 있다. `setup.progress_file`과 `setup.complete_before`는 동시에 사용할 수 없다.
 - runner는 pseudo terminal로 앱을 실행하기 위해 `github.com/creack/pty`를 사용한다.
 - runner는 키 입력 trace를 전송하고, cleaned screen text, exit code, progress file existence/content, key trace exact match, app state summary를 검증한다.
-- runner는 terminal width/height가 있는 scenario에서 raw ANSI stream을 terminal cell grid로 재구성해 `screen_final.txt`를 terminal height 이하의 final viewport evidence로 저장한다.
+- runner는 terminal width/height가 있는 scenario에서 raw ANSI stream을 terminal cell grid로 재구성해 `screen_final.txt`를 terminal height 이하의 final app viewport evidence로 저장한다. double-width 문자 continuation cell은 사람이 읽는 final text에 공백처럼 삽입되지 않아야 한다.
 - runner는 `final_screen_contains`, `final_screen_not_contains`, `final_screen_max_lines` assertion으로 누적 stream이 아니라 final viewport 자체를 검증할 수 있다.
 - visual mode selection assertion은 `docs/verification/selection-app-state-contract.md`의 `selection` object를 기준으로 한다. `internal/e2estate.State`, runner `assert.app_state.selection`, content `e2e_assertions.selection`은 같은 shape를 사용한다.
 - review/daily route assertion은 `assert.app_state.review`로 검증한다. `queue_count`, `primary_exercise_id`, `primary_reason`, `daily_route`는 화면 문구 이동과 별개로 stable state로 본다.
 - focus panel assertion은 `assert.app_state.ui.focus_panel`로 검증한다. `kind`, `title`, `lines`는 화면 배치가 바뀌어도 현재 UI intent를 stable state로 본다.
 - mission/review loop E2E는 success debrief의 `이번 복구`, `최단 복구`, `목표 입력`, `다음 출격` 문구와 `ui.focus_panel.kind/title`을 함께 검증한다.
 - command memory UI E2E는 tutorial `기억할 명령`, duplicate coach suppression, incident hint/failure 후 `참고 명령`, 긴 incident hint cue wrapping을 화면과 app_state evidence로 검증한다.
-- viewport smoke E2E는 80x24 success/failure floating modal에서 action line, final viewport clipping, stale running frame 부재, `ui.focus_panel`이 유지되는지 검증한다.
+- viewport smoke E2E는 80x24 success/failure floating modal에서 action line, final viewport clipping, stale running frame 부재, buffer/status 뒤 append처럼 보이지 않는 modal placement, `ui.focus_panel`이 유지되는지 검증한다.
+- incident hint affordance E2E는 80x24 final viewport에서 hint body와 utility action line이 분리되어 읽히는지 검증한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
 - runner는 `summary.json`, raw ANSI log, cleaned screen stream, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다.
 - `playable_hjkl_success` smoke scenario는 `l`, `l`, `q` 입력으로 첫 playable exercise를 성공시키고, screen text, progress 파일, key trace, app state summary를 검증한다.

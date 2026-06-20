@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-20 — Modal/hint post-release hardening 시작
+
+이전 가정: `v0.2.0` 배포 후 다음 병목은 fresh evidence로 content/UX 후보를 고르는 `NEXT-DIRECTION-CHECKPOINT`였다.
+
+새 가정: 진행 불가 P0는 없지만, 실패/성공 modal placement, running hint/quit utility action wrapping, 한글 final-frame evidence, action language/evidence metadata는 출시 가능한 품질 기준에서 후속 hardening이 필요하다.
+
+이유: 사용자가 "동일한 워크플로우 시작 기준"으로 SubAgent UX 검토를 요청했고, 재검토 결과 `UI-MODAL-ACTION-HIERARCHY-001` 이후에도 사람이 보는 final viewport에서 modal이 append 블록처럼 읽히는 장면과 QA blind spot이 확인됐다.
+
+영향: `UI-MODAL-ACTION-HIERARCHY-002`를 active로 열고, 다음 content breadth나 direction checkpoint는 이 slice 완료 뒤로 미룬다. Release/tag/push, progress schema, content schema, 새 dependency는 이번 범위 밖이다.
+
 ## 2026-06-17 — v0.2.0 배포 완료
 
 이전 가정: `RELEASE-BREW-001`은 Homebrew tap release 자동화 준비 상태였고, 사용자가 release 재개를 명시하기 전까지 paused였다.
