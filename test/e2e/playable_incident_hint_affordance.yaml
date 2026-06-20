@@ -3,7 +3,7 @@ command: ["go", "run", "."]
 timeout_ms: 15000
 terminal:
   width: 80
-  height: 30
+  height: 24
 setup:
   home: temp
   complete_before: incident-hotfix-001
@@ -22,6 +22,14 @@ assert:
     - "잡습니다."
     - "참고 명령: /"
     - "보조 행동  힌트: ? · 종료: q"
+  final_screen_contains:
+    - "OPERATOR JUDGMENT"
+    - "RUNBOOK CONSOLE"
+    - "보조 행동  힌트: ?"
+    - "종료"
+  final_screen_not_contains:
+    - "영향 · 보조 행동"
+  final_screen_max_lines: 24
   exit_code: 0
   progress_file_exists: true
   key_trace:

@@ -369,6 +369,14 @@ func wrapMissionCueLines(parts []string, width int) []string {
 	current := ""
 	for _, part := range parts {
 		wrapped := wrapTextByDisplayWidth(part, width)
+		if isUtilityActionCuePart(part) {
+			if current != "" {
+				out = append(out, current)
+				current = ""
+			}
+			out = append(out, wrapped...)
+			continue
+		}
 		for i, line := range wrapped {
 			if i > 0 && current != "" {
 				out = append(out, current)
@@ -391,6 +399,10 @@ func wrapMissionCueLines(parts []string, width int) []string {
 		out = append(out, current)
 	}
 	return out
+}
+
+func isUtilityActionCuePart(part string) bool {
+	return strings.HasPrefix(part, "보조 행동")
 }
 
 func wrapTextByDisplayWidth(text string, width int) []string {

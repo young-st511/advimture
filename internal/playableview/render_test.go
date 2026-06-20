@@ -439,6 +439,12 @@ func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
 				t.Fatalf("cue line width = %d, want <= 80: %q\nfull view = %q", displayWidth(line), line, view)
 			}
 		}
+		if strings.Contains(line, "보조 행동") && (strings.Contains(line, "힌트 내용") || strings.Contains(line, "등급에 영향") || strings.Contains(line, "잡습니다.")) {
+			t.Fatalf("utility action should be physically separated from hint body: %q\nfull view = %q", line, view)
+		}
+	}
+	if lineIndex(view, "보조 행동") <= lineIndex(view, "등급에 영향") {
+		t.Fatalf("Render output = %q, want utility action after hint body", view)
 	}
 	if lineIndex(view, "OPERATOR JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
 		t.Fatalf("Render output = %q, want wrapped cue before console", view)
