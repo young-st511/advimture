@@ -10,6 +10,8 @@ Last reviewed: 2026-06-20
 
 현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 사용자 스크린샷과 SubAgent 감사로 확인된 modal/action hierarchy P1 blocker와 post-release follow-up은 현재 닫힌 상태다.
 
+2026-06-22 기준 다음 UX/UI 방향은 `docs/roadmap/UX_UI_RESEARCH_2026-06-20.md`와 `docs/roadmap/UX_UI_DEEP_DEVELOPMENT_2026-06-22.md`를 따른다. 핵심은 action bar, dense running HUD, recovery report, hint ladder, dispatch route/rail 순서다.
+
 ## P0
 
 없음.
@@ -21,6 +23,14 @@ P0로 승격하는 조건:
 - 새 콘텐츠가 `app_state` 없이 화면 문자열만으로만 검증되어 E2E가 불안정해진다.
 
 ## P1
+
+### UI-ACTION-HUD-001 — Action Bar and Dense Running HUD
+
+- 상태: proposed
+- 왜 중요한가: 현재 running 화면은 mission/cue/review/signal/console이 비슷한 텍스트 무게로 읽혀 "무엇을 눌러야 하는가"가 약해진다.
+- 범위: `ACTIONS [key] label` action bar, `MISSION/GOAL/TOOLS or JUDGMENT/SIGNAL` running HUD grammar, 80-column review/daily 밀도 조정.
+- 제한: 새 dependency, progress schema, content schema, engine capability 변경 없음.
+- 어떻게 검증할 것인가: 80x24 tutorial/incident running viewport에서 action bar와 dense HUD가 잘리지 않고, existing `FocusPanel.actions[].id` 의미 검증이 유지된다.
 
 ### UI-ADVENTURE-BEAT-001 — Adventure Signal Rail and Input Echo
 
