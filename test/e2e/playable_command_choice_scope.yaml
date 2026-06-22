@@ -8,7 +8,7 @@ setup:
   home: temp
   complete_before: command-choice-scope-001
 steps:
-  - wait_screen_contains: "복구 범위를 먼저 판단"
+  - wait_screen_contains: "MISSION  줄 묶음 복구 범위 판별"
   - send: "V"
   - wait_screen_contains: "Selection: linewise 1,0 -> 1,14"
   - send: "j"

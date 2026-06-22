@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`도 완료됐다.
+현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`, `UI-ACTION-HUD-001`도 완료됐다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
@@ -29,6 +29,7 @@ Completed Midterm Polish:
 Completed UX Hardening:
 - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 - `docs/exec-plans/completed/ui-modal-action-hierarchy-002-post-release.md`
+- `docs/exec-plans/completed/ui-action-hud-001.md`
 Completed Release:
 - `docs/exec-plans/completed/release-brew-001-homebrew-tap.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
@@ -40,6 +41,34 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ## 다음 권장 후보
 
+### NEXT-DIRECTION-CHECKPOINT. Fresh Direction After Action HUD
+
+- 상태: next
+- 목표: `UI-ACTION-HUD-001` 완료 후 fresh evidence를 보고 다음 구현 slice를 고른다.
+- 근거:
+  - `docs/exec-plans/completed/ui-action-hud-001.md`
+  - `docs/roadmap/UX_BACKLOG_001.md`
+  - `docs/gameplay/tui-screen-contract.md`
+- 우선 후보:
+  - `UI-REPORT-001`: 실패/성공 recovery report의 action footer를 running action bar와 같은 명확성으로 정리한다.
+  - `UI-HINT-LADDER-001`: hint를 한 번에 정답처럼 보여주지 않고 판단 관점 -> command family -> exact form으로 점진 공개한다.
+  - 기존 engine 기반 applied content breadth: UI evidence가 안정적인 상태에서 콘텐츠 폭을 늘린다.
+- 제외:
+  - release/tag/push 작업
+  - progress 저장 포맷 변경
+  - content schema 변경
+  - 새 dependency
+
+### UI-ACTION-HUD-001. Action Bar and Dense Running HUD
+
+- 상태: completed
+- 목표: running 화면에서 현재 mission, 판단 cue, signal, 다음 조작을 서로 다른 정보 계층으로 읽히게 한다.
+- 완료:
+  - running HUD는 `MISSION`, `GOAL`, `TOOLS` 또는 `JUDGMENT`, `SIGNAL`, `ACTIONS` grammar를 사용한다.
+  - `hint`는 `[?] 힌트 - grade 영향`, `quit`은 `[q] 종료`로 표시된다.
+  - command/search/insert/visual mode는 현재 mode의 action을 hint/quit보다 우선 표시한다.
+- ExecPlan: `docs/exec-plans/completed/ui-action-hud-001.md`
+
 ### UI-MODAL-ACTION-HIERARCHY-002. Modal/Hint Post-release Hardening
 
 - 상태: completed
@@ -48,24 +77,6 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
   - `docs/exec-plans/completed/ui-modal-action-hierarchy-002-post-release.md`
   - `docs/roadmap/UX_BACKLOG_001.md`
   - `docs/gameplay/tui-screen-contract.md`
-- 제외:
-  - release/tag/push 작업
-  - progress 저장 포맷 변경
-  - content schema 변경
-  - 새 dependency
-
-### NEXT-DIRECTION-CHECKPOINT. Fresh Direction After Modal Hardening
-
-- 상태: next
-- 목표: modal/action hierarchy hardening 이후 fresh evidence를 보고 다음 구현 slice를 고른다.
-- 근거:
-  - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
-  - `docs/roadmap/UX_BACKLOG_001.md`
-  - `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
-- 우선 후보:
-  - 기존 engine 기반 applied content breadth
-  - 정보 밀도가 다시 mission을 밀어낼 때만 `UI-RAIL-001`
-  - 첫 release polish가 필요할 때만 `UI-STYLE-001`
 - 제외:
   - release/tag/push 작업
   - progress 저장 포맷 변경

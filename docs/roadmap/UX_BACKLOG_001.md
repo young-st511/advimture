@@ -2,7 +2,7 @@
 
 Created: 2026-05-26
 Status: current
-Last reviewed: 2026-06-20
+Last reviewed: 2026-06-23
 
 ## 판단
 
@@ -11,6 +11,8 @@ Last reviewed: 2026-06-20
 현재 Foundation은 current mission, console, failed/succeeded floating modal, hint/retry/quit affordance, review/daily motivation, command memory cue를 E2E로 검증한다. 사용자 스크린샷과 SubAgent 감사로 확인된 modal/action hierarchy P1 blocker와 post-release follow-up은 현재 닫힌 상태다.
 
 2026-06-22 기준 다음 UX/UI 방향은 `docs/roadmap/UX_UI_RESEARCH_2026-06-20.md`와 `docs/roadmap/UX_UI_DEEP_DEVELOPMENT_2026-06-22.md`를 따른다. 핵심은 action bar, dense running HUD, recovery report, hint ladder, dispatch route/rail 순서다.
+
+2026-06-23 기준 `UI-ACTION-HUD-001`로 첫 번째 UI 품질 slice를 닫았다. Running 화면은 `MISSION/GOAL/TOOLS or JUDGMENT/SIGNAL/ACTIONS` grammar를 사용하며, mode-specific action은 `COMMAND`/`SEARCH`/`INSERT`/`SELECT` cue와 action bar로 분리된다.
 
 ## P0
 
@@ -26,11 +28,12 @@ P0로 승격하는 조건:
 
 ### UI-ACTION-HUD-001 — Action Bar and Dense Running HUD
 
-- 상태: proposed
+- 상태: completed
 - 왜 중요한가: 현재 running 화면은 mission/cue/review/signal/console이 비슷한 텍스트 무게로 읽혀 "무엇을 눌러야 하는가"가 약해진다.
 - 범위: `ACTIONS [key] label` action bar, `MISSION/GOAL/TOOLS or JUDGMENT/SIGNAL` running HUD grammar, 80-column review/daily 밀도 조정.
 - 제한: 새 dependency, progress schema, content schema, engine capability 변경 없음.
-- 어떻게 검증할 것인가: 80x24 tutorial/incident running viewport에서 action bar와 dense HUD가 잘리지 않고, existing `FocusPanel.actions[].id` 의미 검증이 유지된다.
+- 완료 내용: running HUD에서 current mission, goal, tutorial tools 또는 incident judgment, signal, action bar를 분리했다. Hint 비용은 `[?] 힌트 - grade 영향`, quit은 `[q] 종료`로 표시하고, command/search/insert/visual mode는 현재 mode action을 우선 표시한다.
+- 검증: `go test ./internal/playableview ./internal/playable`, `go test ./...`, `make e2e-playable`, `git diff --check`.
 
 ### UI-ADVENTURE-BEAT-001 — Adventure Signal Rail and Input Echo
 
@@ -105,7 +108,7 @@ P0로 승격하는 조건:
 
 다음 content breadth slice는 진행 가능하다.
 
-- HUD/help/choice/success polish가 full E2E를 통과했다.
+- HUD/help/choice/success/action bar polish가 full E2E를 통과했다.
 - progress 저장 포맷 변경이 필요하지 않다.
 - 진행 불가 P0/P1 UX blocker는 현재 없다.
 - 새 콘텐츠는 기존 engine command만 사용하고, 필요한 경우 command-choice/applied incident layer로 추가한다.
@@ -120,6 +123,7 @@ P0로 승격하는 조건:
 
 - `UI-MODAL-ACTION-HIERARCHY-001 — Modal Decision Surface`: failed/succeeded modal을 viewport overlay decision surface로 재배치하고, primary/secondary action footer, running hint/quit action, hint cost copy, incident progressive briefing, final-frame E2E evidence를 보강했다.
 - `UI-MODAL-ACTION-HIERARCHY-002 — Modal/Hint Post-release Hardening`: modal을 console surface 위 decision layer로 고정하고, running hint utility action 분리, 한글 final-frame evidence, `다음 런북` action label, summary evidence metadata를 보강했다.
+- `UI-ACTION-HUD-001 — Action Bar and Dense Running HUD`: running HUD를 `MISSION/GOAL/TOOLS or JUDGMENT/SIGNAL/ACTIONS` grammar로 정리하고, mode-specific action을 action bar로 분리했다.
 - `UI-EVIDENCE-003 — Final Frame Evidence`: `UI-EVIDENCE-002`에서 runner의 `screen_final.txt` 저장을 구현했고, `E2E-EVIDENCE-008`에서 long incident route가 final/timeline evidence를 남기도록 고정했다.
 - `UI-COMMAND-MEMORY-001 — Learned Command Memory`: `UI-POLISH-002`에서 tutorial/hint/failure command memory cue를 구현했다.
 - `UI-ACTION-LANGUAGE-001 — Action Line Language Contract`: `UI-CONSOLE-POLISH-001`에서 screen label과 action id를 분리했다.

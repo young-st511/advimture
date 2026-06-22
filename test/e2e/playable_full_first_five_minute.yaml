@@ -41,9 +41,9 @@ steps:
   - wait_screen_contains: "다음 단계: enter"
   - send: "enter"
 
-  - wait_screen_contains: "이 변경은 버려도 되니 저장하지 않고 command-line에서 나가세요"
+  - wait_screen_contains: "MISSION  실험 파일 버리고 나가기"
   - send: ":"
-  - wait_screen_contains: "명령: 입력 후 enter 실행"
+  - wait_screen_contains: "COMMAND  :"
   - wait_ms: 100
   - send: "q"
   - wait_ms: 30
@@ -55,7 +55,7 @@ steps:
 
   - wait_screen_contains: "변경을 남긴 채 세션을 닫아야 하니 저장 후 종료하세요"
   - send: ":"
-  - wait_screen_contains: "명령: 입력 후 enter 실행"
+  - wait_screen_contains: "COMMAND  :"
   - wait_ms: 100
   - send: "w"
   - wait_ms: 30
@@ -161,7 +161,7 @@ steps:
 
   - wait_screen_contains: "현재 줄만 긴급 수정"
   - send: ":"
-  - wait_screen_contains: "명령: 입력 후 enter 실행"
+  - wait_screen_contains: "COMMAND  :"
   - wait_ms: 100
   - send: "s"
   - wait_ms: 30
@@ -189,7 +189,7 @@ steps:
 
   - wait_screen_contains: "파일 전체의 TODO를 DONE으로 바꾸세요"
   - send: ":"
-  - wait_screen_contains: "명령: 입력 후 enter 실행"
+  - wait_screen_contains: "COMMAND  :"
   - wait_ms: 100
   - send: "%"
   - wait_ms: 30
@@ -225,7 +225,7 @@ steps:
 
   - wait_screen_contains: "2~3번째 줄의 error만 ok로 바꾸세요"
   - send: ":"
-  - wait_screen_contains: "명령: 입력 후 enter 실행"
+  - wait_screen_contains: "COMMAND  :"
   - wait_ms: 100
   - send: "2"
   - wait_ms: 30

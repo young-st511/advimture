@@ -24,7 +24,7 @@ steps:
   - send: "h"
   - wait_ms: 50
   - send: "enter"
-  - wait_screen_contains: "breach start"
+  - wait_screen_contains: "Command: /breach"
   - send: "V"
   - wait_screen_contains: "Selection: linewise 2,0 -> 2,11"
   - send: "j"

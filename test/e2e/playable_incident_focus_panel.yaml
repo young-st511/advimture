@@ -8,12 +8,12 @@ setup:
   home: temp
   complete_before: incident-hotfix-001
 steps:
-  - wait_screen_contains: "OPERATOR JUDGMENT"
+  - wait_screen_contains: "JUDGMENT"
   - send: "q"
 assert:
   screen_contains:
-    - "OPERATOR JUDGMENT"
-    - "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
+    - "JUDGMENT"
+    - "목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
   exit_code: 0
   progress_file_exists: true
   key_trace:

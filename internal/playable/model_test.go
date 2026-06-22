@@ -81,11 +81,15 @@ func TestPlayablePassesWindowSizeToRenderer(t *testing.T) {
 	if strings.Contains(view, "\n복구 현황\n") {
 		t.Fatalf("view = %q, should fold recovery status into mission HUD", view)
 	}
-	if !strings.Contains(view, "복구 메모: 재점검 3건 · 다음: 목표 문자까지 이동하기") {
-		t.Fatalf("view = %q, want compact recovery memo in mission HUD", view)
+	for _, want := range []string{"MISSION  커서 위치 맞추기", "TOOLS    입력 2/2 · 기억할 명령: l", "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("view = %q, want dense HUD %q", view, want)
+		}
 	}
-	if strings.Contains(view, "오늘의 복구 루트:") {
-		t.Fatalf("view = %q, should not expose detailed daily route in running HUD", view)
+	for _, unwanted := range []string{"복구 메모:", "오늘의 복구 루트:"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("view = %q, should not expose %q in running HUD", view, unwanted)
+		}
 	}
 }
 

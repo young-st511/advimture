@@ -12,7 +12,7 @@ steps:
   - send: "l"
   - wait_screen_contains: "이 입력은 이번 문항"
   - send: "enter"
-  - wait_screen_contains: "Inputs left: 2/2"
+  - wait_screen_contains: "TOOLS    입력 2/2 · 기억할 명령: w"
   - send: "w"
   - wait_ms: 50
   - send: "w"
@@ -21,7 +21,7 @@ steps:
 assert:
   screen_contains:
     - "RECOVERY CHECK"
-    - "단어 시작점으로 뛰어가기"
+    - "서비스 이름 찾기"
     - "다음 행동  다음 단계: enter"
   exit_code: 0
   progress_file_exists: true

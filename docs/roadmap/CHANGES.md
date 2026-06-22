@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-23 — Action bar와 dense running HUD 완료
+
+이전 가정: running 화면은 `SIGNAL` rail로 반응성은 생겼지만, mission/cue/review/action 정보가 여전히 같은 텍스트 무게로 읽혀 다음 조작의 시선 우선순위가 약했다.
+
+새 가정: running HUD는 `MISSION`, `GOAL`, `TOOLS` 또는 `JUDGMENT`, `SIGNAL`, `ACTIONS` grammar를 기본으로 사용한다. `FocusPanel.actions`는 화면에서 `ACTIONS  [key] label` action bar로 보이고, command/search/insert/visual mode는 현재 mode action을 hint/quit보다 우선한다.
+
+이유: 사용자 UX review가 "글자가 많고 무엇을 봐야 할지 어렵다"는 문제를 제기했고, deep development 결과 action bar와 dense running HUD가 가장 작은 범위에서 즉시 품질을 올리는 첫 slice로 판단됐다. `go test ./internal/playableview ./internal/playable`, `go test ./...`, `make e2e-playable`, `git diff --check`가 통과했다.
+
+영향: `UI-ACTION-HUD-001`은 completed로 이동한다. 다음 후보는 recovery report grammar를 action bar 수준으로 정리하는 `UI-REPORT-001`, hint를 판단 관점부터 점진 공개하는 `UI-HINT-LADDER-001`, 또는 기존 engine 기반 applied content breadth다. Release/tag/push, progress schema, content schema, 새 dependency는 변경하지 않았다.
+
 ## 2026-06-20 — Running 화면 adventure beat 적용
 
 이전 가정: modal/action hierarchy는 개선됐지만 running 화면은 여전히 설명형 텍스트 중심이며, 입력이 화면에서 게임적으로 반응한다는 신호가 약했다.

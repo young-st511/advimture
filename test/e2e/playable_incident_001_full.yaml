@@ -97,7 +97,7 @@ steps:
 
   - wait_screen_contains: "첫 줄은 원인 기록"
   - send: ":"
-  - wait_screen_contains: "명령: 입력 후 enter 실행"
+  - wait_screen_contains: "COMMAND  :"
   - send: "2"
   - wait_ms: 30
   - send: ","
@@ -134,7 +134,7 @@ assert:
     - "Runbook Dispatch"
     - "릴레이 기지 001: 야간 핫픽스 복구"
     - "Exercise: 6/6"
-    - "판단:"
+    - "JUDGMENT"
     - "다음 런북: enter"
     - "range를 붙여 원인 기록은 남기고 문제 relay 구간만 ok로 정리했습니다. 첫 야간 핫픽스 runbook을 닫았습니다."
   exit_code: 0

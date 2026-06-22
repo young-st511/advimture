@@ -792,11 +792,24 @@ func revealedHintLine(message string) string {
 
 func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel) []playableview.ActionLine {
 	switch {
-	case view.Mode == string(vimengine.ModeVisual),
-		view.Mode == string(vimengine.ModeInsert),
-		view.Mode == string(vimengine.ModeCommand),
-		view.Mode == string(vimengine.ModeSearch):
-		return nil
+	case view.Mode == string(vimengine.ModeVisual):
+		return []playableview.ActionLine{
+			focusAction("delete_selection", "선택 제거: d"),
+			focusAction("yank_selection", "선택 복사: y"),
+			focusAction("normal", "normal: esc"),
+		}
+	case view.Mode == string(vimengine.ModeInsert):
+		return []playableview.ActionLine{focusAction("normal", "normal: esc")}
+	case view.Mode == string(vimengine.ModeCommand):
+		return []playableview.ActionLine{
+			focusAction("execute", "실행: enter"),
+			focusAction("cancel", "취소: esc"),
+		}
+	case view.Mode == string(vimengine.ModeSearch):
+		return []playableview.ActionLine{
+			focusAction("find", "찾기: enter"),
+			focusAction("cancel", "취소: esc"),
+		}
 	case state.Status == exerciseruntime.StatusSucceeded:
 		return m.successActions()
 	case state.Status == exerciseruntime.StatusFailed:

@@ -8,28 +8,28 @@ setup:
   home: temp
   complete_before: incident-hotfix-001
 steps:
-  - wait_screen_contains: "OPERATOR JUDGMENT"
+  - wait_screen_contains: "JUDGMENT"
   - send: "?"
   - wait_screen_contains: "참고 명령: /"
   - send: "q"
 assert:
   screen_contains:
-    - "OPERATOR JUDGMENT"
-    - "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
+    - "JUDGMENT"
+    - "목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."
     - "힌트 내용  복구 작전에서는"
     - "등급에 영향"
     - "원인 신호를"
     - "잡습니다."
     - "참고 명령: /"
-    - "보조 행동  힌트: ? · 종료: q"
+    - "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"
   final_screen_contains:
-    - "OPERATOR JUDGMENT"
+    - "JUDGMENT"
     - "힌트 내용 복구 작전에서는"
     - "잡습니다. · 등급에 영향"
-    - "보조 행동  힌트: ? · 종료: q"
+    - "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"
     - "RUNBOOK CONSOLE"
   final_screen_not_contains:
-    - "영향 · 보조 행동"
+    - "영향 · ACTIONS"
     - "힌트 내 용"
     - "종료 : q"
   final_screen_max_lines: 24

@@ -7,7 +7,7 @@ terminal:
 setup:
   home: temp
 steps:
-  - wait_screen_contains: "복구 메모: 재점검 3건 · 다음: 목표 문자까지 이동하기"
+  - wait_screen_contains: "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"
   - send: "l"
   - wait_ms: 50
   - send: "l"

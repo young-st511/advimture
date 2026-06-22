@@ -350,16 +350,15 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	if strings.Contains(view, "\n복구 현황\n") {
 		t.Fatalf("Render output = %q, should not render recovery status as a large pre-console section", view)
 	}
-	if !strings.Contains(view, "복구 메모: 재점검 3건 · 다음: 단어 시작점으로 뛰어가기") {
-		t.Fatalf("Render output = %q, want compact recovery memo in mission HUD", view)
+	for _, unwanted := range []string{"복구 메모:", "오늘의 복구 루트:"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should not expose %q in dense running tutorial HUD", view, unwanted)
+		}
 	}
-	if strings.Contains(view, "오늘의 복구 루트: 3건 대기") {
-		t.Fatalf("Render output = %q, should not expose detailed daily route in running tutorial HUD", view)
-	}
-	cueIndex := strings.Index(view, "TRAINING BRIEF")
-	recoveryIndex := strings.Index(view, "복구 메모:")
-	if cueIndex == -1 || recoveryIndex == -1 || cueIndex > recoveryIndex {
-		t.Fatalf("Render output = %q, want action cue before recovery memo", view)
+	for _, want := range []string{"TOOLS    훈련 키 w", "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want dense HUD cue %q", view, want)
+		}
 	}
 	if !strings.Contains(view, "NORMAL · running · cursor 0:0") {
 		t.Fatalf("Render output = %q, want polished HUD status line", view)
@@ -372,7 +371,7 @@ func TestRenderHUDPlacesMissionBeforeConsoleWhenSizeIsKnown(t *testing.T) {
 	}
 }
 
-func TestRenderHUDShowsRunningActionsAsUtilityCue(t *testing.T) {
+func TestRenderHUDShowsRunningActionsAsActionBar(t *testing.T) {
 	view := Render(Screen{
 		Width:       80,
 		Height:      24,
@@ -389,13 +388,122 @@ func TestRenderHUDShowsRunningActionsAsUtilityCue(t *testing.T) {
 		},
 	})
 
-	for _, want := range []string{"TRAINING BRIEF", "기억할 명령: l", "보조 행동  힌트: ? · 종료: q"} {
+	for _, want := range []string{"TOOLS    입력 2/2 · 기억할 명령: l", "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want %q", view, want)
 		}
 	}
-	if strings.Contains(view, "기억할 명령: l · 힌트: ?") {
+	if strings.Contains(view, "기억할 명령: l · 힌트") || strings.Contains(view, "보조 행동") {
 		t.Fatalf("Render output = %q, should not mix utility actions with command memory", view)
+	}
+}
+
+func TestRenderHUDUsesDenseTutorialActionHUD(t *testing.T) {
+	view := Render(Screen{
+		Width:            80,
+		Height:           24,
+		PlaylistCategory: "tutorial",
+		ReviewSummary:    "재점검 대상: 목표 문자까지 이동하기: 미복구",
+		DailyRoute:       "오늘의 복구 루트: 목표 문자까지 이동하기(미복구) 외 2건 대기",
+		ReviewCount:      3,
+		ReviewPrimary:    "목표 문자까지 이동하기",
+		Title:            "커서 위치 맞추기",
+		Message:          "목표까지 이동하세요.",
+		BufferLines:      []string{"abc"},
+		Mode:             "normal",
+		Status:           "running",
+		FocusPanel: &FocusPanel{
+			Kind:    "training",
+			Title:   "TRAINING BRIEF",
+			Lines:   []string{"Inputs left: 2/2", "기억할 명령: l"},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
+		},
+	})
+
+	for _, want := range []string{
+		"MISSION  커서 위치 맞추기",
+		"GOAL     목표까지 이동하세요.",
+		"TOOLS    입력 2/2 · 기억할 명령: l",
+		"SIGNAL",
+		"ACTIONS  [?] 힌트 - grade 영향   [q] 종료",
+	} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+	for _, unwanted := range []string{"TRAINING BRIEF", "보조 행동", "복구 메모:", "오늘의 복구 루트:"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should not show %q in dense running HUD", view, unwanted)
+		}
+	}
+}
+
+func TestRenderHUDUsesDenseIncidentJudgmentHUD(t *testing.T) {
+	view := Render(Screen{
+		Width:            80,
+		Height:           24,
+		PlaylistCategory: "incident",
+		ReviewSummary:    "재점검 대상: timeout 위치 추적: 미복구",
+		DailyRoute:       "오늘의 복구 루트: timeout 위치 추적(미복구) 외 2건 대기",
+		ReviewCount:      3,
+		ReviewPrimary:    "timeout 위치 추적",
+		Title:            "timeout 위치 추적",
+		Message:          "장애 로그에서 timeout marker를 찾아 복구 지점을 고정하세요.",
+		BufferLines:      []string{"ok", "timeout"},
+		Mode:             "normal",
+		Status:           "running",
+		FocusPanel: &FocusPanel{
+			Kind:    "incident",
+			Title:   "OPERATOR JUDGMENT",
+			Lines:   []string{"Inputs left: 3/3", "판단: 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요."},
+			Actions: []ActionLine{{ID: "hint", Label: "힌트: ?"}, {ID: "quit", Label: "종료: q"}},
+		},
+	})
+
+	for _, want := range []string{
+		"MISSION  timeout 위치 추적",
+		"GOAL     장애 로그에서 timeout marker를 찾아 복구 지점을 고정하세요.",
+		"JUDGMENT 입력 3/3 · 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.",
+		"ACTIONS  [?] 힌트 - grade 영향   [q] 종료",
+	} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+	for _, unwanted := range []string{"OPERATOR JUDGMENT", "판단:", "보조 행동", "복구 현황:", "오늘의 복구 루트:"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should not show %q in dense incident HUD", view, unwanted)
+		}
+	}
+}
+
+func TestRenderHUDShowsModeActionBar(t *testing.T) {
+	view := Render(Screen{
+		Width:           80,
+		Height:          24,
+		Title:           "저장 후 종료",
+		Message:         "변경을 저장하고 command-line에서 종료하세요.",
+		BufferLines:     []string{"draft"},
+		Mode:            "command",
+		Status:          "running",
+		CommandLine:     "wq",
+		ShowCommandLine: true,
+		CommandPrompt:   ":",
+		FocusPanel: &FocusPanel{
+			Kind:    "mode",
+			Title:   "명령 모드",
+			Lines:   []string{"명령: 입력 후 enter 실행  esc: normal"},
+			Actions: []ActionLine{{ID: "execute", Label: "실행: enter"}, {ID: "cancel", Label: "취소: esc"}},
+		},
+	})
+
+	for _, want := range []string{"COMMAND  :wq", "ACTIONS  [enter] 실행   [esc] 취소"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+	if strings.Contains(view, "힌트") || strings.Contains(view, "종료: q") {
+		t.Fatalf("Render output = %q, should prioritize mode actions over hint/quit", view)
 	}
 }
 
@@ -445,11 +553,15 @@ func TestRenderHUDUsesIncidentRecoverySummary(t *testing.T) {
 		},
 	})
 
-	if !strings.Contains(view, "복구 현황: 재점검 3건 · 잔류: timeout 위치 추적") {
-		t.Fatalf("Render output = %q, want compact incident recovery status", view)
+	for _, want := range []string{"JUDGMENT 목표 상태를 보고 이미 배운 Vim 동작을 선택하세요.", "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want dense incident HUD %q", view, want)
+		}
 	}
-	if strings.Contains(view, "오늘의 복구 루트: timeout 위치 추적") {
-		t.Fatalf("Render output = %q, should not expose detailed daily route in running incident HUD", view)
+	for _, unwanted := range []string{"복구 현황:", "오늘의 복구 루트:"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should not expose %q in running incident HUD", view, unwanted)
+		}
 	}
 	if !strings.Contains(view, "ADVIMTURE | Runbook Dispatch | 릴레이 기지 001 | Status: running") {
 		t.Fatalf("Render output = %q, want runbook dispatch track in header", view)
@@ -480,25 +592,25 @@ func TestRenderHUDWrapsLongIncidentHintCue(t *testing.T) {
 		},
 	})
 
-	for _, want := range []string{"OPERATOR JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "보조 행동  힌트: ? · 종료: q"} {
+	for _, want := range []string{"JUDGMENT", "참고 명령: /", "원인 신호를", "잡습니다.", "ACTIONS  [?] 힌트 - grade 영향   [q] 종료"} {
 		if !strings.Contains(view, want) {
 			t.Fatalf("Render output = %q, want wrapped cue to preserve %q", view, want)
 		}
 	}
 	for _, line := range strings.Split(view, "\n") {
-		if strings.Contains(line, "OPERATOR JUDGMENT") || strings.Contains(line, "힌트 내용") || strings.Contains(line, "잡습니다.") {
+		if strings.Contains(line, "JUDGMENT") || strings.Contains(line, "힌트 내용") || strings.Contains(line, "잡습니다.") {
 			if displayWidth(line) > 80 {
 				t.Fatalf("cue line width = %d, want <= 80: %q\nfull view = %q", displayWidth(line), line, view)
 			}
 		}
-		if strings.Contains(line, "보조 행동") && (strings.Contains(line, "힌트 내용") || strings.Contains(line, "등급에 영향") || strings.Contains(line, "잡습니다.")) {
+		if strings.Contains(line, "ACTIONS") && (strings.Contains(line, "힌트 내용") || strings.Contains(line, "잡습니다.")) {
 			t.Fatalf("utility action should be physically separated from hint body: %q\nfull view = %q", line, view)
 		}
 	}
-	if lineIndex(view, "보조 행동") <= lineIndex(view, "등급에 영향") {
+	if lineIndex(view, "ACTIONS") <= lineIndex(view, "등급에 영향") {
 		t.Fatalf("Render output = %q, want utility action after hint body", view)
 	}
-	if lineIndex(view, "OPERATOR JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
+	if lineIndex(view, "JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
 		t.Fatalf("Render output = %q, want wrapped cue before console", view)
 	}
 }
@@ -530,7 +642,7 @@ func TestRenderHUDWrapsLongBriefingBeforeConsole(t *testing.T) {
 	if strings.Contains(view, "오염된 줄 묶음을 골\n") || strings.Contains(view, "오염된 줄 묶음을 골라\n") {
 		t.Fatalf("Render output = %q, should not leave incomplete briefing fragment", view)
 	}
-	if lineIndex(view, "OPERATOR JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
+	if lineIndex(view, "JUDGMENT") > lineIndex(view, "RUNBOOK CONSOLE") {
 		t.Fatalf("Render output = %q, want cue before console", view)
 	}
 }
@@ -550,17 +662,22 @@ func TestRenderHUDKeepsCompactRecoverySummaryInModePanel(t *testing.T) {
 		Mode:             "visual",
 		Status:           "running",
 		FocusPanel: &FocusPanel{
-			Kind:  "mode",
-			Title: "선택 모드",
-			Lines: []string{"선택: 이동 키로 범위 조정  esc/v: normal"},
+			Kind:    "mode",
+			Title:   "선택 모드",
+			Lines:   []string{"선택: 이동 키로 범위 조정  esc/v: normal"},
+			Actions: []ActionLine{{ID: "delete_selection", Label: "선택 제거: d"}, {ID: "normal", Label: "normal: esc"}},
 		},
 	})
 
-	if !strings.Contains(view, "복구 현황: 재점검 1건 · 잔류: 복구 범위 판별") {
-		t.Fatalf("Render output = %q, want compact recovery summary in mode panel", view)
+	for _, want := range []string{"SELECT   이동 키로 범위 조정  esc/v: normal", "ACTIONS  [d] 선택 제거   [esc] normal"} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want mode HUD %q", view, want)
+		}
 	}
-	if strings.Contains(view, "오늘의 복구 루트: 복구 범위 판별") {
-		t.Fatalf("Render output = %q, should not expose detailed daily route in mode panel", view)
+	for _, unwanted := range []string{"복구 현황:", "오늘의 복구 루트:"} {
+		if strings.Contains(view, unwanted) {
+			t.Fatalf("Render output = %q, should not expose %q in mode panel", view, unwanted)
+		}
 	}
 }
 

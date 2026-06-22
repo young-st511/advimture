@@ -12,7 +12,7 @@ steps:
   - send: "b"
   - wait_screen_contains: "다시 시도: r 또는 enter"
   - send: "enter"
-  - wait_screen_contains: "Inputs left: 3/3"
+  - wait_screen_contains: "TOOLS    입력 3/3 · 기억할 명령: diw"
   - send: "d"
   - wait_ms: 50
   - send: "i"

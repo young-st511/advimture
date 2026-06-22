@@ -90,10 +90,9 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 위치:
 
 - terminal size가 있는 화면은 `MISSION` HUD → `RUNBOOK CONSOLE` → status line 순서를 따른다.
-- running/mode-specific 안내는 `MISSION` HUD 안의 짧은 cue로 접는다. 긴 hint나 command memory는 terminal width 기준으로 여러 줄에 감싸며, 중요한 action/hint 문구를 truncation으로 잃지 않는다.
-- running HUD에서는 cue line을 review/daily summary보다 먼저 배치한다.
-- tutorial running HUD의 review/daily는 `복구 메모: 재점검 N건 · 다음: <title>`처럼 축약한다.
-- incident running HUD의 review/daily는 `복구 현황: 재점검 N건 · 잔류: <title>`처럼 축약한다.
+- running/mode-specific 안내는 `MISSION` HUD 안의 dense cue로 접는다. 긴 hint나 command memory는 terminal width 기준으로 여러 줄에 감싸며, 중요한 action/hint 문구를 truncation으로 잃지 않는다.
+- running HUD에서는 `MISSION`, `GOAL`, `TOOLS` 또는 `JUDGMENT`, `SIGNAL`, `ACTIONS`를 현재 화면의 기본 grammar로 사용한다.
+- 80-column running HUD의 review/daily는 현재 목표와 console 접근을 밀어내지 않도록 기본 화면에서 숨기거나 후속 wide rail/success debrief로 낮춘다.
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
 - failed/succeeded/debrief 안내는 `RUNBOOK CONSOLE` 위에서 floating modal로 표시하되, buffer/status/grade 뒤에 단순 append된 일반 본문 블록처럼 보이면 안 된다.
 - floating modal은 terminal width/height가 알려진 경우 viewport 기준으로 horizontal/vertical placement를 계산하고, console surface 위에서 buffer/status/grade를 decision layer 뒤로 보낸다.
@@ -102,8 +101,8 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 
 상태별 규칙:
 
-- running tutorial: `MISSION` HUD cue에 command memory, 필요한 경우 훈련 키를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 물리적으로 분리한다. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
-- running incident: `MISSION` HUD cue에 판단 cue를 표시하고, `hint`/`quit`은 `보조 행동  힌트: ? · 종료: q` utility action으로 물리적으로 분리한다. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
+- running tutorial: `TOOLS` line에 command memory, 필요한 경우 훈련 키를 표시하고, `hint`/`quit`은 `ACTIONS` action bar로 물리적으로 분리한다. command memory와 coach key가 같은 정보를 말하면 중복 노출하지 않는다.
+- running incident: `JUDGMENT` line에 판단 cue를 표시하고, `hint`/`quit`은 `ACTIONS` action bar로 물리적으로 분리한다. command memory는 hint/failure 후에만 `참고 명령`으로 점진 공개
 - command/search mode: 입력 중인 prompt와 실행/취소 방법
 - insert/search/command/visual mode cue는 한국어 action label로 표현하고, 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않는다.
 - failed: floating modal에 실패 이유, 남은 입력, attempts, recovery hint, primary retry action footer
@@ -122,7 +121,7 @@ Advimture의 TUI는 Vim 학습 게임이면서 원격 시설 복구국의 콘솔
 - `actions`: retry/next/hint/quit 같은 조작 의미. 화면에는 `label`을 action footer로 표시하고, E2E는 `id`로 검증한다.
 - failed modal은 `RECOVERY CHECK`, success modal은 `RUNBOOK SEALED` heading으로 감싸되, app_state의 원래 focus panel kind/title/lines는 유지한다.
 - floating modal이 추가하는 보조 label은 `실수`, `힌트`, `배운 점`, `기록`처럼 한국어로 표시한다.
-- action footer는 modal body의 기록/힌트/review motivation과 분리한다. 화면에서는 primary action을 `다음 행동`, secondary action을 `보조 행동` prefix로 표시한다. `retry`/`next*`/`dispatch_complete`/`playlist_complete` 같은 primary action은 `hint`나 `quit` 같은 secondary action보다 먼저 읽혀야 한다.
+- action footer는 modal body의 기록/힌트/review motivation과 분리한다. running 화면에서는 `ACTIONS  [key] label` grammar를 사용한다. success/failure modal의 `다음 행동`/`보조 행동` grammar는 `UI-REPORT-001` 전까지 유지할 수 있다.
 
 Action label 계약:
 

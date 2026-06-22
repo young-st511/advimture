@@ -127,13 +127,8 @@ func renderHUD(screen Screen) string {
 	var b strings.Builder
 	b.WriteString(renderHeaderLine(screen, screen.Width))
 	b.WriteString("\n\n")
-	b.WriteString("MISSION\n")
-	b.WriteString(screen.Title + "\n")
-	for _, line := range wrapHUDMessage(screen.Message, screen.Width) {
+	for _, line := range renderDenseMissionHUD(screen) {
 		b.WriteString(line + "\n")
-	}
-	if cue := renderMissionCue(screen.FocusPanel, screen.Width); cue != "" {
-		b.WriteString(cue)
 	}
 	if status := recoveryStatusLine(screen); status != "" {
 		b.WriteString(status + "\n")
@@ -159,6 +154,9 @@ func renderHUD(screen Screen) string {
 		b.WriteString(fmt.Sprintf("Grade: %s\n", screen.Grade))
 	}
 	b.WriteString("\n")
+	if actionBar := renderHUDActionBar(screen); actionBar != "" {
+		b.WriteString(actionBar + "\n\n")
+	}
 	if screen.ShowCommandLine {
 		b.WriteString(screen.CommandPrompt + screen.CommandLine + "\n\n")
 	}
@@ -184,8 +182,105 @@ func renderHUDStatusLine(screen Screen) string {
 	return fmt.Sprintf("%s · %s · cursor %d:%d\n", mode, status, screen.CursorRow, screen.CursorCol)
 }
 
+func renderDenseMissionHUD(screen Screen) []string {
+	width := hudTextWidth(screen.Width)
+	lines := labeledWrappedLine("MISSION", screen.Title, width)
+	for _, line := range wrapHUDMessage(screen.Message, screen.Width) {
+		lines = append(lines, labeledWrappedLine("GOAL", line, width)...)
+	}
+	if screen.FocusPanel != nil && !isFloatingPanel(*screen.FocusPanel) {
+		lines = append(lines, denseFocusPanelLines(screen, *screen.FocusPanel, width)...)
+	}
+	return lines
+}
+
+func denseFocusPanelLines(screen Screen, panel FocusPanel, width int) []string {
+	switch panel.Kind {
+	case "training":
+		if text := densePanelText(panel.Lines); text != "" {
+			return labeledWrappedLine("TOOLS", text, width)
+		}
+	case "incident":
+		if text := densePanelText(panel.Lines); text != "" {
+			return labeledWrappedLine("JUDGMENT", denseIncidentText(text), width)
+		}
+	case "mode":
+		return modeDenseLines(screen, panel, width)
+	}
+	return nil
+}
+
+func modeDenseLines(screen Screen, panel FocusPanel, width int) []string {
+	switch strings.ToLower(screen.Mode) {
+	case "command":
+		return labeledWrappedLine("COMMAND", screen.CommandPrompt+screen.CommandLine, width)
+	case "search":
+		return labeledWrappedLine("SEARCH", screen.CommandPrompt+screen.CommandLine, width)
+	case "insert":
+		return labeledWrappedLine("INSERT", "입력 중", width)
+	case "visual":
+		text := densePanelText(panel.Lines)
+		text = strings.TrimPrefix(text, "선택: ")
+		if text == "" {
+			text = "selection active"
+		}
+		return labeledWrappedLine("SELECT", text, width)
+	default:
+		if text := densePanelText(panel.Lines); text != "" {
+			return labeledWrappedLine(strings.ToUpper(panel.Title), text, width)
+		}
+	}
+	return nil
+}
+
+func densePanelText(lines []string) string {
+	parts := make([]string, 0, len(lines))
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" {
+			continue
+		}
+		line = strings.TrimPrefix(line, "Coach: ")
+		if strings.HasPrefix(line, "Inputs left: ") {
+			line = "입력 " + strings.TrimPrefix(line, "Inputs left: ")
+		}
+		parts = append(parts, line)
+	}
+	return strings.Join(parts, " · ")
+}
+
+func denseIncidentText(text string) string {
+	text = strings.TrimPrefix(text, "판단: ")
+	return strings.Replace(text, " · 판단: ", " · ", 1)
+}
+
+func labeledWrappedLine(label string, text string, width int) []string {
+	if text == "" {
+		return []string{label}
+	}
+	prefix := fmt.Sprintf("%-8s ", label)
+	available := width - displayWidth(prefix)
+	if available < 16 {
+		available = width
+	}
+	wrapped := wrapTextByDisplayWidth(text, available)
+	if len(wrapped) == 0 {
+		return []string{prefix}
+	}
+	lines := make([]string, 0, len(wrapped))
+	lines = append(lines, prefix+wrapped[0])
+	indent := strings.Repeat(" ", displayWidth(prefix))
+	for _, line := range wrapped[1:] {
+		lines = append(lines, indent+line)
+	}
+	return lines
+}
+
 func recoveryStatusLine(screen Screen) string {
 	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
+		return ""
+	}
+	if strings.ToLower(screen.Status) == "running" {
 		return ""
 	}
 	if screen.FocusPanel != nil && !isFloatingPanel(*screen.FocusPanel) && screen.ReviewCount > 0 {
@@ -220,6 +315,101 @@ func renderAdventureSignal(screen Screen) string {
 		line += "  " + echo
 	}
 	return ellipsize(line, width)
+}
+
+func renderHUDActionBar(screen Screen) string {
+	if screen.FocusPanel == nil || isFloatingPanel(*screen.FocusPanel) {
+		return ""
+	}
+	return renderActionBar(screen.FocusPanel.Actions, hudTextWidth(screen.Width))
+}
+
+func renderActionBar(actions []ActionLine, width int) string {
+	if len(actions) == 0 {
+		return ""
+	}
+	parts := make([]string, 0, len(actions))
+	for _, action := range actions {
+		if part := actionBarPart(action); part != "" {
+			parts = append(parts, part)
+		}
+	}
+	if len(parts) == 0 {
+		return ""
+	}
+	return ellipsize("ACTIONS  "+strings.Join(parts, "   "), width)
+}
+
+func actionBarPart(action ActionLine) string {
+	key, label := actionBarKeyLabel(action)
+	if label == "" {
+		return ""
+	}
+	if key == "" {
+		return label
+	}
+	return "[" + key + "] " + label
+}
+
+func actionBarKeyLabel(action ActionLine) (string, string) {
+	switch action.ID {
+	case "hint":
+		return "?", "힌트 - grade 영향"
+	case "quit":
+		return "q", "종료"
+	case "retry":
+		return "enter/r", "다시 시도"
+	case "execute":
+		return "enter", "실행"
+	case "find":
+		return "enter", "찾기"
+	case "cancel":
+		return "esc", "취소"
+	case "normal":
+		return "esc", "normal"
+	case "delete_selection":
+		return "d", "선택 제거"
+	case "yank_selection":
+		return "y", "선택 복사"
+	case "next":
+		return "enter", "다음 단계"
+	case "next_tutorial":
+		return "enter", "다음 튜토리얼"
+	case "next_runbook":
+		return "enter", "다음 런북"
+	case "next_dispatch":
+		return "enter", "다음 출격"
+	case "save_retry":
+		return "enter", "저장 재시도"
+	}
+	return parseActionLabel(action.Label)
+}
+
+func parseActionLabel(label string) (string, string) {
+	label = strings.TrimSpace(label)
+	if label == "" {
+		return "", ""
+	}
+	if !strings.Contains(label, ":") {
+		return "", label
+	}
+	parts := strings.SplitN(label, ":", 2)
+	text := strings.TrimSpace(parts[0])
+	key := strings.TrimSpace(parts[1])
+	switch key {
+	case "?":
+		return "?", text
+	case "q":
+		return "q", text
+	case "enter":
+		return "enter", text
+	case "esc":
+		return "esc", text
+	case "r 또는 enter":
+		return "enter/r", text
+	default:
+		return key, text
+	}
 }
 
 func adventureSignalRail(category string, frame int) string {
