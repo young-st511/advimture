@@ -1,0 +1,57 @@
+id: playable_incident_011_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-range-substitute-001
+steps:
+  - wait_screen_contains: "릴레이 기지 011"
+  - send: ":s/stale/live/g"
+  - wait_ms: 100
+  - send: "enter"
+  - wait_screen_contains: "현재 줄 범위만 live로 바꿨습니다"
+  - send: "enter"
+  - wait_screen_contains: "전체 파일에 흩어진 hold"
+  - send: ":%s/hold/live/g"
+  - wait_ms: 100
+  - send: "enter"
+  - wait_screen_contains: "전체 파일 범위의 hold를 한 번에 live로 바꿨습니다"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Runbook Dispatch"
+    - "릴레이 기지 011: 치환 범위 판별"
+    - "전체 파일 범위의 hold를 한 번에 live로 바꿨습니다"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"incident-range-substitute-001\""
+    - "\"incident-range-substitute-002\""
+  key_trace:
+    - ":s/stale/live/g"
+    - "enter"
+    - "enter"
+    - ":%s/hold/live/g"
+    - "enter"
+    - "q"
+  app_state:
+    buffer: ["live pump", "live relay", "guard live"]
+    mode: "normal"
+    command: ":%s/hold/live/g"
+    status: "succeeded"
+    score:
+      passed: true
+    progress:
+      mission_id: "incident-range-substitute-002"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

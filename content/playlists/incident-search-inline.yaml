@@ -1,0 +1,21 @@
+playlists:
+  - id: incident-009-search-inline
+    status: approved
+    category: incident
+    order: 9
+    title: "릴레이 기지 009: target 재배선"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-009-001
+        role: find_active_target_match
+        command_cluster: search-basic
+        exercise_id: incident-search-inline-001
+        scenario_id: incident-search-inline-001-scenario
+        engine_support: implemented
+      - id: incident-009-002
+        role: repair_inline_target_value
+        command_cluster: char-find-line
+        exercise_id: incident-search-inline-002
+        scenario_id: incident-search-inline-002-scenario
+        engine_support: implemented

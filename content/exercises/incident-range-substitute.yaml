@@ -1,0 +1,100 @@
+exercises:
+  - id: incident-range-substitute-001
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: [":s", ":%s"]
+    mistake_focus: ["현재 줄만 바꿔야 하는데 % range로 정상 줄까지 함께 바꾼다."]
+    replay_status: pass
+    title: "현재 줄 치환 범위 판단"
+    goal_for_player: "node 줄의 stale만 live로 바꾸고 audit/archive 줄의 stale는 그대로 두세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        audit stale
+        node stale stale
+        archive stale
+    target_state:
+      mode: normal
+      buffer: |
+        audit stale
+        node live live
+        archive stale
+    optimal_keys: [":", "s", "/", "s", "t", "a", "l", "e", "/", "l", "i", "v", "e", "/", "g", "enter"]
+    allowed_keys: [":", "s", "/", "t", "a", "l", "e", "i", "v", "g", "enter", "esc"]
+    forbidden_keys: ["%", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 16
+      required_keys: [":", "g", "enter"]
+      forbidden_keys: ["%", "h", "j", "k", "w", "b", "0", "$", "d", "c", "x", "r", "y", "p", "P", "o", "O", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "손상 범위는 현재 node 줄입니다. % range를 붙이면 정상 audit/archive까지 바뀝니다."
+      - after_keys: 15
+        text: "한 줄 안에 stale가 두 번 있으므로 끝에 g flag를 붙여 현재 줄의 모든 match를 바꾸세요."
+    grading:
+      pass_condition: "only node line changed && mode == normal"
+      optimal_key_count: 16
+    e2e_assertions:
+      buffer: ["audit stale", "node live live", "archive stale"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      command: ":s/stale/live/g"
+      status: succeeded
+
+  - id: incident-range-substitute-002
+    status: approved
+    command_cluster: vim-ex-command-substitute
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: [":%s", ":s"]
+    mistake_focus: ["전체 파일에 흩어진 같은 상태값인데 현재 줄 치환으로 일부만 바꾼다."]
+    replay_status: pass
+    title: "전체 파일 치환 범위 판단"
+    goal_for_player: "전체 파일에 흩어진 hold를 모두 live로 바꾸세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        hold pump
+        hold relay
+        guard hold
+    target_state:
+      mode: normal
+      buffer: |
+        live pump
+        live relay
+        guard live
+    optimal_keys: [":", "%", "s", "/", "h", "o", "l", "d", "/", "l", "i", "v", "e", "/", "g", "enter"]
+    allowed_keys: [":", "%", "s", "/", "h", "o", "l", "d", "i", "v", "e", "g", "enter", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 16
+      required_keys: [":", "%", "g", "enter"]
+      forbidden_keys: ["j", "k", "w", "b", "0", "$", "c", "x", "r", "y", "p", "P", "a", "A", "O", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "hold는 현재 줄뿐 아니라 파일 전체에 흩어져 있습니다. % range가 필요합니다."
+      - after_keys: 15
+        text: "끝의 g flag는 같은 줄 안의 모든 match를 처리합니다."
+    grading:
+      pass_condition: "buffer has no hold && mode == normal"
+      optimal_key_count: 16
+    e2e_assertions:
+      buffer: ["live pump", "live relay", "guard live"]
+      cursor:
+        row: 0
+        col: 0
+      mode: normal
+      command: ":%s/hold/live/g"
+      status: succeeded

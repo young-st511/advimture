@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-06-27 — Second Dispatch Pack 완료
+
+이전 가정: `UI-ACTION-HUD-001` 이후 다음 후보는 fresh evidence로 UI/report/hint/content 중 하나를 고르는 것이었고, 콘텐츠 확장은 아직 별도 slice로 열리지 않았다.
+
+새 가정: 기존 engine capability만으로 `incident-009-search-inline`, `incident-010-reuse`, `incident-011-range-substitute`를 추가해 Second Dispatch Pack을 완성했다. 검색 후 inline 수리, 검증값/줄 재사용, 현재 줄/전체 파일 치환 범위 판단을 별도 Runbook Dispatch로 다룬다.
+
+이유: UI action HUD가 안정화된 뒤에는 새 command보다 기존 command를 작전 문맥에서 조합하는 적용 콘텐츠 폭을 늘리는 것이 플레이 가능한 가치가 컸다. RedTeam E2E는 `%` over-scope route가 실패 상태와 recovery modal로 막히며 progress를 저장하지 않는지 확인했다.
+
+영향: `CONTENT-BREADTH-003`은 completed로 이동한다. 새 Vim engine capability, content schema, progress schema, dependency는 변경하지 않았다. RedTeam 중 command mode 실패에서 recovery modal과 `q` 종료가 mode-specific cue보다 우선해야 하는 계약을 보강했다.
+
 ## 2026-06-23 — Action bar와 dense running HUD 완료
 
 이전 가정: running 화면은 `SIGNAL` rail로 반응성은 생겼지만, mission/cue/review/action 정보가 여전히 같은 텍스트 무게로 읽혀 다음 조작의 시선 우선순위가 약했다.

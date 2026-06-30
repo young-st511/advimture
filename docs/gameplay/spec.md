@@ -90,6 +90,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - command goal 문항에서 목표와 다른 command를 실행하면 즉시 실패한다. `:q!` 목표에서 `:wq`, `:wq` 목표에서 `:q!`를 실행하면 저장/폐기 의도 차이를 설명하는 회복 피드백을 보여준다.
 - 목표에 도착했더라도 `constraints.required_keys`가 key trace에 없으면 성공하지 않는다. 단, `constraints.max_inputs`가 남아 있으면 즉시 실패하지 않고 계속 진행할 수 있다. 이후 목표 상태를 벗어났다가 required key로 다시 목표에 도달하면 성공할 수 있지만, 목표 상태에 머문 채 required key를 나중에 덧붙이는 우회는 `required_keys_missing`으로 실패한다. 입력 제한이 끝났거나 입력 제한이 없으면 `required_keys_missing`으로 실패한다.
 - 실패 상태는 progress를 저장하지 않으며, scoring/app_state에는 `Grade=F`를 보존한다. terminal size가 있는 실패 modal은 등급 줄보다 실패 이유, 남은 입력 수, primary retry action을 우선해서 보여준다.
+- 실패/성공 상태의 `FocusPanel`과 global actions는 command/search/insert/visual mode cue보다 우선한다. command mode에서 constraint 실패가 발생해도 recovery modal과 `retry`/`hint`/`quit` action id를 유지하며, failed 상태의 `q`는 Vim command input이 아니라 앱 종료 action으로 처리한다.
 - 실패 화면은 attempt count를 표시하며 `attempt_limit: 0`은 `unlimited`로 표현한다.
 - scoring result는 runtime failure reason을 보존하며, `required_keys_missing`은 `IntentSatisfied=false`, `Grade=F`로 평가한다.
 - `single-char-edit`, `insert-mode-entry`, `undo-redo-basic`은 approved + implemented tutorial cluster이며 `x`, `r`, `i`, `a`, `A`, `u`, `ctrl+r` coverage와 replay gate를 통과한다.
@@ -128,6 +129,9 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-004-linewise-block-recovery`는 “릴레이 기지 004: config block 복구”로 표시하며 `/block`, linewise `Vd`, linewise `Vy` + `p`, linewise `VGd`, `:%s`를 조합하는 네 번째 mixed run이다. replay gate와 full playlist E2E를 통과한다.
 - `incident-006-inline-target-repair`는 “릴레이 기지 006: inline target 복구”로 표시하며 `/target`, `n`, `ct,`를 조합해 comma 뒤 정상 route를 보존하며 손상 값을 교체한다. replay gate와 full playlist E2E를 통과한다.
 - `incident-008-search-scope`는 “릴레이 기지 008: 표식 기반 격리”로 표시하며 `/breach` 검색으로 marker를 찾은 뒤 linewise `V`, `j`, `d`로 breach 줄 묶음을 격리한다. replay gate와 full playlist E2E를 통과한다.
+- `incident-009-search-inline`은 “릴레이 기지 009: target 재배선”으로 표시하며 `/target`, `n`, `ct,`를 조합해 정상 archive match를 건너뛰고 손상 target 값만 delimiter 앞에서 교체한다. replay gate와 full playlist E2E를 통과한다.
+- `incident-010-reuse`는 “릴레이 기지 010: 검증값 재사용”으로 표시하며 `yi"` + `P`, `yy` + `p`를 조합해 검증된 quote 값과 줄 전체를 직접 다시 입력하지 않고 재사용한다. replay gate와 full playlist E2E를 통과한다.
+- `incident-011-range-substitute`는 “릴레이 기지 011: 치환 범위 판별”로 표시하며 `:s/.../.../g`와 `:%s/.../.../g`를 상황에 맞게 구분한다. 첫 beat는 `%` over-scope route를 실패시키고, RedTeam E2E는 요구 범위를 만족하지 않는 클리어 시도가 progress를 저장하지 않는지 검증한다.
 - command choice drill은 새 command cluster가 아니라 이미 배운 command 중 적절한 도구를 고르는 적용 레이어다. 첫 설계 기준은 `docs/gameplay/command-choice-drills.md`를 따른다.
 - command choice playable은 새 schema 승인 전까지 기존 `constraints.required_keys`와 `constraints.forbidden_keys`로 의도한 선택을 고정한다.
 - command choice scenario는 정답 key sequence보다 선택 이유를 성공/실패 피드백에서 강화한다.

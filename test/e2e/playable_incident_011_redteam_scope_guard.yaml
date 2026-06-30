@@ -1,0 +1,44 @@
+id: playable_incident_011_redteam_scope_guard
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-range-substitute-001
+steps:
+  - wait_screen_contains: "릴레이 기지 011"
+  - send: ":"
+  - wait_screen_contains: "COMMAND  :"
+  - send: "%"
+  - wait_screen_contains: "RECOVERY REQUIRED"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Runbook Dispatch"
+    - "RECOVERY REQUIRED"
+    - "% range를 쓰면 정상 audit/archive 상태까지 바뀌므로"
+  exit_code: 0
+  progress_file_exists: true
+  key_trace:
+    - ":"
+    - "%"
+    - "q"
+  app_state:
+    buffer: ["audit stale", "node stale stale", "archive stale"]
+    mode: "command"
+    status: "failed"
+    score:
+      passed: false
+    progress:
+      mission_id: "incident-range-substitute-001"
+      completed: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

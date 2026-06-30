@@ -545,14 +545,10 @@ func TestPlayableReviewDispatchReopensPrimaryReviewCandidateAfterFinalIncident(t
 		SaveProgress: func(*progress.Progress) error { return nil },
 	})
 
-	if got := model.currentExerciseID(); got != "incident-search-scope-001" {
+	if got := model.currentExerciseID(); got != "incident-range-substitute-002" {
 		t.Fatalf("current exercise = %q, want final incident", got)
 	}
-	for _, key := range []string{"/", "b", "r", "e", "a", "c", "h"} {
-		model, _ = updateWithKey(t, model, key)
-	}
-	model, _ = updateWithSpecialKey(t, model, tea.KeyEnter)
-	for _, key := range []string{"V", "j", "d"} {
+	for _, key := range []string{":%s/hold/live/g", "enter"} {
 		model, _ = updateWithKey(t, model, key)
 	}
 
@@ -845,6 +841,38 @@ func TestPlayableShowsCommandLineInsteadOfQuitHintInCommandMode(t *testing.T) {
 	}
 	if strings.Contains(view, "ctrl+c: quit") {
 		t.Fatalf("view = %q, should not show ctrl+c quit hint in command mode", view)
+	}
+}
+
+func TestPlayableFailurePanelOverridesCommandMode(t *testing.T) {
+	model := New(Options{
+		ContentRoot: contentRootForTest(),
+		Progress:    progressCompleteBefore(t, "incident-range-substitute-001"),
+	})
+
+	model, _ = updateWithKey(t, model, ":")
+	model, _ = updateWithKey(t, model, "%")
+
+	state := model.State()
+	if state.Status != "failed" {
+		t.Fatalf("status = %q, want failed", state.Status)
+	}
+	if state.Mode != "command" {
+		t.Fatalf("mode = %q, want command", state.Mode)
+	}
+	if state.UI.FocusPanel.Kind != "failure" || state.UI.FocusPanel.Title != "RECOVERY REQUIRED" {
+		t.Fatalf("focus panel = %+v, want recovery failure panel", state.UI.FocusPanel)
+	}
+	if got, want := focusActionIDs(state.UI.FocusPanel.Actions), []string{"retry", "hint", "quit"}; !sameStrings(got, want) {
+		t.Fatalf("focus panel actions = %v, want %v", got, want)
+	}
+	if !strings.Contains(model.View(), "다시 시도: r 또는 enter") {
+		t.Fatalf("view = %q, want retry prompt after command-mode failure", model.View())
+	}
+
+	model, cmd := updateWithKey(t, model, "q")
+	if cmd == nil {
+		t.Fatal("cmd = nil, want quit command after command-mode failure")
 	}
 }
 

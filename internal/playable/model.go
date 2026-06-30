@@ -135,6 +135,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			return m, nil
 		}
+		if m.run != nil && m.run.State().Status == exerciseruntime.StatusFailed && input == "q" {
+			m.inputEcho = inputEchoForAction(tuiadapter.Action{Type: tuiadapter.ActionQuit}, input)
+			_ = m.writeE2EState()
+			return m, tea.Quit
+		}
 		m.inputEcho = inputEchoForAction(action, input)
 		switch action.Type {
 		case tuiadapter.ActionKey:
@@ -709,6 +714,10 @@ func (m Model) focusPanel(state scenario.State, view tuiadapter.ViewModel) *play
 
 func focusPanelIdentity(state scenario.State, view tuiadapter.ViewModel, incident bool) (string, string) {
 	switch {
+	case state.Status == exerciseruntime.StatusSucceeded:
+		return "success", "STEP SEALED"
+	case state.Status == exerciseruntime.StatusFailed:
+		return "failure", "RECOVERY REQUIRED"
 	case view.Mode == string(vimengine.ModeVisual):
 		return "mode", "선택 모드"
 	case view.Mode == string(vimengine.ModeInsert):
@@ -717,10 +726,6 @@ func focusPanelIdentity(state scenario.State, view tuiadapter.ViewModel, inciden
 		return "mode", "명령 모드"
 	case view.Mode == string(vimengine.ModeSearch):
 		return "mode", "검색 모드"
-	case state.Status == exerciseruntime.StatusSucceeded:
-		return "success", "STEP SEALED"
-	case state.Status == exerciseruntime.StatusFailed:
-		return "failure", "RECOVERY REQUIRED"
 	case incident:
 		return "incident", "OPERATOR JUDGMENT"
 	default:
@@ -731,14 +736,6 @@ func focusPanelIdentity(state scenario.State, view tuiadapter.ViewModel, inciden
 func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) []string {
 	lines := []string{}
 	switch {
-	case view.Mode == string(vimengine.ModeVisual):
-		lines = append(lines, "선택: 이동 키로 범위 조정  esc/v: normal")
-	case view.Mode == string(vimengine.ModeInsert):
-		lines = append(lines, "입력: 텍스트 작성  esc: normal")
-	case view.Mode == string(vimengine.ModeCommand):
-		lines = append(lines, "명령: 입력 후 enter 실행  esc: normal")
-	case view.Mode == string(vimengine.ModeSearch):
-		lines = append(lines, "검색: 입력 후 enter 찾기  esc: normal")
 	case state.Status == exerciseruntime.StatusSucceeded:
 		if feedback := scenarioFeedbackLine(state); feedback != "" {
 			lines = append(lines, feedback)
@@ -766,6 +763,14 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 		if m.hintMessage != "" {
 			lines = append(lines, revealedHintLine(m.hintMessage))
 		}
+	case view.Mode == string(vimengine.ModeVisual):
+		lines = append(lines, "선택: 이동 키로 범위 조정  esc/v: normal")
+	case view.Mode == string(vimengine.ModeInsert):
+		lines = append(lines, "입력: 텍스트 작성  esc: normal")
+	case view.Mode == string(vimengine.ModeCommand):
+		lines = append(lines, "명령: 입력 후 enter 실행  esc: normal")
+	case view.Mode == string(vimengine.ModeSearch):
+		lines = append(lines, "검색: 입력 후 enter 찾기  esc: normal")
 	default:
 		if state.Runtime.MaxInputs > 0 {
 			lines = append(lines, fmt.Sprintf("Inputs left: %d/%d", state.Runtime.InputsLeft, state.Runtime.MaxInputs))
@@ -792,6 +797,10 @@ func revealedHintLine(message string) string {
 
 func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel) []playableview.ActionLine {
 	switch {
+	case state.Status == exerciseruntime.StatusSucceeded:
+		return m.successActions()
+	case state.Status == exerciseruntime.StatusFailed:
+		return failureActions()
 	case view.Mode == string(vimengine.ModeVisual):
 		return []playableview.ActionLine{
 			focusAction("delete_selection", "선택 제거: d"),
@@ -810,10 +819,6 @@ func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel
 			focusAction("find", "찾기: enter"),
 			focusAction("cancel", "취소: esc"),
 		}
-	case state.Status == exerciseruntime.StatusSucceeded:
-		return m.successActions()
-	case state.Status == exerciseruntime.StatusFailed:
-		return failureActions()
 	default:
 		return runningActions()
 	}

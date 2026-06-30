@@ -30,13 +30,13 @@ steps:
   - send: "j"
   - wait_screen_contains: "Selection: linewise 2,0 -> 3,12"
   - send: "d"
-  - wait_screen_contains: "출격 완료"
+  - wait_screen_contains: "다음 런북: enter"
   - send: "q"
 assert:
   screen_contains:
     - "릴레이 기지 008: 표식 기반 격리"
     - "Exercise: 1/1"
-    - "출격 완료"
+    - "다음 런북: enter"
     - "검색으로 표식을 찾은 뒤 줄 묶음 범위를 판단해 격리했습니다."
   exit_code: 0
   progress_file_exists: true

@@ -10,7 +10,7 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
-현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`, `UI-ACTION-HUD-001`도 완료됐다.
+현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`, `CONTENT-BREADTH-003`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`, `UI-ACTION-HUD-001`도 완료됐다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
 Completed Midterm Polish:
@@ -30,6 +30,8 @@ Completed UX Hardening:
 - `docs/exec-plans/completed/ui-modal-action-hierarchy-001.md`
 - `docs/exec-plans/completed/ui-modal-action-hierarchy-002-post-release.md`
 - `docs/exec-plans/completed/ui-action-hud-001.md`
+Completed Applied Content:
+- `docs/exec-plans/completed/content-breadth-003-second-dispatch-pack.md`
 Completed Release:
 - `docs/exec-plans/completed/release-brew-001-homebrew-tap.md`
 Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
@@ -44,15 +46,16 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 ### NEXT-DIRECTION-CHECKPOINT. Fresh Direction After Action HUD
 
 - 상태: next
-- 목표: `UI-ACTION-HUD-001` 완료 후 fresh evidence를 보고 다음 구현 slice를 고른다.
+- 목표: `UI-ACTION-HUD-001`와 `CONTENT-BREADTH-003` 완료 후 fresh evidence를 보고 다음 구현 slice를 고른다.
 - 근거:
   - `docs/exec-plans/completed/ui-action-hud-001.md`
+  - `docs/exec-plans/completed/content-breadth-003-second-dispatch-pack.md`
   - `docs/roadmap/UX_BACKLOG_001.md`
   - `docs/gameplay/tui-screen-contract.md`
 - 우선 후보:
   - `UI-REPORT-001`: 실패/성공 recovery report의 action footer를 running action bar와 같은 명확성으로 정리한다.
   - `UI-HINT-LADDER-001`: hint를 한 번에 정답처럼 보여주지 않고 판단 관점 -> command family -> exact form으로 점진 공개한다.
-  - 기존 engine 기반 applied content breadth: UI evidence가 안정적인 상태에서 콘텐츠 폭을 늘린다.
+  - 기존 engine 기반 applied content breadth: Second Dispatch evidence를 읽고 세 번째 dispatch pack이 실제로 필요한지 결정한다.
 - 제외:
   - release/tag/push 작업
   - progress 저장 포맷 변경
@@ -212,6 +215,13 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 - 제외: 새 engine, 새 schema, progress 저장 포맷 변경
 
 ## 최근 완료
+
+### CONTENT-BREADTH-003. Second Dispatch Pack
+
+- 상태: completed
+- ExecPlan: `docs/exec-plans/completed/content-breadth-003-second-dispatch-pack.md`
+- 완료일: 2026-06-27
+- 결론: `incident-009-search-inline`, `incident-010-reuse`, `incident-011-range-substitute`를 추가했다. RedTeam E2E는 `%` over-scope route가 실패 상태와 recovery modal로 막히며 progress를 저장하지 않는지 검증한다.
 
 ### RELEASE-BREW-001. Homebrew Tap Release
 

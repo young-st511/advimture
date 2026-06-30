@@ -1,0 +1,28 @@
+scenarios:
+  - id: incident-range-substitute-001-scenario
+    status: approved
+    exercise_id: incident-range-substitute-001
+    engine_support: implemented
+    learning_reinforcement: "현재 줄만 손상된 반복 token은 % range 없이 :s/.../.../g로 줄 안 match만 치환한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "현재 줄 stale 격리 치환"
+    briefing: "릴레이 기지 011의 audit/archive stale는 정상이고 node 줄만 손상됐습니다. % range 없이 현재 줄의 stale만 live로 바꾸세요."
+    context_role: "치환 범위 판별"
+    mentor_success: "좋습니다. 현재 줄 범위만 live로 바꿨습니다."
+    mentor_failure: "손상 범위는 현재 node 줄뿐입니다. % range를 쓰면 정상 audit/archive 상태까지 바뀌므로 :s/.../.../g로 줄 안에서만 처리하세요."
+    story_constraints:
+      - "첫 beat는 전체 파일 치환 우회를 실패시킨다."
+
+  - id: incident-range-substitute-002-scenario
+    status: approved
+    exercise_id: incident-range-substitute-002
+    engine_support: implemented
+    learning_reinforcement: "파일 전체에 흩어진 같은 상태값은 % range와 g flag로 한 번에 치환한다."
+    does_not_change: ["target_state", "optimal_keys", "constraints"]
+    mission_title: "전체 파일 hold 승격"
+    briefing: "전체 파일에 흩어진 hold가 모두 같은 손상 상태입니다. % range와 g flag로 모든 hold를 live로 바꾸세요."
+    context_role: "전체 범위 치환"
+    mentor_success: "좋습니다. 전체 파일 범위의 hold를 한 번에 live로 바꿨습니다."
+    mentor_failure: "이번에는 현재 줄 하나가 아니라 전체 파일이 범위입니다. :%s/hold/live/g로 모든 hold를 한 번에 처리하세요."
+    story_constraints:
+      - "둘째 beat는 현재 줄 치환으로 일부만 수리하는 우회를 성공으로 보지 않는다."

@@ -1,0 +1,103 @@
+exercises:
+  - id: incident-reuse-001
+    status: approved
+    command_cluster: text-object-quote-pair
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["yi\"", "P", "i", "ci\""]
+    mistake_focus: ["검증된 quote 값을 직접 다시 입력하거나 quote 내부 값보다 큰 범위를 복사한다."]
+    replay_status: pass
+    title: "검증 quote 값 재사용"
+    goal_for_player: "검증된 primary quote 값을 다시 치지 말고 mirror quote 안에 그대로 재사용하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 10
+      buffer: |
+        primary="vault-731"
+        mirror=""
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 16
+      buffer: |
+        primary="vault-731"
+        mirror="vault-731"
+    optimal_keys: ["y", "i", "\"", "j", "$", "P"]
+    allowed_keys: ["y", "i", "\"", "j", "$", "P", "esc"]
+    forbidden_keys: ["p", "left", "right", "up", "down"]
+    constraints:
+      max_inputs: 6
+      required_keys: ["y", "i", "\"", "P"]
+      forbidden_keys: ["p", "h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "이번 판단은 값을 새로 입력할지, 이미 검증된 quote 값을 재사용할지입니다."
+      - after_keys: 3
+        text: "yi\"로 quote 내부 값만 register에 담았습니다. mirror의 닫는 quote 앞에서 P로 붙입니다."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 6
+    e2e_assertions:
+      buffer: ["primary=\"vault-731\"", "mirror=\"vault-731\""]
+      cursor:
+        row: 1
+        col: 16
+      mode: normal
+      status: succeeded
+
+  - id: incident-reuse-002
+    status: approved
+    command_cluster: yank-put-basic
+    engine_support: implemented
+    trained_commands: []
+    reviewed_commands: ["yy", "p", "i", "dd"]
+    mistake_focus: ["검증된 줄 전체를 재사용해야 하는데 값을 직접 다시 입력하거나 일부 token만 복사한다."]
+    replay_status: pass
+    title: "검증 줄 전체 재사용"
+    goal_for_player: "검증된 guard 줄 전체를 다시 입력하지 않고 아래에 복제하세요."
+    initial_state:
+      mode: normal
+      cursor:
+        row: 0
+        col: 0
+      buffer: |
+        guard=stable
+        backup=slot
+        route=live
+    target_state:
+      mode: normal
+      cursor:
+        row: 1
+        col: 0
+      buffer: |
+        guard=stable
+        guard=stable
+        backup=slot
+        route=live
+    optimal_keys: ["y", "y", "p"]
+    allowed_keys: ["y", "p", "esc"]
+    forbidden_keys: ["left", "right", "up", "down"]
+    constraints:
+      max_inputs: 3
+      required_keys: ["y", "p"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "d", "c", "x", "r", "i", "a", "A", "o", "O", "P", ":", "/", "?", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      attempt_limit: 0
+    hints:
+      - after_keys: 1
+        text: "값을 다시 치는 문항이 아닙니다. 검증된 줄 전체를 register에 담아 재사용하세요."
+      - after_keys: 2
+        text: "yy는 현재 줄 전체를 linewise register에 담습니다. p로 현재 줄 아래에 복제하세요."
+    grading:
+      pass_condition: "buffer == target && mode == normal"
+      optimal_key_count: 3
+    e2e_assertions:
+      buffer: ["guard=stable", "guard=stable", "backup=slot", "route=live"]
+      cursor:
+        row: 1
+        col: 0
+      mode: normal
+      status: succeeded

@@ -1,0 +1,104 @@
+id: playable_incident_009_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-search-inline-001
+steps:
+  - wait_screen_contains: "릴레이 기지 009"
+  - send: "/"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "r"
+  - wait_ms: 50
+  - send: "g"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_ms: 50
+  - send: "n"
+  - wait_screen_contains: "다음 단계: enter"
+  - send: "enter"
+  - wait_screen_contains: "comma 앞 손상 값"
+  - send: "c"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: ","
+  - wait_ms: 50
+  - send: "s"
+  - wait_ms: 50
+  - send: "t"
+  - wait_ms: 50
+  - send: "a"
+  - wait_ms: 50
+  - send: "b"
+  - wait_ms: 50
+  - send: "l"
+  - wait_ms: 50
+  - send: "e"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "delimiter를 보존하고 손상 값만 stable로 교체했습니다"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Runbook Dispatch"
+    - "릴레이 기지 009: target 재배선"
+    - "delimiter를 보존하고 손상 값만 stable로 교체했습니다"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"incident-search-inline-001\""
+    - "\"incident-search-inline-002\""
+  key_trace:
+    - "/"
+    - "t"
+    - "a"
+    - "r"
+    - "g"
+    - "e"
+    - "t"
+    - "enter"
+    - "n"
+    - "enter"
+    - "c"
+    - "t"
+    - ","
+    - "s"
+    - "t"
+    - "a"
+    - "b"
+    - "l"
+    - "e"
+    - "esc"
+    - "q"
+  app_state:
+    buffer: ["node=stable,route=live"]
+    cursor:
+      row: 0
+      col: 11
+    mode: "normal"
+    status: "succeeded"
+    score:
+      passed: true
+    progress:
+      mission_id: "incident-search-inline-002"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

@@ -1,0 +1,21 @@
+playlists:
+  - id: incident-010-reuse
+    status: approved
+    category: incident
+    order: 10
+    title: "릴레이 기지 010: 검증값 재사용"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-010-001
+        role: reuse_verified_quote_value
+        command_cluster: text-object-quote-pair
+        exercise_id: incident-reuse-001
+        scenario_id: incident-reuse-001-scenario
+        engine_support: implemented
+      - id: incident-010-002
+        role: reuse_verified_line
+        command_cluster: yank-put-basic
+        exercise_id: incident-reuse-002
+        scenario_id: incident-reuse-002-scenario
+        engine_support: implemented

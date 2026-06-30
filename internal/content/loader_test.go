@@ -19,14 +19,14 @@ func TestLoadLibraryLoadsRootContent(t *testing.T) {
 	if len(lib.CommandClusters) != 19 {
 		t.Fatalf("command clusters = %d, want 19", len(lib.CommandClusters))
 	}
-	if len(lib.Exercises) != 115 {
-		t.Fatalf("exercises = %d, want 115", len(lib.Exercises))
+	if len(lib.Exercises) != 121 {
+		t.Fatalf("exercises = %d, want 121", len(lib.Exercises))
 	}
-	if len(lib.Scenarios) != 115 {
-		t.Fatalf("scenarios = %d, want 115", len(lib.Scenarios))
+	if len(lib.Scenarios) != 121 {
+		t.Fatalf("scenarios = %d, want 121", len(lib.Scenarios))
 	}
-	if len(lib.Playlists) != 25 {
-		t.Fatalf("playlists = %d, want 25", len(lib.Playlists))
+	if len(lib.Playlists) != 28 {
+		t.Fatalf("playlists = %d, want 28", len(lib.Playlists))
 	}
 }
 
@@ -36,14 +36,14 @@ func TestLoadLibraryFSLoadsRootContent(t *testing.T) {
 		t.Fatalf("LoadLibraryFS returned error: %v", err)
 	}
 
-	if len(lib.PlayableExercises()) != 115 {
-		t.Fatalf("playable exercises = %d, want 115", len(lib.PlayableExercises()))
+	if len(lib.PlayableExercises()) != 121 {
+		t.Fatalf("playable exercises = %d, want 121", len(lib.PlayableExercises()))
 	}
-	if len(lib.Playlists) != 25 {
-		t.Fatalf("playlists = %d, want 25", len(lib.Playlists))
+	if len(lib.Playlists) != 28 {
+		t.Fatalf("playlists = %d, want 28", len(lib.Playlists))
 	}
-	if len(lib.PlayablePlaylists()) != 24 {
-		t.Fatalf("playable playlists = %d, want 24", len(lib.PlayablePlaylists()))
+	if len(lib.PlayablePlaylists()) != 27 {
+		t.Fatalf("playable playlists = %d, want 27", len(lib.PlayablePlaylists()))
 	}
 }
 
@@ -101,8 +101,8 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 	}
 
 	playable := lib.PlayableExercises()
-	if len(playable) != 115 {
-		t.Fatalf("playable exercises = %d, want 115: %+v", len(playable), playable)
+	if len(playable) != 121 {
+		t.Fatalf("playable exercises = %d, want 121: %+v", len(playable), playable)
 	}
 	if playable[0].ID != "change-with-motion-001" {
 		t.Fatalf("playable[0].ID = %q, want change-with-motion-001", playable[0].ID)
@@ -145,6 +145,12 @@ func TestLoadLibraryFiltersPlayableExercises(t *testing.T) {
 		"incident-mixed-recovery-003",
 		"incident-mixed-recovery-004",
 		"incident-mixed-recovery-005",
+		"incident-range-substitute-001",
+		"incident-range-substitute-002",
+		"incident-reuse-001",
+		"incident-reuse-002",
+		"incident-search-inline-001",
+		"incident-search-inline-002",
 		"incident-search-scope-001",
 		"incident-structure-001",
 		"incident-structure-002",
@@ -270,6 +276,9 @@ func TestLoadLibraryFiltersPlayablePlaylists(t *testing.T) {
 		"incident-006-inline-target-repair",
 		"incident-007-mixed-recovery",
 		"incident-008-search-scope",
+		"incident-009-search-inline",
+		"incident-010-reuse",
+		"incident-011-range-substitute",
 	})
 }
 

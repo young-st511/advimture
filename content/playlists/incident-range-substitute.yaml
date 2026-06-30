@@ -1,0 +1,21 @@
+playlists:
+  - id: incident-011-range-substitute
+    status: approved
+    category: incident
+    order: 11
+    title: "릴레이 기지 011: 치환 범위 판별"
+    unlock_policy: sequential
+    completion_policy: all_implemented_beats
+    beats:
+      - id: incident-011-001
+        role: substitute_current_line_scope
+        command_cluster: vim-ex-command-substitute
+        exercise_id: incident-range-substitute-001
+        scenario_id: incident-range-substitute-001-scenario
+        engine_support: implemented
+      - id: incident-011-002
+        role: substitute_whole_file_scope
+        command_cluster: vim-ex-command-substitute
+        exercise_id: incident-range-substitute-002
+        scenario_id: incident-range-substitute-002-scenario
+        engine_support: implemented

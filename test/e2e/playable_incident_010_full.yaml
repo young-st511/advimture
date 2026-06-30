@@ -1,0 +1,74 @@
+id: playable_incident_010_full
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-reuse-001
+steps:
+  - wait_screen_contains: "릴레이 기지 010"
+  - send: "y"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "\""
+  - wait_ms: 50
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "P"
+  - wait_screen_contains: "검증된 quote 값을 다시 치지 않고 mirror에 재사용했습니다"
+  - send: "enter"
+  - wait_screen_contains: "linewise register로 아래에 복제하세요"
+  - send: "y"
+  - wait_ms: 50
+  - send: "y"
+  - wait_ms: 50
+  - send: "p"
+  - wait_screen_contains: "검증된 줄 전체를 linewise register로 재사용했습니다"
+  - send: "q"
+assert:
+  screen_contains:
+    - "Runbook Dispatch"
+    - "릴레이 기지 010: 검증값 재사용"
+    - "검증된 줄 전체를 linewise register로 재사용했습니다"
+  exit_code: 0
+  progress_file_exists: true
+  progress_file_contains:
+    - "\"incident-reuse-001\""
+    - "\"incident-reuse-002\""
+  key_trace:
+    - "y"
+    - "i"
+    - "\""
+    - "j"
+    - "$"
+    - "P"
+    - "enter"
+    - "y"
+    - "y"
+    - "p"
+    - "q"
+  app_state:
+    buffer: ["guard=stable", "guard=stable", "backup=slot", "route=live"]
+    cursor:
+      row: 1
+      col: 0
+    mode: "normal"
+    status: "succeeded"
+    score:
+      passed: true
+    progress:
+      mission_id: "incident-reuse-002"
+      completed: true
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true
