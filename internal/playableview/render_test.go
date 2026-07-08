@@ -876,6 +876,77 @@ func TestRenderFocusPanelOverlayPrioritizesRetryOverQuitWhenFailureOverflows(t *
 	}
 }
 
+func TestRenderSuccessModalCondensesRecoveryRecord(t *testing.T) {
+	view := Render(Screen{
+		Width:       120,
+		Height:      38,
+		Title:       "전체 파일 hold 승격",
+		Message:     "전체 파일에 흩어진 hold가 모두 같은 손상 상태입니다.",
+		BufferLines: []string{"live pump", "live relay", "guard live"},
+		Mode:        "normal",
+		Status:      "succeeded",
+		FocusPanel: &FocusPanel{
+			Kind:  "success",
+			Title: "STEP SEALED",
+			Lines: []string{
+				"좋습니다. 전체 파일 범위의 hold를 한 번에 live로 바꿨습니다.",
+				"이번 복구: grade S, 16 keys",
+				"최단 복구: grade S, 16 keys",
+				"목표 입력: 16 keys",
+				"Runbook: 2/2 복구 완료",
+			},
+			Actions: []ActionLine{
+				{ID: "dispatch_complete", Label: "출격 완료"},
+				{ID: "quit", Label: "종료: q"},
+			},
+		},
+	})
+
+	want := "기록    이번 복구: grade S, 16 keys · 최단 복구: grade S, 16 keys · 목표 입력: 16 keys"
+	if !strings.Contains(view, want) {
+		t.Fatalf("Render output = %q, want condensed record line %q", view, want)
+	}
+	if strings.Count(view, "기록") != 1 {
+		t.Fatalf("Render output = %q, want one record label", view)
+	}
+}
+
+func TestRenderFailureModalSeparatesRuntimeFailureReason(t *testing.T) {
+	view := Render(Screen{
+		Width:       120,
+		Height:      38,
+		Title:       "현재 줄 stale 격리 치환",
+		Message:     "node 줄만 손상됐습니다.",
+		BufferLines: []string{"audit stale", "node stale stale", "archive stale"},
+		Mode:        "command",
+		Status:      "failed",
+		FocusPanel: &FocusPanel{
+			Kind:  "failure",
+			Title: "RECOVERY REQUIRED",
+			Lines: []string{
+				"손상 범위는 현재 node 줄뿐입니다. % range를 쓰면 정상 audit/archive 상태까지 바뀌므로 :s/.../.../g로 줄 안에서만 처리하세요. 이 입력은 이번 문항에서 사용할 수 없습니다.",
+				"Inputs left: 14/16",
+				"Attempts: 1/unlimited",
+				"복구 힌트: 필요한 키 g enter",
+			},
+			Actions: []ActionLine{
+				{ID: "retry", Label: "다시 시도: r 또는 enter"},
+				{ID: "hint", Label: "힌트: ?"},
+			},
+		},
+	})
+
+	for _, want := range []string{
+		"실수    손상 범위는 현재 node 줄뿐입니다.",
+		"원인    이 입력은 이번 문항에서 사용할 수 없습니다.",
+		"다음 행동  다시 시도: r 또는 enter",
+	} {
+		if !strings.Contains(view, want) {
+			t.Fatalf("Render output = %q, want %q", view, want)
+		}
+	}
+}
+
 func TestRenderPrioritizesCurrentTaskBeforeOpsSummary(t *testing.T) {
 	view := Render(Screen{
 		PlaylistTitle: "Tutorial 0",

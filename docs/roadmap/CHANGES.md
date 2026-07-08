@@ -2,6 +2,16 @@
 
 > append-only. 새 항목을 위에 추가하고 기존 항목은 수정하지 않는다.
 
+## 2026-07-02 — Quality Lift 완료
+
+이전 가정: Second Dispatch Pack 이후 다음은 fresh evidence로 UI/report/hint/content 중 가장 큰 병목을 고르는 것이었고, hint와 RedTeam coverage, recovery report grammar는 후속 후보로 남아 있었다.
+
+새 가정: `QUALITY-LIFT-001`로 hint ladder, RedTeam QA matrix, recovery report polish를 완료했다. Incident hint는 판단 힌트 -> 명령 계열 힌트 + command memory -> exact hint 순서로 점진 공개하고, RedTeam E2E는 delimiter 포함 삭제, 직접 재입력 우회, range over-scope를 progress 미완료 실패로 검증한다. 성공 modal은 `배운 점/기록/다음 행동`, 실패 modal은 `실수/원인/다음 행동` grammar를 사용한다.
+
+이유: Second Dispatch evidence에서 치명 버그는 없었지만, 첫 플레이 품질 기준에서는 hint가 너무 빨리 정답처럼 보이고, 우회 방지 evidence가 좁고, 성공/실패 report가 긴 텍스트 덩어리로 읽히는 문제가 남아 있었다. `go test ./internal/content ./internal/playable ./internal/playableview`, `go test ./...`, `make e2e-playable`, `git diff --check`가 통과했다.
+
+영향: `QUALITY-LIFT-001`은 completed로 이동한다. release/tag/push, progress schema, content schema, 새 dependency는 변경하지 않았다. 다음은 fresh evidence를 기반으로 Third Dispatch 콘텐츠 확장 또는 더 깊은 UI scene polish를 고르는 checkpoint다.
+
 ## 2026-06-27 — Second Dispatch Pack 완료
 
 이전 가정: `UI-ACTION-HUD-001` 이후 다음 후보는 fresh evidence로 UI/report/hint/content 중 하나를 고르는 것이었고, 콘텐츠 확장은 아직 별도 slice로 열리지 않았다.

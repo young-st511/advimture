@@ -45,6 +45,7 @@ type Model struct {
 	err            error
 	reviewQueue    []review.Candidate
 	hintMessage    string
+	hintRequests   int
 	width          int
 	height         int
 	animationFrame int
@@ -162,7 +163,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case tuiadapter.ActionHint:
 			if hint, ok := m.run.RequestHint(); ok {
-				m.hintMessage = hint
+				m.hintRequests++
+				m.hintMessage = m.hintDisplayMessage(hint)
 			}
 		case tuiadapter.ActionRetry:
 			m.retryCurrent()
@@ -365,6 +367,7 @@ func (m *Model) jumpToEntry(index int) {
 	m.saved = false
 	m.saveErr = nil
 	m.hintMessage = ""
+	m.hintRequests = 0
 	m.startedAt = m.now()
 }
 
@@ -373,6 +376,7 @@ func (m *Model) retryCurrent() {
 	m.saved = false
 	m.saveErr = nil
 	m.hintMessage = ""
+	m.hintRequests = 0
 	m.startedAt = m.now()
 }
 
@@ -795,6 +799,20 @@ func revealedHintLine(message string) string {
 	return "힌트 내용  " + message + " · 등급에 영향"
 }
 
+func (m Model) hintDisplayMessage(exactHint string) string {
+	if !m.currentEntryIsIncident() {
+		return exactHint
+	}
+	switch m.hintRequests {
+	case 1:
+		return "판단 힌트: 목표 상태에서 바뀌어야 할 범위와 보존할 범위를 먼저 비교하세요."
+	case 2:
+		return "명령 계열 힌트: 참고 명령 후보를 보고 현재 범위에 맞는 도구를 고르세요."
+	default:
+		return exactHint
+	}
+}
+
 func (m Model) focusPanelActions(state scenario.State, view tuiadapter.ViewModel) []playableview.ActionLine {
 	switch {
 	case state.Status == exerciseruntime.StatusSucceeded:
@@ -868,7 +886,7 @@ func (m Model) commandMemoryLine(state scenario.State) string {
 		return ""
 	}
 	if m.currentEntryIsIncident() {
-		if state.Status != exerciseruntime.StatusFailed && m.hintMessage == "" {
+		if state.Status != exerciseruntime.StatusFailed && m.hintRequests < 2 {
 			return ""
 		}
 		commands := entry.TrainedCommands

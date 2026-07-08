@@ -59,6 +59,8 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - failed/succeeded `FocusPanel`은 `RUNBOOK CONSOLE` 위에서 Zellij floating pane처럼 보이는 viewport modal로 렌더링한다.
 - floating modal은 `tea.WindowSizeMsg`로 전달된 terminal width/height가 있으면 console surface 위 overlay로 배치한다. 80x24에서도 buffer/status/grade 뒤에 append된 본문 블록처럼 보이면 안 되며, 좁은 화면에서는 terminal width를 넘지 않도록 폭을 줄인다.
 - floating modal은 실패 시 `RECOVERY CHECK`, 성공 시 `RUNBOOK SEALED` 구조로 표시하며 action label(`다시 시도: r 또는 enter`, `다음 단계: enter`, `다음 튜토리얼: enter`, `다음 런북: enter`, `다음 출격: enter`, `출격 완료`, `플레이리스트 완료`)이 잘리지 않아야 한다. 성공 floating modal은 내부 성공 상태명 `STEP SEALED`를 별도 heading으로 중복 표시하지 않는다.
+- 성공 floating modal은 화면에서 `배운 점`, `기록`, `다음 행동` grammar를 사용한다. `이번 복구`, `최단 복구`, `목표 입력`은 `기록` 한 줄로 묶어 recovery report 밀도를 낮추되, `FocusPanel.lines` 원본 의미는 유지한다.
+- 실패 floating modal은 화면에서 scenario feedback을 `실수`, runtime failure reason을 `원인`, retry/footer를 `다음 행동`으로 분리한다. 금지 입력, 입력 제한 초과, required key 누락 같은 runtime reason은 긴 실패 본문 뒤에 붙은 문장으로만 묻히면 안 된다.
 - `actions`는 내부 QA DTO이며 progress 저장 포맷에 반영하지 않는다. E2E는 `action.id`(`hint`, `retry`, `next`, `next_tutorial`, `next_runbook`, `next_dispatch`, `dispatch_complete`, `playlist_complete`, `quit`)로 의미를 검증하고, 화면은 `action.label`을 표시한다.
 - `복구 현황`은 terminal size가 있는 화면에서 별도 큰 pre-console section이 아니라 `MISSION` HUD 내부의 보조 line으로 표시한다.
 - 80-column running HUD의 review/daily detail은 현재 목표와 console 접근을 밀어내지 않는다. 기본 running 화면에서는 숨기거나 후속 wide rail/success debrief로 낮춘다.
@@ -66,7 +68,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시할 수 있다.
 - tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다. `기억할 명령`이 같은 required key를 이미 설명하면 `Coach: 훈련 키 ...`를 중복 표시하지 않는다.
-- incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청 또는 실패 후에만 `참고 명령: ...`으로 current exercise의 command memory를 점진 공개한다.
+- incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청은 `판단 힌트` -> `명령 계열 힌트` + `참고 명령` -> 기존 exact hint 순서로 점진 공개하며, 실패 후에는 `참고 명령: ...`으로 current exercise의 command memory를 공개한다.
 - incident scenario briefing은 상황 1문장과 판단 목표 1문장을 우선하며, exact command sequence는 기본 briefing보다 hint/failure/command memory에서 공개한다.
 - success/failure floating modal이 표시되는 화면은 상단 detailed review/daily line을 숨기고, modal 내부의 review motivation과 `다음 행동` footer를 primary 안내로 둔다. Tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`, incident success의 review motivation은 `잔류 리스크`/`다음 출격 후보`로 표현한다.
 - `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `힌트 내용  ... · 등급에 영향`으로 표시하며, `힌트 내용`과 action bar는 같은 wrapping group에 합쳐지지 않아야 한다. command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않고 현재 mode의 실행/취소 action을 우선한다.
@@ -75,7 +77,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 다음 playlist가 incident이면 tutorial/incident 어디에서 왔든 `다음 런북: enter`를 표시한다.
 - 마지막 incident 성공 화면은 review queue 후보가 없으면 `출격 완료`를 표시한다.
 - exercise 성공 시 기존 progress `Missions` map에 exercise ID를 key로 자동 저장하고, 성공 상태에서 `enter`를 누르면 다음 unlocked exercise로 이동한다.
-- 성공 FocusPanel은 `이번 복구`, 기존 progress 기반 `최단 복구`, `목표 입력`, 현재 Runbook 복구 완료 수, context별 review motivation, 다음 review 후보를 순서대로 표시한다.
+- 성공 FocusPanel 원본 state는 `이번 복구`, 기존 progress 기반 `최단 복구`, `목표 입력`, 현재 Runbook 복구 완료 수, context별 review motivation, 다음 review 후보를 순서대로 유지한다.
 - 마지막 playable entry에서 성공했고 review queue 후보가 남아 있으면 `다음 출격: enter`를 표시하고, `enter` 입력은 primary review exercise로 재진입한다.
 - 마지막 playable entry에서 review queue 후보가 없으면 기존처럼 incident는 `출격 완료`, tutorial은 `플레이리스트 완료`를 표시한다.
 - 마지막 tutorial playlist 성공 화면은 별도 저장 포맷 변경 없이 같은 debrief와 `플레이리스트 완료` 안내를 표시한다.

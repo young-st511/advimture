@@ -340,7 +340,7 @@ func TestIncidentActionPanelUsesJudgementCueWithoutTrainingKeySpoiler(t *testing
 	}
 }
 
-func TestIncidentHintCanRevealCommandMemory(t *testing.T) {
+func TestIncidentHintLadderProgressivelyRevealsCommandMemory(t *testing.T) {
 	model := New(Options{
 		ContentRoot: contentRootForTest(),
 		Progress:    progressCompleteBefore(t, "incident-hotfix-001"),
@@ -349,11 +349,30 @@ func TestIncidentHintCanRevealCommandMemory(t *testing.T) {
 	model, _ = updateWithKey(t, model, "?")
 
 	view := model.View()
-	if !strings.Contains(view, "참고 명령: /") {
-		t.Fatalf("view = %q, want incident command memory after hint", view)
+	if !strings.Contains(view, "판단 힌트:") {
+		t.Fatalf("view = %q, want judgement hint first", view)
 	}
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "참고 명령: /") {
-		t.Fatalf("focus panel lines = %v, want incident command memory", model.State().UI.FocusPanel.Lines)
+	if strings.Contains(view, "참고 명령: /") {
+		t.Fatalf("view = %q, should not reveal command memory on first hint", view)
+	}
+	if strings.Contains(view, "복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
+		t.Fatalf("view = %q, should not reveal exact hint on first hint", view)
+	}
+
+	model, _ = updateWithKey(t, model, "?")
+
+	view = model.View()
+	if !strings.Contains(view, "명령 계열 힌트:") {
+		t.Fatalf("view = %q, want command family hint second", view)
+	}
+	if !strings.Contains(view, "참고 명령: /") {
+		t.Fatalf("view = %q, want incident command memory on second hint", view)
+	}
+
+	model, _ = updateWithKey(t, model, "?")
+
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
+		t.Fatalf("focus panel lines = %v, want exact content hint on third hint", model.State().UI.FocusPanel.Lines)
 	}
 }
 
@@ -758,11 +777,14 @@ func TestPlayableShowsIncidentHintWithoutTrainingKeySpoiler(t *testing.T) {
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다. · 등급에 영향") {
-		t.Fatalf("view = %q, want incident hint", model.View())
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  판단 힌트: 목표 상태에서 바뀌어야 할 범위와 보존할 범위를 먼저 비교하세요. · 등급에 영향") {
+		t.Fatalf("view = %q, want first-step incident hint", model.View())
 	}
 	if strings.Contains(model.View(), "Coach: 훈련 키") {
 		t.Fatalf("view = %q, should not reveal training key spoiler", model.View())
+	}
+	if strings.Contains(model.View(), "참고 명령:") {
+		t.Fatalf("view = %q, should not reveal command memory on first hint", model.View())
 	}
 	if got, want := focusActionIDs(model.State().UI.FocusPanel.Actions), []string{"hint", "quit"}; !sameStrings(got, want) {
 		t.Fatalf("focus panel actions = %v, want %v", got, want)

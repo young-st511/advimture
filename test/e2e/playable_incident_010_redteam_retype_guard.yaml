@@ -1,0 +1,48 @@
+id: playable_incident_010_redteam_retype_guard
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-reuse-001
+steps:
+  - wait_screen_contains: "검증된 primary 값을"
+  - send: "j"
+  - wait_ms: 50
+  - send: "$"
+  - wait_ms: 50
+  - send: "i"
+  - wait_ms: 50
+  - send: "v"
+  - wait_screen_contains: "RECOVERY REQUIRED"
+  - send: "q"
+assert:
+  screen_contains:
+    - "RECOVERY REQUIRED"
+    - "값을 직접 입력하면 검증된 원본과 달라질 수 있습니다."
+    - "이 입력은 이번 문항에서 사용할 수 없습니다."
+  exit_code: 0
+  progress_file_exists: true
+  key_trace:
+    - "j"
+    - "$"
+    - "i"
+    - "v"
+    - "q"
+  app_state:
+    status: "failed"
+    score:
+      passed: false
+    progress:
+      mission_id: "incident-reuse-001"
+      completed: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

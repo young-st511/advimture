@@ -1,0 +1,43 @@
+id: playable_incident_009_redteam_delimiter_guard
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal:
+  width: 120
+  height: 38
+setup:
+  home: temp
+  complete_before: incident-search-inline-002
+steps:
+  - wait_screen_contains: "comma 앞 손상 값"
+  - send: "c"
+  - wait_ms: 50
+  - send: "f"
+  - wait_screen_contains: "RECOVERY REQUIRED"
+  - send: "q"
+assert:
+  screen_contains:
+    - "RECOVERY REQUIRED"
+    - "f가 아니라 t, 범위"
+    - "이 입력은 이번 문항에서 사용할 수 없습니다."
+  exit_code: 0
+  progress_file_exists: true
+  key_trace:
+    - "c"
+    - "f"
+    - "q"
+  app_state:
+    buffer: ["node=target-bad,route=live"]
+    status: "failed"
+    score:
+      passed: false
+    progress:
+      mission_id: "incident-search-inline-002"
+      completed: false
+evidence:
+  save_raw_ansi: true
+  save_clean_screen: true
+  save_screen_timeline: true
+  save_screen_final: true
+  save_key_trace: true
+  save_app_state: true
+  save_summary: true

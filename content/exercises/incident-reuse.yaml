@@ -27,11 +27,11 @@ exercises:
         mirror="vault-731"
     optimal_keys: ["y", "i", "\"", "j", "$", "P"]
     allowed_keys: ["y", "i", "\"", "j", "$", "P", "esc"]
-    forbidden_keys: ["p", "left", "right", "up", "down"]
+    forbidden_keys: ["p", "v", "left", "right", "up", "down"]
     constraints:
       max_inputs: 6
       required_keys: ["y", "i", "\"", "P"]
-      forbidden_keys: ["p", "h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
+      forbidden_keys: ["p", "h", "k", "l", "b", "e", "0", "d", "c", "x", "r", "a", "A", "o", "O", "v", ":", "/", "ctrl+c", "left", "right", "up", "down"]
       attempt_limit: 0
     hints:
       - after_keys: 1

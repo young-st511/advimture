@@ -35,7 +35,7 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - focus panel assertion은 `assert.app_state.ui.focus_panel`로 검증한다. `kind`, `title`, `lines`는 화면 배치가 바뀌어도 현재 UI intent를 stable state로 본다.
 - mission/review loop E2E는 success debrief의 `이번 복구`, `최단 복구`, `목표 입력`, `다음 출격` 문구와 `ui.focus_panel.kind/title`을 함께 검증한다.
 - command memory UI E2E는 tutorial `기억할 명령`, duplicate coach suppression, incident hint/failure 후 `참고 명령`, 긴 incident hint cue wrapping을 화면과 app_state evidence로 검증한다.
-- viewport smoke E2E는 80x24 success/failure floating modal에서 action line, final viewport clipping, stale running frame 부재, buffer/status 뒤 append처럼 보이지 않는 modal placement, `ui.focus_panel`이 유지되는지 검증한다.
+- viewport smoke E2E는 80x24 success/failure floating modal에서 action line, final viewport clipping, stale running frame 부재, buffer/status 뒤 append처럼 보이지 않는 modal placement, report grammar, `ui.focus_panel`이 유지되는지 검증한다.
 - incident hint affordance E2E는 80x24 final viewport에서 hint body와 utility action line이 분리되어 읽히는지 검증한다.
 - runner는 실제 사용자 HOME과 기존 progress file이 보이는 HOME을 기본적으로 거부한다.
 - runner는 `summary.json`, raw ANSI log, cleaned screen stream, cleaned final screen, key trace, app state snapshot, progress snapshot을 `artifacts/e2e/{scenario_id}/` 아래에 저장할 수 있다. `summary.json`의 `*_evidence`는 raw capture 가능 여부, `*_evidence_saved`는 artifact 파일 저장 여부를 의미한다.
@@ -43,7 +43,8 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 - `playable_ftue_first_five_route` scenario는 FTUE-001 canonical route를 `tutorial-0-movement`부터 `tutorial-3-small-edits` 첫 문항까지 검증하고, screen timeline/final screen/app_state/progress evidence를 남긴다.
 - 긴 incident full route, command-choice applied route, 대표 mid tutorial full route는 route 전체 흐름과 마지막 화면을 재검토할 수 있도록 screen timeline/final screen/app_state evidence를 함께 남긴다.
 - command-choice applied route는 final/timeline evidence와 app_state evidence를 함께 남긴다.
-- `make e2e-playable`은 첫 문제 smoke, constraint/coaching UX, 80x24 success/failure viewport smoke, 80x30 incident hint wrapping smoke, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute, first-cut tutorial flow, operator/yank/text-object/open-line/repeat/search/quote text object 7-beat full playpack, bracket pair text object 6-beat full playpack, incident 001~004, command-choice 7-beat route, incident 006/007/008 run 경로를 모두 검증한다.
+- `make e2e-playable`은 첫 문제 smoke, constraint/coaching UX, 80x24 success/failure viewport smoke, 80x30 incident hint ladder/affordance smoke, playlist next, progress resume, `:q!` command-line, `:s/api/web/` substitute, first-cut tutorial flow, operator/yank/text-object/open-line/repeat/search/quote text object 7-beat full playpack, bracket pair text object 6-beat full playpack, incident 001~004, command-choice 7-beat route, incident 006~011 run 경로, representative RedTeam guard를 모두 검증한다.
+- RedTeam QA matrix는 `docs/verification/redteam-qa-matrix.md`에 기록하며, 대표 fixture는 range over-scope, delimiter 포함 삭제, 직접 재입력 우회를 progress 미완료와 `app_state.status: failed`로 검증한다.
 - E2E runner의 `wait_screen_contains`는 이전 wait 이후 새로 출력된 화면만 대상으로 삼아, 반복되는 `다음 단계: enter` 같은 문자열이 과거 화면 로그 때문에 오탐하지 않게 한다.
 
 ## 미확인 사항

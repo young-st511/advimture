@@ -859,7 +859,13 @@ func failureModalLines(lines []string) []string {
 		line := lines[i]
 		switch {
 		case i == 0:
-			out = append(out, "실수    "+line)
+			mistake, reason := splitRuntimeFailureReason(line)
+			if mistake != "" {
+				out = append(out, "실수    "+mistake)
+			}
+			if reason != "" {
+				out = append(out, "원인    "+reason)
+			}
 		case strings.HasPrefix(line, "Inputs left:") && i+1 < len(lines) && strings.HasPrefix(lines[i+1], "Attempts:"):
 			out = append(out, line+" · "+lines[i+1])
 			i++
@@ -874,12 +880,37 @@ func failureModalLines(lines []string) []string {
 	return out
 }
 
+func splitRuntimeFailureReason(line string) (string, string) {
+	reasons := []string{
+		"이 입력은 이번 문항에서 사용할 수 없습니다.",
+		"입력 제한을 초과했습니다.",
+		"목표에는 도착했지만 이번 문항의 의도한 입력을 사용하지 않았습니다.",
+	}
+	for _, reason := range reasons {
+		if line == reason {
+			return "", reason
+		}
+		suffix := " " + reason
+		if strings.HasSuffix(line, suffix) {
+			return strings.TrimSpace(strings.TrimSuffix(line, suffix)), reason
+		}
+	}
+	return line, ""
+}
+
 func successModalLines(lines []string) []string {
 	out := []string{}
-	for i, line := range lines {
+	for i := 0; i < len(lines); i++ {
+		line := lines[i]
 		switch {
 		case i == 0:
 			out = append(out, "배운 점  "+line)
+		case strings.HasPrefix(line, "이번 복구:") &&
+			i+2 < len(lines) &&
+			strings.HasPrefix(lines[i+1], "최단 복구:") &&
+			strings.HasPrefix(lines[i+2], "목표 입력:"):
+			out = append(out, "기록    "+line+" · "+lines[i+1]+" · "+lines[i+2])
+			i += 2
 		case strings.HasPrefix(line, "복구 기록:") || strings.HasPrefix(line, "이번 복구:"):
 			out = append(out, "기록    "+line)
 		default:
@@ -1018,7 +1049,7 @@ func focusPanelActionLabels(panel FocusPanel) []string {
 func focusPanelWidth(screenWidth int) int {
 	const fallback = 58
 	const minWidth = 32
-	const maxWidth = 72
+	const maxWidth = 96
 	if screenWidth <= 0 {
 		return fallback
 	}
