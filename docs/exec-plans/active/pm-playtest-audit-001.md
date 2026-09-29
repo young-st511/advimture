@@ -23,7 +23,7 @@ Allowed-Paths: docs/exec-plans/, docs/roadmap/PM_PLAYTEST_REVIEW_2026-09-29.md, 
 - [x] 응용 대안 풀이, 힌트 비용/효용, 저장/재개, 복습의 기대와 실제를 비교한다.
 - [x] 발견마다 재현 단계, 영향, 분류, 우선순위, 코드 근거를 기록한다.
 - [x] 후속 계획에 순서/완료 기준/사용자 검증 기준을 명시한다.
-- [ ] 문서 및 evidence를 검토하고 문서 커밋과 PR을 만든다.
+- [x] 문서 및 evidence를 검토하고 문서 커밋과 PR을 만든다.
 
 ## 검증 계획
 
@@ -38,6 +38,7 @@ Allowed-Paths: docs/exec-plans/, docs/roadmap/PM_PLAYTEST_REVIEW_2026-09-29.md, 
 - 2026-09-29: 기준 commit `aa685ce`, VERSION `0.4.0`, 전용 branch `codex/pm-playtest-audit`. TUI 전용 검증 계약을 따라 브라우저 대신 PTY를 사용한다.
 - 2026-09-29: 직접 PTY 세션 3개와 기본 경로 5개/관찰 재현 20개를 수행했다. 모든 관찰 assertion이 충족됐다. 그중 결함을 기대하는 assertion의 통과는 품질 통과와 구별했다.
 - 2026-09-29: `docs/roadmap/PM_PLAYTEST_REVIEW_2026-09-29.md`에 12개 발견과 후속 5단계 `[draft]` 기획을 작성했다. 입력/실패 복구를 첫 구현 후보로 권장하며, 기존 PRODUCT/PROGRAM과 제품 구현은 변경하지 않았다.
+- 2026-09-29: 문서 커밋 `e341682`, PR https://github.com/young-st511/advimture/pull/1 제출. 감사 작업은 완료했다. `docs/exec-plans/README.md`의 PR merge 이후 이동 규칙에 따라 merge 전까지 review-ready로 active에 둔다. 후속 제품 구현을 승인한 상태는 아니다.
 
 ## 한계
 
