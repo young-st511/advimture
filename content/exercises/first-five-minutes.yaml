@@ -150,7 +150,7 @@ exercises:
       attempt_limit: 0
     hints:
       - after_keys: 1
-        text: "오른쪽으로 한 칸 더 이동해야 합니다."
+        text: "목표는 c입니다. 현재 위치를 보고 l로 오른쪽으로 이동하세요."
       - after_keys: 2
         text: "l은 오른쪽으로 한 칸 이동합니다."
     grading:

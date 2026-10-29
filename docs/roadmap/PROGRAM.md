@@ -10,6 +10,8 @@ Phase: Vim Learning Foundation
 
 ## 활성 슬라이스
 
+2026-10-29: `PM-QUALITY-RECOVERY-001` active. PM 직접 플레이 감사의 개선안이 승인됐다. 입력/실패 복구 → 첫 복구 경로 → 응용 채점 → 코칭/복습 순서로 구현·검증한다. 상세 TODO: `docs/exec-plans/active/pm-quality-recovery-001.md`. 아래의 기존 완료 이력 이후 현재 우선순위는 이 슬라이스다.
+
 현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`, `CONTENT-BREADTH-003`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`, `UI-ACTION-HUD-001`, `QUALITY-LIFT-001`도 완료됐다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`

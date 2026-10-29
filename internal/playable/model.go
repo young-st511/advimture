@@ -30,26 +30,34 @@ type Options struct {
 }
 
 type Model struct {
-	run            *scenario.Run
-	entries        []gameEntry
-	current        int
-	contentRoot    string
-	contentFS      fs.FS
-	progress       *progress.Progress
-	saveProgress   func(*progress.Progress) error
-	e2eStatePath   string
-	now            func() time.Time
-	startedAt      time.Time
-	saved          bool
-	saveErr        error
-	err            error
-	reviewQueue    []review.Candidate
-	hintMessage    string
-	hintRequests   int
-	width          int
-	height         int
-	animationFrame int
-	inputEcho      string
+	run                *scenario.Run
+	entries            []gameEntry
+	current            int
+	contentRoot        string
+	contentFS          fs.FS
+	progress           *progress.Progress
+	saveProgress       func(*progress.Progress) error
+	e2eStatePath       string
+	now                func() time.Time
+	startedAt          time.Time
+	saved              bool
+	saveErr            error
+	err                error
+	reviewQueue        []review.Candidate
+	hintMessage        string
+	hintRequests       int
+	width              int
+	height             int
+	animationFrame     int
+	inputEcho          string
+	routeMenu          bool
+	routeNotice        string
+	route              []int
+	routePos           int
+	routeName          string
+	routeComplete      bool
+	reviewMode         bool
+	terminalReplyUntil time.Time
 }
 
 type gameEntry struct {
@@ -127,7 +135,67 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, animationTick()
 	case tea.KeyMsg:
+		// Bubble Tea v1 reports OSC replies as Alt+] / text / Alt+\\ key messages.
+		if msg.Alt && string(msg.Runes) == "]" {
+			m.terminalReplyUntil = m.now().Add(time.Second)
+			return m, nil
+		}
+		if !m.terminalReplyUntil.IsZero() && m.now().Before(m.terminalReplyUntil) {
+			if (msg.Alt && string(msg.Runes) == "\\") || msg.Type == tea.KeyCtrlG {
+				m.terminalReplyUntil = time.Time{}
+			}
+			return m, nil
+		}
+		if msg.Alt {
+			return m, nil
+		}
 		input := msg.String()
+		if m.routeMenu {
+			cmd := m.selectRoute(input)
+			return m, cmd
+		}
+		if m.err == nil && m.run != nil && input == "m" && (m.run.State().Status != "running" || (m.inputMode() == vimengine.ModeNormal && m.run.State().Runtime.Vim.PendingKey == "")) {
+			m.routeMenu = true
+			return m, nil
+		}
+		if m.err == nil && m.run != nil && m.run.State().Status != exerciseruntime.StatusRunning {
+			switch input {
+			case "q":
+				return m, tea.Quit
+			case "enter", "r":
+				if m.run.State().Status == exerciseruntime.StatusFailed {
+					m.retryCurrent()
+				} else if input == "enter" {
+					m.advanceAfterSuccess()
+				}
+				_ = m.writeE2EState()
+				return m, nil
+			case "?":
+				if hint, ok := m.run.RequestHint(); ok {
+					m.hintRequests++
+					m.hintMessage = m.hintDisplayMessage(hint)
+				}
+				_ = m.writeE2EState()
+				return m, nil
+			}
+		}
+		if msg.Type == tea.KeyRunes && len(msg.Runes) > 1 {
+			for _, r := range msg.Runes {
+				if m.run == nil || m.run.State().Status != exerciseruntime.StatusRunning {
+					break
+				}
+				key := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{r}}
+				if r == '\n' || r == '\r' {
+					key = tea.KeyMsg{Type: tea.KeyEnter}
+				}
+				next, cmd := m.Update(key)
+				m = next.(Model)
+				if cmd != nil {
+					return m, cmd
+				}
+			}
+			return m, nil
+		}
 		action := tuiadapter.MapInputForMode(input, m.inputMode())
 		if m.err != nil {
 			if action.Type == tuiadapter.ActionQuit {
@@ -146,14 +214,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tuiadapter.ActionKey:
 			for _, key := range actionKeySequence(action) {
 				status := m.run.State().Status
-				if status == exerciseruntime.StatusFailed && (key == vimengine.KeyEnter || key == vimengine.KeyR) {
-					m.retryCurrent()
-					continue
-				}
-				if status == exerciseruntime.StatusSucceeded && key == vimengine.KeyEnter {
-					m.advanceAfterSuccess()
-					continue
-				}
 				if status != exerciseruntime.StatusRunning {
 					break
 				}
@@ -226,6 +286,9 @@ func compactInputEcho(input string) string {
 }
 
 func (m Model) View() string {
+	if m.routeMenu {
+		return m.routeMenuView()
+	}
 	if m.err != nil {
 		return fmt.Sprintf("Playable error: %v\nq: quit", m.err)
 	}
@@ -250,6 +313,10 @@ func (m Model) View() string {
 		ShowLastCommand: state.Status == exerciseruntime.StatusRunning,
 		AnimationFrame:  m.animationFrame,
 		InputEcho:       m.inputEcho,
+		RouteFooter:     m.routeFooter(),
+	}
+	if m.routeName == "첫 복구" && state.Status == exerciseruntime.StatusSucceeded && m.currentEntryIsTutorial() && m.saveErr == nil {
+		screen.FocusPanel = &playableview.FocusPanel{Kind: "checkpoint", Title: "복구 확인", Lines: []string{state.Message}, Actions: m.successActions()}
 	}
 	if entry, ok := m.currentEntry(); ok {
 		screen.PlaylistTitle = entry.PlaylistTitle
@@ -342,6 +409,16 @@ func (m *Model) advanceAfterSuccess() {
 		m.applyProgressIfSucceeded()
 	}
 	if !m.saved {
+		return
+	}
+	if m.route != nil && !m.reviewMode {
+		if m.routePos+1 < len(m.route) {
+			m.routePos++
+			m.jumpToEntry(m.route[m.routePos])
+		} else {
+			m.routeComplete = true
+			m.routeMenu = true
+		}
 		return
 	}
 	if m.current+1 < len(m.entries) {
@@ -509,6 +586,12 @@ func (m Model) successActions() []playableview.ActionLine {
 			focusAction("save_retry", "저장 재시도: enter"),
 			focusAction("quit", "종료: q"),
 		}
+	}
+	if m.route != nil && !m.reviewMode {
+		if m.routePos+1 == len(m.route) {
+			return []playableview.ActionLine{focusAction("route_complete", "다음 출격 선택: enter"), focusAction("quit", "종료: q")}
+		}
+		return []playableview.ActionLine{focusAction("next", "다음 단계: enter")}
 	}
 	if m.current+1 < len(m.entries) {
 		if !m.nextEntryStartsNewPlaylist() {

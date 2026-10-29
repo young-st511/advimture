@@ -8,6 +8,21 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 
 ## 현재 동작
 
+### PM 입력 복구 (2026-10-29)
+
+- Backspace는 insert에서 현재 줄의 앞 문자, search/command에서 입력 마지막 문자를 rune 단위로 삭제한다. 특수키 이름은 텍스트로 분해하지 않는다.
+- 실패 모달의 Enter/r/?/q는 Vim 모드와 무관하게 재시도/힌트/종료로 처리한다.
+- 묶음 문자 입력은 키마다 모드를 다시 확인하며 성공/실패 후 잔여 입력을 버린다. 다음 문제 진입은 별도 Enter가 필요하다.
+- 80x24 modal은 모든 action footer를 우선 보존한다. 첫 문제는 목표 c를 명시한다.
+- 소스/검증: `internal/playable/recovery_test.go`, `internal/vimengine/backspace_test.go`, `playable_input_recovery`, `playable_failed_insert_retry`.
+
+### 첫 복구 경로 (2026-10-29)
+
+- Normal의 독립 입력 `m`은 경로 선택을 연다. 첫 복구/전체 학습/응용/복습/현재 경로 선택을 제공한다. pending motion의 대상 m이나 insert/search/command 텍스트 m은 가로채지 않는다.
+- 첫 복구는 이동/단어 이동/검색/단어 변경 4개 연습 후 incident 001의 원인 신호/상태 복구를 수행한다. 단일 연습 성공은 편집 결과를 유지한 checkpoint로 표시하고 복구 결과는 모달로 보고한다.
+- 경로 선택은 세션 상태이며 기존 저장 ID/포맷을 유지한다. 전체 학습은 전체 library의 첫 미완료 문항으로 돌아간다.
+- 검증: `TestFirstRecoveryRouteIsShortAndPreservesLibrary`, `playable_first_recovery_route`.
+
 ### 제품 설계 순서
 
 **소스**: `docs/roadmap/PRODUCT.md`, `docs/workflows/vim-learning-loops.md`, `docs/gameplay/domain-contract.md`

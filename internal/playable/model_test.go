@@ -755,7 +755,7 @@ func TestPlayableShowsRequestedHintInActionPanel(t *testing.T) {
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  오른쪽으로 한 칸 더 이동해야 합니다. · 등급에 영향") {
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  목표는 c입니다. 현재 위치를 보고 l로 오른쪽으로 이동하세요. · 등급에 영향") {
 		t.Fatalf("view = %q, want requested hint", model.View())
 	}
 	if got, want := focusActionIDs(model.State().UI.FocusPanel.Actions), []string{"hint", "quit"}; !sameStrings(got, want) {
@@ -1044,6 +1044,11 @@ func TestPlayableCanQuitFromContentLoadError(t *testing.T) {
 
 func updateWithKey(t *testing.T, model Model, key string) (Model, tea.Cmd) {
 	t.Helper()
+	for name, kind := range map[string]tea.KeyType{"enter": tea.KeyEnter, "esc": tea.KeyEsc, "ctrl+r": tea.KeyCtrlR, "ctrl+c": tea.KeyCtrlC, "left": tea.KeyLeft, "right": tea.KeyRight, "up": tea.KeyUp, "down": tea.KeyDown, "backspace": tea.KeyBackspace} {
+		if key == name {
+			return updateWithSpecialKey(t, model, kind)
+		}
+	}
 
 	updated, cmd := model.Update(tea.KeyMsg{
 		Type:  tea.KeyRunes,

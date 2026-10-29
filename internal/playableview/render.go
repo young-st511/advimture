@@ -39,6 +39,7 @@ type Screen struct {
 	ShowLastCommand  bool
 	AnimationFrame   int
 	InputEcho        string
+	RouteFooter      string
 }
 
 type FocusPanel struct {
@@ -99,6 +100,13 @@ func renderLegacy(screen Screen) string {
 		b.WriteString(RenderLine(line, row, screen.CursorRow, screen.CursorCol, screen.Selection))
 		b.WriteString("\n")
 	}
+	if screen.FocusPanel != nil && screen.FocusPanel.Kind == "checkpoint" {
+		for _, line := range screen.FocusPanel.Lines {
+			for _, part := range wrapTextByDisplayWidth(line, hudTextWidth(screen.Width)) {
+				b.WriteString("복구 확인  " + part + "\n")
+			}
+		}
+	}
 	b.WriteString("\n")
 	b.WriteString(fmt.Sprintf("Mode: %s  Status: %s  Cursor: %d,%d\n", screen.Mode, screen.Status, screen.CursorRow, screen.CursorCol))
 	if screen.Selection != nil && screen.Selection.Active {
@@ -116,6 +124,9 @@ func renderLegacy(screen Screen) string {
 	}
 	if screen.ShowLastCommand && screen.LastCommand != "" {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
+	}
+	if screen.RouteFooter != "" {
+		b.WriteString(screen.RouteFooter + "\n")
 	}
 	if screen.FocusPanel == nil {
 		b.WriteString(RenderActionPanel(screen.ActionLines))
@@ -162,6 +173,9 @@ func renderHUD(screen Screen) string {
 	}
 	if screen.ShowLastCommand && screen.LastCommand != "" {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
+	}
+	if screen.RouteFooter != "" {
+		b.WriteString(screen.RouteFooter + "\n")
 	}
 	view := b.String()
 	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
@@ -975,6 +989,28 @@ func fitFocusPanelLines(rendered []string, maxHeight int, priorityLabels []strin
 		return rendered
 	}
 	interiorLimit := maxHeight - 2
+	// Reserve every advertised action before shortening the report body.
+	reserved := map[int]bool{}
+	for i, line := range rendered[1 : len(rendered)-1] {
+		for _, label := range priorityLabels {
+			if label != "" && strings.Contains(line, label) {
+				reserved[i] = true
+			}
+		}
+	}
+	if len(reserved) > 0 && len(reserved) <= interiorLimit {
+		out := []string{rendered[0]}
+		bodyLeft := interiorLimit - len(reserved)
+		for i, line := range rendered[1 : len(rendered)-1] {
+			if reserved[i] {
+				out = append(out, line)
+			} else if bodyLeft > 0 {
+				out = append(out, line)
+				bodyLeft--
+			}
+		}
+		return append(out, rendered[len(rendered)-1])
+	}
 	fitted := make([]string, 0, maxHeight)
 	fitted = append(fitted, rendered[0])
 	interior := append([]string(nil), rendered[1:len(rendered)-1]...)
