@@ -38,6 +38,7 @@ type Constraints struct {
 	RequiredKeys  []string
 	ForbiddenKeys []string
 	AttemptLimit  int
+	RequireReuse  bool
 }
 
 type Goal struct {
@@ -77,6 +78,9 @@ type Session struct {
 	failure                        FailureReason
 	message                        string
 	matchedGoalWithMissingRequired bool
+	yankedRegister                 vimengine.Register
+	hasYank                        bool
+	yankPut                        bool
 }
 
 func CursorGoal(row int, col int) *vimengine.Cursor {
@@ -154,7 +158,17 @@ func (s *Session) ApplyKey(key string) StepResult {
 		}
 	}
 
+	before := s.engine.State()
 	vimResult := s.engine.Apply(key)
+	for _, event := range vimResult.Events {
+		if event.Type == vimengine.EventYanked {
+			s.yankedRegister = vimResult.State.Register
+			s.hasYank = true
+		}
+		if event.Type == vimengine.EventChanged && before.Mode == vimengine.ModeNormal && (key == "p" || key == "P") && s.hasYank && before.Register.Text == s.yankedRegister.Text && before.Register.Linewise == s.yankedRegister.Linewise && sameStrings(before.Register.Lines, s.yankedRegister.Lines) {
+			s.yankPut = true
+		}
+	}
 	if s.shouldFailCommandMismatch(vimResult.State) {
 		s.fail(FailureCommandMismatch, commandMismatchMessage(*s.exercise.Goal.Command, vimResult.State.LastCommand))
 		return StepResult{
@@ -198,6 +212,9 @@ func (s *Session) Retry() State {
 	s.failure = FailureNone
 	s.message = ""
 	s.matchedGoalWithMissingRequired = false
+	s.yankedRegister = vimengine.Register{}
+	s.yankPut = false
+	s.hasYank = false
 	if s.canSucceedWithCurrentTrace(s.engine.State()) {
 		s.status = StatusSucceeded
 	}
@@ -253,6 +270,9 @@ func (s *Session) exceededMaxInputs() bool {
 
 func (s *Session) missingRequiredKeys() []string {
 	var missing []string
+	if s.exercise.Constraints.RequireReuse && !s.yankPut {
+		missing = append(missing, "복사 후 붙여넣기")
+	}
 	for _, required := range s.exercise.Constraints.RequiredKeys {
 		if !containsString(s.keyTrace, required) {
 			missing = append(missing, required)
@@ -324,6 +344,7 @@ func copyConstraints(constraints Constraints) Constraints {
 		RequiredKeys:  copyStrings(constraints.RequiredKeys),
 		ForbiddenKeys: copyStrings(constraints.ForbiddenKeys),
 		AttemptLimit:  constraints.AttemptLimit,
+		RequireReuse:  constraints.RequireReuse,
 	}
 }
 

@@ -158,7 +158,13 @@ func validateExerciseSpec(spec ExerciseSpec) error {
 }
 
 func compileConstraints(spec ConstraintSpec) exerciseruntime.Constraints {
+	hasY, hasPut := false, false
+	for _, key := range spec.RequiredKeys {
+		hasY = hasY || key == "y"
+		hasPut = hasPut || key == "p" || key == "P"
+	}
 	return exerciseruntime.Constraints{
+		RequireReuse:  hasY && hasPut,
 		MaxInputs:     spec.MaxInputs,
 		RequiredKeys:  copyStrings(spec.RequiredKeys),
 		ForbiddenKeys: copyStrings(spec.ForbiddenKeys),

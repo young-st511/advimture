@@ -23,6 +23,17 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - 경로 선택은 세션 상태이며 기존 저장 ID/포맷을 유지한다. 전체 학습은 전체 library의 첫 미완료 문항으로 돌아간다.
 - 검증: `TestFirstRecoveryRouteIsShortAndPreservesLibrary`, `playable_first_recovery_route`.
 
+### 응용 판정과 코칭/복습 (2026-10-29)
+
+- 줄 재사용 응용에서 `yyjp`/`Vyjp`, guard 복제에서 `yyp`/`Vyp`를 모두 인정한다. quote 재사용의 j/G 이동 대안도 인정한다. 튜토리얼의 고지된 제약과 최종 buffer/보존 조건은 유지한다.
+- required y와 p/P 조합은 내부 runtime에서 실제 yank event 이후 같은 register의 put 변경이 있었는지 확인한다. 문자로 y/p를 입력하는 것만으로 재사용 의도를 충족하지 않는다. 이 내부 판정은 YAML/progress schema 필드를 추가하지 않는다.
+- 효율이 같은 정상 대안은 정답 trace와 달라도 S를 받을 수 있다. 성공한 결과의 최저 등급은 C이며 F는 미완료 실패에 사용한다.
+- incident 힌트는 과제별 개념(무료) → 도구 계열(무료) → 마지막 상세 예시(도움 사용)의 3단계다. 단계는 3에서 멈추며 같은 도움 재열람은 중복 감점하지 않는다. 상세 도움을 사용한 완료는 보고서에서 구별한다.
+- UI의 최대 3개 추천에는 새 학습/복습이 포함될 수 있다. 미학습은 다음 새 미션으로 표시하고 재점검/잔류 리스크에 넣지 않는다. 복습 진입/전환은 완료한 저등급/비효율 문항만 조회한다.
+- 복습이 비면 Enter는 경로 선택으로 돌아가며, 남으면 다음 복습으로 간다. 이미 숙련한 순차 튜토리얼을 자동으로 진행하지 않는다.
+- m → 학습 목록은 페이지별 에피소드 선택(j/k/화살표/Enter)을 제공하며 기존 완료 ID를 보존한다.
+- 검증: `fairness_test.go`, `coaching_test.go`, runtime `reuse_test.go`, `playable_reuse_alternative`, `playable_hint_bounded`, `playable_review_completion`, `playable_learning_library`.
+
 ### 제품 설계 순서
 
 **소스**: `docs/roadmap/PRODUCT.md`, `docs/workflows/vim-learning-loops.md`, `docs/gameplay/domain-contract.md`
@@ -83,7 +94,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - HUD briefing은 terminal width를 기준으로 최대 2줄까지 wrap하고, 초과분은 `...`로 축약할 수 있다.
 - running/failed 상태의 `FocusPanel`은 아직 쓰지 않은 `constraints.required_keys`를 tutorial에서는 `Coach: 훈련 키 ...`, incident failure에서는 `복구 힌트: 필요한 키 ...`로 표시할 수 있다.
 - tutorial running `FocusPanel`은 current exercise의 `trained_commands`를 `기억할 명령: ...`으로 짧게 표시한다. `기억할 명령`이 같은 required key를 이미 설명하면 `Coach: 훈련 키 ...`를 중복 표시하지 않는다.
-- incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?` hint 요청은 `판단 힌트` -> `명령 계열 힌트` + `참고 명령` -> 기존 exact hint 순서로 점진 공개하며, 실패 후에는 `참고 명령: ...`으로 current exercise의 command memory를 공개한다.
+- incident running 기본 화면은 정답 key sequence나 command memory를 노출하지 않는다. `?`는 무료 과제별 판단 힌트 -> 무료 명령 계열 + 참고 명령 -> 마지막 상세 예시를 공개한다. 상세 도움 재열람은 무료이며 실패 후에는 참고 명령을 공개한다.
 - incident scenario briefing은 상황 1문장과 판단 목표 1문장을 우선하며, exact command sequence는 기본 briefing보다 hint/failure/command memory에서 공개한다.
 - success/failure floating modal이 표시되는 화면은 상단 detailed review/daily line을 숨기고, modal 내부의 review motivation과 `다음 행동` footer를 primary 안내로 둔다. Tutorial success의 review motivation은 `재점검 메모`/`나중에 다시 풀기`, incident success의 review motivation은 `잔류 리스크`/`다음 출격 후보`로 표현한다.
 - `?` hint 요청 결과는 첫 입력 전에도 `FocusPanel`에 `힌트 내용  ... · 등급에 영향`으로 표시하며, `힌트 내용`과 action bar는 같은 wrapping group에 합쳐지지 않아야 한다. command/search/insert/visual mode 패널에는 실제 입력 처리와 맞지 않는 일반 hint/quit 안내를 섞지 않고 현재 mode의 실행/취소 action을 우선한다.
@@ -135,7 +146,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `tutorial-90-search-basic`은 `/`, `n`, `N`, wrap-around literal search를 다루는 4문항 tutorial이며 replay gate와 full playlist E2E를 통과한다.
 - 장기 반복 학습 플랫폼은 `docs/roadmap/PLATFORM_RFC_001.md`를 기준으로 검토한다. mastery, spaced review, daily run은 후보이며, progress 저장 포맷 변경은 별도 승인 전까지 구현하지 않는다.
 - 2026-05-25 기준 progress schema v2는 보류한다. FTUE, command-choice, no-schema daily route는 progress v1과 runtime 계산만으로 충분하며, 실패 attempt 지속 저장, mastery, review due date, daily streak이 실제 제품 문제로 확인될 때 다시 연다.
-- review queue는 저장 포맷 변경 없이 기존 progress v1 `Missions`와 content library만 읽는다. 메인 첫 화면에서는 `재점검 대상`, tutorial 성공 debrief에서는 `재점검 메모`/`나중에 다시 풀기`, incident 성공 debrief에서는 `잔류 리스크`/`다음 출격 후보`로 표현한다. candidate reason은 `미복구`, `복구 등급 <grade>`, `복구 입력 <best>/<optimal> keys`로 표시한다.
+- 추천은 저장 변경 없이 progress v1 Missions와 content library를 읽는다. 미완료는 다음 학습/다음 새 미션으로, 완료 후 개선이 필요한 문항은 재점검/복습으로 구별한다. candidate reason은 미복구/복구 등급/복구 입력으로 유지하되 최대 3건의 추천 수를 전체 문항 수로 해석하지 않는다.
 - 오늘의 복구 루트는 저장하지 않는 daily motivation layer다. 현재 review queue의 primary 대상과 이유를 읽어 `오늘의 복구 루트: 목표 문자까지 이동하기(미복구) 외 2건 대기`처럼 표시한다.
 - E2E state summary는 저장 포맷과 별개로 review queue count, primary exercise, primary reason, daily route 문구를 노출한다.
 - Incident Run은 tutorial이 아니라 별도 `incident-*` 카테고리로 다룬다. Incident는 새 command를 소개하지 않고 이미 배운 command를 조합해 생존 어드벤처 사건을 해결하는 적용 런이다.
@@ -157,7 +168,7 @@ Advimture의 게임플레이, Vim 학습 문항, 내러티브, 미션 구조를 
 - `incident-005-command-choice`는 세 번째 beat로 `choice-005-inline-target-range`를 포함한다. hyphenated 값 뒤 comma delimiter를 보존해야 하는 상황에서 `cf,`나 `cw`가 아니라 `ct,`를 선택하는 판단을 검증한다.
 - `incident-005-command-choice`는 네 번째 beat로 `choice-006-quote-value-reuse`를 포함한다. 검증된 quote 내부 값을 직접 재입력하지 않고 `yi"` + `P`로 빈 quote에 재사용하는 판단을 검증한다.
 - `incident-005-command-choice`는 다섯 번째 beat로 `choice-008-repeat-change-reuse`를 포함한다. 같은 단어 교체가 이어지는 상황에서 두 번째 변경을 직접 재입력하지 않고 `.`으로 마지막 변경을 반복하는 판단을 검증한다.
-- `incident-005-command-choice`는 여섯 번째 beat로 `choice-007-line-reuse`를 포함한다. 검증된 route 줄 전체를 직접 재입력하지 않고 linewise `V` + `y` + `p`로 backup 아래에 재사용하는 판단을 검증한다.
+- `incident-005-command-choice`의 줄 재사용 beat는 검증된 route 줄을 backup 아래에 재사용하는 판단을 검증하며 `Vyjp`와 `yyjp`를 모두 인정한다.
 - `incident-005-command-choice`는 일곱 번째 beat로 `choice-010-bracket-pair-scope`를 포함한다. `old-value`처럼 단어 단위로는 충분하지 않은 괄호 내부 인자 전체를 `ci(`로 교체하는 판단을 검증한다.
 - incident 001/002/003의 exercise는 각 beat마다 2단계 이상의 hint를 제공하며, scenario wording은 target state, optimal keys, constraints를 바꾸지 않는다.
 - `incident-007-mixed-recovery`는 “릴레이 기지 007: 혼합 복구 작전”으로 표시하며 `/breach`, `ci"`, linewise `Vd`, `ct,`, `:%s`를 조합한다. replay gate와 full playlist E2E를 통과한다.

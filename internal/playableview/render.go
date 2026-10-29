@@ -126,7 +126,7 @@ func renderLegacy(screen Screen) string {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
 	}
 	if screen.RouteFooter != "" {
-		b.WriteString(screen.RouteFooter + "\n")
+		b.WriteString(ellipsize(screen.RouteFooter, hudTextWidth(screen.Width)) + "\n")
 	}
 	if screen.FocusPanel == nil {
 		b.WriteString(RenderActionPanel(screen.ActionLines))
@@ -154,6 +154,13 @@ func renderHUD(screen Screen) string {
 		b.WriteString("\n")
 	}
 	b.WriteString("\n")
+	if screen.FocusPanel != nil && screen.FocusPanel.Kind == "checkpoint" {
+		for _, line := range screen.FocusPanel.Lines {
+			for _, part := range wrapTextByDisplayWidth(line, hudTextWidth(screen.Width)-11) {
+				b.WriteString("복구 확인  " + part + "\n")
+			}
+		}
+	}
 	b.WriteString(renderHUDStatusLine(screen))
 	if screen.Selection != nil && screen.Selection.Active {
 		b.WriteString(fmt.Sprintf("Selection: %s %d,%d -> %d,%d\n", screen.Selection.Kind, screen.Selection.Start.Row, screen.Selection.Start.Col, screen.Selection.End.Row, screen.Selection.End.Col))
@@ -175,7 +182,7 @@ func renderHUD(screen Screen) string {
 		b.WriteString(fmt.Sprintf("Command: %s\n", screen.LastCommand))
 	}
 	if screen.RouteFooter != "" {
-		b.WriteString(screen.RouteFooter + "\n")
+		b.WriteString(ellipsize(screen.RouteFooter, hudTextWidth(screen.Width)) + "\n")
 	}
 	view := b.String()
 	if screen.FocusPanel != nil && isFloatingPanel(*screen.FocusPanel) {
@@ -199,9 +206,12 @@ func renderHUDStatusLine(screen Screen) string {
 func renderDenseMissionHUD(screen Screen) []string {
 	width := hudTextWidth(screen.Width)
 	lines := labeledWrappedLine("MISSION", screen.Title, width)
-	for _, line := range wrapHUDMessage(screen.Message, screen.Width) {
-		lines = append(lines, labeledWrappedLine("GOAL", line, width)...)
+	goals := labeledWrappedLine("GOAL", screen.Message, width)
+	if len(goals) > 2 {
+		goals = goals[:2]
+		goals[1] = forceEllipsis(goals[1], width)
 	}
+	lines = append(lines, goals...)
 	if screen.FocusPanel != nil && !isFloatingPanel(*screen.FocusPanel) {
 		lines = append(lines, denseFocusPanelLines(screen, *screen.FocusPanel, width)...)
 	}

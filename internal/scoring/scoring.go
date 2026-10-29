@@ -62,9 +62,6 @@ func Evaluate(input Input) Result {
 	if score < 0 {
 		score = 0
 	}
-	if !exactKeys && score > 0.89 {
-		score = 0.89
-	}
 
 	return Result{
 		Passed:           true,
@@ -74,7 +71,7 @@ func Evaluate(input Input) Result {
 		Efficiency:       efficiency,
 		Penalty:          penalty,
 		Score:            score,
-		Grade:            gradeForScore(score),
+		Grade:            successGrade(score),
 		KeyCount:         len(keyTrace),
 		ExpectedKeyCount: len(expectedKeys),
 	}
@@ -121,6 +118,14 @@ func gradeForScore(score float64) Grade {
 	default:
 		return GradeF
 	}
+}
+
+func successGrade(score float64) Grade {
+	grade := gradeForScore(score)
+	if grade == GradeF {
+		return GradeC
+	}
+	return grade
 }
 
 func keysMatch(left []string, right []string) bool {

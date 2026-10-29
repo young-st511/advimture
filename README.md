@@ -6,7 +6,9 @@ Vim을 실제로 유용하게 쓰기 위한 Go + Bubble Tea 기반 터미널 어
 
 ## 현재 플레이 가능 범위
 
-현재 앱은 첫 공개 전 foundation build입니다.
+현재 stable 배포 버전은 `v0.4.0`입니다. 아래 첫 복구/경로 선택 개선은 현재 소스에 포함되며 다음 배포 대상입니다.
+
+Normal 모드에서 `m`으로 첫 복구, 전체 학습 이어하기, 응용 도전, 복습, 학습 목록을 선택합니다. 첫 복구는 짧은 조작 연습 4개 후 원인 추적과 상태 복구로 이어집니다.
 
 - 생존 조작: `esc`, `:q!`, `:wq`
 - 이동: `h/j/k/l`, `w/b/e`, `gg/G/0/$`
@@ -17,7 +19,7 @@ Vim을 실제로 유용하게 쓰기 위한 Go + Bubble Tea 기반 터미널 어
 - visual/inline target: `v`, `V`, visual `d/y`, `f/t`, `df/dt/cf/ct`
 - 게임 루프: tutorial playlist, incident run, 실패 후 재시도, 힌트, 복습 queue, 성공 debrief, 자동 저장
 
-콘텐츠는 `content/`의 YAML로 관리하며, 현재 106개 exercise와 18개 exercise 파일, 18개 playlist 파일이 연결되어 있습니다.
+콘텐츠는 `content/`의 YAML로 관리합니다. 기존 학습 에피소드와 복구 작전은 학습 목록에서 다시 선택할 수 있습니다.
 
 ## 요구 사항
 

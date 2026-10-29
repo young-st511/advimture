@@ -4,13 +4,15 @@
 
 ## 현재 Phase
 
-Phase: Vim Learning Foundation
+Phase: Player Experience Validation
 
 목표: Vim 학습 게임의 핵심 설계 단위인 command cluster, exercise, scenario를 축적하고, 첫 출시 가능한 foundation loop의 출구 조건을 닫는다.
 
 ## 활성 슬라이스
 
-2026-10-29: `PM-QUALITY-RECOVERY-001` active. PM 직접 플레이 감사의 개선안이 승인됐다. 입력/실패 복구 → 첫 복구 경로 → 응용 채점 → 코칭/복습 순서로 구현·검증한다. 상세 TODO: `docs/exec-plans/active/pm-quality-recovery-001.md`. 아래의 기존 완료 이력 이후 현재 우선순위는 이 슬라이스다.
+2026-10-29: `PM-QUALITY-RECOVERY-001` 구현과 자동 검증 완료. 입력/실패 복구, 첫 복구/학습 목록, 응용 대안 판정, 유한 힌트, 복습 종료를 구현했다. Go/build/playable E2E 52개가 통과했다. 계획: `docs/exec-plans/completed/pm-quality-recovery-001.md`.
+
+현재 구현 슬라이스는 없다. 다음은 `PLAYER-VALIDATION-001`: `docs/verification/player-validation-protocol.md`에 따라 실제 참여자의 첫 복구 시간/학습 전이/재방문을 측정한다. 참가자 실험은 미실시다. 아래는 기존 foundation 완료 이력이다.
 
 현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`, `CONTENT-BREADTH-003`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`, `UI-ACTION-HUD-001`, `QUALITY-LIFT-001`도 완료됐다.
 
@@ -59,7 +61,7 @@ Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
 ### NEXT-DIRECTION-CHECKPOINT. Fresh Direction After Quality Lift
 
-- 상태: next
+- 상태: superseded by PM-QUALITY-RECOVERY-001; next PLAYER-VALIDATION-001
 - 목표: `QUALITY-LIFT-001` 완료 후 fresh evidence를 보고 Third Dispatch 콘텐츠 확장, 더 깊은 UI scene polish, 또는 QA hardening 중 다음 구현 slice를 고른다.
 - 근거:
   - `docs/exec-plans/completed/ui-action-hud-001.md`

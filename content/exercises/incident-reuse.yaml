@@ -79,12 +79,12 @@ exercises:
         backup=slot
         route=live
     optimal_keys: ["y", "y", "p"]
-    allowed_keys: ["y", "p", "esc"]
+    allowed_keys: ["y", "p", "V", "esc"]
     forbidden_keys: ["left", "right", "up", "down"]
     constraints:
       max_inputs: 3
       required_keys: ["y", "p"]
-      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "d", "c", "x", "r", "i", "a", "A", "o", "O", "P", ":", "/", "?", "v", "V", "ctrl+c", "left", "right", "up", "down"]
+      forbidden_keys: ["h", "j", "k", "l", "w", "b", "e", "0", "$", "d", "c", "x", "r", "i", "a", "A", "o", "O", "P", ":", "/", "?", "v", "ctrl+c", "left", "right", "up", "down"]
       attempt_limit: 0
     hints:
       - after_keys: 1

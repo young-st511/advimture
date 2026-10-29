@@ -31,7 +31,7 @@ func TestPlayableStartsWithBriefing(t *testing.T) {
 	if !strings.Contains(model.View(), "Exercise: 1/4") {
 		t.Fatalf("view = %q, want episode-local count", model.View())
 	}
-	if !strings.Contains(model.View(), "재점검 대상: 목표 문자까지 이동하기: 미복구") {
+	if !strings.Contains(model.View(), "다음 학습: 목표 문자까지 이동하기: 미복구") {
 		t.Fatalf("view = %q, want review queue", model.View())
 	}
 	if !strings.Contains(model.View(), "오늘의 복구 루트: 목표 문자까지 이동하기(미복구) 외 2건 대기") {
@@ -270,10 +270,10 @@ func TestPlayableShowsSuccessDebriefAndBestRecord(t *testing.T) {
 		t.Fatalf("view = %q, want playlist completion count", view)
 	}
 	lines := model.State().UI.FocusPanel.Lines
-	if !containsLineWith(lines, "재점검 메모: 경고 지점으로 이동하기: 미복구") {
-		t.Fatalf("focus panel lines = %v, want tutorial review note", lines)
+	if containsLineWith(lines, "재점검 메모:") {
+		t.Fatalf("new learning must not be review debt: %v", lines)
 	}
-	if !containsLineWith(lines, "나중에 다시 풀기: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
+	if !containsLineWith(lines, "다음 새 미션: 경고 지점으로 이동하기(미복구) 외 2건 대기") {
 		t.Fatalf("focus panel lines = %v, want tutorial review motivation", lines)
 	}
 	if strings.Contains(view, "다음 출격: 경고 지점으로 이동하기") {
@@ -297,10 +297,10 @@ func TestPlayableShowsIncidentReviewMotivationAsDispatchCandidate(t *testing.T) 
 
 	view := model.View()
 	lines := model.State().UI.FocusPanel.Lines
-	if !containsLineWith(lines, "잔류 리스크: 다음 timeout 신호 추적: 미복구") {
-		t.Fatalf("focus panel lines = %v, want incident residual risk", lines)
+	if containsLineWith(lines, "잔류 리스크:") {
+		t.Fatalf("new mission must not be residual risk: %v", lines)
 	}
-	if !containsLineWith(lines, "다음 출격 후보: 다음 timeout 신호 추적(미복구) 외 2건 대기") {
+	if !containsLineWith(lines, "다음 새 미션: 다음 timeout 신호 추적(미복구) 외 2건 대기") {
 		t.Fatalf("focus panel lines = %v, want incident dispatch candidate", lines)
 	}
 	if !strings.Contains(view, "다음 단계: enter") {
@@ -355,7 +355,7 @@ func TestIncidentHintLadderProgressivelyRevealsCommandMemory(t *testing.T) {
 	if strings.Contains(view, "참고 명령: /") {
 		t.Fatalf("view = %q, should not reveal command memory on first hint", view)
 	}
-	if strings.Contains(view, "복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
+	if strings.Contains(view, "/error를 끝까지") {
 		t.Fatalf("view = %q, should not reveal exact hint on first hint", view)
 	}
 
@@ -371,7 +371,7 @@ func TestIncidentHintLadderProgressivelyRevealsCommandMemory(t *testing.T) {
 
 	model, _ = updateWithKey(t, model, "?")
 
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "/error를 끝까지 입력하고 enter로 검색을 확정하세요.") {
 		t.Fatalf("focus panel lines = %v, want exact content hint on third hint", model.State().UI.FocusPanel.Lines)
 	}
 }
@@ -527,7 +527,9 @@ func TestSuccessActionLinesUsePlaylistCategoryLanguage(t *testing.T) {
 		{
 			name: "final incident with review dispatch",
 			model: Model{
-				current: 1,
+				current:     1,
+				contentRoot: contentRootForTest(),
+				progress:    &progress.Progress{Missions: map[string]progress.MissionProgress{"normal-motion-basic-001": {Completed: true, BestGrade: "A"}}},
 				entries: []gameEntry{
 					{PlaylistID: "tutorial-0", PlaylistCategory: "tutorial", ExerciseID: "normal-motion-basic-001"},
 					{PlaylistID: "incident-005", PlaylistCategory: "incident"},
@@ -777,7 +779,7 @@ func TestPlayableShowsIncidentHintWithoutTrainingKeySpoiler(t *testing.T) {
 	if model.State().Status != "running" {
 		t.Fatalf("status = %q, want running", model.State().Status)
 	}
-	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  판단 힌트: 목표 상태에서 바뀌어야 할 범위와 보존할 범위를 먼저 비교하세요. · 등급에 영향") {
+	if !containsLineWith(model.State().UI.FocusPanel.Lines, "힌트 내용  판단 힌트: 복구 작전에서는 한 줄씩 훑기보다 검색으로 원인 신호를 잡습니다.") {
 		t.Fatalf("view = %q, want first-step incident hint", model.View())
 	}
 	if strings.Contains(model.View(), "Coach: 훈련 키") {

@@ -29,6 +29,15 @@ func TestRecoveryIgnoresTerminalReply(t *testing.T) {
 	}
 }
 
+func TestPendingTargetQDoesNotQuit(t *testing.T) {
+	m := New(Options{ContentRoot: contentRootForTest(), Progress: progressCompleteBefore(t, "char-find-line-001")})
+	m, _ = updateWithKey(t, m, "f")
+	_, cmd := updateWithKey(t, m, "q")
+	if cmd != nil {
+		t.Fatal("find target q became app quit")
+	}
+}
+
 func TestRecoveryFailedModeActions(t *testing.T) {
 	for _, key := range []string{"enter", "r", "?"} {
 		t.Run(key, func(t *testing.T) {
@@ -45,6 +54,31 @@ func TestRecoveryFailedModeActions(t *testing.T) {
 					t.Fatal(m.View())
 				}
 			} else if m.State().Status != "running" || m.State().Buffer[0] != "ac" {
+				t.Fatal(m.State())
+			}
+		})
+	}
+}
+
+func TestRetryFromVisualSearchAndCommand(t *testing.T) {
+	for _, tc := range []struct {
+		id   string
+		keys []string
+	}{{"command-choice-scope-001", []string{"V", "x"}}, {"incident-hotfix-001", []string{"/", "ctrl+c"}}, {"vim-ex-command-substitute-002", []string{":", "ctrl+c"}}} {
+		t.Run(tc.id, func(t *testing.T) {
+			m := New(Options{ContentRoot: contentRootForTest(), Progress: progressCompleteBefore(t, tc.id)})
+			for _, key := range tc.keys {
+				m, _ = updateWithKey(t, m, key)
+			}
+			if m.State().Status != "failed" {
+				t.Fatal(m.State())
+			}
+			m, _ = updateWithKey(t, m, "?")
+			if !strings.Contains(m.View(), "힌트 내용") {
+				t.Fatal(m.View())
+			}
+			m, _ = updateWithKey(t, m, "enter")
+			if m.State().Status != "running" || m.State().Mode != "normal" {
 				t.Fatal(m.State())
 			}
 		})

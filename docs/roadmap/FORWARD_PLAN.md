@@ -1,7 +1,11 @@
 # Forward Plan — Foundation to Release Quality
 
-Last reviewed: 2026-06-20
+Last reviewed: 2026-10-29
 Status: current rolling plan
+
+## 2026-10 현재 방향
+
+PM-QUALITY-RECOVERY-001의 입력/경로/공정한 판정/코칭/복습 구현과 자동 gate는 완료했다. 다음 2~8주의 첫 판단 근거는 실제 사용자 6~8명의 첫 복구 시간, 실제 Vim 과제 전이, 지연 유지 및 자발적 추가 플레이로 삼는다. 절차는 `docs/verification/player-validation-protocol.md`에 있다. 콘텐츠 확대와 추가 UI 작업은 이 실측 결과로 선택한다. 아래의 2026-06 세부 계획은 이전 완료 이력이다.
 
 ## 목적
 

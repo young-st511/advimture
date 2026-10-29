@@ -40,6 +40,7 @@ type Run struct {
 	message   string
 	score     *scoring.Result
 	hintsUsed int
+	hintSeen  map[string]bool
 }
 
 func NewRun(spec Spec) (*Run, error) {
@@ -102,7 +103,30 @@ func (r *Run) RequestHint() (string, bool) {
 	if !ok {
 		return "", false
 	}
-	r.hintsUsed++
+	r.recordHint(hint)
+	return hint, true
+}
+
+func (r *Run) recordHint(hint string) {
+	if r.hintSeen == nil {
+		r.hintSeen = map[string]bool{}
+	}
+	if !r.hintSeen[hint] {
+		r.hintsUsed++
+		r.hintSeen[hint] = true
+	}
+}
+
+func (r *Run) RequestGuidance(stage int) (string, bool) {
+	hints := r.spec.Exercise.Exercise.Hints
+	if len(hints) == 0 {
+		return "", false
+	}
+	if stage < 3 {
+		return hints[0].Text, true
+	}
+	hint := hints[len(hints)-1].Text
+	r.recordHint(hint)
 	return hint, true
 }
 
@@ -114,6 +138,7 @@ func (r *Run) Retry() State {
 	}
 	r.score = nil
 	r.hintsUsed = 0
+	r.hintSeen = nil
 	return r.State()
 }
 
