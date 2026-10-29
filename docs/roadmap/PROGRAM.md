@@ -14,6 +14,8 @@ Phase: Player Experience Validation
 
 현재 구현 슬라이스는 없다. 다음은 `PLAYER-VALIDATION-001`: `docs/verification/player-validation-protocol.md`에 따라 실제 참여자의 첫 복구 시간/학습 전이/재방문을 측정한다. 참가자 실험은 미실시다. 아래는 기존 foundation 완료 이력이다.
 
+2026-10-29 재실험: 기존 회귀 52개는 통과했지만 추가 탐색에서 메뉴 묶음 입력/첫 학습 오타 여유 등 잔여·회귀 8개를 확인했다. 현재 판단 근거는 `PM_RETEST_REVIEW_2026-10-29.md`다. 후속 수정 순서는 보고서의 draft 제안이며 아직 구현하지 않았다.
+
 현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 중기 보강과 applied content 보강(`POST-POLISH-PLAYTEST-001`, `LINE-REUSE-APPLIED-001`, `SEARCH-THEN-SCOPE-APPLIED-001`, `BRACKET-PAIR-HARDEN-001`, `CONTENT-BREADTH-003`)은 완료됐고, `NEXT-PLAYTEST-REVIEW-001` 이후의 `REVIEW-LOOP-MOTIVATION-001`, `COMMAND-CHOICE-BREADTH-002`, `POST-BREADTH-PLAYTEST-REVIEW-001`, `SUCCESS-STATUSLINE-CLEANUP-001`, `UI-MODAL-ACTION-HIERARCHY-001`, `RELEASE-BREW-001`, `UI-MODAL-ACTION-HIERARCHY-002`, `UI-ACTION-HUD-001`, `QUALITY-LIFT-001`도 완료됐다.
 
 Completed ExecPlan: `docs/exec-plans/completed/playable-quality-baseline-001-release-quality-baseline.md`
@@ -44,7 +46,7 @@ Review: `docs/roadmap/PLAYABLE_QUALITY_BASELINE_2026-06-02.md`
 Audit: `docs/roadmap/PLAYABLE_QUALITY_COMPLETION_AUDIT_2026-06-02.md`
 Evidence Bundle: `docs/roadmap/CONTENT_EVIDENCE_BUNDLE_001.md`
 Latest Review: `docs/roadmap/POST_BREADTH_PLAYTEST_REVIEW_2026-06-07.md`
-Active Review: `docs/roadmap/POST_SECOND_DISPATCH_PLAYTEST_REVIEW_2026-07-02.md`
+Active Review: `docs/roadmap/PM_RETEST_REVIEW_2026-10-29.md`
 
 Rolling plan: `docs/roadmap/FORWARD_PLAN.md`
 
