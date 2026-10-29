@@ -1,0 +1,27 @@
+id: playable_input_recovery
+command: ["go", "run", "."]
+timeout_ms: 30000
+terminal: {width: 80, height: 24}
+setup: {home: temp, complete_before: vim-ex-command-substitute-002}
+steps:
+  - wait_screen_contains: "RUNBOOK CONSOLE"
+  - send: ":%s/TODO/DONX"
+  - wait_ms: 100
+  - send: "\u007f"
+  - wait_screen_contains: "COMMAND  :%s/TODO/DON"
+  - send: "E/g"
+  - wait_ms: 100
+  - send: "enter"
+  - wait_screen_contains: "RUNBOOK SEALED"
+  - send: "q"
+assert:
+  exit_code: 0
+  app_state:
+    status: succeeded
+    buffer: ["DONE api", "DONE worker"]
+evidence:
+  save_screen_final: true
+  save_screen_timeline: true
+  save_app_state: true
+  save_summary: true
+  save_key_trace: true

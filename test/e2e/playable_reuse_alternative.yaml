@@ -1,0 +1,53 @@
+{
+  "id": "playable_reuse_alternative",
+  "timeout_ms": 30000,
+  "terminal": {
+    "width": 80,
+    "height": 24
+  },
+  "setup": {
+    "home": "temp",
+    "complete_before": "command-choice-line-reuse-001"
+  },
+  "steps": [
+    {
+      "wait_screen_contains": "RUNBOOK CONSOLE"
+    },
+    {
+      "send": "yyjp"
+    },
+    {
+      "wait_ms": 100
+    },
+    {
+      "send": "q"
+    },
+    {
+      "wait_ms": 100
+    }
+  ],
+  "assert": {
+    "exit_code": 0,
+    "app_state": {
+      "status": "succeeded",
+      "buffer": [
+        "route=stable",
+        "backup=",
+        "route=stable",
+        "guard=on"
+      ],
+      "score": {
+        "grade": "S",
+        "passed": true
+      }
+    },
+    "final_screen_max_lines": 24
+  },
+  "evidence": {
+    "save_screen_final": true,
+    "save_screen_timeline": true,
+    "save_app_state": true,
+    "save_summary": true,
+    "save_key_trace": true
+  }
+}

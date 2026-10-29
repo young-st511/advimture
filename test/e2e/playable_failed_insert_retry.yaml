@@ -1,0 +1,26 @@
+id: playable_failed_insert_retry
+timeout_ms: 30000
+terminal: {width: 80, height: 24}
+setup: {home: temp, complete_before: insert-mode-entry-001}
+steps:
+  - wait_screen_contains: "RUNBOOK CONSOLE"
+  - send: "izzz"
+  - wait_screen_contains: "RECOVERY REQUIRED"
+  - send: "?"
+  - wait_screen_contains: "힌트 내용"
+  - send: "enter"
+  - wait_screen_contains: "ACTIONS"
+  - send: "ib"
+  - wait_ms: 100
+  - send: "esc"
+  - wait_screen_contains: "RUNBOOK SEALED"
+  - send: "q"
+assert:
+  exit_code: 0
+  app_state: {status: succeeded, buffer: ["abc"]}
+evidence:
+  save_screen_final: true
+  save_screen_timeline: true
+  save_app_state: true
+  save_summary: true
+  save_key_trace: true

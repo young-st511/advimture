@@ -201,6 +201,30 @@ type applyOptions struct {
 
 func applyWithOptions(state State, key string, options applyOptions) Result {
 	next := normalizeState(state)
+	if key == "backspace" {
+		if next.Mode == ModeCommand || next.Mode == ModeSearch {
+			text := []rune(next.CommandLine)
+			if len(text) > 0 {
+				next.CommandLine = string(text[:len(text)-1])
+			}
+			return Result{State: copyState(next), Events: []Event{{Type: EventCommandInput, Key: key}}}
+		}
+		if next.Mode == ModeInsert {
+			if next.Cursor.Col == 0 {
+				return boundary(next, key)
+			}
+			next = pushUndo(next)
+			line := []rune(next.Lines[next.Cursor.Row])
+			col := next.Cursor.Col
+			next.Lines[next.Cursor.Row] = string(append(line[:col-1], line[col:]...))
+			next.Cursor.Col--
+			next.Cursor.DesiredCol = next.Cursor.Col
+			if !options.replaying {
+				next = appendRecording(next, key, true)
+			}
+			return Result{State: copyState(next), Events: []Event{{Type: EventChanged, Key: key}}}
+		}
+	}
 
 	if key == KeyEsc {
 		wasInsert := next.Mode == ModeInsert

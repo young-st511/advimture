@@ -93,7 +93,7 @@ assert:
     - "릴레이 기지 004: config block 복구"
     - "Exercise: 5/5"
     - "다음 런북: enter"
-    - "잔류 리스크: 줄 묶음 복구 범위 판별: 미복구"
+    - "다음 새 미션: 줄 묶음 복구 범위 판별"
     - "좋습니다. 남은 hold 상태를 전체 범위에서 live로 승격해 config block 복구 runbook을 닫았습니다."
   exit_code: 0
   progress_file_exists: true

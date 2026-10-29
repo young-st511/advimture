@@ -18,6 +18,8 @@ E2E scenario
 
 ## Agent Loop
 
+2026-10-29 이후 추가 검사: 특수키가 문자로 삽입되지 않는지, 묶음 입력과 개별 입력이 일치하는지, OSC reply가 입력 trace에 섞이지 않는지, 모든 실패 mode의 retry/hint/quit, 80x24 힌트 후 전체 action footer, 복습 큐 소진 후 종료를 확인한다. 정상 대안 풀이 성공과 범위/재사용 의도를 어긴 풀이의 실패를 모두 확인한다.
+
 1. E2E scenario를 실행한다.
 2. 실패하면 `artifacts/e2e/<scenario>/`의 evidence를 읽는다.
 3. 실패 원인을 spec 또는 구현 중 하나로 분류한다.

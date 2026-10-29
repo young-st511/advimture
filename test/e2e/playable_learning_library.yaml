@@ -1,0 +1,70 @@
+{
+  "id": "playable_learning_library",
+  "timeout_ms": 30000,
+  "terminal": {
+    "width": 80,
+    "height": 24
+  },
+  "setup": {
+    "home": "temp"
+  },
+  "steps": [
+    {
+      "wait_screen_contains": "RUNBOOK CONSOLE"
+    },
+    {
+      "send": "m"
+    },
+    {
+      "wait_ms": 100
+    },
+    {
+      "send": "6"
+    },
+    {
+      "wait_ms": 100
+    },
+    {
+      "send": "j"
+    },
+    {
+      "wait_ms": 100
+    },
+    {
+      "send": "enter"
+    },
+    {
+      "wait_ms": 100
+    },
+    {
+      "send": "esc"
+    },
+    {
+      "wait_ms": 100
+    },
+    {
+      "send": "q"
+    },
+    {
+      "wait_ms": 100
+    }
+  ],
+  "assert": {
+    "exit_code": 0,
+    "app_state": {
+      "status": "succeeded",
+      "progress": {
+        "mission_id": "survival-save-quit-001",
+        "completed": true
+      }
+    },
+    "final_screen_max_lines": 24
+  },
+  "evidence": {
+    "save_screen_final": true,
+    "save_screen_timeline": true,
+    "save_app_state": true,
+    "save_summary": true,
+    "save_key_trace": true
+  }
+}

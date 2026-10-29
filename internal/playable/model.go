@@ -30,26 +30,36 @@ type Options struct {
 }
 
 type Model struct {
-	run            *scenario.Run
-	entries        []gameEntry
-	current        int
-	contentRoot    string
-	contentFS      fs.FS
-	progress       *progress.Progress
-	saveProgress   func(*progress.Progress) error
-	e2eStatePath   string
-	now            func() time.Time
-	startedAt      time.Time
-	saved          bool
-	saveErr        error
-	err            error
-	reviewQueue    []review.Candidate
-	hintMessage    string
-	hintRequests   int
-	width          int
-	height         int
-	animationFrame int
-	inputEcho      string
+	run                *scenario.Run
+	entries            []gameEntry
+	current            int
+	contentRoot        string
+	contentFS          fs.FS
+	progress           *progress.Progress
+	saveProgress       func(*progress.Progress) error
+	e2eStatePath       string
+	now                func() time.Time
+	startedAt          time.Time
+	saved              bool
+	saveErr            error
+	err                error
+	reviewQueue        []review.Candidate
+	hintMessage        string
+	hintRequests       int
+	width              int
+	height             int
+	animationFrame     int
+	inputEcho          string
+	routeMenu          bool
+	chapterMenu        bool
+	chapterIndex       int
+	routeNotice        string
+	route              []int
+	routePos           int
+	routeName          string
+	routeComplete      bool
+	reviewMode         bool
+	terminalReplyUntil time.Time
 }
 
 type gameEntry struct {
@@ -127,8 +137,68 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, animationTick()
 	case tea.KeyMsg:
+		// Bubble Tea v1 reports OSC replies as Alt+] / text / Alt+\\ key messages.
+		if msg.Alt && string(msg.Runes) == "]" {
+			m.terminalReplyUntil = m.now().Add(time.Second)
+			return m, nil
+		}
+		if !m.terminalReplyUntil.IsZero() && m.now().Before(m.terminalReplyUntil) {
+			if (msg.Alt && string(msg.Runes) == "\\") || msg.Type == tea.KeyCtrlG {
+				m.terminalReplyUntil = time.Time{}
+			}
+			return m, nil
+		}
+		if msg.Alt {
+			return m, nil
+		}
 		input := msg.String()
+		if m.routeMenu {
+			cmd := m.selectRoute(input)
+			return m, cmd
+		}
+		if m.err == nil && m.run != nil && input == "m" && (m.run.State().Status != "running" || (m.inputMode() == vimengine.ModeNormal && m.run.State().Runtime.Vim.PendingKey == "")) {
+			m.routeMenu = true
+			return m, nil
+		}
+		if m.err == nil && m.run != nil && m.run.State().Status != exerciseruntime.StatusRunning {
+			switch input {
+			case "q":
+				return m, tea.Quit
+			case "enter", "r":
+				if m.run.State().Status == exerciseruntime.StatusFailed {
+					m.retryCurrent()
+				} else if input == "enter" {
+					m.advanceAfterSuccess()
+				}
+				_ = m.writeE2EState()
+				return m, nil
+			case "?":
+				m.requestHint()
+				_ = m.writeE2EState()
+				return m, nil
+			}
+		}
+		if msg.Type == tea.KeyRunes && len(msg.Runes) > 1 {
+			for _, r := range msg.Runes {
+				if m.run == nil || m.run.State().Status != exerciseruntime.StatusRunning {
+					break
+				}
+				key := tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune{r}}
+				if r == '\n' || r == '\r' {
+					key = tea.KeyMsg{Type: tea.KeyEnter}
+				}
+				next, cmd := m.Update(key)
+				m = next.(Model)
+				if cmd != nil {
+					return m, cmd
+				}
+			}
+			return m, nil
+		}
 		action := tuiadapter.MapInputForMode(input, m.inputMode())
+		if m.run != nil && m.inputMode() == vimengine.ModeNormal && m.run.State().Runtime.Vim.PendingKey != "" && len(msg.Runes) == 1 && (action.Type == tuiadapter.ActionHint || action.Type == tuiadapter.ActionQuit) {
+			action = tuiadapter.Action{Type: tuiadapter.ActionKey, Key: string(msg.Runes)}
+		}
 		if m.err != nil {
 			if action.Type == tuiadapter.ActionQuit {
 				_ = m.writeE2EState()
@@ -146,26 +216,20 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tuiadapter.ActionKey:
 			for _, key := range actionKeySequence(action) {
 				status := m.run.State().Status
-				if status == exerciseruntime.StatusFailed && (key == vimengine.KeyEnter || key == vimengine.KeyR) {
-					m.retryCurrent()
-					continue
-				}
-				if status == exerciseruntime.StatusSucceeded && key == vimengine.KeyEnter {
-					m.advanceAfterSuccess()
-					continue
-				}
 				if status != exerciseruntime.StatusRunning {
 					break
 				}
 				m.hintMessage = ""
-				m.run.ApplyKey(key)
+				step := m.run.ApplyKey(key)
+				for _, event := range step.Runtime.Vim.Events {
+					if event.Type == vimengine.EventUnsupportedKey {
+						m.inputEcho = "미지원 입력: " + key
+					}
+				}
 				m.applyProgressIfSucceeded()
 			}
 		case tuiadapter.ActionHint:
-			if hint, ok := m.run.RequestHint(); ok {
-				m.hintRequests++
-				m.hintMessage = m.hintDisplayMessage(hint)
-			}
+			m.requestHint()
 		case tuiadapter.ActionRetry:
 			m.retryCurrent()
 		case tuiadapter.ActionQuit:
@@ -226,6 +290,9 @@ func compactInputEcho(input string) string {
 }
 
 func (m Model) View() string {
+	if m.routeMenu {
+		return m.routeMenuView()
+	}
 	if m.err != nil {
 		return fmt.Sprintf("Playable error: %v\nq: quit", m.err)
 	}
@@ -250,6 +317,10 @@ func (m Model) View() string {
 		ShowLastCommand: state.Status == exerciseruntime.StatusRunning,
 		AnimationFrame:  m.animationFrame,
 		InputEcho:       m.inputEcho,
+		RouteFooter:     m.routeFooter(),
+	}
+	if m.routeName == "첫 복구" && state.Status == exerciseruntime.StatusSucceeded && m.currentEntryIsTutorial() && m.saveErr == nil {
+		screen.FocusPanel = &playableview.FocusPanel{Kind: "checkpoint", Title: "복구 확인", Lines: []string{state.Message}, Actions: m.successActions()}
 	}
 	if entry, ok := m.currentEntry(); ok {
 		screen.PlaylistTitle = entry.PlaylistTitle
@@ -344,11 +415,31 @@ func (m *Model) advanceAfterSuccess() {
 	if !m.saved {
 		return
 	}
+	if m.reviewMode {
+		if index, ok := m.reviewDispatchTargetIndex(); ok {
+			m.jumpToEntry(index)
+		} else {
+			m.routeComplete = true
+			m.routeMenu = true
+		}
+		return
+	}
+	if m.route != nil && !m.reviewMode {
+		if m.routePos+1 < len(m.route) {
+			m.routePos++
+			m.jumpToEntry(m.route[m.routePos])
+		} else {
+			m.routeComplete = true
+			m.routeMenu = true
+		}
+		return
+	}
 	if m.current+1 < len(m.entries) {
 		m.advanceToNext()
 		return
 	}
 	if index, ok := m.reviewDispatchTargetIndex(); ok {
+		m.reviewMode = true
 		m.jumpToEntry(index)
 	}
 }
@@ -437,6 +528,9 @@ func (m Model) reviewQueueSummary() string {
 	if len(m.reviewQueue) == 0 {
 		return ""
 	}
+	if m.reviewQueue[0].Reason == review.ReasonIncomplete {
+		return "다음 학습: " + m.reviewQueue[0].Summary()
+	}
 	return "재점검 대상: " + m.reviewQueue[0].Summary()
 }
 
@@ -452,6 +546,16 @@ func (m Model) dailyRouteSummary() string {
 }
 
 func (m Model) nextDispatchSummary() string {
+	if len(m.route) > 0 && !m.reviewMode {
+		if m.routePos+1 >= len(m.route) {
+			return "경로 완료 · 다음 출격을 선택하세요."
+		}
+		library, err := loadLibrary(m.contentRoot, m.contentFS)
+		if err == nil {
+			id := m.entries[m.route[m.routePos+1]].ExerciseID
+			return "다음 경로: " + library.Exercises[id].Title
+		}
+	}
 	if len(m.reviewQueue) == 0 {
 		return ""
 	}
@@ -459,6 +563,9 @@ func (m Model) nextDispatchSummary() string {
 	label := "다음 출격 후보"
 	if m.currentEntryIsTutorial() {
 		label = "나중에 다시 풀기"
+	}
+	if m.reviewQueue[0].Reason == review.ReasonIncomplete {
+		label = "다음 새 미션"
 	}
 	if len(m.reviewQueue) == 1 {
 		return label + ": " + primary
@@ -472,6 +579,9 @@ func (m Model) residualRiskSummary() string {
 		label = "재점검 메모"
 	}
 	for _, candidate := range m.reviewQueue {
+		if candidate.Reason == review.ReasonIncomplete {
+			continue
+		}
 		if candidate.ExerciseID != m.currentExerciseID() {
 			return label + ": " + candidate.Summary()
 		}
@@ -487,13 +597,21 @@ func (m Model) nextEntryStartsNewPlaylist() bool {
 }
 
 func (m Model) reviewDispatchTargetIndex() (int, bool) {
-	if len(m.reviewQueue) == 0 {
+	if m.progress == nil {
 		return 0, false
 	}
-	target := m.reviewQueue[0].ExerciseID
-	for index, entry := range m.entries {
-		if entry.ExerciseID == target {
-			return index, true
+	library, err := loadLibrary(m.contentRoot, m.contentFS)
+	if err != nil {
+		return 0, false
+	}
+	for _, candidate := range review.Candidates(library, *m.progress, review.Options{OrderedExerciseIDs: m.exerciseOrder()}) {
+		if candidate.Reason == review.ReasonIncomplete || candidate.ExerciseID == m.currentExerciseID() {
+			continue
+		}
+		for index, entry := range m.entries {
+			if entry.ExerciseID == candidate.ExerciseID {
+				return index, true
+			}
 		}
 	}
 	return 0, false
@@ -509,6 +627,18 @@ func (m Model) successActions() []playableview.ActionLine {
 			focusAction("save_retry", "저장 재시도: enter"),
 			focusAction("quit", "종료: q"),
 		}
+	}
+	if m.reviewMode {
+		if _, ok := m.reviewDispatchTargetIndex(); ok {
+			return []playableview.ActionLine{focusAction("next_dispatch", "다음 복습: enter"), focusAction("quit", "종료: q")}
+		}
+		return []playableview.ActionLine{focusAction("route_complete", "복습 완료 · 다음 출격: enter"), focusAction("quit", "종료: q")}
+	}
+	if m.route != nil && !m.reviewMode {
+		if m.routePos+1 == len(m.route) {
+			return []playableview.ActionLine{focusAction("route_complete", "다음 출격 선택: enter"), focusAction("quit", "종료: q")}
+		}
+		return []playableview.ActionLine{focusAction("next", "다음 단계: enter")}
 	}
 	if m.current+1 < len(m.entries) {
 		if !m.nextEntryStartsNewPlaylist() {
@@ -742,6 +872,13 @@ func (m Model) focusPanelLines(state scenario.State, view tuiadapter.ViewModel) 
 	switch {
 	case state.Status == exerciseruntime.StatusSucceeded:
 		if feedback := scenarioFeedbackLine(state); feedback != "" {
+			if m.routeName == "첫 복구" && m.currentEntryIsIncident() {
+				if m.routePos+1 < len(m.route) {
+					feedback = "검색으로 원인 신호를 고정했습니다. 이제 같은 기지의 상태값을 복구합니다."
+				} else {
+					feedback = "단어 범위를 선택해 down 전체를 up으로 바꿨습니다. 첫 출격을 마쳤습니다."
+				}
+			}
 			lines = append(lines, feedback)
 		}
 		if m.saveErr != nil {
@@ -805,11 +942,26 @@ func (m Model) hintDisplayMessage(exactHint string) string {
 	}
 	switch m.hintRequests {
 	case 1:
-		return "판단 힌트: 목표 상태에서 바뀌어야 할 범위와 보존할 범위를 먼저 비교하세요."
+		return "판단 힌트: " + exactHint + " [1/3 · 무료]"
 	case 2:
-		return "명령 계열 힌트: 참고 명령 후보를 보고 현재 범위에 맞는 도구를 고르세요."
+		return "명령 계열 힌트: 참고 명령 후보를 보고 현재 범위에 맞는 도구를 고르세요. [2/3 · 무료]"
 	default:
-		return exactHint
+		return "상세 힌트: " + exactHint + " [3/3 · 재열람 무료]"
+	}
+}
+
+func (m *Model) requestHint() {
+	if m.currentEntryIsIncident() {
+		if m.hintRequests < 3 {
+			m.hintRequests++
+		}
+		if hint, ok := m.run.RequestGuidance(m.hintRequests); ok {
+			m.hintMessage = m.hintDisplayMessage(hint)
+		}
+		return
+	}
+	if hint, ok := m.run.RequestHint(); ok {
+		m.hintMessage = hint
 	}
 }
 
@@ -1015,6 +1167,9 @@ func (m Model) successDebriefLines(state scenario.State) []string {
 	}
 	if state.Score.ExpectedKeyCount > 0 {
 		lines = append(lines, fmt.Sprintf("목표 입력: %d keys", state.Score.ExpectedKeyCount))
+	}
+	if state.HintsUsed > 0 {
+		lines = append(lines, "도움받아 완료 · 같은 힌트 재열람은 무료")
 	}
 	if entry, ok := m.currentEntry(); ok {
 		completed, total := m.playlistCompletion(entry.PlaylistID)

@@ -51,7 +51,7 @@ scenarios:
     learning_reinforcement: "l은 Normal mode에서 오른쪽으로 이동한다."
     does_not_change: ["target_state", "optimal_keys", "allowed_keys"]
     mission_title: "커서 위치 맞추기"
-    briefing: "터미널 지도에서 목표 문자까지 커서를 이동하세요. 화살표 키 대신 Vim 기본 이동을 사용합니다."
+    briefing: "터미널 지도에서 목표 문자까지 커서를 이동하세요. 목표는 c입니다."
     context_role: "짧은 터미널 지도"
     mentor_success: "좋습니다. 손을 홈 포지션에 둔 채 목표 위치에 도착했습니다."
     mentor_failure: "지금은 오른쪽 이동 감각을 익히는 단계입니다. l 방향을 떠올려보세요."

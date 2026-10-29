@@ -4,7 +4,18 @@
 
 ## 현재 상태
 
-Status: v0.2.0 released; next direction checkpoint
+Status: PM quality recovery implemented; human validation pending (2026-10-29)
+
+## 2026-10 현재 보드
+
+- [x] 입력/실패 복구와 80x24 footer.
+- [x] 첫 복구 4개 연습 + 2개 적용 경로, 에피소드 목록.
+- [x] 대표 응용의 대안 풀이와 실제 yank/put 판정.
+- [x] 유한 힌트/재열람 비용/복습 종료.
+- [x] 전체 Go/build/E2E 52개와 RedTeam 검증.
+- [ ] 실제 사용자 6~8명 학습 전이/재방문 측정. 절차: `docs/verification/player-validation-protocol.md`.
+
+이하 표와 권고는 2026-06 이력이다. 현재 다음 방향은 PLAYER-VALIDATION-001이다.
 
 현재 active implementation slice는 없다. `PLAYABLE-QUALITY-BASELINE-001` 이후의 `CONTENT-ARC-POLISH-001 -> JUDGMENT-DRILL-REVIEW-001 -> UI-CONSOLE-POLISH-001 -> POST-POLISH-PLAYTEST-001 -> LINE-REUSE-APPLIED-001 -> SEARCH-THEN-SCOPE-APPLIED-001 -> BRACKET-PAIR-HARDEN-001 -> NEXT-PLAYTEST-REVIEW-001 -> REVIEW-LOOP-MOTIVATION-001 -> COMMAND-CHOICE-BREADTH-002 -> POST-BREADTH-PLAYTEST-REVIEW-001 -> SUCCESS-STATUSLINE-CLEANUP-001 -> UI-MODAL-ACTION-HIERARCHY-001 -> RELEASE-BREW-001 -> UI-MODAL-ACTION-HIERARCHY-002` 보강과 배포 후속 hardening이 완료됐다.
 

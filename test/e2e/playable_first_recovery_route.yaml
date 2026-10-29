@@ -1,0 +1,50 @@
+id: playable_first_recovery_route
+timeout_ms: 30000
+terminal: {width: 80, height: 24}
+setup: {home: temp}
+steps:
+  - wait_screen_contains: "RUNBOOK CONSOLE"
+  - send: "m"
+  - wait_screen_contains: "출격 경로"
+  - send: "1"
+  - wait_screen_contains: "첫 복구 1/6"
+  - send: "ll"
+  - wait_screen_contains: "ACTIONS  [enter] 다음 단계"
+  - send: "enter"
+  - wait_screen_contains: "첫 복구 2/6"
+  - send: "ww"
+  - wait_screen_contains: "ACTIONS  [enter] 다음 단계"
+  - send: "enter"
+  - wait_screen_contains: "첫 복구 3/6"
+  - send: "/error"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_screen_contains: "ACTIONS  [enter] 다음 단계"
+  - send: "enter"
+  - wait_screen_contains: "첫 복구 4/6"
+  - send: "ciwup"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "ACTIONS  [enter] 다음 단계"
+  - send: "enter"
+  - wait_screen_contains: "원인 신호 고정"
+  - send: "/error"
+  - wait_ms: 50
+  - send: "enter"
+  - wait_screen_contains: "RUNBOOK SEALED"
+  - send: "enter"
+  - wait_screen_contains: "상태"
+  - send: "ciwup"
+  - wait_ms: 50
+  - send: "esc"
+  - wait_screen_contains: "다음 출격 선택: enter"
+  - send: "q"
+assert:
+  exit_code: 0
+  app_state: {status: succeeded, buffer: ["status=up"]}
+evidence:
+  save_screen_final: true
+  save_screen_timeline: true
+  save_app_state: true
+  save_summary: true
+  save_key_trace: true

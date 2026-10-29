@@ -63,6 +63,10 @@ func MapInput(input string) Action {
 func MapInputForMode(input string, mode vimengine.Mode) Action {
 	trimmed := strings.TrimSpace(input)
 	normalized := strings.ToLower(trimmed)
+	switch normalized {
+	case "backspace", "delete", "left", "right", "up", "down", "home", "end", "pgup", "pgdown", "tab", "shift+tab":
+		return Action{Type: ActionKey, Key: normalized}
+	}
 	if normalized == "ctrl+c" {
 		return Action{Type: ActionKey, Key: "ctrl+c"}
 	}

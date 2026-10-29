@@ -60,8 +60,8 @@ func TestRequestHintRecordsHintUse(t *testing.T) {
 	if !ok || hint != "Use l twice." {
 		t.Fatalf("hint = (%q,%v), want (%q,true)", hint, ok, "Use l twice.")
 	}
-	if run.State().HintsUsed != 2 {
-		t.Fatalf("HintsUsed = %d, want 2", run.State().HintsUsed)
+	if run.State().HintsUsed != 1 {
+		t.Fatalf("HintsUsed = %d, want 1 (free repeat)", run.State().HintsUsed)
 	}
 }
 

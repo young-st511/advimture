@@ -8,6 +8,13 @@ Advimture의 테스트와 TUI QA 루프를 정의한다. 웹 Playwright처럼 Ag
 
 ## 현재 동작
 
+### PM 개선 회귀 검증 (2026-10-29)
+
+- `make e2e-playable`에는 input recovery, insert 실패 재시도, 첫 복구 경로, 대안 복사, 유한 힌트, 복습 종료, 학습 목록의 7개 회귀 시나리오가 포함된다.
+- 정상 대안 풀이와 의미상 잘못된 풀이를 양쪽 모두 검증한다. terminal OSC response는 runtime trace/입력 제한에 포함하지 않는다.
+- 시나리오는 임시 HOME만 쓰며 80x24 final frame/상태/입력 evidence를 남긴다. 기존 110x34 이상 full route와 RedTeam 경로도 유지한다.
+- 외부 사용자의 학습 전이/48~72시간 유지 여부는 `player-validation-protocol.md`에 따라 별도로 측정한다. 자동 E2E 시간을 사람의 플레이 시간이나 학습 효과로 보고하지 않는다.
+
 ### Go 테스트
 
 **소스**: `go.mod`, `internal/**/*_test.go`

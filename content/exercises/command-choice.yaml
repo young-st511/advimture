@@ -289,7 +289,7 @@ exercises:
     forbidden_keys: ["v", "left", "right", "up", "down"]
     constraints:
       max_inputs: 4
-      required_keys: ["V", "y", "p"]
+      required_keys: ["y", "p"]
       forbidden_keys: ["v", "h", "k", "l", "w", "b", "e", "0", "$", "x", "r", "c", "d", "P", "i", "a", "A", "o", "O", ":", "/", "ctrl+c", "left", "right", "up", "down"]
       attempt_limit: 0
     hints:
