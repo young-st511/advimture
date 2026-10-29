@@ -18,6 +18,15 @@ E2E scenario
 
 ## Agent Loop
 
+PM 재실험(2026-10-29)에서 보강이 필요했던 검사 항목:
+
+- 메뉴에서도 묶음/개별 키 전달을 비교한다.
+- 정상 정답 외에 오타→Backspace→수정→확정 경로를 관찰한다. 고정 입력 예산의 정책 실패와 엔진 오류를 구별한다.
+- checkpoint/메뉴/복습 세션의 실제 화면과 ui.focus_panel identity를 비교한다.
+- 80x24의 긴 running hint 3단계에서 header/목표/console/action이 유지되는지 확인한다. final line 수만으로 판정하지 않는다.
+- 복습 1개 S 개선뿐 아니라 복수 문항의 도움받은 완료와 session counter를 확인한다.
+- 사용자에게 보이는 무료/감점/종료 안내가 실제 동작과 일치하는지 읽는다.
+
 2026-10-29 이후 추가 검사: 특수키가 문자로 삽입되지 않는지, 묶음 입력과 개별 입력이 일치하는지, OSC reply가 입력 trace에 섞이지 않는지, 모든 실패 mode의 retry/hint/quit, 80x24 힌트 후 전체 action footer, 복습 큐 소진 후 종료를 확인한다. 정상 대안 풀이 성공과 범위/재사용 의도를 어긴 풀이의 실패를 모두 확인한다.
 
 1. E2E scenario를 실행한다.
